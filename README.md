@@ -1,4 +1,4 @@
-# TI4-Race-Picker
+# TI4 Race Picker
 A tool to pick out races randomly for players playing in a Twilight Imperium 4 game
 
 ## Configuration
