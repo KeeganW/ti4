@@ -1,9 +1,17 @@
 #!/usr/bin/env python
 
+# TI4 Race Picker
+#
+# A quick tool to help with random selection of races for a more fair and balanced picking. To use, just replace the
+# players with the players from your game, and select a pair of random numbers to use as seeds for the RNG of race
+# and position selection.
+#
+# Created by KeeganW
+
 import random
 
-# TODO: Change the players playing this game
-players=["P1", "P2", "P3", "P4", "P5", "P6"]
+# Change the names of the players playing this game here
+players = ["P1", "P2", "P3", "P4", "P5", "P6"]
 
 # Any races previously used (to be excluded to keep things interesting)
 exluded_races = []
@@ -25,15 +33,14 @@ races = [
 ]
 
 
-"""
-Generate
+def create_race_lists(player_count: int):
+    """
+    Generates a list of races evenly split amongst the number players playing in the game. Factors in any excluded races
+    from being used.
 
-Generates a list of races evenly split amongst the number players playing in the game. Factors in any excluded races
-from being used. 
-
-@input player_count: The number of players playing in this game of TI.
-"""
-def generate(player_count: int):
+    :param player_count: The number of players playing in this game of TI.
+    :return: A list of lists of races.
+    """
     # Get the races that are being used this round
     r = races[:]
     for race in exluded_races: r.remove(race)
@@ -52,13 +59,13 @@ def generate(player_count: int):
     return results
 
 
-"""
-Main
+def get_player_races():
+    """
+    Generate seating positions and race selections for a game of Twilight Imperium Version 4. To be used in conjunction
+    with https://ti4-map-generator.derekpeterson.ca/ for a balanced randomized game of TI4.
 
-Generate seating positions and race selections for a game of Twilight Imperium Version 4. To be used in conjunction with 
-https://ti4-map-generator.derekpeterson.ca/ for a balanced game of TI4.
-"""
-def main():
+    :return: None
+    """
     p = players[:]
     c = 0
 
@@ -67,10 +74,10 @@ def main():
     random.shuffle(p)
 
     # Generate the races for the players, then print out the results.
-    for r in generate(len(p)):
+    for r in create_race_lists(len(p)):
         print("%s (%d): %s" % (p[c], c+1, ", ".join(r)))
         c += 1
 
 
 if __name__ == '__main__':
-    main()
+    get_player_races()
