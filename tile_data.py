@@ -13,614 +13,741 @@ Data format:
 }
 
 Tile information:
-1-17 are home systems
-Mecatol Rex is tile 18
+1-17 are home worlds
+18 is Mecatol Rex
 19-38 are safe
-39-50 are hazards
+39-50 are anomaly
+51 is Cruess wormhole home world
 """
-tile_data = {
-    '1': {
+tiles = {
+    1: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Jord',
                 'resources': 4,
                 'influence': 2,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '2': {
+    2: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Moll Primus',
                 'resources': 4,
                 'influence': 1,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '3': {
+    3: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Darien',
                 'resources': 4,
                 'influence': 4,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '4': {
+    4: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Muaat',
                 'resources': 4,
                 'influence': 1,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '5': {
+    5: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Nestphar',
                 'resources': 3,
                 'influence': 2,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '6': {
+    6: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': '[0.0.0]',
                 'resources': 5,
                 'influence': 0,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '7': {
+    7: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Winnu',
                 'resources': 3,
                 'influence': 4,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '8': {
+    8: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Mordai II',
                 'resources': 4,
                 'influence': 0,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '9': {
+    9: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Maaluuk',
                 'resources': 2,
                 'influence': 0,
+                'trait': None,
                 'specialty': None
             },
             {
                 'name': 'Druaa',
                 'resources': 3,
                 'influence': 1,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '10': {
+    10: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Arc Prime',
                 'resources': 4,
                 'influence': 0,
+                'trait': None,
                 'specialty': None
             },
             {
                 'name': 'Wren Terra',
                 'resources': 2,
                 'influence': 1,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '11': {
+    11: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Lisis II',
                 'resources': 1,
                 'influence': 0,
+                'trait': None,
                 'specialty': None
             },
             {
                 'name': 'Ragh',
                 'resources': 2,
                 'influence': 1,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '12': {
+    12: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Nar',
                 'resources': 2,
                 'influence': 3,
+                'trait': None,
                 'specialty': None
             },
             {
                 'name': 'Jol',
                 'resources': 1,
                 'influence': 2,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '13': {
+    13: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Tren\'lak',
                 'resources': 1,
                 'influence': 0,
+                'trait': None,
                 'specialty': None
             },
             {
                 'name': 'Quinarra',
                 'resources': 3,
                 'influence': 1,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '14': {
+    14: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Archon Ren',
                 'resources': 2,
                 'influence': 3,
+                'trait': None,
                 'specialty': None
             },
             {
                 'name': 'Archon Tau',
                 'resources': 1,
                 'influence': 1,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '15': {
+    15: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Retillion',
                 'resources': 2,
                 'influence': 3,
+                'trait': None,
                 'specialty': None
             },
             {
                 'name': 'Shalloq',
                 'resources': 1,
                 'influence': 2,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '16': {
+    16: {
         'type': 'home',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Arretze',
                 'resources': 2,
                 'influence': 0,
+                'trait': None,
                 'specialty': None
             },
             {
                 'name': 'Hercant',
                 'resources': 1,
                 'influence': 1,
+                'trait': None,
                 'specialty': None
             },
             {
                 'name': 'Kamdorn',
                 'resources': 0,
                 'influence': 1,
+                'trait': None,
                 'specialty': None
             },
         ]
     },
-    '17': {
+    17: {
         'type': 'home',
+        'wormhole': 'delta',
         'planets': [
-            {
-                'name': 'Creuss',
-                'resources': 4,
-                'influence': 2,
-                'specialty': None
-            },
         ]
     },
-    '18': {
+    18: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Mecatol Rex',
                 'resources': 1,
                 'influence': 6,
+                'trait': None,
                 'specialty': None
             }
         ]
     },
-    '19': {
+    19: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Wellon',
                 'resources': 1,
                 'influence': 2,
+                'trait': 'industrial',
                 'specialty': None
             }
         ]
     },
-    '20': {
+    20: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Vefut II',
                 'resources': 2,
                 'influence': 2,
+                'trait': 'hazardous',
                 'specialty': None
             }
         ]
     },
-    '21': {
+    21: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Thibah',
                 'resources': 1,
                 'influence': 1,
+                'trait': 'industrial',
                 'specialty': 'blue'
             }
         ]
     },
-    '22': {
+    22: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Tar\'mann',
                 'resources': 1,
                 'influence': 1,
+                'trait': 'industrial',
                 'specialty': 'green'
             }
         ]
     },
-    '23': {
+    23: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Saudor',
                 'resources': 2,
                 'influence': 2,
+                'trait': 'industrial',
                 'specialty': None
             }
         ]
     },
-    '24': {
+    24: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Mehar Xull',
                 'resources': 1,
                 'influence': 3,
+                'trait': 'hazardous',
                 'specialty': 'red'
             }
         ]
     },
-    '25': {
+    25: {
         'type': 'safe',
+        'wormhole': 'beta',
         'planets': [
             {
                 'name': 'Quann',
                 'resources': 2,
                 'influence': 1,
+                'trait': 'cultural',
                 'specialty': None
             }
         ]
     },
-    '26': {
+    26: {
         'type': 'safe',
+        'wormhole': 'alpha',
         'planets': [
             {
                 'name': 'Lodor',
                 'resources': 3,
                 'influence': 1,
+                'trait': 'cultural',
                 'specialty': None
             }
         ]
     },
-    '27': {
+    27: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'New Albion',
                 'resources': 1,
                 'influence': 1,
+                'trait': 'industrial',
                 'specialty': 'green'
             },
             {
                 'name': 'Starpoint',
                 'resources': 3,
                 'influence': 1,
+                'trait': 'hazardous',
                 'specialty': None
             }
         ]
     },
-    '28': {
+    28: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Tequ\'ran',
                 'resources': 2,
                 'influence': 0,
+                'trait': 'hazardous',
                 'specialty': None
             },
             {
                 'name': 'Torkan',
                 'resources': 0,
                 'influence': 3,
+                'trait': 'cultural',
                 'specialty': None
             }
         ]
     },
-    '29': {
+    29: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Qucen\'n',
                 'resources': 1,
                 'influence': 2,
+                'trait': 'industrial',
                 'specialty': None
             },
             {
                 'name': 'Rarron',
                 'resources': 0,
                 'influence': 3,
+                'trait': 'cultural',
                 'specialty': None
             }
         ]
     },
-    '30': {
+    30: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Mellon',
                 'resources': 0,
                 'influence': 2,
+                'trait': 'cultural',
                 'specialty': None
             },
             {
                 'name': 'Zohbat',
                 'resources': 3,
                 'influence': 1,
+                'trait': 'hazardous',
                 'specialty': None
             }
         ]
     },
-    '31': {
+    31: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Lazar',
                 'resources': 1,
                 'influence': 0,
+                'trait': 'industrial',
                 'specialty': 'yellow'
             },
             {
                 'name': 'Sakulag',
                 'resources': 2,
                 'influence': 1,
+                'trait': 'hazardous',
                 'specialty': None
             }
         ]
     },
-    '32': {
+    32: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Dal Bootha',
                 'resources': 0,
                 'influence': 2,
+                'trait': 'cultural',
                 'specialty': None
             },
             {
                 'name': 'Xxehan',
                 'resources': 1,
                 'influence': 1,
+                'trait': 'cultural',
                 'specialty': None
             }
         ]
     },
-    '33': {
+    33: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Corneeq',
                 'resources': 1,
                 'influence': 2,
+                'trait': 'cultural',
                 'specialty': None
             },
             {
                 'name': 'Resulon',
                 'resources': 2,
                 'influence': 0,
+                'trait': 'cultural',
                 'specialty': None
             }
         ]
     },
-    '34': {
+    34: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Centauri',
                 'resources': 1,
                 'influence': 3,
+                'trait': 'cultural',
                 'specialty': None
             },
             {
                 'name': 'Gral',
                 'resources': 1,
                 'influence': 1,
+                'trait': 'industrial',
                 'specialty': 'blue'
             }
         ]
     },
-    '35': {
+    35: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Bereg',
                 'resources': 3,
                 'influence': 1,
+                'trait': 'hazardous',
                 'specialty': None
             },
             {
                 'name': 'Lirta IV',
                 'resources': 2,
                 'influence': 3,
+                'trait': 'hazardous',
                 'specialty': None
             }
         ]
     },
-    '36': {
+    36: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Arnor',
                 'resources': 2,
                 'influence': 1,
+                'trait': 'industrial',
                 'specialty': None
             },
             {
                 'name': 'Lor',
                 'resources': 1,
                 'influence': 2,
+                'trait': 'industrial',
                 'specialty': None
             }
         ]
     },
-    '37': {
+    37: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Arinam',
                 'resources': 1,
                 'influence': 2,
+                'trait': 'industrial',
                 'specialty': None
             },
             {
                 'name': 'Meer',
                 'resources': 0,
                 'influence': 4,
+                'trait': 'hazardous',
                 'specialty': 'red'
             }
         ]
     },
-    '38': {
+    38: {
         'type': 'safe',
+        'wormhole': None,
         'planets': [
             {
                 'name': 'Abyz',
                 'resources': 3,
                 'influence': 0,
+                'trait': 'hazardous',
                 'specialty': None
             },
             {
                 'name': 'Fria',
                 'resources': 2,
                 'influence': 0,
+                'trait': 'hazardous',
                 'specialty': None
             }
         ]
     },
-    '39': {
-        'type': 'hazard',
+    39: {
+        'type': 'anomaly',
+        'wormhole': 'alpha',
+        'anomaly': None,
         'planets': [
         ]
     },
-    '40': {
-        'type': 'hazard',
+    40: {
+        'type': 'anomaly',
+        'wormhole': 'beta',
+        'anomaly': None,
         'planets': [
         ]
     },
-    '41': {
-        'type': 'hazard',
+    41: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': 'gravity-rift',
         'planets': [
         ]
     },
-    '42': {
-        'type': 'hazard',
+    42: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': 'nebula',
         'planets': [
         ]
     },
-    '43': {
-        'type': 'hazard',
+    43: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': 'supernova',
         'planets': [
         ]
     },
-    '44': {
-        'type': 'hazard',
+    44: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': 'asteroid-field',
         'planets': [
         ]
     },
-    '45': {
-        'type': 'hazard',
+    45: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': 'asteroid-field',
         'planets': [
         ]
     },
-    '46': {
-        'type': 'hazard',
+    46: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': None,
         'planets': [
         ]
     },
-    '47': {
-        'type': 'hazard',
+    47: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': None,
         'planets': [
         ]
     },
-    '48': {
-        'type': 'hazard',
+    48: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': None,
         'planets': [
         ]
     },
-    '49': {
-        'type': 'hazard',
+    49: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': None,
         'planets': [
         ]
     },
-    '50': {
-        'type': 'hazard',
+    50: {
+        'type': 'anomaly',
+        'wormhole': None,
+        'anomaly': None,
         'planets': [
+        ]
+    },
+    51: {
+        'type': 'home',
+        'wormhole': 'delta',
+        'planets': [
+            {
+                'name': 'Creuss',
+                'resources': 4,
+                'influence': 2,
+                'specialty': None
+            }
         ]
     },
 }
