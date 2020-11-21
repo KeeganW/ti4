@@ -1,12 +1,13 @@
-#!/usr/bin/env python
+"""
+TI4 Race Picker
 
-# TI4 Race Picker
-#
-# A quick tool to help with random selection of races for a more fair and balanced picking. To use, just replace the
-# players with the players from your game, and select a pair of random numbers to use as seeds for the RNG of race
-# and position selection.
-#
-# Created by KeeganW
+A quick tool to help with random selection of races for a more fair and balanced picking. To use,
+just replace the players with the players from your game, and select a pair of random numbers to use
+as seeds for the RNG of race and position selection.
+
+Created by KeeganW
+"""
+# !/usr/bin/env python
 
 import random
 
@@ -14,7 +15,7 @@ import random
 players = ["P1", "P2", "P3", "P4", "P5", "P6"]
 
 # Any races previously used (to be excluded to keep things interesting)
-exluded_races = []
+excluded_races = []
 
 # The seed to split races apart into equal groupings
 race_seed = 1
@@ -33,7 +34,7 @@ races = [
 ]
 
 
-def create_race_lists(player_count: int):
+def create_race_lists(player_count: int) -> list:
     """
     Generates a list of races evenly split amongst the number players playing in the game. Factors in any excluded races
     from being used.
@@ -43,7 +44,7 @@ def create_race_lists(player_count: int):
     """
     # Get the races that are being used this round
     r = races[:]
-    for race in exluded_races: r.remove(race)
+    for race in excluded_races: r.remove(race)
 
     # Randomize the races based on input seed
     random.seed(race_seed)
@@ -75,7 +76,7 @@ def get_player_races():
 
     # Generate the races for the players, then print out the results.
     for r in create_race_lists(len(p)):
-        print("%s (%d): %s" % (p[c], c+1, ", ".join(r)))
+        print("%s (%d): %s" % (p[c], c + 1, ", ".join(r)))
         c += 1
 
 
