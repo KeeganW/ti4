@@ -1,12 +1,15 @@
 """
 Data format:
 'tile number': {
-    'type': 'safe',  # Can be safe, hazard, home
+    'type': 'safe',  # Can be safe, anomaly, or home
+    'wormhole': 'alpha',  # Can be none, alpha, beta, or delta
+    'anomaly': None,  # The name of the anomaly. Can only exist in anomaly systems
     'planets': [  # Can be 0 to 3 planets on a tile
         {
-            'name': 'name',
-            'resources': 0,
-            'influence': 0,
+            'name': 'name',  # The name on the tile of this planet
+            'resources': 0,  # A resource value between 0 and 5
+            'influence': 0,  # A influence value between 0 and 6
+            'trait': 'industrial',  # Can be industrial, cultural, or hazardous
             'specialty': None  # Can be red, yellow, green, or blue
         }
     ]

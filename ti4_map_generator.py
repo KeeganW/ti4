@@ -5,8 +5,8 @@ clockwise fashion from there.
 """
 import random
 
-from boards_config import boards
-from tile_data import tiles
+from helpers.board_data import boards
+from helpers.tile_data import tiles
 
 
 class TI4Board:
@@ -21,26 +21,15 @@ class TI4Board:
     would again be at M-Rex's 12 o'clock position, but the second ring out. In the list, -1 means
     empty, and 0 means an unregistered home system.
     """
-    number_of_tiles = 37  # There are 37 tiles on the board, including M-Rex
-    ring_outer = 18  # The number of tiles on the outer ring
-    ring_middle = 10  # The number of tiles on the middle ring
-    ring_inner = 6  # The number of tiles on the inner ring
-    board_as_list = [-1] * number_of_tiles  # The board, initialized to -1s
-    possible_boards = boards  # All the boards that can be used
-    tile_data = tiles  # All the tile data
-    shuffle_boards_before_placement = True  # Whether the board priorities should be shuffled
-    possible_pick_styles = ['random', 'resource', 'influence', 'tas']  # For weighted picking tiles
-
     def __init__(self, player_count: int = 6) -> None:
-        # M-Rex is always in the middle
-        self.board_as_list[0] = 18
-
-        # Users can provide their given player counts
-        self.player_count = player_count
+        self.player_count = player_count  # Users can provide their given player counts
         self.board_style = 'normal'
         self.pick_style = 'random'
-
-        random.seed(0)
+        self.board_as_list = [-1] * 37  # The board, initialized to -1s (37 tiles on a board)
+        self.board_as_list[0] = 18  # M-Rex is always in the middle
+        self.shuffle_boards_before_placement = True  # The board priorities should be shuffled
+        self.possible_pick_styles = ['random', 'resource', 'influence', 'tas']
+        self.seed = 0
 
     def get_planet_indexes_to_place(self) -> list:
         """
@@ -48,9 +37,10 @@ class TI4Board:
 
         :return: A list of indexes
         """
-        primary = self.possible_boards[self.player_count][self.board_style]['primary_tiles']
-        secondary = self.possible_boards[self.player_count][self.board_style]['secondary_tiles']
-        tertiary = self.possible_boards[self.player_count][self.board_style]['tertiary_tiles']
+        # Don't need to deep copy, because we are only copying a list of ints
+        primary = boards[self.player_count][self.board_style]['primary_tiles'].copy()
+        secondary = boards[self.player_count][self.board_style]['secondary_tiles'].copy()
+        tertiary = boards[self.player_count][self.board_style]['tertiary_tiles'].copy()
 
         # If shuffling, we need to shuffle primary, secondary, and tertiary indexes.
         if self.shuffle_boards_before_placement:
@@ -73,7 +63,6 @@ class TI4Board:
         if self.pick_style == 'random':
             # Use true randomness to configure the tile placement
             random.shuffle(possible_planets)
-            return possible_planets
         if self.pick_style == 'resource':
             # Favor resources above all else. Medium distribution for other components.
             weights = {
@@ -85,7 +74,7 @@ class TI4Board:
                 'wormhole': 0.1
             }
 
-            return self.get_weighted_planet_list(possible_planets, weights)
+            possible_planets = self.get_weighted_planet_list(possible_planets, weights)
         if self.pick_style == 'influence':
             # Favor influence above all else. Medium distribution for other components.
             weights = {
@@ -97,7 +86,7 @@ class TI4Board:
                 'wormhole': 0.1
             }
 
-            return self.get_weighted_planet_list(possible_planets, weights)
+            possible_planets = self.get_weighted_planet_list(possible_planets, weights)
         if self.pick_style == 'tas':
             # A custom set of weights favored by the author and the author's playing group.
             weights = {
@@ -109,9 +98,17 @@ class TI4Board:
                 'wormhole': 0.1
             }
 
-            return self.get_weighted_planet_list(possible_planets, weights)
+            possible_planets = self.get_weighted_planet_list(possible_planets, weights)
+        return possible_planets
 
-    def get_weighted_planet_list(self, possible_planets, weights):
+    def get_weighted_planet_list(self, possible_planets: list, weights: dict) -> list:
+        """
+        Using a list of planets and a weighting metric, create an ordered list with higher weights
+        being first.
+        :param possible_planets: A list of planets from the planet list to evaluate
+        :param weights: A dictionary of ways to weight a planets values
+        :return: An ordered list of planets
+        """
         # Get every planet's weight using the provided weights
         planet_weights = list()
         for planet_tile_number in possible_planets:
@@ -125,9 +122,16 @@ class TI4Board:
             ordered_planets.append(weighted_planet[0])
         return ordered_planets
 
-    def get_weight(self, planet_tile_number, weights):
+    @staticmethod
+    def get_weight(planet_tile_number: int, weights: dict) -> int:
+        """
+        Using weight values, calculate a planet's weight using its listed values.
+        :param planet_tile_number: The tile number to reference against the tile data
+        :param weights: A dictionary of various weights to use to calculate overall weight
+        :return: An integer representing this tiles weight.
+        """
         total_weight = 0
-        tile = self.tile_data[planet_tile_number]
+        tile = tiles[planet_tile_number]
 
         for planet in tile['planets']:
             total_weight += planet['resources'] * weights['resource']
@@ -148,11 +152,15 @@ class TI4Board:
         Generates a TI4 board using the set parameters for this instance of the board.
         :return: The board as a list.
         """
+        random.seed(self.seed)
+
         # Get a list of planets to populate
         planet_indexes_to_place = self.get_planet_indexes_to_place()
+        print(planet_indexes_to_place)
 
         # Get an ordered list of planets to use to fill board with
         possible_planets = self.get_possible_planets()
+        print(possible_planets)
 
         # Place planets in a specific order, focusing on spreading the planets evenly
         for planet_index in planet_indexes_to_place:
@@ -160,8 +168,7 @@ class TI4Board:
             self.board_as_list[planet_index] = planet
 
         # Set home worlds to 0
-        for planet_index in \
-                self.possible_boards[self.player_count][self.board_style]['home_worlds']:
+        for planet_index in boards[self.player_count][self.board_style]['home_worlds']:
             self.board_as_list[planet_index] = 0
 
         return self.board_as_list
@@ -178,15 +185,25 @@ class TI4Board:
         Set the seeding of this instance.
         :param new_seed: The new seed to set the instance to.
         """
-        # Check that the new style is acceptable
-        random.seed(new_seed)
+        self.seed = new_seed
 
     def get_board_styles(self) -> list:
         """
         Get all the possible styles for a given player count.
         :return: A list of names of boards styles to play with
         """
-        return list(self.possible_boards[self.player_count].keys())
+        return list(boards[self.player_count].keys())
+
+    @staticmethod
+    def get_all_board_styles() -> dict:
+        """
+        Returns all board styles ordered by the player count.
+        :return: A dictionary of board styles
+        """
+        all_board_styles = {}
+        for players in [6, 5, 4, 3, 2]:
+            all_board_styles[str(players)] = list(boards[players].keys())
+        return all_board_styles
 
     def set_board_style(self, new_style: str) -> bool:
         """
@@ -195,7 +212,7 @@ class TI4Board:
         :return: True if set, False if not
         """
         # Check that the new style is acceptable
-        if new_style in self.possible_boards[self.player_count].keys():
+        if new_style in boards[self.player_count].keys():
             self.board_style = new_style
             return True
         return False
@@ -228,6 +245,21 @@ class TI4Board:
         if isinstance(shuffle_board, bool):
             self.shuffle_boards_before_placement = shuffle_board
         return self.shuffle_boards_before_placement
+
+    def set_player_count(self, player_count):
+        """
+        Set the player count to a new count
+        :param player_count:
+        :return:
+        """
+        if self.player_count in [6, 5, 4, 3, 2]:
+            self.player_count = player_count
+
+            # Reset the board style if needed
+            if self.board_style not in self.get_board_styles():
+                self.board_style = 'random'
+            return True
+        return False
 
     def __repr__(self) -> str:
         information = "A -1 means an empty system with no tile, " \
@@ -282,21 +314,21 @@ class TI4Board:
 
 if __name__ == '__main__':
     # Create a new board object with your desired player count
-    ti_board = TI4Board(player_count=6)
+    a_board = TI4Board(player_count=5)
 
     # Set the pick style for how planets are weighted to be placed
     #   (use get_pick_styles to see options)
-    ti_board.set_pick_style('random')
+    a_board.set_pick_style('resource')
 
     # Set the specific board layout to configure what spaces will be filled
     #   (use get_board_styles to see options)
-    ti_board.set_board_style('normal')
+    a_board.set_board_style('normal')
 
     # Set a specific seed to iterate over options, or work with your friends to find a board
-    ti_board.set_seed(1337)
+    a_board.set_seed(1337)
 
     # Generate the new board
-    ti_board.generate_new_board()
+    print(a_board.generate_new_board())
 
     # Print the board out to console to view tile placements
-    print(ti_board)
+    print(a_board)
