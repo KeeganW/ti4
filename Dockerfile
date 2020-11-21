@@ -14,4 +14,4 @@ COPY . /ti4-generator
 
 EXPOSE 80
 
-CMD ['python', 'ti4_generator.py']
+CMD ["python", "ti4_web.py"]
