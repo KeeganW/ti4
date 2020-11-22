@@ -11,12 +11,14 @@
 }
 
 /* Place the overview in the middle of the left div*/
-#overview {
+#mainContent {
     position: fixed;
     top: 0;
     left: 20%;
     width: 80%;
+    height: 100vh;
     text-align: center;
+    overflow: scroll;
 }
 
 /* Set the description below the overview */
@@ -57,8 +59,10 @@
     /* Slightly more left than 50% due to the options panel */
     left: 60%;
 }
-#maps {
-    min-height: 500px;
+
+img:hover {
+    outline: aqua 1px solid;
+    z-index: 1000;
 }
 
 /* Display certain maps based on browser size, so it fits on the page. */

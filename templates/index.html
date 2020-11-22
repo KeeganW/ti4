@@ -1,338 +1,410 @@
 <!doctype html>
 <html lang="en" class="h-100">
-<head>
-    {% block head %}
-    {% block meta %}
-    <meta charset="UTF-8">
-    <meta name="description" content="An application to generate a new game board map for TI4.">
-    <meta name="keywords" content="Twilight Imperium,TI4,Map,Board,Players,Generator">
-    <meta name="author" content="Keegan Williams">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% endblock %}
+    <head>
+        {% block head %}
+        {% block meta %}
+        <meta charset="UTF-8">
+        <meta name="description" content="An application to generate a new game board map for TI4.">
+        <meta name="keywords" content="Twilight Imperium,TI4,Map,Board,Players,Generator">
+        <meta name="author" content="Keegan Williams">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% endblock %}
 
-    <title>{% block title %}TI4 Generator{% endblock %}</title>
+        <title>{% block title %}TI4 Generator{% endblock %}</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
-    {% block css %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {% endblock %}
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='img/favicon.png') }}">
-    {% endblock %}
-</head>
-<body class="d-flex flex-column h-100">
-<header>
-</header>
-<main role="main" class="flex-shrink-0">
-    <div id="options">
-        <h2 class="text-center">Generation Options</h2>
-        <form id="generateForm" action="{{ url_for('.generate') }}">
-            <div class="form-group">
-                <label for="playerCount">Number of Players</label>
-                <select class="form-control" id="playerCount" name="player-count" onchange="updateBoardStyles()">
-                    {% for count in form_info.player_count %}
-                        <option value="{{ count }}">{{ count }}</option>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous">
+        {% block css %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        {% endblock %}
+        <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='img/favicon.png') }}">
+        {% endblock %}
+    </head>
+    <body class="d-flex flex-column h-100">
+        <header>
+        </header>
+        <main role="main" class="flex-shrink-0">
+            <div id="options">
+                <h2 class="text-center">Generation Options</h2>
+                <form id="generateForm" action="{{ url_for('.generate') }}">
+                    <div class="form-group">
+                        <label for="playerCount">Number of Players</label>
+                        <select class="form-control" id="playerCount" name="player-count" onchange="updateBoardStyles()">
+                            {% for count in form_info.player_count %}
+                                <option value="{{ count }}">{{ count }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pickStyle">Picking Style <img src="{{ url_for('static', filename='img/question-circle.svg') }}" class="more-info" alt="More Information" title="More Information" data-toggle="modal" data-target="#pickStyleModal"></label>
+                        <select class="form-control" id="pickStyle" name="pick-style">
+                            {% for style in form_info.pick_style %}
+                                <option value="{{ style }}">{{ style|capitalize }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="boardStyle">Board Style <img src="{{ url_for('static', filename='img/question-circle.svg') }}" class="more-info" alt="More Information" title="More Information" data-toggle="modal" data-target="#boardStyleModal"></label>
+                        <select class="form-control" id="boardStyle" name="board-style">
+                            {% for style in form_info.board_style %}
+                                <option value="{{ style }}">{{ style|capitalize }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="seed">Specific Seed</label>
+                        <input class="form-control" id="seed" name="seed" type="text" placeholder="" value="{{ form_info.seed }}">
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="shuffleBoards" name="shuffle-boards" {% if form_info.shuffle_boards == True %}checked{% endif %}>
+                        <label class="form-check-label" for="shuffleBoards">Randomize Priorities Before Placement</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Generate</button>
+                </form>
+                <h2 class="text-center m-4">or</h2>
+                <form id="tileForm">
+                    <div class="form-group">
+                        <label for="tileStringInput">Custom Tile String <img src="{{ url_for('static', filename='img/question-circle.svg') }}" class="more-info" alt="More Information" title="More Information" data-toggle="modal" data-target="#tileStringModal"></label>
+                        <textarea class="form-control" id="tileStringInput" rows="3" placeholder="Enter a tile string from a previous generation..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Display</button>
+                </form>
+            </div>
+            <div id="mainContent">
+                <div id="overview" class="justify-content-center">
+                    <h1>TI4 Board Generator</h1>
+                    <div id="description">
+                        <p>This tool is designed to help you pick out a Twilight Imperium 4 board to play your next game on. By using the customization options to the left, you can design and agree upon on a fair and balanced galaxy map before you even open the box to begin step. This helps cut down on game time and unlucky tile draws during traditional game setup. Hit "Generate" to view a randomly generated 6 player map, and get started customizing your own board!</p>
+                    </div>
+                </div>
+
+                <div id="map">
+                    {% for index in range(37) %}
+                        <div class="tile">
+                            <img id="tile-{{ index }}"
+                                 class="centered"
+                                    {# style="margin-left: {{ offsets_136[index][0] }}px; margin-top: {{ offsets_136[index][1] }}px;"#}
+                                 src=""
+                                 draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"
+                                    {# width="136" height="119"#}
+                                 alt=""
+                                 onerror="this.style.display='none'"
+                            />
+                        </div>
                     {% endfor %}
-                </select>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="pickStyle">Picking Style <img src="{{ url_for('static', filename='img/question-circle.svg') }}" class="more-info" alt="More Information" title="More Information" data-toggle="modal" data-target="#pickStyleModal"></label>
-                <select class="form-control" id="pickStyle" name="pick-style">
-                    {% for style in form_info.pick_style %}
-                        <option value="{{ style }}">{{ style|capitalize }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+{#            <div id="tileList" class="d-none">#}
+{#                <span id="tileString"></span>#}
+{#                <button id="copyClipboard" type="button" onclick="copyToClipboard('#tileString')" class="btn btn-light">#}
+{#                    <img src="{{ url_for('static', filename='img/clipboard-plus.svg') }}" alt="Copy to clipboard" width="26" height="26" title="Copy to clipboard">#}
+{#                </button>#}
+{#            </div>#}
 
-            <div class="form-group">
-                <label for="boardStyle">Board Style <img src="{{ url_for('static', filename='img/question-circle.svg') }}" class="more-info" alt="More Information" title="More Information" data-toggle="modal" data-target="#boardStyleModal"></label>
-                <select class="form-control" id="boardStyle" name="board-style">
-                    {% for style in form_info.board_style %}
-                        <option value="{{ style }}">{{ style|capitalize }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+            {% set id="pickStyleModal" %}
+            {% set title="About Pick Style" %}
+            {% set text='Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the board style) it is put closer to home worlds to facilitate availiable assets.
+                            <br>
+                            <br>Random: Tiles are completely randomly ordered. Expect chaotic and unbalanced maps.
+                            <br>Resource: Tiles are ordered primarily by their resource values. Higher resource planets are more coveted, and so are more important.
+                            <br>Influence: Similar to "resource", tiles are ordered primarily by their influence values.
+                            <br>Tas: A custom weight which favors resources above all else, but more accurately factors in tech specialties and influence as trade-offs to the "resource" pick.' %}
+            {% include "modal.html" %}
 
-            <div class="form-group">
-                <label for="seed">Specific Seed</label>
-                <input class="form-control" id="seed" name="seed" type="text" placeholder="" value="{{ form_info.seed }}">
-            </div>
+            {% set id="boardStyleModal" %}
+            {% set title="About Board Style" %}
+            {% set text='Board style is how the board is actually pictured. Changing this value would cause you to expect weighted tiles to be placed in certain positions, or some tiles not to be placed at all (especially in lower player counts). For example, 6-player "Normal" places important tiles closer to home worlds, while 6-player "Warzone" places the most valuable planets close to Mecatol Rex, forcing you to fight for your assets.' %}
+            {% include "modal.html" %}
 
-            <div class="form-check mb-3">
-                <input type="checkbox" class="form-check-input" id="shuffleBoards" name="shuffle-boards" {% if form_info.shuffle_boards == True %}checked{% endif %}>
-                <label class="form-check-label" for="shuffleBoards">Randomize Priorities Before Placement</label>
-            </div>
+            {% set id="tileStringModal" %}
+            {% set title="About Tile String" %}
+            {% set text='The custom tile string allows you to share board layouts with friends easily. Just copy your tile string from the bottom of the page or the text box below, and send it to your friends. When they are using this application, they can simply paste it in, and hit "Display" to view the board layout you created.' %}
+            {% include "modal.html" %}
+        </main>
+        <footer class="footer mt-auto py-3">
+        {#    {% block footer %}#}
+        {#    <div class="container">#}
+        {#        <span class="text-muted">&copy; 2020 by <a href="https://keeganwilliams.com">Keegan Williams</a></span>#}
+        {#    </div>#}
+        {#    {% endblock %}#}
+        </footer>
+        {% block bootstrap_scripts %}
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                crossorigin="anonymous">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous">
+        </script>
+        {% endblock %}
+        {% block scripts %}
+            <script>
+                var CURRENT_TILES = [];
+                var ZOOM = 1.0;
+                // Calculate the map
+                function scaleMap() {
+                    console.log("Resizing.")
+                    if (CURRENT_TILES.length <= 0) {
+                        return;
+                    }
 
-            <button type="submit" class="btn btn-primary">Generate</button>
-        </form>
-        <h2 class="text-center m-4">or</h2>
-        <form id="tileForm">
-            <div class="form-group">
-                <label for="tileStringInput">Custom Tile String <img src="{{ url_for('static', filename='img/question-circle.svg') }}" class="more-info" alt="More Information" title="More Information" data-toggle="modal" data-target="#tileStringModal"></label>
-                <textarea class="form-control" id="tileStringInput" rows="3" placeholder="Enter a tile string from a previous generation..."></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Display</button>
-        </form>
-    </div>
+                        // Get the various jquery selectors
+                    let mapContainer =  $("#mainContent");
+                    let map = $("#map");
+                    let tiles = $(".tile");
 
-    <div id="overview" class="justify-content-center">
-        <h1>TI4 Board Generator</h1>
-        <div id="description">
-            <p>This tool is designed to help you pick out a Twilight Imperium 4 board to play your next game on. By using the customization options to the left, you can design and agree upon on a fair and balanced galaxy map before you even open the box to begin step. This helps cut down on game time and unlucky tile draws during traditional game setup. Hit "Generate" to view a randomly generated 6 player map, and get started customizing your own board!</p>
-        </div>
-    </div>
+                    // Configuration options for magic numbers
+                    let mapPadding = 5;
+                    let mapNumberTilesHeight = 7;
+                    let mapNumberTilesWidth = 5.5;
+                    let mapTileWidth = 364; // The width of every tile in the static folder
+                    let mapTileHeight = 317;
 
-    <div id="maps">
-        <div id="map-46" class="">
-            {% for index in range(37) %}
-                <img id="46-{{ index }}"
-                     class="centered"
-                     style="margin-left: {{ offsets_46[index][0] }}px; margin-top: {{ offsets_46[index][1] }}px;"
-                     src=""
-                     draggable="true" ondragstart="drag(event)"
-                     ondrop="drop(event)" ondragover="allowDrop(event)"
-                     width="46" height="40"
-                     alt=""
-                     onerror="this.style.display='none'"
-                />
-            {% endfor %}
-        </div>
-        <div id="map-76" class="">
-            {% for index in range(37) %}
-                <img id="76-{{ index }}"
-                     class="centered"
-                     style="margin-left: {{ offsets_76[index][0] }}px; margin-top: {{ offsets_76[index][1] }}px;"
-                     src=""
-                     draggable="true" ondragstart="drag(event)"
-                     ondrop="drop(event)" ondragover="allowDrop(event)"
-                     width="76" height="66"
-                     alt=""
-                     onerror="this.style.display='none'"
-                />
-            {% endfor %}
-        </div>
-        <div id="map-106" class="">
-            {% for index in range(37) %}
-                <img id="106-{{ index }}"
-                     class="centered"
-                     style="margin-left: {{ offsets_106[index][0] }}px; margin-top: {{ offsets_106[index][1] }}px;"
-                     src=""
-                     draggable="true" ondragstart="drag(event)"
-                     ondrop="drop(event)" ondragover="allowDrop(event)"
-                     width="106" height="92"
-                     alt=""
-                     onerror="this.style.display='none'"
-                />
-            {% endfor %}
-        </div>
-        <div id="map-136" class="">
-            {% for index in range(37) %}
-                <img id="136-{{ index }}"
-                     class="centered"
-                     style="margin-left: {{ offsets_136[index][0] }}px; margin-top: {{ offsets_136[index][1] }}px;"
-                     src=""
-                     draggable="true" ondragstart="drag(event)"
-                     ondrop="drop(event)" ondragover="allowDrop(event)"
-                     width="136" height="119"
-                     alt=""
-                     onerror="this.style.display='none'"
-                />
-            {% endfor %}
-        </div>
-    </div>
+                    // Get extra information about the map
+                    let mapWidth = mapContainer.width() - (2 * mapPadding); // Put padding on either side of map
+                    let mapHeight = mapContainer.height() - (2 * mapPadding); // Put padding on either side of map
+                    let tileWidth = Math.floor(mapWidth / mapNumberTilesWidth)
+                    let tileHeight = Math.floor(mapHeight / mapNumberTilesHeight)
 
-    <div id="tileList" class="d-none">
-        <span id="tileString"></span>
-        <button id="copyClipboard" type="button" onclick="copyToClipboard('#tileString')" class="btn btn-light">
-            <img src="{{ url_for('static', filename='img/clipboard-plus.svg') }}" alt="Copy to clipboard" width="26" height="26" title="Copy to clipboard">
-        </button>
-    </div>
+                    // Determine which will be our constraining factor, width or height?
+                    let constraintWidth = ZOOM * Math.min(tileWidth, Math.floor((mapTileWidth / mapTileHeight) * tileHeight))
+                    let constraintHeight = Math.floor((mapTileHeight / mapTileWidth) * constraintWidth)
 
-    {% set id="pickStyleModal" %}
-    {% set title="About Pick Style" %}
-    {% set text='Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the board style) it is put closer to home worlds to facilitate availiable assets.
-                    <br>
-                    <br>Random: Tiles are completely randomly ordered. Expect chaotic and unbalanced maps.
-                    <br>Resource: Tiles are ordered primarily by their resource values. Higher resource planets are more coveted, and so are more important.
-                    <br>Influence: Similar to "resource", tiles are ordered primarily by their influence values.
-                    <br>Tas: A custom weight which favors resources above all else, but more accurately factors in tech specialties and influence as trade-offs to the "resource" pick.' %}
-    {% include "modal.html" %}
+                    map.css("width", constraintWidth * mapNumberTilesWidth)
+                       .css("height", constraintHeight * mapNumberTilesHeight);
 
-    {% set id="boardStyleModal" %}
-    {% set title="About Board Style" %}
-    {% set text='Board style is how the board is actually pictured. Changing this value would cause you to expect weighted tiles to be placed in certain positions, or some tiles not to be placed at all (especially in lower player counts). For example, 6-player "Normal" places important tiles closer to home worlds, while 6-player "Warzone" places the most valuable planets close to Mecatol Rex, forcing you to fight for your assets.' %}
-    {% include "modal.html" %}
 
-    {% set id="tileStringModal" %}
-    {% set title="About Tile String" %}
-    {% set text='The custom tile string allows you to share board layouts with friends easily. Just copy your tile string from the bottom of the page or the text box below, and send it to your friends. When they are using this application, they can simply paste it in, and hit "Display" to view the board layout you created.' %}
-    {% include "modal.html" %}
-</main>
-<footer class="footer mt-auto py-3">
-{#    {% block footer %}#}
-{#    <div class="container">#}
-{#        <span class="text-muted">&copy; 2020 by <a href="https://keeganwilliams.com">Keegan Williams</a></span>#}
-{#    </div>#}
-{#    {% endblock %}#}
-</footer>
-{% block bootstrap_scripts %}
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous">
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous">
-</script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous">
-</script>
-{% endblock %}
-{% block scripts %}
-<script>
-    $("#generateForm").submit(function(e) {
-        // Prevent normal submission of the page
-        e.preventDefault();
+                    function calculateOffsets() {
+                        console.log(constraintWidth);
+                        console.log(constraintHeight);
+                        let full_left = -constraintWidth
+                        let full_top = -constraintHeight
+                        let base_left = Math.ceil(full_left * 0.5)
+                        let base_top = Math.ceil(full_top * 0.5)
+                        let half_left = Math.ceil(full_left * 0.75)
 
-        // Get the form data
-        let form = $(this);
-        let url = form.attr('action');
+                        return [
+                            [base_left, base_top],  // Mecatol Rex
+                            // Inner ring
+                            [base_left, base_top + full_top],
+                            [base_left - half_left, base_top + base_top],
+                            [base_left - half_left, 0],
+                            [base_left, base_top - full_top],
+                            [base_left + half_left, 0],
+                            [base_left + half_left, base_top + base_top],
+                            // Middle ring
+                            [base_left, base_top + full_top + full_top],
+                            [base_left - half_left, base_top + full_top + base_top],
+                            [base_left - full_left - base_left, base_top + full_top],
+                            [base_left - full_left - base_left, base_top],
+                            [base_left - full_left - base_left, base_top - full_top],
+                            [base_left - half_left, base_top - full_top - base_top],
+                            [base_left, base_top - full_top - full_top],
+                            [base_left + half_left, base_top - full_top - base_top],
+                            [base_left + full_left + base_left, base_top - full_top],
+                            [base_left + full_left + base_left, base_top],
+                            [base_left + full_left + base_left, base_top + full_top],
+                            [base_left + half_left, base_top + full_top + base_top],
+                            // Outer Ring
+                            [base_left, base_top + full_top + full_top + full_top],
+                            [base_left - half_left, base_top + full_top + full_top + base_top],
+                            [base_left - full_left - base_left, base_top + full_top + full_top],
+                            [base_left - half_left - full_left - base_left, base_top + full_top + base_top],
+                            [base_left - half_left - full_left - base_left, base_top + base_top],
+                            [base_left - half_left - full_left - base_left, base_top - base_top],
+                            [base_left - half_left - full_left - base_left, base_top - full_top - base_top],
+                            [base_left - full_left - base_left, base_top - full_top - full_top],
+                            [base_left - half_left, base_top - full_top - full_top - base_top],
+                            [base_left, base_top - full_top - full_top - full_top],
+                            [base_left + half_left, base_top - full_top - full_top - base_top],
+                            [base_left + full_left + base_left, base_top - full_top - full_top],
+                            [base_left + half_left + full_left + base_left, base_top - full_top - base_top],
+                            [base_left + half_left + full_left + base_left, base_top - base_top],
+                            [base_left + half_left + full_left + base_left, base_top + base_top],
+                            [base_left + half_left + full_left + base_left, base_top + full_top + base_top],
+                            [base_left + full_left + base_left, base_top + full_top + full_top],
+                            [base_left + half_left, base_top + full_top + full_top + base_top]
+                        ]
+                    }
 
-        // Make ajax call to generate
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: form.serialize(),
-            success: function (response) {
-                // Render the tiles to the screen
-                renderTiles(response)
-            },
-            error: function (response) {
-                console.log("Error...")
-                console.log(response)
+                    // Calculate the offset values for margin left and margin top per tile
+                    let offsets = calculateOffsets()
+
+                    // Loop over offsets, assigning them to the tiles as margin-left and margin-top
+                    for (let tileNumber = 0; tileNumber < offsets.length; tileNumber++) {
+                        let tile = $("#tile-" + tileNumber);
+                        tile.attr("src", "{{ url_for('static', filename='img/tiles/') }}ST_" + CURRENT_TILES[tileNumber] + ".png")
+                            .attr("width", constraintWidth)
+                            .attr("height", constraintHeight)
+                            .css("margin-left", offsets[tileNumber][0])
+                            .css("margin-top", offsets[tileNumber][1])
+                            .css('display', 'block')
+                    }
+                }
+
+                // Trigger on resize and ready
+                window.onresize = scaleMap;
+                $( document ).ready(function() {
+                    scaleMap();
+                });
+            </script>
+        <script>
+            $("#generateForm").submit(function(e) {
+                // Prevent normal submission of the page
+                e.preventDefault();
+
+                // Get the form data
+                let form = $(this);
+                let url = form.attr('action');
+
+                // Make ajax call to generate
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    success: function (response) {
+                        // Render the tiles to the screen
+                        renderTiles(response)
+                    },
+                    error: function (response) {
+                        console.log("Error...")
+                        console.log(response)
+                    }
+                });
+            });
+
+            function updateBoardStyles(){
+                // Get the possible board styles at load time
+                let boardStyles = {{ all_board_styles|tojson }};
+
+                // Clear the current select
+                $("#boardStyle").html("")
+
+                // Add in new options from boardStyles
+                for (let styleIndex in boardStyles[$("#playerCount").val()]) {
+                    let style = boardStyles[$("#playerCount").val()][styleIndex]
+                    $("#boardStyle").append(
+                        "<option value=\"" + style + "\">" + style.charAt(0).toUpperCase() + style.slice(1) + "</option>"
+                    )
+                }
             }
-        });
-    });
 
-    function updateBoardStyles(){
-        // Get the possible board styles at load time
-        let boardStyles = {{ all_board_styles|tojson }};
+            $("#tileForm").submit(function(e) {
+                // Prevent normal submission of the page
+                e.preventDefault();
 
-        // Clear the current select
-        $("#boardStyle").html("")
+                // Get the tile string from the user
+                let tiles = $('#tileStringInput').val()
 
-        // Add in new options from boardStyles
-        for (let styleIndex in boardStyles[$("#playerCount").val()]) {
-            let style = boardStyles[$("#playerCount").val()][styleIndex]
-            $("#boardStyle").append(
-                "<option value=\"" + style + "\">" + style.charAt(0).toUpperCase() + style.slice(1) + "</option>"
-            )
-        }
-    }
+                // TODO validate tile input
 
-    $("#tileForm").submit(function(e) {
-        // Prevent normal submission of the page
-        e.preventDefault();
+                // Remove any spaces
+                tiles = tiles.replaceAll(" ", "")
 
-        // Get the tile string from the user
-        let tiles = $('#tileStringInput').val()
+                // Try to convert to a list of tiles
+                if (tiles.charAt(0) === "[") {
+                    tiles = tiles.substring(1, tiles.length);
+                }
+                if (tiles.charAt(tiles.length - 1) === "]") {
+                    tiles = tiles.substring(0, tiles.length-1);
+                }
+                tiles = tiles.split(',').map( Number );
 
-        // TODO validate tile input
+                // Render the tiles to the screen
+                renderTiles(tiles)
+            });
 
-        // Remove any spaces
-        tiles = tiles.replaceAll(" ", "")
+            function renderTiles(tiles) {
+                CURRENT_TILES = tiles;
+                scaleMap();
+                {#for (let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {#}
+                {#    $("#136-" + tileIndex).attr("src", "{{ url_for('static', filename='img/tiles/') }}ST_" + tiles[tileIndex] + ".png").css('display', 'block')#}
+                {#    $("#106-" + tileIndex).attr("src", "{{ url_for('static', filename='img/tiles/') }}ST_" + tiles[tileIndex] + ".png").css('display', 'block')#}
+                {#    $("#76-" + tileIndex).attr("src", "{{ url_for('static', filename='img/tiles/') }}ST_" + tiles[tileIndex] + ".png").css('display', 'block')#}
+                {#    $("#46-" + tileIndex).attr("src", "{{ url_for('static', filename='img/tiles/') }}ST_" + tiles[tileIndex] + ".png").css('display', 'block')#}
+                {# }#}
 
-        // Try to convert to a list of tiles
-        if (tiles.charAt(0) === "[") {
-            tiles = tiles.substring(1, tiles.length);
-        }
-        if (tiles.charAt(tiles.length - 1) === "]") {
-            tiles = tiles.substring(0, tiles.length-1);
-        }
-        tiles = tiles.split(',').map( Number );
+                // Show hidden things
+                {#$("#tileList").removeClass("d-none")#}
+                $("#overview").addClass("d-none")
 
-        // Render the tiles to the screen
-        renderTiles(tiles)
-    });
+                // Add the tile string to various places
+                {#$("#tileString").text(JSON.stringify(tiles))#}
+                $("#tileStringInput").text(JSON.stringify(tiles))
+            }
+        </script>
+        <script>
+            function copyToClipboard(element) {
+                var $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val($(element).text()).select();
+                document.execCommand("copy");
+                $temp.remove();
+            }
+        </script>
+        <script>
+            function allowDrop(ev) {
+                ev.preventDefault();
+            }
 
-    function renderTiles(tiles) {
-        for (let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
-            $("#136-" + tileIndex).attr("src", "{{ url_for('static', filename='img/tiles/') }}ST_" + tiles[tileIndex] + ".png").css('display', 'block')
-            $("#106-" + tileIndex).attr("src", "{{ url_for('static', filename='img/tiles/') }}ST_" + tiles[tileIndex] + ".png").css('display', 'block')
-            $("#76-" + tileIndex).attr("src", "{{ url_for('static', filename='img/tiles/') }}ST_" + tiles[tileIndex] + ".png").css('display', 'block')
-            $("#46-" + tileIndex).attr("src", "{{ url_for('static', filename='img/tiles/') }}ST_" + tiles[tileIndex] + ".png").css('display', 'block')
-        }
+            function drag(ev) {
+                ev.dataTransfer.setData("text", ev.target.id);
+            }
 
-        // Show hidden things
-        $("#tileList").removeClass("d-none")
-        $("#overview").addClass("d-none")
+            function drop(ev) {
+                ev.preventDefault();
+                // Get the associated ids
+                let fromId = ev.dataTransfer.getData("text");
+                let targetId = ev.target.id;
 
-        // Add the tile string to various places
-        $("#tileString").text(JSON.stringify(tiles))
-        $("#tileStringInput").text(JSON.stringify(tiles))
-    }
-</script>
-<script>
-    function copyToClipboard(element) {
-        var $temp = $("<input>");
-        $("body").append($temp);
-        $temp.val($(element).text()).select();
-        document.execCommand("copy");
-        $temp.remove();
-    }
-</script>
-<script>
-    function allowDrop(ev) {
-        ev.preventDefault();
-    }
+                // Temporarily store the target's source
+                let targetSource = $("#" + targetId).attr('src');
 
-    function drag(ev) {
-        ev.dataTransfer.setData("text", ev.target.id);
-    }
+                // Swap the sources
+                $("#" + targetId).attr('src', $("#" + fromId).attr('src'));
+                $("#" + fromId).attr('src', targetSource);
 
-    function drop(ev) {
-        ev.preventDefault();
-        // Get the associated ids
-        let fromId = ev.dataTransfer.getData("text");
-        let targetId = ev.target.id;
+                // Update the tile string
+                let tiles = $("#tileString").text();
 
-        // Temporarily store the target's source
-        let targetSource = $("#" + targetId).attr('src');
+                // Remove any spaces
+                tiles = tiles.replaceAll(" ", "")
 
-        // Swap the sources
-        $("#" + targetId).attr('src', $("#" + fromId).attr('src'));
-        $("#" + fromId).attr('src', targetSource);
+                // Try to convert to a list of tiles
+                if (tiles.charAt(0) === "[") {
+                    tiles = tiles.substring(1, tiles.length);
+                }
+                if (tiles.charAt(tiles.length - 1) === "]") {
+                    tiles = tiles.substring(0, tiles.length-1);
+                }
+                tiles = tiles.split(',').map( Number );
 
-        // Update the tile string
-        let tiles = $("#tileString").text();
+                // TODO change ALL maps, not just the current one
 
-        // Remove any spaces
-        tiles = tiles.replaceAll(" ", "")
+                let firstIndex = targetId.split("-")[1]
+                let secondIndex = fromId.split("-")[1]
+                let temp = tiles[firstIndex];
+                tiles[firstIndex] = tiles[secondIndex];
+                tiles[secondIndex] = temp;
 
-        // Try to convert to a list of tiles
-        if (tiles.charAt(0) === "[") {
-            tiles = tiles.substring(1, tiles.length);
-        }
-        if (tiles.charAt(tiles.length - 1) === "]") {
-            tiles = tiles.substring(0, tiles.length-1);
-        }
-        tiles = tiles.split(',').map( Number );
+                $("#tileString").text(JSON.stringify(tiles))
+                $("#tileStringInput").text(JSON.stringify(tiles))
 
-        let firstIndex = targetId.split("-")[1]
-        let secondIndex = fromId.split("-")[1]
-        let temp = tiles[firstIndex];
-        tiles[firstIndex] = tiles[secondIndex];
-        tiles[secondIndex] = temp;
+            }
+        </script>
+        {% endblock %}
 
-        $("#tileString").text(JSON.stringify(tiles))
-        $("#tileStringInput").text(JSON.stringify(tiles))
-
-    }
-</script>
-{% endblock %}
-
-</body>
+    </body>
 </html>
