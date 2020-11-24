@@ -20,6 +20,11 @@
         {% endblock %}
         <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='img/favicon.png') }}">
         {% endblock %}
+        <link rel="preload" href="{{ url_for('static', filename='img/tiles/ST_0.png') }}" as="image">
+        {% for tile_num in range(18,50) %}
+            <link rel="preload" href="{{ url_for('static', filename='img/tiles/ST_' + tile_num|string + '.png') }}" as="image">
+        {% endfor %}
+
     </head>
     <body class="d-flex flex-column h-100">
         <header>
