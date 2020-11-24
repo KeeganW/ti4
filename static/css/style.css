@@ -51,18 +51,38 @@
     padding-bottom: 3px;
 }
 
-/* Always position the map images in the middle of the screen.
-    Use margin-left and right to position exactly. */
-.centered {
-    position: fixed;
+/* Make map positioned centered relative to enclosing container. */
+.center-map {
+    position: absolute;
     top: 50%;
-    /* Slightly more left than 50% due to the options panel */
-    left: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.center-map-horizontal {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+.center-map-vertical {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
 }
 
-img:hover {
-    outline: aqua 1px solid;
+#zoomButtons {
+    position: fixed;
+    top: 50px;
+    right: 17px; /* Avoid the scroll bar */
     z-index: 1000;
+}
+#zoomButtons .btn:focus {
+    box-shadow: none;
+}
+
+/* Always position the map images relative to the map container.
+    Use margin-left and right to position exactly. */
+.tile {
+    position: absolute;
 }
 
 /* Display certain maps based on browser size, so it fits on the page. */
