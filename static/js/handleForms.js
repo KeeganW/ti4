@@ -68,3 +68,20 @@ tileForm.submit(function(e) {
     // Render the tiles from the tileStringInput
     renderTiles(validateTiles(tileStringInput.val()))
 });
+
+/**
+ * Allow for the toggling of options from the hamburger menu. Changes the options display and how
+ * the map is rendered. Redraws map in case the map can now fit in the middle of the screen.
+ */
+$("#toggleOptions").click(function () {
+    optionsContainer.toggle()
+    if (optionsContainer.css("display") === "none") {
+        mapContainer.addClass("w-100")
+        mapContainer.addClass("l-0")
+        drawMap();
+    } else {
+        mapContainer.removeClass("w-100")
+        mapContainer.removeClass("l-0")
+        drawMap();
+    }
+})

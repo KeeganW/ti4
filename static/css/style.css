@@ -9,6 +9,16 @@
     overflow: scroll;
     padding: 10px;
 }
+#toggleOptions {
+    position: fixed;
+    top:0;
+    left:0;
+    z-index: 1002;
+}
+
+.l-0 {
+    left: 0!important;
+}
 
 /* Place the overview in the middle of the left div*/
 #mainContent {
@@ -86,25 +96,40 @@
 }
 
 /* Display certain maps based on browser size, so it fits on the page. */
-#map-46 { display: none; }
-#map-76 { display: none; }
-#map-106 { display: none; }
-#map-136 { display: block; }
+@media screen and (max-width: 1000px) {
+    #options {
+        width: 40%;
+    }
+    #mainContent {
+        left: 40%;
+        width: 60%;
+    }
+}
+@media screen and (max-width: 700px) {
+    #options {
+        width: 50%;
+    }
+    #mainContent {
+        left: 50%;
+        width: 50%;
+    }
+}
+@media screen and (max-width: 500px) {
+    /* Trigger hamburger menu */
+    #options {
+        display: none;
+        width: 100%;
+        z-index: 1001;
+    }
+    #mainContent {
+        left: 0;
+        width: 100%;
+    }
+}
+
 @media screen and (max-width: 1000px), (max-height: 900px) {
-    #map-46 { display: none; }
-    #map-76 { display: none; }
-    #map-106 { display: block; }
-    #map-136 { display: none; }
 }
 @media screen and (max-width: 700px), (max-height: 720px) {
-    #map-46 { display: none; }
-    #map-76 { display: block; }
-    #map-106 { display: none; }
-    #map-136 { display: none; }
 }
 @media screen and (max-width: 500px), (max-height: 540px) {
-    #map-46 { display: block; }
-    #map-76 { display: none; }
-    #map-106 { display: none; }
-    #map-136 { display: none; }
 }

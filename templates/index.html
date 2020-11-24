@@ -30,6 +30,10 @@
         <header>
         </header>
         <main role="main" class="flex-shrink-0">
+            <button type="button" id="toggleOptions" class="btn btn-danger">
+                <div>☰</div>
+{#                <div class="d-none">X</div>#}
+            </button>
             <div id="options">
                 <h2 class="text-center">Generation Options</h2>
                 <form id="generateForm" action="{{ url_for('.generate') }}">
@@ -168,6 +172,7 @@
                 // Get the various jquery selectors
                 let overview = $("#overview");
                 let mapContainer =  $("#mainContent");
+                let optionsContainer =  $("#options");
                 let map = $("#map");
                 let generateForm = $("#generateForm");
                 let playerCount = $("#playerCount");
