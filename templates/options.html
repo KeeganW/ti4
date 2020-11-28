@@ -12,19 +12,6 @@
     </div>
 
     <div class="form-group">
-        <label for="pickStyle" class="d-flex">Picking Style
-            <svg class="icon" data-toggle="modal" data-target="#pickStyleModal">
-                <use xlink:href="#question-circle"/>
-            </svg>
-        </label>
-        <select class="form-control" id="pickStyle" name="pick-style">
-            {% for style in form_info.pick_style %}
-                <option value="{{ style }}">{{ style|capitalize }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="form-group">
         <label for="boardStyle" class="d-flex">Board Style
             <svg class="icon" data-toggle="modal" data-target="#boardStyleModal">
                 <use xlink:href="#question-circle"/>
@@ -32,6 +19,19 @@
         </label>
         <select class="form-control" id="boardStyle" name="board-style">
             {% for style in form_info.board_style %}
+                <option value="{{ style }}">{{ style|capitalize }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="pickStyle" class="d-flex">Picking Style
+            <svg class="icon" data-toggle="modal" data-target="#pickStyleModal">
+                <use xlink:href="#question-circle"/>
+            </svg>
+        </label>
+        <select class="form-control" id="pickStyle" name="pick-style">
+            {% for style in form_info.pick_style %}
                 <option value="{{ style }}">{{ style|capitalize }}</option>
             {% endfor %}
         </select>
