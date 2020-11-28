@@ -70,6 +70,11 @@
             {% set title="About Tile String" %}
             {% set text='The custom tile string allows you to share board layouts with friends easily. Just copy your tile string from the bottom of the page or the text box below, and send it to your friends. When they are using this application, they can simply paste it in, and hit "Display" to view the board layout you created.' %}
             {% include "modal.html" %}
+
+            {% set id="shuffleBoardsModal" %}
+            {% set title="About Shuffle Boards" %}
+            {% set text='When using the priority queues of important planets per player, activating this will shuffle who gets first pick from the set of tiles. If unactivated, then tiles are picked in double-back style order. For the primary tiles, Player 1 gets first pick, and the last player gets last pick. After the first round of placements is complete, the person who had last pick gets first pick, and the round continues in reverse pick order. Proceed using this double-back picking strategy until the board is filled.' %}
+            {% include "modal.html" %}
         </main>
 
         {% block bootstrap_scripts %}
