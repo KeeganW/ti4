@@ -59,7 +59,7 @@ class TI4Board:
         If you add a pick style, make sure to add it to self.possible_pick_styles!
         :return: An ordered list of tiles to add to the board.
         """
-        possible_planets = list(range(19, 50))  # M-Rex through all anomalies
+        possible_planets = list(range(19, 51))  # M-Rex through all anomalies
         if self.pick_style == 'random':
             # Use true randomness to configure the tile placement
             random.shuffle(possible_planets)
@@ -156,11 +156,9 @@ class TI4Board:
 
         # Get a list of planets to populate
         planet_indexes_to_place = self.get_planet_indexes_to_place()
-        print(planet_indexes_to_place)
 
         # Get an ordered list of planets to use to fill board with
         possible_planets = self.get_possible_planets()
-        print(possible_planets)
 
         # Place planets in a specific order, focusing on spreading the planets evenly
         for planet_index in planet_indexes_to_place:
