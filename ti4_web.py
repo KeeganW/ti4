@@ -69,77 +69,9 @@ def create_application():
 
         all_board_styles = ti_board.get_all_board_styles()
 
-        # Generate a new set of offsets
-        offsets_46 = calculate_offsets(46)  # Height is 40
-        offsets_76 = calculate_offsets(76)  # Height is 66
-        offsets_106 = calculate_offsets(106)  # Height is 92
-        offsets_136 = calculate_offsets(136)  # Height is 119
-
         return render_template('index.html',
                                form_info=form_info,
-                               all_board_styles=all_board_styles,
-                               offsets_46=offsets_46,
-                               offsets_76=offsets_76,
-                               offsets_106=offsets_106,
-                               offsets_136=offsets_136)
-
-    def calculate_offsets(image_width: int) -> list:
-        """
-        Calculates the various x/y offsets given an image width, using the 317hx364w ratio that
-        images in static/img/tiles use.
-        :param image_width: The width of the image
-        :return: A list of tuple offsets organized by tile number 37 long
-        """
-        image_height = int(317 / 364 * image_width)
-        full_left = -image_width
-        full_top = -image_height
-        base_left = int(full_left * 0.5)
-        base_top = int(full_top * 0.5)
-        half_left = int(full_left * 0.75)
-
-        offsets = [
-            (base_left, base_top),  # Mecatol Rex
-            # Inner ring
-            (base_left, base_top + full_top),
-            (base_left - half_left, base_top + base_top),
-            (base_left - half_left, 0),
-            (base_left, base_top - full_top),
-            (base_left + half_left, 0),
-            (base_left + half_left, base_top + base_top),
-            # Middle ring
-            (base_left, base_top + full_top + full_top),
-            (base_left - half_left, base_top + full_top + base_top),
-            (base_left - full_left - base_left, base_top + full_top),
-            (base_left - full_left - base_left, base_top),
-            (base_left - full_left - base_left, base_top - full_top),
-            (base_left - half_left, base_top - full_top - base_top),
-            (base_left, base_top - full_top - full_top),
-            (base_left + half_left, base_top - full_top - base_top),
-            (base_left + full_left + base_left, base_top - full_top),
-            (base_left + full_left + base_left, base_top),
-            (base_left + full_left + base_left, base_top + full_top),
-            (base_left + half_left, base_top + full_top + base_top),
-            # Outer Ring
-            (base_left, base_top + full_top + full_top + full_top),
-            (base_left - half_left, base_top + full_top + full_top + base_top),
-            (base_left - full_left - base_left, base_top + full_top + full_top),
-            (base_left - half_left - full_left - base_left, base_top + full_top + base_top),
-            (base_left - half_left - full_left - base_left, base_top + base_top),
-            (base_left - half_left - full_left - base_left, base_top - base_top),
-            (base_left - half_left - full_left - base_left, base_top - full_top - base_top),
-            (base_left - full_left - base_left, base_top - full_top - full_top),
-            (base_left - half_left, base_top - full_top - full_top - base_top),
-            (base_left, base_top - full_top - full_top - full_top),
-            (base_left + half_left, base_top - full_top - full_top - base_top),
-            (base_left + full_left + base_left, base_top - full_top - full_top),
-            (base_left + half_left + full_left + base_left, base_top - full_top - base_top),
-            (base_left + half_left + full_left + base_left, base_top - base_top),
-            (base_left + half_left + full_left + base_left, base_top + base_top),
-            (base_left + half_left + full_left + base_left, base_top + full_top + base_top),
-            (base_left + full_left + base_left, base_top + full_top + full_top),
-            (base_left + half_left, base_top + full_top + full_top + base_top)
-        ]
-        return offsets
+                               all_board_styles=all_board_styles)
 
     @app.route("/generate/", methods=['POST'])
     def generate() -> json:

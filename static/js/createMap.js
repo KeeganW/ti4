@@ -25,8 +25,8 @@ function drawMap() {
     let constraintHeight = Math.floor((mapTileHeight / mapTileWidth) * constraintWidth)
 
     // Configure the map container to be this size
-    map.css("width", constraintWidth * mapNumberTilesWidth)
-        .css("height", constraintHeight * mapNumberTilesHeight);
+    tiMap.css("width", constraintWidth * mapNumberTilesWidth)
+         .css("height", constraintHeight * mapNumberTilesHeight);
 
     /**
      * Calculate offsets of the tiles in relation to Mecatol Rex (the center tile). This information
@@ -107,24 +107,26 @@ function drawMap() {
     zoomButtons.removeClass("d-none")
 
     // Clear any css classes on the map
-    map.removeClass("center-map")
-    map.removeClass("center-map-vertical")
-    map.removeClass("center-map-horizontal")
+    tiMap.removeClass("center-map")
+    tiMap.removeClass("center-map-vertical")
+    tiMap.removeClass("center-map-horizontal")
 
     // Check to see if we are zoomed, or map is always screen size.
     if (zoom > 1.0) {
         // Check to see if we should still be horizontally or vertically centered
         if ((constraintWidth * mapNumberTilesWidth) < mapWidth) {
-            map.addClass("center-map-horizontal")
+            tiMap.addClass("center-map-horizontal")
         } else if ((constraintHeight * mapNumberTilesHeight) < mapHeight) {
-            map.addClass("center-map-vertical")
+            tiMap.addClass("center-map-vertical")
+        } else {
+            // Use default map values
         }
 
         // Center Mecatol Rex on the screen
         $("#tile-0").get(0).scrollIntoView({behavior: "smooth", block:"center", inline: "center"});
     } else {
         // No need to move the map around, just center it on the screen
-        map.addClass("center-map")
+        tiMap.addClass("center-map")
     }
 }
 

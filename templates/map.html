@@ -1,0 +1,37 @@
+<div id="overview" class="justify-content-center">
+    <div class="title">
+        <h2>TI4 Board Generator</h2>
+    </div>
+    <div id="description">
+        <p>This tool is designed to help you pick out a Twilight Imperium 4 board to play your next game on. By using the customization options to the right, you can design and agree upon on a fair and balanced galaxy map before you even open the box to begin setup. This helps cut down on game time and unlucky tile draws during traditional game setup. Hit "Generate" to view a randomly generated 6 player map, and drag and drop tiles to get started customizing your own board!</p>
+    </div>
+</div>
+
+<div id="tiMap" class="map">
+    {% for index in range(37) %}
+        <div class="tile-wrapper">
+            <img id="tile-{{ index }}"
+                 class="tile"
+                    {# style="margin-left: {{ offsets_136[index][0] }}px; margin-top: {{ offsets_136[index][1] }}px;"#}
+                 src=""
+                 draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"
+                    {# width="136" height="119"#}
+                 alt=""
+                 onerror="this.style.display='none'"
+            />
+        </div>
+    {% endfor %}
+</div>
+
+<div id="zoomButtons" class="d-none btn-group-justified btn-group-sm btn-group-vertical">
+    <button class="btn btn-primary" id="zoomPlus">
+        <svg class="icon">
+            <use xlink:href="#plus"/>
+        </svg>
+    </button>
+    <button class="btn btn-primary" id="zoomMinus">
+        <svg class="icon">
+            <use xlink:href="#dash"/>
+        </svg>
+    </button>
+</div>

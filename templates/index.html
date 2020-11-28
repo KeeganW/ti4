@@ -2,121 +2,54 @@
 <html lang="en" class="h-100">
     <head>
         {% block head %}
-        {% block meta %}
-        <meta charset="UTF-8">
-        <meta name="description" content="An application to generate a new game board map for TI4.">
-        <meta name="keywords" content="Twilight Imperium,TI4,Map,Board,Players,Generator">
-        <meta name="author" content="Keegan Williams">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {% endblock %}
+            {% block meta %}
+                <meta charset="UTF-8">
+                <meta name="description" content="An application to generate a new game board map for TI4.">
+                <meta name="keywords" content="Twilight Imperium,TI4,Map,Board,Players,Generator">
+                <meta name="author" content="Keegan Williams">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            {% endblock %}
 
-        <title>{% block title %}TI4 Generator{% endblock %}</title>
+            <title>{% block title %}TI4 Map Generator{% endblock %}</title>
 
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-              crossorigin="anonymous">
-        {% block css %}
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-        {% endblock %}
-        <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='img/favicon.png') }}">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+                  crossorigin="anonymous">
+            <link rel="preconnect" href="https://fonts.gstatic.com">
+            <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+            <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='img/favicon.png') }}">
+
+            {% block css %}
+                <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+            {% endblock %}
         {% endblock %}
         <link rel="preload" href="{{ url_for('static', filename='img/tiles/ST_0.png') }}" as="image">
         {% for tile_num in range(18,50) %}
             <link rel="preload" href="{{ url_for('static', filename='img/tiles/ST_' + tile_num|string + '.png') }}" as="image">
         {% endfor %}
-
     </head>
+
     <body class="d-flex flex-column h-100">
-        <header>
-        </header>
+        {% include "bootstrap-icons.svg" %}
+
         <main role="main" class="flex-shrink-0">
+            <div class="controls btn-group-justified btn-group-sm ">
+                <button type="button" id="toggleOptions" class="btn btn-primary">
+                    <svg class="icon icon-contract">
+                        <use xlink:href="#arrow-bar-right"/>
+                    </svg>
+                    <svg class="icon icon-expand">
+                        <use xlink:href="#arrow-bar-left"/>
+                    </svg>
+                </button>
+
+            </div>
             <div id="options">
-                <h2 class="text-center">Generation Options</h2>
-                <form id="generateForm" action="{{ url_for('.generate') }}">
-                    <div class="form-group">
-                        <label for="playerCount">Number of Players</label>
-                        <select class="form-control" id="playerCount" name="player-count">
-                            {% for count in form_info.player_count %}
-                                <option value="{{ count }}">{{ count }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="pickStyle">Picking Style <img src="{{ url_for('static', filename='img/question-circle.svg') }}" class="more-info" alt="More Information" title="More Information" data-toggle="modal" data-target="#pickStyleModal"></label>
-                        <select class="form-control" id="pickStyle" name="pick-style">
-                            {% for style in form_info.pick_style %}
-                                <option value="{{ style }}">{{ style|capitalize }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="boardStyle">Board Style <img src="{{ url_for('static', filename='img/question-circle.svg') }}" class="more-info" alt="More Information" title="More Information" data-toggle="modal" data-target="#boardStyleModal"></label>
-                        <select class="form-control" id="boardStyle" name="board-style">
-                            {% for style in form_info.board_style %}
-                                <option value="{{ style }}">{{ style|capitalize }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="seed">Specific Seed</label>
-                        <input class="form-control" id="seed" name="seed" type="text" placeholder="" value="{{ form_info.seed }}">
-                    </div>
-
-                    <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input" id="shuffleBoards" name="shuffle-boards" {% if form_info.shuffle_boards == True %}checked{% endif %}>
-                        <label class="form-check-label" for="shuffleBoards">Randomize Priorities Before Placement</label>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Generate</button>
-                </form>
-                <h2 class="text-center m-4">or</h2>
-                <form id="tileForm">
-                    <div class="form-group">
-                        <label for="tileStringInput">Custom Tile String <img src="{{ url_for('static', filename='img/question-circle.svg') }}" class="more-info" alt="More Information" title="More Information" data-toggle="modal" data-target="#tileStringModal"></label>
-                        <textarea class="form-control" id="tileStringInput" rows="3" placeholder="Enter a tile string from a previous generation..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Display</button>
-                </form>
+                {% include "options.html" %}
             </div>
             <div id="mainContent" class="justify-content-center align-items-center">
-                <div id="overview" class="justify-content-center">
-                    <h1>TI4 Board Generator</h1>
-                    <div id="description">
-                        <p>This tool is designed to help you pick out a Twilight Imperium 4 board to play your next game on. By using the customization options to the left, you can design and agree upon on a fair and balanced galaxy map before you even open the box to begin step. This helps cut down on game time and unlucky tile draws during traditional game setup. Hit "Generate" to view a randomly generated 6 player map, and drag and drop tiles to get started customizing your own board!</p>
-                    </div>
-                </div>
-
-                <div id="map" class="center-map">
-                    {% for index in range(37) %}
-                        <div class="tile-wrapper">
-                            <img id="tile-{{ index }}"
-                                 class="tile"
-                                    {# style="margin-left: {{ offsets_136[index][0] }}px; margin-top: {{ offsets_136[index][1] }}px;"#}
-                                 src=""
-                                 draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"
-                                    {# width="136" height="119"#}
-                                 alt=""
-                                 onerror="this.style.display='none'"
-                            />
-                        </div>
-                    {% endfor %}
-                </div>
-
-                <div id="zoomButtons" class="d-none btn-group-justified btn-group-sm btn-group-vertical">
-                    <button class="btn btn-info" id="zoomPlus">+</button>
-                    <button class="btn btn-info" id="zoomMinus">-</button>
-                </div>
+                {% include "map.html" %}
             </div>
-
-{#            <div id="tileList" class="d-none">#}
-{#                <span id="tileString"></span>#}
-{#                <button id="copyClipboard" type="button" onclick="copyToClipboard('#tileString')" class="btn btn-light">#}
-{#                    <img src="{{ url_for('static', filename='img/clipboard-plus.svg') }}" alt="Copy to clipboard" width="26" height="26" title="Copy to clipboard">#}
-{#                </button>#}
-{#            </div>#}
 
             {% set id="pickStyleModal" %}
             {% set title="About Pick Style" %}
@@ -138,13 +71,7 @@
             {% set text='The custom tile string allows you to share board layouts with friends easily. Just copy your tile string from the bottom of the page or the text box below, and send it to your friends. When they are using this application, they can simply paste it in, and hit "Display" to view the board layout you created.' %}
             {% include "modal.html" %}
         </main>
-        <footer class="footer mt-auto py-3">
-        {#    {% block footer %}#}
-        {#    <div class="container">#}
-        {#        <span class="text-muted">&copy; 2020 by <a href="https://keeganwilliams.com">Keegan Williams</a></span>#}
-        {#    </div>#}
-        {#    {% endblock %}#}
-        </footer>
+
         {% block bootstrap_scripts %}
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"
                 integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -159,6 +86,7 @@
                 crossorigin="anonymous">
         </script>
         {% endblock %}
+
         {% block scripts %}
             <script>
                 var currentTiles = [];
@@ -168,7 +96,9 @@
                 // Get the various jquery selectors
                 let overview = $("#overview");
                 let mapContainer =  $("#mainContent");
-                let map = $("#map");
+                let optionsContainer =  $("#options");
+                let toggleOptions =  $("#toggleOptions");
+                let tiMap = $("#tiMap");
                 let generateForm = $("#generateForm");
                 let playerCount = $("#playerCount");
                 let boardStyle = $("#boardStyle");
@@ -184,11 +114,12 @@
             <script>
                 // Trigger a map redraw on resize and ready
                 window.onresize = drawMap;
+                window.onresize = checkToggle;
                 $( document ).ready(function() {
                     drawMap();
+                    checkToggle(true);
                 });
             </script>
         {% endblock %}
-
     </body>
 </html>
