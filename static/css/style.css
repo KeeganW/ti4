@@ -1,88 +1,163 @@
-/* Place the options board on the left side of the screen */
-#options {
-    background: #cdcdcd;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 20%;
-    overflow: scroll;
-    padding: 10px;
+:root {
+    --primary-color: #BFA62A;
+    /*--primary-color: #3778b8;*/
+    --secondary-color: #3B4859;
+    --tertiary-color: #e6e8ea;
+    --border-color: #cbcbcb;
+    --background-color: #3B4859;
+    --hover-color: #8f790f;
+    --scroll-bar-distance: 17px;
+    --title-height: 60px;
+    --options-width: 400px;
 }
-#toggleOptions {
-    position: fixed;
-    top:0;
-    left:0;
-    z-index: 1002;
+/*:root {*/
+/*    --primary-color: #315D89;*/
+/*    --secondary-color: #505050;*/
+/*    --tertiary-color: #736e70;*/
+/*    --border-color: #cbcbcb;*/
+/*    --background-color: #31313b;*/
+/*    --highlight-color: #BFA62A;*/
+/*    --scroll-bar-distance: 17px;*/
+/*    --title-height: 60px;*/
+/*    --options-width: 400px;*/
+/*}*/
+
+/* Set height for mobile address bar issues*/
+html, body {margin: 0; height: 100%;}
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: var(--background-color);
+    color: black;
 }
 
-.l-0 {
-    left: 0!important;
+/* Settings for button customization */
+.btn-primary, .btn-outline-primary:hover, .btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle, .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    color: white;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-primary:hover {
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
+}
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+    /* Change the background on checkboxes to be the same as buttons*/
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.custom-control-label {
+    /* Change the label for checkboxes to be a pointer */
+    cursor: pointer;
+}
+
+/* Icon specific configurations */
+.icon {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    display: block;
+}
+label .icon {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+/* Set the top headers to be the same height, but have different colors */
+.title {
+    height: 60px;
+    background-color: var(--primary-color);
+}
+#mainContent .title {
+    padding-top: 8px;
+    background-color: var(--secondary-color);
+}
+#options .title {
+    color: white;
+    padding-top: 15px;
+}
+
+/* Place the options board on the right side of the screen */
+/*  Debate about this, but modeling after twitch's chat popout */
+/*  Could also consider a bottom bar, but vertical page height is too important*/
+#options {
+    color: black;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: var(--options-width);
+    overflow: scroll;
+    background-color: var(--tertiary-color);
+}
+#generateForm, #tileForm {
+    padding: var(--scroll-bar-distance);
+}
+
+/* Where the toggle option is visible */
+#toggleOptions {
+    position: fixed;
+    z-index: 1002;
+    top: 17px;
+    right: calc(var(--options-width) - 35px - var(--scroll-bar-distance));
+}
+#toggleOptions.full-screen {
+    right: calc(100% - 35px - var(--scroll-bar-distance));
+}
+#toggleOptions.hidden, #toggleOptions.full-screen.hidden {
+    right: var(--scroll-bar-distance);
+}
+#toggleOptions .icon-expand {
+    display: none;
+}
+
 
 /* Place the overview in the middle of the left div*/
 #mainContent {
     position: fixed;
     top: 0;
-    left: 20%;
-    width: 80%;
-    height: 100vh;
+    left: 0;
+    width: calc(100% - var(--options-width));
+    height: 100%;
     text-align: center;
     overflow: scroll;
+    background-color: var(--background-color);
+    color: white;
 }
-
-/* Set the description below the overview */
 #description {
+    padding-top: 10px;
     padding-left: 20%;
     padding-right: 20%;
-    text-align: center;
-}
-
-/* Put the tile list under the map. */
-#tileList {
-    position: fixed;
-    bottom: 0;
-    left: 20%;
-    width: 80%;
-    text-align: center;
-}
-
-/* Some spacing on the clipboard icon */
-#copyClipboard {
-    padding: 6px;
-}
-
-/* Set the more info icons to be clickable */
-.more-info {
-    cursor: pointer;
-    width: 18px;
-    height: 18px;
-    margin-left: 5px;
-    padding-bottom: 3px;
 }
 
 /* Make map positioned centered relative to enclosing container. */
-.center-map {
+.map {
     position: absolute;
+    top: 0;
+    left: 0;
+}
+.center-map {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 .center-map-horizontal {
-    position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
 }
 .center-map-vertical {
-    position: absolute;
     top: 50%;
     transform: translate(0, -50%);
 }
 
+/* Add the zoom buttons for the map to work with */
 #zoomButtons {
     position: fixed;
-    top: 50px;
-    right: 17px; /* Avoid the scroll bar */
+    top: var(--title-height);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1000;
 }
 #zoomButtons .btn:focus {
@@ -97,24 +172,11 @@
 
 /* Display certain maps based on browser size, so it fits on the page. */
 @media screen and (max-width: 1000px) {
-    #options {
-        width: 40%;
-    }
-    #mainContent {
-        left: 40%;
-        width: 60%;
-    }
 }
 @media screen and (max-width: 700px) {
-    #options {
-        width: 50%;
+    :root {
+        --options-width: 0px;
     }
-    #mainContent {
-        left: 50%;
-        width: 50%;
-    }
-}
-@media screen and (max-width: 500px) {
     /* Trigger hamburger menu */
     #options {
         display: none;
@@ -122,9 +184,17 @@
         z-index: 1001;
     }
     #mainContent {
-        left: 0;
         width: 100%;
     }
+    #mainContent .title h2 {
+        margin-right: calc(35px + var(--scroll-bar-distance));
+    }
+    #description {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+@media screen and (max-width: 500px) {
 }
 
 @media screen and (max-width: 1000px), (max-height: 900px) {

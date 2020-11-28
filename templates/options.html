@@ -1,0 +1,66 @@
+<div class="title">
+    <h4 class="text-center">Generation Options</h4>
+</div>
+<form id="generateForm" action="{{ url_for('.generate') }}">
+    <div class="form-group">
+        <label for="playerCount">Number of Players</label>
+        <select class="form-control" id="playerCount" name="player-count">
+            {% for count in form_info.player_count %}
+                <option value="{{ count }}">{{ count }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="pickStyle" class="d-flex">Picking Style
+            <svg class="icon" data-toggle="modal" data-target="#pickStyleModal">
+                <use xlink:href="#question-circle"/>
+            </svg>
+        </label>
+        <select class="form-control" id="pickStyle" name="pick-style">
+            {% for style in form_info.pick_style %}
+                <option value="{{ style }}">{{ style|capitalize }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="boardStyle" class="d-flex">Board Style
+            <svg class="icon" data-toggle="modal" data-target="#boardStyleModal">
+                <use xlink:href="#question-circle"/>
+            </svg>
+        </label>
+        <select class="form-control" id="boardStyle" name="board-style">
+            {% for style in form_info.board_style %}
+                <option value="{{ style }}">{{ style|capitalize }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="seed">Specific Seed</label>
+        <input class="form-control" id="seed" name="seed" type="text" placeholder="Enter a number to seed generation..." value="{{ form_info.seed }}">
+    </div>
+
+    <div class="custom-control custom-checkbox mb-3">
+        <input type="checkbox" class="custom-control-input" id="shuffleBoards" name="shuffle-boards" {% if form_info.shuffle_boards == True %}checked{% endif %}>
+        <label class="custom-control-label" for="shuffleBoards">Randomize Priorities Before Placement</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Generate</button>
+</form>
+<h2 class="text-center m-2">or</h2>
+<form id="tileForm">
+    <div class="form-group">
+        <label for="tileStringInput" class="d-flex">Custom Tile String
+            <svg class="icon" data-toggle="modal" data-target="#tileStringModal">
+                <use xlink:href="#question-circle"/>
+            </svg>
+        </label>
+        <textarea class="form-control" id="tileStringInput" rows="3" placeholder="Enter a tile string from a previous generation..."></textarea>
+    </div>
+    <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary">Display</button>
+        <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('#tileStringInput')">Copy</button>
+    </div>
+</form>

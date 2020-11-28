@@ -18,6 +18,9 @@ generateForm.submit(function(e) {
         success: function (response) {
             // Render the tiles to the screen
             renderTiles(response)
+            if ($(window).width() <= 700) {
+                toggleOptionsContainer()
+            }
         },
         error: function (response) {
             console.log("Error...")
@@ -73,15 +76,37 @@ tileForm.submit(function(e) {
  * Allow for the toggling of options from the hamburger menu. Changes the options display and how
  * the map is rendered. Redraws map in case the map can now fit in the middle of the screen.
  */
-$("#toggleOptions").click(function () {
+function toggleOptionsContainer() {
     optionsContainer.toggle()
     if (optionsContainer.css("display") === "none") {
-        mapContainer.addClass("w-100")
-        mapContainer.addClass("l-0")
+        document.documentElement.style.setProperty('--options-width', '0px');
+        $("#toggleOptions .icon-expand").css("display", "block");
+        $("#toggleOptions .icon-contract").css("display", "none");
+        toggleOptions.addClass("hidden");
+        mapContainer.addClass("w-100");
         drawMap();
     } else {
-        mapContainer.removeClass("w-100")
-        mapContainer.removeClass("l-0")
+        document.documentElement.style.setProperty('--options-width', '400px');
+        $("#toggleOptions .icon-expand").css("display", "none");
+        $("#toggleOptions .icon-contract").css("display", "block");
+        toggleOptions.removeClass("hidden");
+        mapContainer.removeClass("w-100");
         drawMap();
     }
-})
+}
+
+function checkToggle(firstLoad = false) {
+    let windowWidth = $( window ).width();
+    if (windowWidth <= 700) {
+        if (firstLoad) {
+            toggleOptions.addClass("hidden");
+            $("#toggleOptions .icon-expand").css("display", "block");
+            $("#toggleOptions .icon-contract").css("display", "none");
+        }
+        toggleOptions.addClass("full-screen");
+    } else {
+        toggleOptions.removeClass("full-screen");
+    }
+}
+
+toggleOptions.click(toggleOptionsContainer)
