@@ -64,14 +64,23 @@ def create_application():
             'pick_style': ti_board.get_pick_styles(),
             'board_style': ti_board.get_board_styles(),
             'seed': '',
-            'shuffle_boards': True
+            'shuffle_boards': False
         }
 
         all_board_styles = ti_board.get_all_board_styles()
 
         return render_template('index.html',
                                form_info=form_info,
-                               all_board_styles=all_board_styles)
+                               all_board_styles=all_board_styles,
+                               races=[
+                                   "Sardakk N'orr", "The Arborec", "The Barony of Letnev",
+                                   "The Clan of Saar", "The Embers of Muaat",
+                                   "The Emirates of Hacan", "The Federation of Sol",
+                                   "The Ghosts of Creuss", "The Lizix Mindnet",
+                                   "The Mentak Coalition", "The Naalu Collective",
+                                   "The Nekro Virus", "The Universities of Jol-Nar", "The Winnu",
+                                   "The Xxcha Kingdom", "The Yin Brotherhood", "The Yssaril Tribes"
+                               ])
 
     @app.route("/generate/", methods=['POST'])
     def generate() -> json:
@@ -79,6 +88,7 @@ def create_application():
         Generates a new TI4 map, and returns a json object representing the tiles on the map.
         :return: a json list of the tiles of the map
         """
+        print(request.form)
         # Get form data
         try:
             player_count = int(request.form.get('player-count', 6))

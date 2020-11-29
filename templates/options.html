@@ -3,6 +3,11 @@
 </div>
 <form id="generateForm" action="{{ url_for('.generate') }}">
 
+    <div class="custom-control custom-checkbox mb-3">
+        <input type="checkbox" class="custom-control-input" id="poeExpansion" name="expansion" {% if form_info.expansion == True %}checked{% endif %}>
+        <label class="custom-control-label" for="poeExpansion">Use Prophecy of Kings Expansion</label>
+    </div>
+
     <div class="form-group">
         <label for="playerCount">Number of Players</label>
         <select class="form-control" id="playerCount" name="player-count">
@@ -38,23 +43,45 @@
         </select>
     </div>
 
+{#    <div class="form-group">#}
+{#        <label for="formControlRange">Example Range input</label>#}
+{#        <input type="range" class="form-control-range" id="formControlRange">#}
+{#    </div>#}
+
     <div class="form-group">
         <label for="seed">Specific Seed</label>
         <input class="form-control" id="seed" name="seed" type="text" placeholder="Enter a number to seed generation..." value="{{ form_info.seed }}">
     </div>
 
-    <div class="custom-control custom-checkbox mb-3">
-        <input type="checkbox" class="custom-control-input" id="shuffleBoards" name="shuffle-boards" {% if form_info.shuffle_boards == True %}checked{% endif %}>
-        <label class="custom-control-label d-flex" for="shuffleBoards">Randomize Priorities Before Placement
-            <svg class="icon" data-toggle="modal" data-target="#shuffleBoardsModal">
-                <use xlink:href="#question-circle"/>
-            </svg>
-        </label>
+    <div class="custom-control custom-checkbox mb-3 d-flex">
+        <input type="checkbox" class="custom-control-input" data-toggle="collapse" href="#pickRacesCollapse" id="pickRaces" name="pick-races" {% if form_info.pick_races == True %}checked{% endif %}>
+        <label class="custom-control-label" for="pickRaces">Pick Races for Players</label>
+        <svg class="icon" data-toggle="modal" data-target="#pickRacesModal">
+            <use xlink:href="#question-circle"/>
+        </svg>
+    </div>
+    <div class="collapse ml-2" id="pickRacesCollapse">
+        <div class="card card-body">
+            <button type="button" class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#playerNamesModal">Set Player Names</button>
+
+            <button type="button" class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#includedRacesModal">Set Included Races</button>
+
+            <div class="custom-control custom-checkbox d-flex">
+                <input type="checkbox" class="custom-control-input" id="pickMultipleRaces" name="pick-multiple-races">
+                <label class="custom-control-label" for="pickMultipleRaces">Let Players Pick From Multiple</label>
+                <svg class="icon" data-toggle="modal" data-target="#pickMultipleRacesModal">
+                    <use xlink:href="#question-circle"/>
+                </svg>
+            </div>
+        </div>
     </div>
 
-    <div class="custom-control custom-checkbox mb-3">
-        <input type="checkbox" class="custom-control-input" id="poeExpansion" name="expansion" {% if form_info.expansion == True %}checked{% endif %}>
-        <label class="custom-control-label" for="poeExpansion">Use Prophecy of Kings Expansion</label>
+    <div class="custom-control custom-checkbox mb-3 d-flex">
+        <input type="checkbox" class="custom-control-input" id="shuffleBoards" name="shuffle-boards" {% if form_info.shuffle_boards == True %}checked{% endif %}>
+        <label class="custom-control-label" for="shuffleBoards">Randomize Priorities Before Placement</label>
+        <svg class="icon" data-toggle="modal" data-target="#shuffleBoardsModal">
+            <use xlink:href="#question-circle"/>
+        </svg>
     </div>
 
     <button type="submit" class="btn btn-primary">Generate</button>
