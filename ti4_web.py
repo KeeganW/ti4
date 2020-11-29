@@ -89,38 +89,14 @@ def create_application():
         :return: a json list of the tiles of the map
         """
         print(request.form)
-        # Get form data
-        try:
-            player_count = int(request.form.get('player-count', 6))
-        except ValueError:
-            player_count = 6
 
-        try:
-            pick_style = str(request.form.get('pick-style', 'random'))
-        except ValueError:
-            pick_style = 'random'
-
-        try:
-            board_style = str(request.form.get('board-style', 'normal'))
-        except ValueError:
-            board_style = 'normal'
-
-        try:
-            seed = int(request.form.get('seed', random.randint(0, 9999)))
-        except ValueError:
-            seed = random.randint(0, 9999)
-
-        try:
-            shuffle_boards = bool(request.form.get('shuffle-boards') == 'on')
-        except ValueError:
-            shuffle_boards = True
 
         # Create the model of the board
-        new_ti_board = TI4Board(player_count)
-        new_ti_board.set_pick_style(pick_style)
-        new_ti_board.set_board_style(board_style)
-        new_ti_board.set_shuffle_boards_before_placement(shuffle_boards)
-        new_ti_board.set_seed(seed)
+        new_ti_board = TI4Board(form_data=request.form)
+        # new_ti_board.set_pick_style(pick_style)
+        # new_ti_board.set_board_style(board_style)
+        # new_ti_board.set_shuffle_boards_before_placement(shuffle_boards)
+        # new_ti_board.set_seed(seed)
 
         # Use form data to create a new TI4 board with options
         tiles = new_ti_board.generate_new_board()
