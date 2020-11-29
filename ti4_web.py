@@ -57,6 +57,19 @@ def create_application():
         """
         log.debug('Running the main page. Application is running as a %s server.', env)
 
+        tiles_as_str: str = request.args.get('tiles', '[]')
+        # Attempt to convert tiles
+        if tiles_as_str[0] == '[':
+            tiles_as_str = tiles_as_str[1:]
+        if tiles_as_str[len(tiles_as_str) - 1] == ']':
+            tiles_as_str = tiles_as_str[:-1]
+        tiles_as_str = tiles_as_str.replace(' ', '')
+        tiles: list = tiles_as_str.split(',')
+
+        # Change default back to empty list
+        if tiles == ['']:
+            tiles = []
+
         # Initial values for the first load of the page
         ti_board = TI4Board(6)
         form_info = {
@@ -70,6 +83,7 @@ def create_application():
         all_board_styles = ti_board.get_all_board_styles()
 
         return render_template('index.html',
+                               tiles=tiles,
                                form_info=form_info,
                                all_board_styles=all_board_styles,
                                races=[
@@ -88,15 +102,8 @@ def create_application():
         Generates a new TI4 map, and returns a json object representing the tiles on the map.
         :return: a json list of the tiles of the map
         """
-        print(request.form)
-
-
         # Create the model of the board
         new_ti_board = TI4Board(form_data=request.form)
-        # new_ti_board.set_pick_style(pick_style)
-        # new_ti_board.set_board_style(board_style)
-        # new_ti_board.set_shuffle_boards_before_placement(shuffle_boards)
-        # new_ti_board.set_seed(seed)
 
         # Use form data to create a new TI4 board with options
         tiles = new_ti_board.generate_new_board()
