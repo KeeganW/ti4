@@ -4,7 +4,14 @@
 function drawMap() {
     // Check to see if there are any tiles to render currently
     if (currentTiles.length <= 0) {
+        overview.show();
+        tiMap.hide();
         return;
+    } else {
+        overview.hide();
+        tiMap.show();
+        zoomButtons.show();
+        tileStringInput.text(JSON.stringify(currentTiles))
     }
 
     // Configuration options for magic numbers
@@ -103,9 +110,6 @@ function drawMap() {
             .css("display", "block")
     }
 
-    // Make zoom buttons visible
-    zoomButtons.removeClass("d-none")
-
     // Clear any css classes on the map
     tiMap.removeClass("center-map")
     tiMap.removeClass("center-map-vertical")
@@ -161,11 +165,8 @@ function renderTiles(tiles) {
     currentTiles = tiles;
     drawMap();
 
-    // Show hidden things
-    overview.addClass("d-none")
-
     // Add the tile string to various places
-    tileStringInput.text(JSON.stringify(tiles))
+    window.history.pushState({}, null, '/?tiles=[' + currentTiles.toString() + ']');
 }
 
 // On zoom in/out, change zoom value
@@ -181,3 +182,18 @@ zoomMinus.click(function () {
         drawMap();
     }
 })
+
+// Whenever we go back, grab the tiles from the url bar, and set them as the current tiles
+window.onpopstate = function(event) {
+    let url = new URL(document.location);
+    let tiles = url.searchParams.get("tiles");
+
+    // Make sure the tiles parameter is set
+    if (tiles != null) {
+        currentTiles = validateTiles(tiles);
+        drawMap();
+    } else {
+        currentTiles = [];
+        drawMap();
+    }
+};
