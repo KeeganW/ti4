@@ -8,13 +8,15 @@ generateForm.submit(function(e) {
 
     // Get the form data
     let form = $(this);
+    let playerNames = $("#playerNameForm")
+    let includedRaces = $("#includedRacesForm")
     let url = form.attr('action');
 
     // Make ajax call to generate
     $.ajax({
         type: "POST",
         url: url,
-        data: form.serialize(),
+        data: form.serialize() + "&" + playerNames.serialize() + "&" + includedRaces.serialize(),
         success: function (response) {
             // Render the tiles to the screen
             renderTiles(response)
@@ -108,5 +110,21 @@ function checkToggle(firstLoad = false) {
         toggleOptions.removeClass("full-screen");
     }
 }
+
+filterRaces.keyup(function() {
+    let filterText = filterRaces.val().toLowerCase();
+    console.log(filterText);
+    if (filterText === "") {
+        // Show all again
+        allRaces.show();
+    } else {
+        allRaces.hide();
+
+        // Find all that match, then set them to be displayed
+        allRaces.filter(function () {
+            return this.id.toLowerCase().match("wrapper.*" + filterText + ".*");
+        }).show();
+    }
+});
 
 toggleOptions.click(toggleOptionsContainer)

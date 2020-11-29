@@ -64,14 +64,23 @@ def create_application():
             'pick_style': ti_board.get_pick_styles(),
             'board_style': ti_board.get_board_styles(),
             'seed': '',
-            'shuffle_boards': True
+            'shuffle_boards': False
         }
 
         all_board_styles = ti_board.get_all_board_styles()
 
         return render_template('index.html',
                                form_info=form_info,
-                               all_board_styles=all_board_styles)
+                               all_board_styles=all_board_styles,
+                               races=[
+                                   "Sardakk N'orr", "The Arborec", "The Barony of Letnev",
+                                   "The Clan of Saar", "The Embers of Muaat",
+                                   "The Emirates of Hacan", "The Federation of Sol",
+                                   "The Ghosts of Creuss", "The Lizix Mindnet",
+                                   "The Mentak Coalition", "The Naalu Collective",
+                                   "The Nekro Virus", "The Universities of Jol-Nar", "The Winnu",
+                                   "The Xxcha Kingdom", "The Yin Brotherhood", "The Yssaril Tribes"
+                               ])
 
     @app.route("/generate/", methods=['POST'])
     def generate() -> json:
@@ -79,38 +88,15 @@ def create_application():
         Generates a new TI4 map, and returns a json object representing the tiles on the map.
         :return: a json list of the tiles of the map
         """
-        # Get form data
-        try:
-            player_count = int(request.form.get('player-count', 6))
-        except ValueError:
-            player_count = 6
+        print(request.form)
 
-        try:
-            pick_style = str(request.form.get('pick-style', 'random'))
-        except ValueError:
-            pick_style = 'random'
-
-        try:
-            board_style = str(request.form.get('board-style', 'normal'))
-        except ValueError:
-            board_style = 'normal'
-
-        try:
-            seed = int(request.form.get('seed', random.randint(0, 9999)))
-        except ValueError:
-            seed = random.randint(0, 9999)
-
-        try:
-            shuffle_boards = bool(request.form.get('shuffle-boards') == 'on')
-        except ValueError:
-            shuffle_boards = True
 
         # Create the model of the board
-        new_ti_board = TI4Board(player_count)
-        new_ti_board.set_pick_style(pick_style)
-        new_ti_board.set_board_style(board_style)
-        new_ti_board.set_shuffle_boards_before_placement(shuffle_boards)
-        new_ti_board.set_seed(seed)
+        new_ti_board = TI4Board(form_data=request.form)
+        # new_ti_board.set_pick_style(pick_style)
+        # new_ti_board.set_board_style(board_style)
+        # new_ti_board.set_shuffle_boards_before_placement(shuffle_boards)
+        # new_ti_board.set_seed(seed)
 
         # Use form data to create a new TI4 board with options
         tiles = new_ti_board.generate_new_board()

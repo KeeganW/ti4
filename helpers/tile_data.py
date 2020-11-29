@@ -25,6 +25,7 @@ Tile information:
 tiles = {
     1: {
         'type': 'home',
+        'race': 'The Federation of Sol',
         'wormhole': None,
         'planets': [
             {
@@ -38,6 +39,7 @@ tiles = {
     },
     2: {
         'type': 'home',
+        'race': 'The Mentak Coalition',
         'wormhole': None,
         'planets': [
             {
@@ -51,6 +53,7 @@ tiles = {
     },
     3: {
         'type': 'home',
+        'race': 'The Yin Brotherhood',
         'wormhole': None,
         'planets': [
             {
@@ -64,6 +67,7 @@ tiles = {
     },
     4: {
         'type': 'home',
+        'race': 'The Embers of Muaat',
         'wormhole': None,
         'planets': [
             {
@@ -77,6 +81,7 @@ tiles = {
     },
     5: {
         'type': 'home',
+        'race': 'The Arborec',
         'wormhole': None,
         'planets': [
             {
@@ -90,6 +95,7 @@ tiles = {
     },
     6: {
         'type': 'home',
+        'race': 'The Lizix Mindnet',
         'wormhole': None,
         'planets': [
             {
@@ -103,6 +109,7 @@ tiles = {
     },
     7: {
         'type': 'home',
+        'race': 'The Winnu',
         'wormhole': None,
         'planets': [
             {
@@ -116,6 +123,7 @@ tiles = {
     },
     8: {
         'type': 'home',
+        'race': 'The Nekro Virus',
         'wormhole': None,
         'planets': [
             {
@@ -129,6 +137,7 @@ tiles = {
     },
     9: {
         'type': 'home',
+        'race': 'The Naalu Collective',
         'wormhole': None,
         'planets': [
             {
@@ -149,6 +158,7 @@ tiles = {
     },
     10: {
         'type': 'home',
+        'race': 'The Barony of Letnev',
         'wormhole': None,
         'planets': [
             {
@@ -169,6 +179,7 @@ tiles = {
     },
     11: {
         'type': 'home',
+        'race': 'The Clan of Saar',
         'wormhole': None,
         'planets': [
             {
@@ -189,6 +200,7 @@ tiles = {
     },
     12: {
         'type': 'home',
+        'race': 'The Universities of Jol-Nar',
         'wormhole': None,
         'planets': [
             {
@@ -209,6 +221,7 @@ tiles = {
     },
     13: {
         'type': 'home',
+        'race': "Sardakk N'orr",
         'wormhole': None,
         'planets': [
             {
@@ -229,6 +242,7 @@ tiles = {
     },
     14: {
         'type': 'home',
+        'race': 'The Xxcha Kingdom',
         'wormhole': None,
         'planets': [
             {
@@ -249,6 +263,7 @@ tiles = {
     },
     15: {
         'type': 'home',
+        'race': 'The Yssaril Tribes',
         'wormhole': None,
         'planets': [
             {
@@ -269,6 +284,7 @@ tiles = {
     },
     16: {
         'type': 'home',
+        'race': 'The Emirates of Hacan',
         'wormhole': None,
         'planets': [
             {
@@ -296,6 +312,7 @@ tiles = {
     },
     17: {
         'type': 'home',
+        'race': 'The Ghosts of Creuss',
         'wormhole': 'delta',
         'planets': [
         ]

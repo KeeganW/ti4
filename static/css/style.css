@@ -1,11 +1,13 @@
 :root {
-    --primary-color: #BFA62A;
+    --primary-color: #FAA126;
+    /*--primary-color: #BFA62A;*/
     /*--primary-color: #3778b8;*/
-    --secondary-color: #3B4859;
+    --secondary-color: #3778b8;
     --tertiary-color: #e6e8ea;
-    --border-color: #cbcbcb;
+    --border-color: #efefef;
     --background-color: #3B4859;
-    --hover-color: #8f790f;
+    --hover-color: #AD6300;
+    /*--hover-color: #8f790f;*/
     --scroll-bar-distance: 17px;
     --title-height: 60px;
     --options-width: 400px;
@@ -61,7 +63,7 @@ body {
     cursor: pointer;
     display: block;
 }
-label .icon {
+.d-flex > .icon {
     margin-top: 5px;
     margin-left: 5px;
 }

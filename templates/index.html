@@ -33,7 +33,7 @@
         {% include "bootstrap-icons.svg" %}
 
         <main role="main" class="flex-shrink-0">
-            <div class="controls btn-group-justified btn-group-sm ">
+            <div class="controls btn-group-justified btn-group-sm">
                 <button type="button" id="toggleOptions" class="btn btn-primary">
                     <svg class="icon icon-contract">
                         <use xlink:href="#arrow-bar-right"/>
@@ -61,14 +61,78 @@
                             <br>Tas: A custom weight which favors resources above all else, but more accurately factors in tech specialties and influence as trade-offs to the "resource" pick.' %}
             {% include "modal.html" %}
 
+            <div class="modal fade" id="playerNamesModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Set Player Names</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="playerNameForm">
+                                {% for number in range(1, 7) %}
+                                    <div class="form-group">
+                                        <label for="player{{ number }}Name">Player {{ number }}</label>
+                                        <input class="form-control" id="player{{ number }}Name" name="player-{{ number }}-name" type="text" placeholder="P{{ number }}">
+                                    </div>
+                                {% endfor %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="includedRacesModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Set Races to Generate From</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="includedRacesForm">
+                                <div class="form-group">
+                                    <input class="form-control" id="filterRaces" type="text" placeholder="Filter Races...">
+                                </div>
+                                {% for race in races %}
+                                    <div class="custom-control custom-checkbox mb-3 races" id="wrapper{{ race|replace(' ', '') }}">
+                                        <input type="checkbox" class="custom-control-input" id="include{{ race|replace(' ', '') }}" name="race {{ race }}" checked>
+                                        <label class="custom-control-label d-flex" for="include{{ race|replace(' ', '') }}">{{ race }}</label>
+                                    </div>
+                                {% endfor %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% set id="boardStyleModal" %}
             {% set title="About Board Style" %}
             {% set text='Board style is how the board is actually pictured. Changing this value would cause you to expect weighted tiles to be placed in certain positions, or some tiles not to be placed at all (especially in lower player counts). For example, 6-player "Normal" places important tiles closer to home worlds, while 6-player "Warzone" places the most valuable planets close to Mecatol Rex, forcing you to fight for your assets.' %}
             {% include "modal.html" %}
 
+            {% set id="pickRacesModal" %}
+            {% set title="About Picking Races" %}
+            {% set text='TODO' %}
+            {% include "modal.html" %}
+
+            {% set id="pickMultipleRacesModal" %}
+            {% set title="About Picking Multiple Races" %}
+            {% set text='TODO' %}
+            {% include "modal.html" %}
+
             {% set id="tileStringModal" %}
             {% set title="About Tile String" %}
             {% set text='The custom tile string allows you to share board layouts with friends easily. Just copy your tile string from the bottom of the page or the text box below, and send it to your friends. When they are using this application, they can simply paste it in, and hit "Display" to view the board layout you created.' %}
+            {% include "modal.html" %}
+
+            {% set id="shuffleBoardsModal" %}
+            {% set title="About Shuffle Boards" %}
+            {% set text='When using the priority queues of important planets per player, activating this will shuffle who gets first pick from the set of tiles. If unactivated, then tiles are picked in double-back style order. For the primary tiles, Player 1 gets first pick, and the last player gets last pick. After the first round of placements is complete, the person who had last pick gets first pick, and the round continues in reverse pick order. Proceed using this double-back picking strategy until the board is filled.' %}
             {% include "modal.html" %}
         </main>
 
@@ -107,6 +171,8 @@
                 let zoomButtons = $("#zoomButtons");
                 let zoomPlus = $("#zoomPlus");
                 let zoomMinus = $("#zoomMinus");
+                let filterRaces = $("#filterRaces");
+                let allRaces = $(".races");
             </script>
             <script src="{{ url_for('static', filename='js/createMap.js') }}"></script>
             <script src="{{ url_for('static', filename='js/dragAndDrop.js') }}"></script>

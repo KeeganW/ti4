@@ -7,6 +7,7 @@ import random
 
 from helpers.board_data import boards
 from helpers.tile_data import tiles
+from ti4_race_picker import TI4Races
 
 
 class TI4Board:
@@ -21,15 +22,75 @@ class TI4Board:
     would again be at M-Rex's 12 o'clock position, but the second ring out. In the list, -1 means
     empty, and 0 means an unregistered home system.
     """
-    def __init__(self, player_count: int = 6) -> None:
-        self.player_count = player_count  # Users can provide their given player counts
-        self.board_style = 'normal'
-        self.pick_style = 'random'
-        self.board_as_list = [-1] * 37  # The board, initialized to -1s (37 tiles on a board)
+    def __init__(self, player_count: int = 6, form_data: dict = None) -> None:
+        if form_data:
+            # Generate from form data
+            self.player_count: int = self.get_safe_from_form(form_data, int, 'player-count', 6)
+            self.board_style: str = self.get_safe_from_form(form_data, str, 'board-style', 'normal')
+            self.pick_style: str = self.get_safe_from_form(form_data, str, 'pick-style', 'random')
+            self.seed: int = self.get_safe_from_form(form_data, int, 'seed', random.randint(0, 9999))
+            self.shuffle_boards_before_placement: bool = self.get_safe_from_form(form_data, bool, 'shuffle-boards', 'on')
+            self.set_player_races: bool = self.get_safe_from_form(form_data, bool, 'pick-races', 'off')
+            self.pick_multiple_races: bool = self.get_safe_from_form(form_data, bool, 'pick-multiple-races', 'off')
+            player_names = self.get_player_names_from_form(form_data)
+            races = self.get_races_from_form(form_data)
+            self.players = TI4Races(player_count, player_names)
+            self.players.set_seed(self.seed)
+            self.players.set_player_options(self.pick_multiple_races)
+            self.players.shuffle_player_position()
+            self.players.races = races
+            self.players.create_race_lists()
+
+        else:
+            self.player_count: int = player_count  # Users can provide their given player counts
+            self.board_style: str = 'normal'
+            self.pick_style: str = 'random'
+            self.seed: int = 0
+            self.shuffle_boards_before_placement: bool = True  # The board priorities should be shuffled
+            self.set_player_races: bool = False
+            self.players: TI4Races = TI4Races(player_count)
+
+        self.board_as_list: list = [-1] * 37  # The board, initialized to -1s (37 tiles on a board)
         self.board_as_list[0] = 18  # M-Rex is always in the middle
-        self.shuffle_boards_before_placement = True  # The board priorities should be shuffled
-        self.possible_pick_styles = ['random', 'resource', 'influence', 'tas']
-        self.seed = 0
+        self.possible_pick_styles: list = ['random', 'resource', 'influence', 'tas']
+
+    @staticmethod
+    def get_safe_from_form(form_data, input_type, name, default_value):
+        try:
+            new_value = form_data.get(name, default_value)
+
+            # Turn it into the correct type
+            if input_type == int:
+                new_value = int(new_value)
+            elif input_type == str:
+                new_value = str(new_value)
+            elif input_type == bool:
+                new_value = bool(new_value == 'on')
+        except ValueError:
+            if input_type == bool:
+                new_value = bool(default_value == 'on')
+            else:
+                new_value = default_value
+        return new_value
+
+    @staticmethod
+    def get_races_from_form(form_data):
+        races = []
+        for race in form_data.keys():
+            if race[:5] == "race ":
+                # New race we want to add
+                races.append(race[5:])
+        return races
+
+    @staticmethod
+    def get_player_names_from_form(form_data):
+        names = []
+        for number in range(1, 7):
+            new_name = form_data.get('player-' + str(number) + "-name", 'P' + str(number))
+            if new_name == '':
+                new_name = 'P' + str(number)
+            names.append(new_name)
+        return names
 
     def get_planet_indexes_to_place(self) -> list:
         """
@@ -165,9 +226,19 @@ class TI4Board:
             planet = possible_planets.pop()
             self.board_as_list[planet_index] = planet
 
-        # Set home worlds to 0
-        for planet_index in boards[self.player_count][self.board_style]['home_worlds']:
-            self.board_as_list[planet_index] = 0
+        for index in range(len(boards[self.player_count][self.board_style]['home_worlds'])):
+            planet_index = boards[self.player_count][self.board_style]['home_worlds'][index]
+            if self.set_player_races and not self.pick_multiple_races:
+                if len(self.players.player_races[index]) == 0:
+                    self.board_as_list[planet_index] = 0
+                else:
+                    # Convert races into race hexes
+                    for planet_tile_number in list(range(1, 18)):
+                        if tiles[planet_tile_number]['race'] == self.players.player_races[index][0]:
+                            self.board_as_list[planet_index] = planet_tile_number
+            else:
+                # Set home worlds to 0, to be decided later
+                self.board_as_list[planet_index] = 0
 
         return self.board_as_list
 
