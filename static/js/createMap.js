@@ -6,6 +6,7 @@ function drawMap() {
     if (currentTiles.length <= 0) {
         overview.show();
         tiMap.hide();
+        zoomButtons.hide();
         return;
     } else {
         overview.hide();
