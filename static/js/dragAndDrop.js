@@ -45,8 +45,7 @@ function drop(ev) {
     tiles[secondIndex] = temp;
 
     // Update the tile string
-    tileStringInput.text(JSON.stringify(tiles))
-    // TODO have this change url as well (put into function)
+    updateTileStrings()
 
     // Clear the target classes
     targetSelector.removeClass("tile-target")

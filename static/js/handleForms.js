@@ -29,6 +29,7 @@ generateForm.submit(function(e) {
             console.log(response)
         }
     });
+    return false
 });
 
 /**
