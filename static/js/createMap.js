@@ -7,11 +7,15 @@ function drawMap() {
         overview.show();
         tiMap.hide();
         zoomButtons.hide();
+        hexOverlay.hide();
+        moreInfo.hide();
         return;
     } else {
         overview.hide();
         tiMap.show();
         zoomButtons.show();
+        hexOverlay.show();
+        moreInfo.show();
         tileStringInput.text(JSON.stringify(currentTiles))
     }
 
@@ -118,10 +122,11 @@ function drawMap() {
             .css("margin-top", offsets[tileNumber][1])
             .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
             .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
-            .css("display", "block").html(currentTiles[tileNumber])
+            .css("display", "block")
+            .html(currentTiles[tileNumber])
 
 
-        if (currentTiles[tileNumber] === 0 || currentTiles[tileNumber] === -1) {
+        if (!overlay || currentTiles[tileNumber] === 0 || currentTiles[tileNumber] === -1) {
             numOverlay.hide()
         } else {
             numOverlay.show()
@@ -193,13 +198,22 @@ zoomPlus.click(function () {
         zoom += 0.75;
         drawMap();
     }
-})
+});
 zoomMinus.click(function () {
     if (zoom > 1) {
         zoom -= 0.75;
         drawMap();
     }
-})
+});
+
+showHexOverlay.click(function () {
+    overlay = !overlay
+    drawMap()
+});
+
+showMoreInfo.click(function () {
+
+});
 
 // Whenever we go back, grab the tiles from the url bar, and set them as the current tiles
 window.onpopstate = function(event) {

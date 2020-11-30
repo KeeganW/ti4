@@ -179,6 +179,21 @@ body {
 #zoomButtons .btn:focus {
     box-shadow: none;
 }
+#hexOverlay {
+    position: fixed;
+    top: calc(var(--title-height) + 60px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1000;
+}
+#moreInfo {
+    position: fixed;
+    top: calc(var(--title-height) + 95px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1000;
+}
+#hexOverlay .btn:focus {
+    box-shadow: none;
+}
 
 /* Always position the map images relative to the map container.
     Use margin-left and right to position exactly. */

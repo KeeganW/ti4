@@ -155,6 +155,7 @@
             <script>
                 var currentTiles = {{ tiles }};
                 var zoom = 1.0;
+                var overlay = false;
                 const BOARD_STYLES = {{ all_board_styles|tojson }};
 
                 // Get the various jquery selectors
@@ -169,8 +170,12 @@
                 let tileForm = $("#tileForm");
                 let tileStringInput = $("#tileStringInput");
                 let zoomButtons = $("#zoomButtons");
+                let hexOverlay = $("#hexOverlay");
+                let moreInfo = $("#moreInfo");
                 let zoomPlus = $("#zoomPlus");
                 let zoomMinus = $("#zoomMinus");
+                let showHexOverlay = $("#showHexOverlay");
+                let showMoreInfo = $("#showMoreInfo");
                 let filterRaces = $("#filterRaces");
                 let allRaces = $(".races");
             </script>
@@ -184,7 +189,11 @@
                 $( document ).ready(function() {
                     drawMap();
                     checkToggle(true);
+                    $(function () {
+                        $('[data-toggle="tooltip"]').tooltip()
+                    })
                 });
+
             </script>
         {% endblock %}
     </body>
