@@ -197,7 +197,12 @@ function renderTiles(tiles) {
     drawMap();
 
     // Add the tile string to various places
-    window.history.pushState({}, null, '/?tiles=[' + currentTiles.toString() + ']');
+    updateTileStrings()
+}
+
+function updateTileStrings() {
+    window.history.pushState({}, null, '/?tiles=' + currentTiles.toString());
+    tileStringInput.text(JSON.stringify(currentTiles))
 }
 
 // On zoom in/out, change zoom value

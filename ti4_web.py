@@ -6,7 +6,7 @@ starting it based off of configuration and environment variables.
 import os
 
 from logging.config import dictConfig
-from flask import Flask, render_template, jsonify, request, json
+from flask import Flask, render_template, jsonify, request, json, url_for, redirect
 from flask.logging import create_logger
 from helpers.sys_config import config
 from ti4_map_generator import TI4Board
@@ -57,6 +57,10 @@ def create_application():
         log.debug('Running the main page. Application is running as a %s server.', env)
 
         tiles: str = request.args.get('tiles', '[]')
+        if tiles[0] != '[':
+            tiles = '[' + tiles
+        if tiles[len(tiles) - 1] != "]":
+            tiles = tiles + ']'
 
         ti_board = TI4Board(6)
         form_info = {
@@ -97,6 +101,11 @@ def create_application():
 
         # Return tile string as json to caller
         return jsonify(tiles)
+
+    # @app.route("/generate/", methods=['GET'])  # Safety precaution, redirect back to main
+    # def generate_redirect() -> str:
+    #     tiles: str = request.args.get('tiles', [])
+    #     return redirect(url_for('.index', tiles=tiles))
 
     return app, log
 
