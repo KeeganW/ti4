@@ -2,6 +2,18 @@
 function allowDrop(ev) {
     ev.preventDefault();
 }
+function dragEnter(ev){
+    let targetSelector = $("#" + ev.target.id);
+    let targetUnderlay = $("#underlay-" + ev.target.id.split("-")[1]);
+    targetSelector.addClass("tile-target")
+    targetUnderlay.addClass("underlay-target")
+}
+function dragLeave(ev){
+    let targetSelector = $("#" + ev.target.id);
+    let targetUnderlay = $("#underlay-" + ev.target.id.split("-")[1]);
+    targetSelector.removeClass("tile-target")
+    targetUnderlay.removeClass("underlay-target")
+}
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
 }
@@ -13,6 +25,7 @@ function drop(ev) {
 
     let targetSelector = $("#" + targetId);
     let fromSelector = $("#" + fromId);
+    let targetUnderlay = $("#underlay-" + ev.target.id.split("-")[1]);
 
     // Temporarily store the target's source
     let targetSource = targetSelector.attr('src');
@@ -33,4 +46,9 @@ function drop(ev) {
 
     // Update the tile string
     tileStringInput.text(JSON.stringify(tiles))
+    // TODO have this change url as well (put into function)
+
+    // Clear the target classes
+    targetSelector.removeClass("tile-target")
+    targetUnderlay.removeClass("underlay-target")
 }
