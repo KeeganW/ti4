@@ -14,10 +14,13 @@
             <img id="tile-{{ index }}"
                  class="tile"
                  src=""
-                 draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"
+                 draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"
                  alt=""
                  onerror="this.style.display='none'"
             />
+            <svg id="underlay-{{ index }}" class="underlay">
+                <use xlink:href="#hex"/>
+            </svg>
         </div>
     {% endfor %}
 </div>
@@ -38,7 +41,7 @@
 <div id="hexOverlay" class="btn-group-justified btn-group-sm" style="display: none;">
     <button class="btn btn-primary" id="showHexOverlay" data-toggle="tooltip" data-placement="left" title="Toggle Tile Number Overlay">
         <svg class="icon">
-            <use xlink:href="#hex"/>
+            <use xlink:href="#overlay"/>
         </svg>
     </button>
 </div>

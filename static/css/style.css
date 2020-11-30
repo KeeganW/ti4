@@ -200,6 +200,27 @@ body {
 .tile {
     position: absolute;
 }
+.tile:hover {
+    z-index: 100;
+}
+.tile-target {
+    z-index: 102;
+}
+.underlay {
+    color: var(--secondary-color);
+    display: none;
+    position: absolute;
+    z-index: -1;
+}
+.tile:hover + .underlay {
+    z-index: 98;
+    display: block;
+}
+.underlay-target {
+    color: var(--primary-color);
+    z-index: 101;
+    display: block;
+}
 
 /* Display certain maps based on browser size, so it fits on the page. */
 @media screen and (max-width: 1000px) {
