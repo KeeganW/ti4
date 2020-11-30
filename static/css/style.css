@@ -141,6 +141,20 @@ body {
     top: 0;
     left: 0;
 }
+.overlay {
+    position: absolute;
+    text-align: center;
+    z-index: 2; /* Raise above images */
+    text-shadow:2px 2px 0 #000,
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    0px 2px 0 #000,
+    2px 0px 0 #000,
+    0px -2px 0 #000,
+    -2px 0px 0 #000,
+    2px 2px 5px #000;
+}
 .center-map {
     top: 50%;
     left: 50%;

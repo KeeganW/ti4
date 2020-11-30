@@ -4,7 +4,6 @@ The main starting file for this flask project, which is in charge of creating th
 starting it based off of configuration and environment variables.
 """
 import os
-import random
 
 from logging.config import dictConfig
 from flask import Flask, render_template, jsonify, request, json
@@ -57,20 +56,8 @@ def create_application():
         """
         log.debug('Running the main page. Application is running as a %s server.', env)
 
-        tiles_as_str: str = request.args.get('tiles', '[]')
-        # Attempt to convert tiles
-        if tiles_as_str[0] == '[':
-            tiles_as_str = tiles_as_str[1:]
-        if tiles_as_str[len(tiles_as_str) - 1] == ']':
-            tiles_as_str = tiles_as_str[:-1]
-        tiles_as_str = tiles_as_str.replace(' ', '')
-        tiles: list = tiles_as_str.split(',')
+        tiles: str = request.args.get('tiles', '[]')
 
-        # Change default back to empty list
-        if tiles == ['']:
-            tiles = []
-
-        # Initial values for the first load of the page
         ti_board = TI4Board(6)
         form_info = {
             'player_count': [6, 5, 4, 3, 2],

@@ -101,6 +101,7 @@ function drawMap() {
     // Loop over tiles to assign various values to them
     for (let tileNumber = 0; tileNumber < offsets.length; tileNumber++) {
         let tile = $("#tile-" + tileNumber);
+        let numOverlay = $("#num-" + tileNumber);
         tile.attr("src", "/static/img/tiles/ST_" + currentTiles[tileNumber] + ".png")
             .attr("width", constraintWidth)
             .attr("height", constraintHeight)
@@ -109,6 +110,22 @@ function drawMap() {
             .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
             .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
             .css("display", "block")
+
+        numOverlay.css("width", constraintWidth)
+            .css("height", constraintHeight)
+            .css("line-height", constraintHeight + "px")
+            .css("margin-left", offsets[tileNumber][0])
+            .css("margin-top", offsets[tileNumber][1])
+            .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
+            .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
+            .css("display", "block").html(currentTiles[tileNumber])
+
+
+        if (currentTiles[tileNumber] === 0 || currentTiles[tileNumber] === -1) {
+            numOverlay.hide()
+        } else {
+            numOverlay.show()
+        }
     }
 
     // Clear any css classes on the map
