@@ -10,12 +10,11 @@
 <div id="tiMap" class="map">
     {% for index in range(37) %}
         <div class="tile-wrapper">
+            <span id="num-{{ index }}" class="overlay">{{ index }}</span>
             <img id="tile-{{ index }}"
                  class="tile"
-                    {# style="margin-left: {{ offsets_136[index][0] }}px; margin-top: {{ offsets_136[index][1] }}px;"#}
                  src=""
                  draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"
-                    {# width="136" height="119"#}
                  alt=""
                  onerror="this.style.display='none'"
             />
