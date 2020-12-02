@@ -8,14 +8,16 @@ function drawMap() {
         tiMap.hide();
         zoomButtons.hide();
         hexOverlay.hide();
-        moreInfo.hide();
+        moreInfoButton.hide();
+        extraTilesButton.hide();
         return;
     } else {
         overview.hide();
         tiMap.show();
         zoomButtons.show();
         hexOverlay.show();
-        moreInfo.show();
+        moreInfoButton.show();
+        extraTilesButton.show();
         tileStringInput.text(JSON.stringify(currentTiles))
     }
 
@@ -107,14 +109,18 @@ function drawMap() {
         let tile = $("#tile-" + tileNumber);
         let numOverlay = $("#num-" + tileNumber);
         let underlay = $("#underlay-" + tileNumber);
-        tile.attr("src", "/static/img/tiles/ST_" + currentTiles[tileNumber] + ".png")
-            .attr("width", constraintWidth)
-            .attr("height", constraintHeight)
-            .css("margin-left", offsets[tileNumber][0])
-            .css("margin-top", offsets[tileNumber][1])
-            .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
-            .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
-            .css("display", "block")
+        if (currentTiles[tileNumber] !== -1) {
+            tile.attr("src", "/static/img/tiles/ST_" + currentTiles[tileNumber] + ".png")
+                .attr("width", constraintWidth)
+                .attr("height", constraintHeight)
+                .css("margin-left", offsets[tileNumber][0])
+                .css("margin-top", offsets[tileNumber][1])
+                .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
+                .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
+            tile.show()
+        } else {
+            tile.hide()
+        }
 
         numOverlay.css("width", constraintWidth)
             .css("height", constraintHeight)
@@ -225,7 +231,36 @@ showHexOverlay.click(function () {
 });
 
 showMoreInfo.click(function () {
+    console.log("Showing info")
+    // Swap the display
+    if (moreInfo.css("display") === "none") {
+        document.documentElement.style.setProperty('--more-info-width', '400px');
+        moreInfo.show()
+    } else {
+        document.documentElement.style.setProperty('--more-info-width', '0px');
+        moreInfo.hide()
+    }
+    drawMap()
+});
 
+showExtraTiles.click(function () {
+    // Show all extra tiles
+    for (let tileNum = 19; tileNum <= 50; tileNum++) {
+        console.log(currentTiles.includes(tileNum))
+        if (!currentTiles.includes(tileNum)) {
+            $("#extra-tile-" + tileNum).show();
+        }
+    }
+
+    // Swap the display
+    if (extraTiles.css("display") === "none") {
+        document.documentElement.style.setProperty('--extra-tiles-width', '150px');
+        extraTiles.show()
+    } else {
+        document.documentElement.style.setProperty('--extra-tiles-width', '0px');
+        extraTiles.hide()
+    }
+    drawMap()
 });
 
 // Whenever we go back, grab the tiles from the url bar, and set them as the current tiles

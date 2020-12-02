@@ -44,11 +44,17 @@
                 </button>
 
             </div>
-            <div id="options">
-                {% include "options.html" %}
-            </div>
             <div id="mainContent" class="justify-content-center align-items-center">
                 {% include "map.html" %}
+            </div>
+            <div id="extraTilesContainer" style="display: none">
+                {% include "extra-tiles.html" %}
+            </div>
+            <div id="moreInfoContainer" style="display: none">
+                {% include "more-info.html" %}
+            </div>
+            <div id="options">
+                {% include "options.html" %}
             </div>
 
             {% set id="pickStyleModal" %}
@@ -153,13 +159,16 @@
 
         {% block scripts %}
             <script>
-                var currentTiles = {{ tiles }};
-                var zoom = 1.0;
-                var overlay = false;
+                let currentTiles = {{ tiles }};
+                let zoom = 1.0;
+                let overlay = false;
                 const BOARD_STYLES = {{ all_board_styles|tojson }};
 
                 // Get the various jquery selectors
                 let overview = $("#overview");
+                let extraTiles = $("#extraTilesContainer");
+                let extraTilesButton = $("#extraTilesButton");
+                let moreInfoButton = $("#moreInfoButton");
                 let mapContainer =  $("#mainContent");
                 let optionsContainer =  $("#options");
                 let toggleOptions =  $("#toggleOptions");
@@ -171,11 +180,12 @@
                 let tileStringInput = $("#tileStringInput");
                 let zoomButtons = $("#zoomButtons");
                 let hexOverlay = $("#hexOverlay");
-                let moreInfo = $("#moreInfo");
+                let moreInfo = $("#moreInfoContainer");
                 let zoomPlus = $("#zoomPlus");
                 let zoomMinus = $("#zoomMinus");
                 let showHexOverlay = $("#showHexOverlay");
                 let showMoreInfo = $("#showMoreInfo");
+                let showExtraTiles = $("#showExtraTiles");
                 let filterRaces = $("#filterRaces");
                 let allRaces = $(".races");
             </script>

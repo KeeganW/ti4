@@ -86,14 +86,14 @@ function toggleOptionsContainer() {
         $("#toggleOptions .icon-expand").css("display", "block");
         $("#toggleOptions .icon-contract").css("display", "none");
         toggleOptions.addClass("hidden");
-        mapContainer.addClass("w-100");
+        // mapContainer.addClass("w-100");
         drawMap();
     } else {
         document.documentElement.style.setProperty('--options-width', '400px');
         $("#toggleOptions .icon-expand").css("display", "none");
         $("#toggleOptions .icon-contract").css("display", "block");
         toggleOptions.removeClass("hidden");
-        mapContainer.removeClass("w-100");
+        // mapContainer.removeClass("w-100");
         drawMap();
     }
 }

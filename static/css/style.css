@@ -11,6 +11,8 @@
     --scroll-bar-distance: 17px;
     --title-height: 60px;
     --options-width: 400px;
+    --extra-tiles-width: 0px;
+    --more-info-width: 0px;
 }
 /*:root {*/
 /*    --primary-color: #315D89;*/
@@ -77,7 +79,7 @@ body {
     padding-top: 8px;
     background-color: var(--secondary-color);
 }
-#options .title {
+#options .title, #extraTilesContainer .title, #moreInfoContainer .title {
     color: white;
     padding-top: 15px;
 }
@@ -95,7 +97,27 @@ body {
     overflow: scroll;
     background-color: var(--tertiary-color);
 }
-#generateForm, #tileForm {
+#extraTilesContainer {
+    color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--extra-tiles-width);
+    overflow: scroll;
+    background-color: var(--tertiary-color);
+}
+#moreInfoContainer {
+    color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--more-info-width);
+    overflow: scroll;
+    background-color: var(--tertiary-color);
+}
+#generateForm, #tileForm, #extraTiles {
     padding: var(--scroll-bar-distance);
 }
 
@@ -110,6 +132,7 @@ body {
     right: calc(100% - 35px - var(--scroll-bar-distance));
 }
 #toggleOptions.hidden, #toggleOptions.full-screen.hidden {
+    --options-width: 0;
     right: var(--scroll-bar-distance);
 }
 #toggleOptions .icon-expand {
@@ -121,8 +144,8 @@ body {
 #mainContent {
     position: fixed;
     top: 0;
-    left: 0;
-    width: calc(100% - var(--options-width));
+    right: var(--options-width);
+    width: calc(100% - var(--options-width) - var(--extra-tiles-width) - var(--more-info-width));
     height: 100%;
     text-align: center;
     overflow: scroll;
@@ -185,9 +208,15 @@ body {
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1000;
 }
-#moreInfo {
+#moreInfoButton {
     position: fixed;
     top: calc(var(--title-height) + 95px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1000;
+}
+#extraTilesButton {
+    position: fixed;
+    top: calc(var(--title-height) + 130px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1000;
 }
@@ -228,9 +257,10 @@ body {
 @media screen and (max-width: 700px) {
     :root {
         --options-width: 0px;
+        --extra-tiles-width: 0px;
     }
     /* Trigger hamburger menu */
-    #options {
+    #options, #extraTiles, #moreInfo {
         display: none;
         width: 100%;
         z-index: 1001;
