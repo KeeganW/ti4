@@ -22,7 +22,7 @@ class TI4Board:
     would again be at M-Rex's 12 o'clock position, but the second ring out. In the list, -1 means
     empty, and 0 means an unregistered home system.
     """
-    def __init__(self, player_count: int = 6, form_data: dict = None) -> None:
+    def __init__(self, player_count: int = 6, form_data: dict = None, tiles: list = []) -> None:
         if form_data:
             # Generate from form data
             self.player_count: int = self.get_safe_from_form(form_data, int, 'player-count', 6)
@@ -40,7 +40,6 @@ class TI4Board:
             self.players.shuffle_player_position()
             self.players.races = races
             self.players.create_race_lists()
-
         else:
             self.player_count: int = player_count  # Users can provide their given player counts
             self.board_style: str = 'normal'
@@ -53,6 +52,9 @@ class TI4Board:
         self.board_as_list: list = [-1] * 37  # The board, initialized to -1s (37 tiles on a board)
         self.board_as_list[0] = 18  # M-Rex is always in the middle
         self.possible_pick_styles: list = ['random', 'resource', 'influence', 'tas']
+
+        if len(tiles) > 0:
+            self.board_as_list = tiles
 
     @staticmethod
     def get_safe_from_form(form_data, input_type, name, default_value):
@@ -241,6 +243,13 @@ class TI4Board:
                 self.board_as_list[planet_index] = 0
 
         return self.board_as_list
+
+    def get_player_info(self) -> dict:
+        """
+        Get the various information for players about their surroundings.
+        :return: a dictionary per player detailing their information.
+        """
+        return {}
 
     def get_board(self) -> list:
         """

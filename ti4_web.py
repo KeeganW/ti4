@@ -62,7 +62,13 @@ def create_application():
         if tiles[len(tiles) - 1] != "]":
             tiles = tiles + ']'
 
-        ti_board = TI4Board(6)
+        if tiles != '[]':
+            ti_board = TI4Board(tiles=[int(x) for x in tiles[1:len(tiles)-1].split(",")])
+        else:
+            ti_board = TI4Board(6)
+
+        print(ti_board)
+
         form_info = {
             'player_count': [6, 5, 4, 3, 2],
             'pick_style': ti_board.get_pick_styles(),
