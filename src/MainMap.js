@@ -11,7 +11,7 @@ class MoreInfo extends React.Component {
                     <span id={"num-" + index} className={"overlay"}>{index}</span>
                     <img id={"tile-" + index}
                          className="tile"
-                         src={window.location.origin + "/tiles/ST_" + this.props.tiles[index] + ".png"}
+                         src={window.location.origin + window.location.pathname + "/tiles/ST_" + this.props.tiles[index] + ".png"}
                          draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop}
                          onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter}
                          onDragLeave={this.props.dragLeave}

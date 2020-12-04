@@ -76,7 +76,7 @@ class App extends React.Component {
     /* TILE CHANGING FUNCTIONS */
     
     updateTiles(newTiles) {
-        window.history.pushState({}, null, '/?tiles=' + newTiles.toString());
+        window.history.pushState({}, null, window.location.pathname + '?tiles=' + newTiles.toString());
         
         this.setState({
             tiles: newTiles
