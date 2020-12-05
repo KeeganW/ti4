@@ -9,7 +9,8 @@
                 "resources": 4,
                 "influence": 2,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -23,7 +24,8 @@
                 "resources": 4,
                 "influence": 1,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -37,7 +39,8 @@
                 "resources": 4,
                 "influence": 4,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -51,7 +54,8 @@
                 "resources": 4,
                 "influence": 1,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -65,7 +69,8 @@
                 "resources": 3,
                 "influence": 2,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -79,7 +84,8 @@
                 "resources": 5,
                 "influence": 0,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -93,7 +99,8 @@
                 "resources": 3,
                 "influence": 4,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -107,7 +114,8 @@
                 "resources": 4,
                 "influence": 0,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -121,14 +129,16 @@
                 "resources": 2,
                 "influence": 0,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Druaa",
                 "resources": 3,
                 "influence": 1,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -142,14 +152,16 @@
                 "resources": 4,
                 "influence": 0,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Wren Terra",
                 "resources": 2,
                 "influence": 1,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -163,14 +175,16 @@
                 "resources": 1,
                 "influence": 0,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Ragh",
                 "resources": 2,
                 "influence": 1,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -184,14 +198,16 @@
                 "resources": 2,
                 "influence": 3,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Jol",
                 "resources": 1,
                 "influence": 2,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -205,14 +221,16 @@
                 "resources": 1,
                 "influence": 0,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Quinarra",
                 "resources": 3,
                 "influence": 1,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -226,14 +244,16 @@
                 "resources": 2,
                 "influence": 3,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Archon Tau",
                 "resources": 1,
                 "influence": 1,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -247,14 +267,16 @@
                 "resources": 2,
                 "influence": 3,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Shalloq",
                 "resources": 1,
                 "influence": 2,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -268,21 +290,24 @@
                 "resources": 2,
                 "influence": 0,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Hercant",
                 "resources": 1,
                 "influence": 1,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Kamdorn",
                 "resources": 0,
                 "influence": 1,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -302,7 +327,8 @@
                 "resources": 1,
                 "influence": 6,
                 "trait": null,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -315,7 +341,8 @@
                 "resources": 1,
                 "influence": 2,
                 "trait": "industrial",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -328,7 +355,8 @@
                 "resources": 2,
                 "influence": 2,
                 "trait": "hazardous",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -341,7 +369,8 @@
                 "resources": 1,
                 "influence": 1,
                 "trait": "industrial",
-                "specialty": "blue"
+                "specialty": "blue",
+                "legendary": false
             }
         ]
     },
@@ -354,7 +383,8 @@
                 "resources": 1,
                 "influence": 1,
                 "trait": "industrial",
-                "specialty": "green"
+                "specialty": "green",
+                "legendary": false
             }
         ]
     },
@@ -367,7 +397,8 @@
                 "resources": 2,
                 "influence": 2,
                 "trait": "industrial",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -380,7 +411,8 @@
                 "resources": 1,
                 "influence": 3,
                 "trait": "hazardous",
-                "specialty": "red"
+                "specialty": "red",
+                "legendary": false
             }
         ]
     },
@@ -393,7 +425,8 @@
                 "resources": 2,
                 "influence": 1,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -406,7 +439,8 @@
                 "resources": 3,
                 "influence": 1,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -419,14 +453,16 @@
                 "resources": 1,
                 "influence": 1,
                 "trait": "industrial",
-                "specialty": "green"
+                "specialty": "green",
+                "legendary": false
             },
             {
                 "name": "Starpoint",
                 "resources": 3,
                 "influence": 1,
                 "trait": "hazardous",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -439,14 +475,16 @@
                 "resources": 2,
                 "influence": 0,
                 "trait": "hazardous",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Torkan",
                 "resources": 0,
                 "influence": 3,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -459,14 +497,16 @@
                 "resources": 1,
                 "influence": 2,
                 "trait": "industrial",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Rarron",
                 "resources": 0,
                 "influence": 3,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -479,14 +519,16 @@
                 "resources": 0,
                 "influence": 2,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Zohbat",
                 "resources": 3,
                 "influence": 1,
                 "trait": "hazardous",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -499,14 +541,16 @@
                 "resources": 1,
                 "influence": 0,
                 "trait": "industrial",
-                "specialty": "yellow"
+                "specialty": "yellow",
+                "legendary": false
             },
             {
                 "name": "Sakulag",
                 "resources": 2,
                 "influence": 1,
                 "trait": "hazardous",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -519,14 +563,16 @@
                 "resources": 0,
                 "influence": 2,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Xxehan",
                 "resources": 1,
                 "influence": 1,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -539,14 +585,16 @@
                 "resources": 1,
                 "influence": 2,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Resulon",
                 "resources": 2,
                 "influence": 0,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -559,14 +607,16 @@
                 "resources": 1,
                 "influence": 3,
                 "trait": "cultural",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Gral",
                 "resources": 1,
                 "influence": 1,
                 "trait": "industrial",
-                "specialty": "blue"
+                "specialty": "blue",
+                "legendary": false
             }
         ]
     },
@@ -579,14 +629,16 @@
                 "resources": 3,
                 "influence": 1,
                 "trait": "hazardous",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Lirta IV",
                 "resources": 2,
                 "influence": 3,
                 "trait": "hazardous",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -599,14 +651,16 @@
                 "resources": 2,
                 "influence": 1,
                 "trait": "industrial",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Lor",
                 "resources": 1,
                 "influence": 2,
                 "trait": "industrial",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -619,14 +673,16 @@
                 "resources": 1,
                 "influence": 2,
                 "trait": "industrial",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Meer",
                 "resources": 0,
                 "influence": 4,
                 "trait": "hazardous",
-                "specialty": "red"
+                "specialty": "red",
+                "legendary": false
             }
         ]
     },
@@ -639,14 +695,16 @@
                 "resources": 3,
                 "influence": 0,
                 "trait": "hazardous",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             },
             {
                 "name": "Fria",
                 "resources": 2,
                 "influence": 0,
                 "trait": "hazardous",
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
         ]
     },
@@ -742,8 +800,707 @@
                 "name": "Creuss",
                 "resources": 4,
                 "influence": 2,
-                "specialty": null
+                "specialty": null,
+                "legendary": false
             }
+        ]
+    },
+    "52": {
+        "type": "home",
+        "race": "",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Ixth",
+                "resources": 3,
+                "influence": 5,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "53": {
+        "type": "home",
+        "race": "",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Arcturus",
+                "resources": 4,
+                "influence": 4,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "54": {
+        "type": "home",
+        "race": "",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Acheron",
+                "resources": 4,
+                "influence": 0,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "55": {
+        "type": "home",
+        "race": "",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Elysium",
+                "resources": 4,
+                "influence": 1,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "56": {
+        "type": "home",
+        "race": "",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "The Dark",
+                "resources": 3,
+                "influence": 4,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "57": {
+        "type": "home",
+        "race": "",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Naazir",
+                "resources": 2,
+                "influence": 1,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Rokha",
+                "resources": 1,
+                "influence": 2,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "58": {
+        "type": "home",
+        "race": "",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Valk",
+                "resources": 2,
+                "influence": 0,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Avar",
+                "resources": 1,
+                "influence": 1,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Ylir",
+                "resources": 0,
+                "influence": 2,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "59": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Archon Vail",
+                "resources": 1,
+                "influence": 3,
+                "trait": "hazardous",
+                "specialty": "blue",
+                "legendary": false
+            }
+        ]
+    },
+    "60": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Perimeter",
+                "resources": 2,
+                "influence": 1,
+                "trait": "industrial",
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "61": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Perimeter",
+                "resources": 2,
+                "influence": 0,
+                "trait": "industrial",
+                "specialty": "red",
+                "legendary": false
+            }
+        ]
+    },
+    "62": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Sem-Lore",
+                "resources": 3,
+                "influence": 2,
+                "trait": "cultural",
+                "specialty": "yellow",
+                "legendary": false
+            }
+        ]
+    },
+    "63": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Vorhal",
+                "resources": 0,
+                "influence": 2,
+                "trait": "cultural",
+                "specialty": "green",
+                "legendary": false
+            }
+        ]
+    },
+    "64": {
+        "type": "safe",
+        "wormhole": "beta",
+        "planets": [
+            {
+                "name": "Atlas",
+                "resources": 3,
+                "influence": 1,
+                "trait": "hazardous",
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "65": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Primor",
+                "resources": 2,
+                "influence": 1,
+                "trait": "cultural",
+                "specialty": null,
+                "legendary": true
+            }
+        ]
+    },
+    "66": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Hope's End",
+                "resources": 3,
+                "influence": 0,
+                "trait": "hazardous",
+                "specialty": null,
+                "legendary": true
+            }
+        ]
+    },
+    "67": {
+        "type": "anomaly",
+        "wormhole": null,
+        "anomaly": "gravity-rift",
+        "planets": [
+            {
+                "name": "Cormund",
+                "resources": 2,
+                "influence": 0,
+                "trait": "hazardous",
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "68": {
+        "type": "anomaly",
+        "wormhole": null,
+        "anomaly": "nebula",
+        "planets": [
+            {
+                "name": "Everra",
+                "resources": 3,
+                "influence": 1,
+                "trait": "cultural",
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "69": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Accoen",
+                "resources": 2,
+                "influence": 3,
+                "trait": "industrial",
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Jeol Ir",
+                "resources": 2,
+                "influence": 3,
+                "trait": "industrial",
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "70": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Kraag",
+                "resources": 2,
+                "influence": 1,
+                "trait": "hazardous",
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Siig",
+                "resources": 0,
+                "influence": 2,
+                "trait": "hazardous",
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "71": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Ba'Kal",
+                "resources": 3,
+                "influence": 2,
+                "trait": "industrial",
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Alio Prima",
+                "resources": 1,
+                "influence": 1,
+                "trait": "cultural",
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "72": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Lisis",
+                "resources": 2,
+                "influence": 2,
+                "trait": "industrial",
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Velnor",
+                "resources": 2,
+                "influence": 1,
+                "trait": "industrial",
+                "specialty": "red",
+                "legendary": false
+            }
+        ]
+    },
+    "73": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Lisis",
+                "resources": 0,
+                "influence": 2,
+                "trait": "cultural",
+                "specialty": "yellow",
+                "legendary": false
+            },
+            {
+                "name": "Xanhact",
+                "resources": 0,
+                "influence": 1,
+                "trait": "hazardous",
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "74": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Vega Major",
+                "resources": 2,
+                "influence": 1,
+                "trait": "cultural",
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Vega Minor",
+                "resources": 1,
+                "influence": 2,
+                "trait": "cultural",
+                "specialty": "blue",
+                "legendary": false
+            }
+        ]
+    },
+    "75": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Loki",
+                "resources": 1,
+                "influence": 2,
+                "trait": "cultural",
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Abaddon",
+                "resources": 1,
+                "influence": 0,
+                "trait": "cultural",
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Ashtroth",
+                "resources": 2,
+                "influence": 0,
+                "trait": "hazardous",
+                "specialty": null,
+                "legendary": false
+            }
+        ]
+    },
+    "76": {
+        "type": "safe",
+        "wormhole": null,
+        "planets": [
+            {
+                "name": "Rigel I",
+                "resources": 0,
+                "influence": 1,
+                "trait": "hazardous",
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Rigel II",
+                "resources": 1,
+                "influence": 2,
+                "trait": "industrial",
+                "specialty": null,
+                "legendary": false
+            },
+            {
+                "name": "Rigel III",
+                "resources": 1,
+                "influence": 1,
+                "trait": "industrial",
+                "specialty": "green",
+                "legendary": false
+            }
+        ]
+    },
+    "77": {
+        "type": "anomaly",
+        "wormhole": null,
+        "anomaly": null,
+        "planets": [
+        ]
+    },
+    "78": {
+        "type": "anomaly",
+        "wormhole": null,
+        "anomaly": null,
+        "planets": [
+        ]
+    },
+    "79": {
+        "type": "anomaly",
+        "wormhole": "alpha",
+        "anomaly": "asteroid-field",
+        "planets": [
+        ]
+    },
+    "80": {
+        "type": "anomaly",
+        "wormhole": null,
+        "anomaly": "supernova",
+        "planets": [
+        ]
+    },
+    "81": {
+        "type": "anomaly",
+        "wormhole": null,
+        "anomaly": "muaat-supernova",
+        "planets": [
+        ]
+    },
+    "82": {
+        "type": "safe",
+        "wormhole": "all",
+        "anomaly": "muaat-supernova",
+        "planets": [
+            {
+                "name": "Mallice",
+                "resources": 0,
+                "influence": 3,
+                "trait": "cultural",
+                "specialty": null,
+                "legendary": true
+            }
+        ]
+    },
+    "83A": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [1, 4]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "83B": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 3],
+            [0, 2],
+            [3, 5]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "84A": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [2, 5]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "84B": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 3],
+            [0, 4],
+            [1, 3]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "85A": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [1, 5]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "85B": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 3],
+            [0, 2],
+            [3, 5]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "86A": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [1, 5]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "86B": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 3],
+            [0, 4],
+            [1, 3]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "87A": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 2],
+            [2, 4],
+            [2, 5]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "87B": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 2],
+            [0, 3]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "88A": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 4],
+            [1, 4],
+            [2, 4]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "88B": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 3],
+            [0, 2],
+            [3, 5]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "89A": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 2],
+            [0, 4],
+            [2, 4]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "89B": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 3],
+            [0, 4]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "90A": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [1, 5],
+            [2, 4]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "90B": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 3],
+            [0, 4]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "91A": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 3],
+            [0, 4],
+            [1, 3]
+        ],
+        "wormhole": null,
+        "planets": [
+        ]
+    },
+    "91B": {
+        "type": "hyperspace",
+        "hyperspace": [
+            [0, 2],
+            [0, 3]
+        ],
+        "wormhole": null,
+        "planets": [
         ]
     }
 }
