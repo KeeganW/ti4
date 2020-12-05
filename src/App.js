@@ -266,6 +266,7 @@ class App extends React.Component {
         let offsets = calculateOffsets(constraintWidth, constraintHeight)
 
         // Loop over tiles to assign various values to them
+        let currentPlayerNumber = 1;
         for (let tileNumber = 0; tileNumber < offsets.length; tileNumber++) {
             let tile = $("#tile-" + tileNumber);
             let numOverlay = $("#num-" + tileNumber);
@@ -299,10 +300,18 @@ class App extends React.Component {
                 .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
                 .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
 
-            if (!this.state.overlayVisible || this.state.tiles[tileNumber] === 0 || this.state.tiles[tileNumber] === -1) {
+            if (!this.state.overlayVisible) {
                 numOverlay.hide()
             } else {
-                numOverlay.show()
+                if (this.state.tiles[tileNumber] === 0) {
+                    // Show the player name
+                    numOverlay.html("P" + currentPlayerNumber);
+                    currentPlayerNumber += 1;
+                }
+
+                if (this.state.tiles[tileNumber] >= 0) {
+                    numOverlay.show()
+                }
             }
         }
 
