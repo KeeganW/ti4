@@ -31,14 +31,14 @@ class MoreInfo extends React.Component {
             currentNumberOfPlayers: 6,
             currentBoardStyleOptions: ["normal", "warzone"],
             currentBoardStyle: "normal",
-            currentPickStyle: "normal",
+            currentPickStyle: "random",
             currentPlayerNames: ["P1", "P2", "P3", "P4", "P5", "P6"],
             currentRaces: ["Sardakk N'orr", "The Arborec", "The Barony of Letnev", "The Clan of Saar", "The Embers of Muaat", "The Emirates of Hacan", "The Federation of Sol", "The Ghosts of Creuss", "The Lizix Mindnet", "The Mentak Coalition", "The Naalu Collective", "The Nekro Virus", "The Universities of Jol-Nar", "The Winnu", "The Xxcha Kingdom", "The Yin Brotherhood", "The Yssaril Tribes"],
             currentSeed: "",
             userSetSeed: false,
             pickRaces: false,
             pickMultipleRaces: false,
-            shuffleBoards: false,
+            shuffleBoards: true,
         };
         
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -175,10 +175,9 @@ class MoreInfo extends React.Component {
     getPossiblePlanets() {
         let possiblePlanets = Array.from({length: 32}, (_, i) => i + 19)
         let weights = {};
-        
         switch (this.state.currentPickStyle) {
             case "random":
-                // shuffle(possible_planets)
+                possiblePlanets = this.shuffle(possiblePlanets, this.state.currentSeed)
                 return possiblePlanets
             case "resource":
                 weights = {
@@ -260,6 +259,23 @@ class MoreInfo extends React.Component {
     }
     
     render() {
+        const playerNames = "" +
+            "<form id=\"playerNameForm\">\n" +
+            "                                    <div class=\"form-group\">\n" +
+            "                                        <label for=\"player{{ number }}Name\">Player {{ number }}</label>\n" +
+            "                                        <input class=\"form-control\" id=\"player{{ number }}Name\" name=\"player-{{ number }}-name\" type=\"text\" placeholder=\"P{{ number }}\">\n" +
+            "                                    </div>\n" +
+            "                            </form>"
+        const racesOptions = "" +
+            "<form id=\"includedRacesForm\">\n" +
+            "                                <div class=\"form-group\">\n" +
+            "                                    <input class=\"form-control\" id=\"filterRaces\" type=\"text\" placeholder=\"Filter Races...\">\n" +
+            "                                </div>\n" +
+            "                                    <div class=\"custom-control custom-checkbox mb-3 races\" id=\"wrapper{{ race|replace(' ', '') }}\">\n" +
+            "                                        <input type=\"checkbox\" class=\"custom-control-input\" id=\"include{{ race|replace(' ', '') }}\" name=\"race {{ race }}\" checked>\n" +
+            "                                        <label class=\"custom-control-label d-flex\" for=\"include{{ race|replace(' ', '') }}\">{{ race }}</label>\n" +
+            "                                    </div>\n" +
+            "                            </form>"
         return (
             <div id="options" className={this.props.visible ? "" : "d-none"}>
                 <div className="title">
@@ -281,7 +297,7 @@ class MoreInfo extends React.Component {
             
                     <div className="form-group">
                         <label htmlFor="boardStyle" className="d-flex">Board Style
-                            <QuestionCircle className="icon" />
+                            <QuestionCircle className="icon" data-toggle="modal" data-target="#boardStyleModal" />
                         </label>
                         <select className="form-control" id="boardStyle" name="currentBoardStyle" value={this.state.currentBoardStyle} onChange={this.handleInputChange}>
                             {this.state.currentBoardStyleOptions.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
@@ -290,7 +306,7 @@ class MoreInfo extends React.Component {
             
                     <div className="form-group">
                         <label htmlFor="pickStyle" className="d-flex">Picking Style
-                            <QuestionCircle className="icon" />
+                            <QuestionCircle className="icon" data-toggle="modal" data-target="#pickStyleModal" />
                         </label>
                         <select className="form-control" id="pickStyle" name="currentPickStyle" value={this.state.currentPickStyle} onChange={this.handleInputChange}>
                             {this.state.optionsPossible.pickStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
@@ -306,18 +322,18 @@ class MoreInfo extends React.Component {
                     <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="pickRaces" name="pickRaces" checked={this.state.pickRaces} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="pickRaces">Pick Races for Players</label>
-                        <QuestionCircle className="icon" />
+                        <QuestionCircle className="icon" data-toggle="modal" data-target="#pickRacesModal" />
                     </div>
                     <div className={"ml-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
                         <div className="card card-body">
-                            <button type="button" className="btn btn-outline-primary mb-2">Set Player Names</button>
+                            <button type="button" className="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#playerNamesModal">Set Player Names</button>
                     
-                            <button type="button" className="btn btn-outline-primary mb-2">Set Included Races</button>
+                            <button type="button" className="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#includedRacesModal">Set Included Races</button>
                     
                             <div className="custom-control custom-checkbox d-flex">
                                 <input type="checkbox" className="custom-control-input" id="pickMultipleRaces" name="pickMultipleRaces" checked={this.state.pickMultipleRaces} onChange={this.handleInputChange} />
                                 <label className="custom-control-label" htmlFor="pickMultipleRaces">Let Players Pick From Multiple</label>
-                                <QuestionCircle className="icon" />
+                                <QuestionCircle className="icon" data-toggle="modal" data-target="#pickMultipleRacesModal" />
                             </div>
                         </div>
                     </div>
@@ -325,8 +341,35 @@ class MoreInfo extends React.Component {
                     <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="shuffleBoards" name="shuffleBoards" checked={this.state.shuffleBoards} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="shuffleBoards">Randomize Priorities Before Placement</label>
-                        <QuestionCircle className="icon" />
+                        <QuestionCircle className="icon" data-toggle="modal" data-target="#shuffleBoardsModal" />
                     </div>
+
+                    <div id={"pickStyleModal"} title={"About Pick Style"}
+                         content='<p>Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the board style) it is put closer to home worlds to facilitate availiable assets.
+                       <br>
+                       <br>Random: Tiles are completely randomly ordered. Expect chaotic and unbalanced maps.
+                       <br>Resource: Tiles are ordered primarily by their resource values. Higher resource planets are more coveted, and so are more important.
+                       <br>Influence: Similar to "resource", tiles are ordered primarily by their influence values.
+                       <br>Tas: A custom weight which favors resources above all else, but more accurately factors in tech specialties and influence as trade-offs to the "resource" pick.</p>'
+                    />
+                    <div id={"playerNamesModal"} title={"Set Player Names"}
+                         content={playerNames}
+                    />
+                    <div id={"includedRacesModal"} title={"Set Races to Generate From"}
+                         content={racesOptions}
+                    />
+                    <div id={"boardStyleModal"} title={"About Board Style"}
+                         content='<p>Board style is how the board is actually pictured. Changing this value would cause you to expect weighted tiles to be placed in certain positions, or some tiles not to be placed at all (especially in lower player counts). For example, 6-player "Normal" places important tiles closer to home worlds, while 6-player "Warzone" places the most valuable planets close to Mecatol Rex, forcing you to fight for your assets.</p>'
+                    />
+                    <div id={"pickRacesModal"} title={"About Picking Races"}
+                         content="<p>Automatically assigns races to the players on the boards.</p>"
+                    />
+                    <div id={"pickMultipleRacesModal"} title={"About Picking Multiple Races"}
+                         content="<p>Divides all the races evenly up amongst the players in the game, so that they can choose from a selection instead of being specifically assigned one race.</p>"
+                    />
+                    <div id={"shuffleBoardsModal"} title={"About Shuffling Priority"}
+                         content='<p>When using the priority queues of important planets per player, activating this will shuffle who gets first pick from the set of tiles. If unactivated, then tiles are picked in double-back style order. For the primary tiles, Player 1 gets first pick, and the last player gets last pick. After the first round of placements is complete, the person who had last pick gets first pick, and the round continues in reverse pick order. Proceed using this double-back picking strategy until the board is filled.</p>'
+                    />
             
                     <button type="submit" className="btn btn-primary">Generate</button>
                 </form>

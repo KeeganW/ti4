@@ -24,8 +24,10 @@ class App extends React.Component {
             zoom: 1.0
         };
     
+        this.drawMap = this.drawMap.bind(this);
+
         this.onPopState = this.onPopState.bind(this);
-        
+
         this.updateTiles = this.updateTiles.bind(this);
         this.validateTiles = this.validateTiles.bind(this);
     
@@ -53,6 +55,8 @@ class App extends React.Component {
 
         window.onpopstate = this.onPopState
         this.onPopState()
+
+        window.addEventListener('resize', this.drawMap)
     }
     componentWillUnmount() {
         // As you leave the page
@@ -163,7 +167,7 @@ class App extends React.Component {
 
     drawMap() {
         // Check to see if there are any tiles to render currently
-        if (this.state.tiles.length <= 0) {
+        if (this.state === undefined || this.state.tiles.length <= 0) {
             this.setState(state => ({
                 overviewVisible: true,
                 mapVisible: false,
@@ -423,7 +427,6 @@ class App extends React.Component {
                 <MoreInfo visible={this.state.moreInfoVisible}/>
                 
                 <MapOptions visible={this.state.isOptionsMenuShowing} updateTiles={this.updateTiles} />
-                
             
                 <BootstrapScripts />
             </div>
