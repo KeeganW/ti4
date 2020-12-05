@@ -228,13 +228,13 @@ body {
 }
 #moreInfoButton {
   position: fixed;
-  top: calc(var(--title-height) + 95px);
+  top: calc(var(--title-height) + 130px);
   right: calc(var(--options-width) + var(--scroll-bar-distance));
   z-index: 1000;
 }
 #extraTilesButton {
   position: fixed;
-  top: calc(var(--title-height) + 130px);
+  top: calc(var(--title-height) + 95px);
   right: calc(var(--options-width) + var(--scroll-bar-distance));
   z-index: 1000;
 }
