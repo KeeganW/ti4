@@ -2,39 +2,41 @@ import React from "react";
 import {QuestionCircle} from "react-bootstrap-icons";
 import boardData from "./boardData.json";
 import tileData from "./tileData.json";
+import raceData from "./raceData.json";
 
 class MoreInfo extends React.Component {
     constructor(props) {
         super(props);
+        const startingValues = {
+            numberOfPlayers: [2, 3, 4, 5, 6],
+            pokNumberOfPlayers: [7, 8],
+            boardStyles: {
+                2: ["normal"],
+                3: ["normal", "compact", "manta"],
+                4: ["normal", "horizontal", "vertical", "gaps"],
+                5: ["normal", "diamond"],
+                6: ["normal", "warzone"],
+                7: ["normal"],
+                8: ["normal"],
+            },
+            pickStyles: ['random', 'resource', 'influence', 'tas'],
+            races: raceData["races"],
+            pokRaces: raceData["pokRaces"],
+            homeworlds: raceData["homeworlds"],
+            pokHomeworlds: raceData["pokHomeworlds"]
+        }
         
         this.state = {
-            optionsPossible: {
-                numberOfPlayers: [6, 5, 4, 3, 2],
-                boardStyles: {
-                    6: ["normal", "warzone"],
-                    5: ["normal", "diamond"],
-                    4: ["normal", "horizontal", "vertical", "gaps"],
-                    3: ["normal", "compact", "manta"],
-                    2: ["normal"],
-                },
-                pickStyles: ['random', 'resource', 'influence', 'tas'],
-                races: [
-                    "Sardakk N'orr", "The Arborec", "The Barony of Letnev",
-                    "The Clan of Saar", "The Embers of Muaat", "The Emirates of Hacan",
-                    "The Federation of Sol", "The Ghosts of Creuss", "The Lizix Mindnet",
-                    "The Mentak Coalition", "The Naalu Collective", "The Nekro Virus",
-                    "The Universities of Jol-Nar", "The Winnu", "The Xxcha Kingdom",
-                    "The Yin Brotherhood", "The Yssaril Tribes"
-                ]
-            },
-            useProphecyOfKings: false,
+            optionsPossible: startingValues,
             currentNumberOfPlayers: 6,
-            currentBoardStyleOptions: ["normal", "warzone"],
-            currentBoardStyle: "normal",
-            currentPickStyle: "random",
+            currentNumberOfPlayersOptions: startingValues["numberOfPlayers"],
+            currentBoardStyleOptions: startingValues["boardStyles"]["6"],
+            currentBoardStyle: startingValues["boardStyles"]["6"][0],
+            currentPickStyle: startingValues["pickStyles"][0],
             currentPlayerNames: ["P1", "P2", "P3", "P4", "P5", "P6"],
-            currentRaces: ["Sardakk N'orr", "The Arborec", "The Barony of Letnev", "The Clan of Saar", "The Embers of Muaat", "The Emirates of Hacan", "The Federation of Sol", "The Ghosts of Creuss", "The Lizix Mindnet", "The Mentak Coalition", "The Naalu Collective", "The Nekro Virus", "The Universities of Jol-Nar", "The Winnu", "The Xxcha Kingdom", "The Yin Brotherhood", "The Yssaril Tribes"],
+            currentRaces: startingValues["races"],
             currentSeed: "",
+            useProphecyOfKings: false,
             userSetSeed: false,
             pickRaces: false,
             pickMultipleRaces: false,
@@ -42,6 +44,7 @@ class MoreInfo extends React.Component {
         };
         
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.updatePok = this.updatePok.bind(this);
         this.updatePlayerCount = this.updatePlayerCount.bind(this);
         this.updateSeed = this.updateSeed.bind(this);
         
@@ -59,10 +62,28 @@ class MoreInfo extends React.Component {
             [name]: value
         });
     }
+    updatePok(event) {
+        if (event.target.checked) {
+            this.setState({
+                useProphecyOfKings: true,
+                currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers),
+                currentRaces: this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
+            });
+        } else {
+            this.setState({
+                useProphecyOfKings: false,
+                currentNumberOfPlayers: this.state.currentNumberOfPlayers > 6 ? 6 : this.state.currentNumberOfPlayers,
+                currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers,
+                currentBoardStyle: this.state.currentNumberOfPlayers > 6 ? this.state.optionsPossible.boardStyles["6"][0] : this.state.currentBoardStyle,
+                currentBoardStyleOptions: this.state.currentNumberOfPlayers > 6 ? this.state.optionsPossible.boardStyles["6"] : this.state.currentBoardStyleOptions,
+                currentRaces: this.state.optionsPossible.races
+            });
+        }
+    }
     updatePlayerCount(event) {
-        this.setState(state => ({
+        this.setState({
             currentNumberOfPlayers: parseInt(event.target.value)
-        }), this.updateBoardStyleOptions );
+        }, this.updateBoardStyleOptions );
     }
     updateBoardStyleOptions() {
         this.setState(state => ({
@@ -105,61 +126,58 @@ class MoreInfo extends React.Component {
     }
     
     generateBoard(e) {
+        // Don't actually submit the form
         e.preventDefault();
-        
+
+        // Create a random seed to use unless the user has specified one
         let currentSeed = this.state.currentSeed
         if (!this.state.userSetSeed) {
             currentSeed = Math.floor(Math.random() * Math.floor(9999));
         }
         
-        // Get a list of planets to populate
+        // Get a list of board spaces that need to have non-homeworld planets assigned to them
         let planetIndexesToPlace = this.getPlanetIndexesToPlace(currentSeed)
         
         // Get an ordered list of planets to use to fill board with
         let possiblePlanets = this.getPossiblePlanets()
         
-        // Place planets in a specific order, focusing on spreading the planets evenly
-        let newTiles = Array.apply(-1, Array(37)).fill(-1);  // Reset tiles to be empty
+        // Place planets one at a time, using the indexes to place combined with the ordered planet list
+        let newTiles = Array.apply(-1, Array(this.state.useProphecyOfKings ? boardData.pokSize : boardData.size)).fill(-1);  // Reset tiles to be empty
         for (let planetIndex in planetIndexesToPlace){
             newTiles[planetIndexesToPlace[planetIndex]] = possiblePlanets.shift()
         }
         
-        // Get current races for placing races
+        // Get current races for placing races, and shuffle them around
         let currentRaces = [...this.state.currentRaces]
         currentRaces = this.shuffle(currentRaces, currentSeed)
-        
-        for (let index = 0; index < boardData[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'].length; index++) {
-            let planetIndex = boardData[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'][index]
+
+        // Place data for the homeworlds from board data
+        for (let index = 0; index < boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'].length; index++) {
+            let planetIndex = boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'][index]
             if (this.state.pickRaces && !this.state.pickMultipleRaces) {
-                // Convert races into race hexes
-                // Assign a random race to a player
-                
-                // TODO make this cleaner. Currently looping over all homeworlds to try to match the race name
-                const homeworlds = Array.from({length: 18}, (_, i) => i+1)
-                for (let planetTileNumberIndex in homeworlds) {
-                    let planetTileNumber = homeworlds[planetTileNumberIndex]
-                    if (tileData[planetTileNumber.toString()]['race'] === currentRaces[0]) {
-                        newTiles[planetIndex] = planetTileNumber;
-                        currentRaces.shift();
-                    }
-                }
+                // Convert races into race hexes and assign a random race to a player
+                newTiles[planetIndex] = raceData.raceToHomeworldMap[currentRaces[0]]
+                currentRaces.shift();
             } else {
                 // Set home worlds to 0, races to be decided later
                 newTiles[planetIndex] = 0
             }
         }
-        
+
+        // Put Mecatol Rex in the middle
         newTiles[0] = 18
-        
+
+        // Update the seed we are using (so it is displayed) and then update the tiles
         this.setState({
             currentSeed: currentSeed
         }, this.props.updateTiles(newTiles));
     }
     
     getPlanetIndexesToPlace(currentSeed) {
-        let primary = [...boardData[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['primary_tiles']]
-        let secondary = [...boardData[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['secondary_tiles']]
-        let tertiary = [...boardData[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['tertiary_tiles']]
+        // Copy all the tile arrays from board data
+        let primary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['primary_tiles']]
+        let secondary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['secondary_tiles']]
+        let tertiary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['tertiary_tiles']]
         
         // If shuffling, we need to shuffle primary, secondary, and tertiary indexes.
         if (this.state.shuffleBoards) {
@@ -173,7 +191,15 @@ class MoreInfo extends React.Component {
     }
     
     getPossiblePlanets() {
-        let possiblePlanets = Array.from({length: 32}, (_, i) => i + 19)
+        // Get the list of planets to evaluate
+        let possiblePlanets = []
+        possiblePlanets = possiblePlanets.concat(tileData.safe).concat(tileData.anomaly)
+        if (this.state.useProphecyOfKings) {
+            possiblePlanets = possiblePlanets.concat(tileData.pokSafe).concat(tileData.pokAnomaly)
+        }
+
+        // Get the preset weighting format based on the current pick style
+        // TODO react-ify this when adding custom weighting
         let weights = {};
         switch (this.state.currentPickStyle) {
             case "random":
@@ -211,49 +237,50 @@ class MoreInfo extends React.Component {
                 }
                 break;
         }
+
+        // Re-order the planets based on their weights
         possiblePlanets = this.getWeightedPlanetList(possiblePlanets, weights)
+
         return possiblePlanets
     }
-    
+
+    // TODO rename from planet to tile
     getWeightedPlanetList(possiblePlanets, weights) {
+        // Generate an array of tuples where the first element is the plant's tile number and the second is its weight
         let planetWeights = [];
         for (let planetTileNumber in possiblePlanets) {
             planetWeights.push([possiblePlanets[planetTileNumber], this.getWeight(possiblePlanets[planetTileNumber], weights)])
         }
         
-        // Sort the returned list by weight
+        // Sort the returned list by weight, with higher weighted planets being first
         planetWeights.sort(function(a, b) {
             return b[1] - a[1];
         })
         
-        // Get just the planet number
+        // Convert from tuple down to just the tile number
         let orderedPlanets = [];
         for (let weightedPlanet in planetWeights) {
             orderedPlanets.push(planetWeights[weightedPlanet][0]);
         }
+
         return orderedPlanets
     }
     
     getWeight(planetTileNumber, weights) {
         let total_weight = 0
-        let tile = tileData[planetTileNumber.toString()]
-        
+        let tile = tileData.all[planetTileNumber.toString()]
+
+        // Go over all the planets in this tile and add up their values
         for (let planetIndex in tile['planets']) {
             let planet = tile['planets'][planetIndex]
             total_weight += planet['resources'] * weights['resource']
             total_weight += planet['influence'] * weights['influence']
             total_weight += weights['planet_count']
-            if (planet['specialty']) {
-                total_weight += weights['specialty']
-            }
+            total_weight += planet['specialty'] ? weights['specialty'] : 0
         }
-        
-        if (tile['type'] === 'anomaly') {
-            total_weight += weights['anomaly']
-        }
-        if (tile['wormhole']) {
-            total_weight += weights['wormhole']
-        }
+
+        total_weight += tile['type'] === 'anomaly' ? weights['anomaly'] : 0
+        total_weight += tile['wormhole'] ? weights['wormhole'] : 0
         
         return total_weight
     }
@@ -284,14 +311,14 @@ class MoreInfo extends React.Component {
                 <form id="generateForm" onSubmit={this.generateBoard}>
             
                     <div className="custom-control custom-checkbox mb-3">
-                        <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.state.useProphecyOfKings} onChange={this.handleInputChange} />
+                        <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.state.useProphecyOfKings} onChange={this.updatePok} />
                         <label className="custom-control-label" htmlFor="pokExpansion">Use Prophecy of Kings Expansion</label>
                     </div>
             
                     <div className="form-group">
                         <label htmlFor="playerCount">Number of Players</label>
                         <select className="form-control" id="playerCount" name="currentNumberOfPlayers" value={this.state.currentNumberOfPlayers} onChange={this.updatePlayerCount}>
-                            {this.state.optionsPossible.numberOfPlayers.map((x) => <option key={x} value={x}>{x}</option>)}
+                            {this.state.currentNumberOfPlayersOptions.map((x) => <option key={x} value={x}>{x}</option>)}
                         </select>
                     </div>
             

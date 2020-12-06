@@ -258,7 +258,26 @@ class App extends React.Component {
                 [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + halfHeight],
                 [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + topHeight + halfHeight],
                 [halfWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight],
-                [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + halfHeight]
+                [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
+                // 8 player Ring
+                // [halfWidth, halfHeight + topHeight + topHeight + topHeight],
+                // [halfWidth - treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
+                // [halfWidth - leftWidth - halfWidth, halfHeight + topHeight + topHeight],
+                // [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight + topHeight + halfHeight],
+                // [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight + halfHeight],
+                // [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight - halfHeight],
+                // [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight - topHeight - halfHeight],
+                // [halfWidth - leftWidth - halfWidth, halfHeight - topHeight - topHeight],
+                // [halfWidth - treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
+                // [halfWidth, halfHeight - topHeight - topHeight - topHeight],
+                // [halfWidth + treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
+                // [halfWidth + leftWidth + halfWidth, halfHeight - topHeight - topHeight],
+                // [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight - topHeight - halfHeight],
+                // [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight - halfHeight],
+                // [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + halfHeight],
+                // [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + topHeight + halfHeight],
+                // [halfWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight],
+                // [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + halfHeight]
             ]
         }
 
