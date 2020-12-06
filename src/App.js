@@ -470,7 +470,7 @@ class App extends React.Component {
                     <MainOverview visible={this.state.overviewVisible}/>
                     
                     <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
-                             tiles={this.state.tiles}
+                             tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}
                              drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}/>
                     
                     {/* TODO can these controls be moved into MainMap? */}
