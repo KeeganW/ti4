@@ -26,12 +26,6 @@ class MoreInfo extends React.Component {
                     <ReactTooltip place={"left"} effect={"solid"}/>
                 </div>
     
-                <div id="moreInfoButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.toggleMoreInfo}>
-                    <button className="btn btn-primary" id="showMoreInfo" data-tip="Extra Map Information">
-                        <InfoCircle className="icon" />
-                    </button>
-                </div>
-    
                 <div id="extraTilesButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.toggleExtraTiles}>
                     <button className="btn btn-primary" id="showExtraTiles" data-tip="Show Unused Tiles" >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="icon" fill="currentColor">
@@ -39,6 +33,12 @@ class MoreInfo extends React.Component {
                         </svg>
                     </button>
                 </div>
+
+                {/*<div id="moreInfoButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.toggleMoreInfo}>*/}
+                {/*    <button className="btn btn-primary" id="showMoreInfo" data-tip="Extra Map Information">*/}
+                {/*        <InfoCircle className="icon" />*/}
+                {/*    </button>*/}
+                {/*</div>*/}
             </div>
         );
     }

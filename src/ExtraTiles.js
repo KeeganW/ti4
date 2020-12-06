@@ -1,5 +1,5 @@
 import React from "react";
-import $ from "jquery";
+import tileData from "./tileData.json";
 
 class MoreInfo extends React.Component {
     constructor(props) {
@@ -19,7 +19,12 @@ class MoreInfo extends React.Component {
     }
     
     render() {
-        const tileNumbers = Array.from({length: 32}, (v, i) => (i + 19));
+        let tileNumbers = []
+        tileNumbers = tileNumbers.concat(tileData.safe).concat(tileData.anomaly)
+        if (this.props.useProphecyOfKings) {
+            tileNumbers = tileNumbers.concat(tileData.pokSafe).concat(tileData.pokAnomaly)
+        }
+
         const tileObjects = []
         for (const [index, value] of tileNumbers.entries()) {
             tileObjects.push(
@@ -51,25 +56,6 @@ class MoreInfo extends React.Component {
                 </div>
                 <div id="extraTiles" className="">
                     {tileObjects}
-                    {/*{% for index in range(19,51) %}*/}
-                    {/*<div className="tile-wrapper" style="position: relative">*/}
-                    {/*    /!*<span id="extra-num-{{ index }}" class="overlay" style="width: 105px; height: 91px; line-height: 91px; display: none;">index</span>*!/*/}
-                    {/*    <img id="extra-tile-{{ index }}"*/}
-                    {/*         width="105px"*/}
-                    {/*         height="91px"*/}
-                    {/*         className="tile"*/}
-                    {/*         src="/static/img/tiles/ST_{{ index }}.png"*/}
-                    {/*         draggable="true" onDragStart="drag(event)" onDrop="drop(event)"*/}
-                    {/*         onDragOver="allowDrop(event)" onDragEnter="dragEnter(event)"*/}
-                    {/*         onDragLeave="dragLeave(event)"*/}
-                    {/*         alt=""*/}
-                    {/*         // style="display: none;margin:3px;position:relative;"*/}
-                    {/*    />*/}
-                    {/*    <svg id="extra-underlay-{{ index }}" className="underlay"*/}
-                    {/*         style="width: 111px; height: 97px;position:absolute;top:0;left:0;">*/}
-                    {/*        <use xlink:href="#hex"/>*/}
-                    {/*    </svg>*/}
-                    {/*</div>*/}
                 </div>
             </div>
         );

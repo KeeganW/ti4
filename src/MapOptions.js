@@ -36,7 +36,6 @@ class MoreInfo extends React.Component {
             currentPlayerNames: ["P1", "P2", "P3", "P4", "P5", "P6"],
             currentRaces: startingValues["races"],
             currentSeed: "",
-            useProphecyOfKings: false,
             userSetSeed: false,
             pickRaces: false,
             pickMultipleRaces: false,
@@ -65,19 +64,17 @@ class MoreInfo extends React.Component {
     updatePok(event) {
         if (event.target.checked) {
             this.setState({
-                useProphecyOfKings: true,
                 currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers),
                 currentRaces: this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
-            });
+            }, this.props.toggleProphecyOfKings);
         } else {
             this.setState({
-                useProphecyOfKings: false,
                 currentNumberOfPlayers: this.state.currentNumberOfPlayers > 6 ? 6 : this.state.currentNumberOfPlayers,
                 currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers,
                 currentBoardStyle: this.state.currentNumberOfPlayers > 6 ? this.state.optionsPossible.boardStyles["6"][0] : this.state.currentBoardStyle,
                 currentBoardStyleOptions: this.state.currentNumberOfPlayers > 6 ? this.state.optionsPossible.boardStyles["6"] : this.state.currentBoardStyleOptions,
                 currentRaces: this.state.optionsPossible.races
-            });
+            }, this.props.toggleProphecyOfKings);
         }
     }
     updatePlayerCount(event) {
@@ -142,7 +139,7 @@ class MoreInfo extends React.Component {
         let possiblePlanets = this.getPossiblePlanets()
         
         // Place planets one at a time, using the indexes to place combined with the ordered planet list
-        let newTiles = Array.apply(-1, Array(this.state.useProphecyOfKings ? boardData.pokSize : boardData.size)).fill(-1);  // Reset tiles to be empty
+        let newTiles = Array.apply(-1, Array(this.props.useProphecyOfKings ? boardData.pokSize : boardData.size)).fill(-1);  // Reset tiles to be empty
         for (let planetIndex in planetIndexesToPlace){
             newTiles[planetIndexesToPlace[planetIndex]] = possiblePlanets.shift()
         }
@@ -194,7 +191,7 @@ class MoreInfo extends React.Component {
         // Get the list of planets to evaluate
         let possiblePlanets = []
         possiblePlanets = possiblePlanets.concat(tileData.safe).concat(tileData.anomaly)
-        if (this.state.useProphecyOfKings) {
+        if (this.props.useProphecyOfKings) {
             possiblePlanets = possiblePlanets.concat(tileData.pokSafe).concat(tileData.pokAnomaly)
         }
 
@@ -311,7 +308,7 @@ class MoreInfo extends React.Component {
                 <form id="generateForm" onSubmit={this.generateBoard}>
             
                     <div className="custom-control custom-checkbox mb-3">
-                        <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.state.useProphecyOfKings} onChange={this.updatePok} />
+                        <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.props.useProphecyOfKings} onChange={this.updatePok} />
                         <label className="custom-control-label" htmlFor="pokExpansion">Use Prophecy of Kings Expansion</label>
                     </div>
             

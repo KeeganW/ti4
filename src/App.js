@@ -9,6 +9,7 @@ import MainMap from "./MainMap";
 import MapControls from "./MapControls";
 import OptionsControls from "./OptionsControls";
 import MapOptions from "./MapOptions";
+import tileData from "./tileData.json";
 
 class App extends React.Component {
     constructor(props) {
@@ -16,6 +17,7 @@ class App extends React.Component {
         
         this.state = {
             isOptionsMenuShowing: true,
+            useProphecyOfKings: false,
             overviewVisible: true,
             extraTilesVisible: false,
             moreInfoVisible: false,
@@ -32,9 +34,11 @@ class App extends React.Component {
         this.validateTiles = this.validateTiles.bind(this);
     
         this.toggleOptionsMenu = this.toggleOptionsMenu.bind(this);
+        this.toggleProphecyOfKings = this.toggleProphecyOfKings.bind(this);
         this.toggleOverlay = this.toggleOverlay.bind(this);
         this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
         this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
+        this.showExtraTiles = this.showExtraTiles.bind(this);
         this.zoomPlusClick = this.zoomPlusClick.bind(this);
         this.zoomMinusClick = this.zoomMinusClick.bind(this);
         
@@ -84,7 +88,10 @@ class App extends React.Component {
         
         this.setState({
             tiles: newTiles
-        }, this.drawMap );
+        }, () => {
+            this.showExtraTiles();
+            this.drawMap();
+        });
     }
     /**
      * Attempts to validate a given tile string, by cleaning it up and turning it into an object.
@@ -128,6 +135,11 @@ class App extends React.Component {
             overlayVisible: !this.state.overlayVisible,
         }, this.drawMap );
     }
+    toggleProphecyOfKings(event) {
+        this.setState({
+            useProphecyOfKings: !this.state.useProphecyOfKings,
+        }, this.showExtraTiles);
+    }
     toggleMoreInfo(event) {
         let optionsSize = this.state.moreInfoVisible ? "0px" : "400px";
         document.documentElement.style.setProperty('--more-info-width', optionsSize);
@@ -136,17 +148,28 @@ class App extends React.Component {
         }));
     }
     toggleExtraTiles(event) {
-        for (let tileNum = 19; tileNum <= 50; tileNum++) {
-            if (!this.state.tiles.includes(tileNum)) {
-                $("#extra-" + tileNum).show();
-            }
-        }
+        this.showExtraTiles();
         
         let optionsSize = this.state.extraTilesVisible ? "0px" : "150px";
         document.documentElement.style.setProperty('--extra-tiles-width', optionsSize);
-        this.setState(state => ({
+        this.setState({
             extraTilesVisible: !this.state.extraTilesVisible,
-        }));
+        });
+    }
+    showExtraTiles() {
+        let tileNumbers = []
+        tileNumbers = tileNumbers.concat(tileData.safe).concat(tileData.anomaly)
+        if (this.state.useProphecyOfKings) {
+            tileNumbers = tileNumbers.concat(tileData.pokSafe).concat(tileData.pokAnomaly)
+        }
+
+        for (let tileNumberIndex in tileNumbers) {
+            if (!this.state.tiles.includes(tileNumbers[tileNumberIndex])) {
+                $("#extra-" + tileNumbers[tileNumberIndex]).show();
+            } else {
+                $("#extra-" + tileNumbers[tileNumberIndex]).hide();
+            }
+        }
     }
     zoomPlusClick() {
         if (this.state.zoom < 3) {
@@ -259,25 +282,31 @@ class App extends React.Component {
                 [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + topHeight + halfHeight],
                 [halfWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight],
                 [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
-                // 8 player Ring
-                // [halfWidth, halfHeight + topHeight + topHeight + topHeight],
-                // [halfWidth - treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
-                // [halfWidth - leftWidth - halfWidth, halfHeight + topHeight + topHeight],
-                // [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight + topHeight + halfHeight],
-                // [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight + halfHeight],
-                // [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight - halfHeight],
-                // [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight - topHeight - halfHeight],
-                // [halfWidth - leftWidth - halfWidth, halfHeight - topHeight - topHeight],
-                // [halfWidth - treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
-                // [halfWidth, halfHeight - topHeight - topHeight - topHeight],
-                // [halfWidth + treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
-                // [halfWidth + leftWidth + halfWidth, halfHeight - topHeight - topHeight],
-                // [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight - topHeight - halfHeight],
-                // [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight - halfHeight],
-                // [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + halfHeight],
-                // [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + topHeight + halfHeight],
-                // [halfWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight],
-                // [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + halfHeight]
+                // Extended Ring
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
             ]
         }
 
@@ -309,7 +338,7 @@ class App extends React.Component {
                 .css("margin-top", offsets[tileNumber][1])
                 .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
                 .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
-                .css("display", "block")
+                .css("display", "none")
                 .html(this.state.tiles[tileNumber])
 
             underlay.css("width", constraintWidth + 6)
@@ -407,13 +436,13 @@ class App extends React.Component {
         } else if (fromType === "extra" && targetType === "tile") {
             // Moving from the extra tiles onto the main map
             let temp = tilesCopy[targetSecond];
-            tilesCopy[targetSecond] = fromSecond;
+            tilesCopy[targetSecond] = parseInt(fromSecond);
             // Update the id of the tile
             fromSelector.attr('id', 'extra-' + temp)
         } else if (fromType === "tile" && targetType === "extra") {
             // Moving from the main map to the tiles
             let temp = tilesCopy[fromSecond];
-            tilesCopy[fromSecond] = targetSecond;
+            tilesCopy[fromSecond] = parseInt(targetSecond);
             // Update the id of the tile
             targetSelector.attr('id', 'extra-' + temp)
         } else {
@@ -440,7 +469,8 @@ class App extends React.Component {
                 <div id="mainContent" className="justify-content-center align-items-center">
                     <MainOverview visible={this.state.overviewVisible}/>
                     
-                    <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible} tiles={this.state.tiles}
+                    <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
+                             tiles={this.state.tiles}
                              drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}/>
                     
                     {/* TODO can these controls be moved into MainMap? */}
@@ -449,12 +479,16 @@ class App extends React.Component {
                                  zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick} />
                 </div>
                 
-                <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible} updateTiles={this.updateTiles}
+                <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}
+                            useProphecyOfKings={this.state.useProphecyOfKings}
+                            updateTiles={this.updateTiles}
                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}/>
                 
-                <MoreInfo visible={this.state.moreInfoVisible}/>
+                <MoreInfo visible={this.state.moreInfoVisible} useProphecyOfKings={this.state.useProphecyOfKings}/>
                 
-                <MapOptions visible={this.state.isOptionsMenuShowing} updateTiles={this.updateTiles} />
+                <MapOptions visible={this.state.isOptionsMenuShowing}  useProphecyOfKings={this.state.useProphecyOfKings}
+                            toggleProphecyOfKings={this.toggleProphecyOfKings} updateTiles={this.updateTiles}
+                            showExtraTiles={this.showExtraTiles} />
             
                 <BootstrapScripts />
             </div>
