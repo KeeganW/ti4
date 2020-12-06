@@ -115,10 +115,22 @@
             "normal": {
                 "description": "Control what is around you for resources, and attack the center for victory points.",
                 "empty_tiles": [],
-                "home_worlds": [19, 22, 25, 28, 31, 34],
-                "primary_tiles": [7, 9, 11, 13, 15, 17],
-                "secondary_tiles": [33, 30, 27, 24, 21, 36, 20, 23, 26, 29, 32, 35],
-                "tertiary_tiles": [18, 16, 14, 12, 10, 8, 4, 6, 2, 3, 5, 1]
+                "home_worlds": [37, 40, 43, 46, 52, 55, 58],
+                "primary_tiles": [19, 34, 32, 30, 26, 24, 22],
+                "secondary_tiles": [38, 41, 44, 47, 53, 56, 57, 59, 54, 51, 45, 42, 39, 60],
+                "tertiary_tiles": [4, 2, 6, 1, 3, 5, 7, 9, 11, 15, 17, 18, 16, 14, 12, 10, 8, 20, 21, 23, 25, 28, 31, 33, 35, 36],
+                "hyperlane_tiles": [13, 27, 29, 48, 49, 50]
+            }
+        },
+        "8": {
+            "normal": {
+                "description": "Control what is around you for resources, and attack the center for victory points.",
+                "empty_tiles": [],
+                "home_worlds": [37, 40, 43, 46, 49, 52, 55, 58],
+                "primary_tiles": [19, 28, 34, 32, 30, 26, 24, 22],
+                "secondary_tiles": [38, 50, 41, 44, 47, 53, 56, 59, 57, 54, 51, 45, 42, 39, 48, 60],
+                "tertiary_tiles": [4, 2, 6, 1, 3, 5, 7, 9, 11, 13, 15, 17, 18, 16, 14, 12, 10, 8, 20, 29, 21, 23, 25, 31, 33, 35, 27, 36],
+                "hyperlane_tiles": []
             }
         }
     }

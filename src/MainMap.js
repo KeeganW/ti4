@@ -1,11 +1,9 @@
 import React from "react";
-import $ from "jquery";
-import tileData from "./tileData.json";
 import boardData from "./boardData.json";
 
 class MoreInfo extends React.Component {
     render() {
-        const tileNumbers = Array.from({length: this.props.useProphecyOfKings ? boardData.pokSize : boardData.size}, (_, i) => i);
+        const tileNumbers = Array.from({length: boardData.pokSize}, (_, i) => i);
         const tileObjects = []
         for (const [index, value] of tileNumbers.entries()) {
             tileObjects.push(

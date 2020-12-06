@@ -80,7 +80,10 @@ class MoreInfo extends React.Component {
     updatePlayerCount(event) {
         this.setState({
             currentNumberOfPlayers: parseInt(event.target.value)
-        }, this.updateBoardStyleOptions );
+        }, () => {
+            this.updateBoardStyleOptions()
+            this.generateBoard(event)
+        });
     }
     updateBoardStyleOptions() {
         this.setState(state => ({

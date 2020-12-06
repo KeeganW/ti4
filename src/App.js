@@ -179,7 +179,7 @@ class App extends React.Component {
         }
     }
     zoomMinusClick() {
-        if (this.state.zoom > 1) {
+        if (this.state.zoom > 0.5) {
             this.setState({
                 zoom: this.state.zoom - 0.75
             }, this.drawMap );
@@ -207,8 +207,8 @@ class App extends React.Component {
 
         // Configuration options for magic numbers
         let mapPadding = 0; // The amount of pad spacing to apply to the map edges
-        let mapNumberTilesHeight = 7; // Every TI board is 7 tiles tall
-        let mapNumberTilesWidth = 5.5; // Every TI board is 5.5 tiles wide
+        let mapNumberTilesHeight = 9; // Every TI board is 7 tiles tall
+        let mapNumberTilesWidth = 7; // Every TI board is 5.5 tiles wide
         let mapTileWidth = 364; // The width of every tile in the static folder
         let mapTileHeight = 317;
 
@@ -283,30 +283,30 @@ class App extends React.Component {
                 [halfWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight],
                 [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
                 // Extended Ring
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
+                [halfWidth, halfHeight + topHeight + topHeight + topHeight + topHeight],
+                [halfWidth - treQuarWidth, halfHeight + topHeight + topHeight + topHeight + halfHeight],
+                [halfWidth - leftWidth - halfWidth, halfHeight + topHeight + topHeight + topHeight],
+                [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight + topHeight + topHeight + halfHeight],
+                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight + topHeight + topHeight],
+                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight + topHeight],
+                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight],
+                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight - topHeight],
+                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight - topHeight - topHeight],
+                [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight - topHeight - topHeight - halfHeight],
+                [halfWidth - leftWidth - halfWidth, halfHeight - topHeight - topHeight - topHeight],
+                [halfWidth - treQuarWidth, halfHeight - topHeight - topHeight - topHeight - halfHeight],
+                [halfWidth, halfHeight - topHeight - topHeight - topHeight - topHeight],
+                [halfWidth + treQuarWidth, halfHeight - topHeight - topHeight - topHeight - halfHeight],
+                [halfWidth + leftWidth + halfWidth, halfHeight - topHeight - topHeight - topHeight],
+                [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight - topHeight - topHeight - halfHeight],
+                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight - topHeight - topHeight],
+                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight - topHeight],
+                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight],
+                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight + topHeight],
+                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight + topHeight + topHeight],
+                [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight + halfHeight],
+                [halfWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight + topHeight],
+                [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + topHeight + halfHeight],
             ]
         }
 
@@ -319,7 +319,7 @@ class App extends React.Component {
             let tile = $("#tile-" + tileNumber);
             let numOverlay = $("#num-" + tileNumber);
             let underlay = $("#underlay-" + tileNumber);
-            if (this.state.tiles[tileNumber] !== -1) {
+            if (this.state.tiles[tileNumber] >= 0) {
                 tile.attr("width", constraintWidth)
                     .attr("height", constraintHeight)
                     .css("margin-left", offsets[tileNumber][0])
@@ -339,7 +339,8 @@ class App extends React.Component {
                 .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
                 .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
                 .css("display", "none")
-                .html(this.state.tiles[tileNumber])
+                // .html(this.state.tiles[tileNumber])
+                .html(tileNumber) // TODO comment out
 
             underlay.css("width", constraintWidth + 6)
                 .css("height", constraintHeight + 6)
@@ -357,9 +358,9 @@ class App extends React.Component {
                     currentPlayerNumber += 1;
                 }
 
-                if (this.state.tiles[tileNumber] >= 0) {
-                    numOverlay.show()
-                }
+                // if (this.state.tiles[tileNumber] >= 0) { // TODO comment in
+                    numOverlay.show();
+                // } // TODO comment in
             }
         }
 
