@@ -3,6 +3,7 @@ import {QuestionCircle} from "react-bootstrap-icons";
 import boardData from "./boardData.json";
 import tileData from "./tileData.json";
 import raceData from "./raceData.json";
+import HelpModal from "./HelpModal";
 
 class MoreInfo extends React.Component {
     constructor(props) {
@@ -40,6 +41,14 @@ class MoreInfo extends React.Component {
             pickRaces: false,
             pickMultipleRaces: false,
             shuffleBoards: true,
+
+            pickRacesHelp: false,
+            boardStyleHelp: false,
+            pickStyleHelp: false,
+            setPlayerNamesHelp: false,
+            setRacesHelp: false,
+            pickMultipleRacesHelp: false,
+            shufflePriorityHelp: false,
         };
         
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -50,6 +59,14 @@ class MoreInfo extends React.Component {
         this.updateBoardStyleOptions = this.updateBoardStyleOptions.bind(this); // TODO is the bind needed?
 
         this.generateBoard = this.generateBoard.bind(this);
+
+        this.togglePickRacesHelp = this.togglePickRacesHelp.bind(this);
+        this.toggleBoardStyleHelp = this.toggleBoardStyleHelp.bind(this);
+        this.togglePickStyleHelp = this.togglePickStyleHelp.bind(this);
+        this.toggleSetPlayerNamesHelp = this.toggleSetPlayerNamesHelp.bind(this);
+        this.toggleSetRacesHelp = this.toggleSetRacesHelp.bind(this);
+        this.togglePickMultipleRacesHelp = this.togglePickMultipleRacesHelp.bind(this);
+        this.toggleShufflePriorityHelp = this.toggleShufflePriorityHelp.bind(this);
     }
     
     handleInputChange(event) {
@@ -284,6 +301,41 @@ class MoreInfo extends React.Component {
         
         return total_weight
     }
+    togglePickRacesHelp(event) {
+        this.setState({
+            pickRacesHelp: !this.state.pickRacesHelp
+        })
+    }
+    toggleBoardStyleHelp(event) {
+        this.setState({
+            boardStyleHelp: !this.state.boardStyleHelp
+        })
+    }
+    togglePickStyleHelp(event) {
+        this.setState({
+            pickStyleHelp: !this.state.pickStyleHelp
+        })
+    }
+    toggleSetPlayerNamesHelp(event) {
+        this.setState({
+            setPlayerNamesHelp: !this.state.setPlayerNamesHelp
+        })
+    }
+    toggleSetRacesHelp(event) {
+        this.setState({
+            setRacesHelp: !this.state.setRacesHelp
+        })
+    }
+    togglePickMultipleRacesHelp(event) {
+        this.setState({
+            pickMultipleRacesHelp: !this.state.pickMultipleRacesHelp
+        })
+    }
+    toggleShufflePriorityHelp(event) {
+        this.setState({
+            shufflePriorityHelp: !this.state.shufflePriorityHelp
+        })
+    }
     
     render() {
         const playerNames = "" +
@@ -324,7 +376,7 @@ class MoreInfo extends React.Component {
             
                     <div className="form-group">
                         <label htmlFor="boardStyle" className="d-flex">Board Style
-                            <QuestionCircle className="icon" data-toggle="modal" data-target="#boardStyleModal" />
+                            <QuestionCircle className="icon" onClick={this.toggleBoardStyleHelp} />
                         </label>
                         <select className="form-control" id="boardStyle" name="currentBoardStyle" value={this.state.currentBoardStyle} onChange={this.handleInputChange}>
                             {this.state.currentBoardStyleOptions.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
@@ -333,7 +385,7 @@ class MoreInfo extends React.Component {
             
                     <div className="form-group">
                         <label htmlFor="pickStyle" className="d-flex">Picking Style
-                            <QuestionCircle className="icon" data-toggle="modal" data-target="#pickStyleModal" />
+                            <QuestionCircle className="icon" onClick={this.togglePickStyleHelp} />
                         </label>
                         <select className="form-control" id="pickStyle" name="currentPickStyle" value={this.state.currentPickStyle} onChange={this.handleInputChange}>
                             {this.state.optionsPossible.pickStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
@@ -349,18 +401,18 @@ class MoreInfo extends React.Component {
                     <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="pickRaces" name="pickRaces" checked={this.state.pickRaces} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="pickRaces">Pick Races for Players</label>
-                        <QuestionCircle className="icon" data-toggle="modal" data-target="#pickRacesModal" />
+                        <QuestionCircle className="icon" onClick={this.togglePickRacesHelp} />
                     </div>
                     <div className={"ml-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
                         <div className="card card-body">
-                            <button type="button" className="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#playerNamesModal">Set Player Names</button>
+                            {/*<button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>*/}
                     
-                            <button type="button" className="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#includedRacesModal">Set Included Races</button>
+                            {/*<button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>*/}
                     
                             <div className="custom-control custom-checkbox d-flex">
                                 <input type="checkbox" className="custom-control-input" id="pickMultipleRaces" name="pickMultipleRaces" checked={this.state.pickMultipleRaces} onChange={this.handleInputChange} />
                                 <label className="custom-control-label" htmlFor="pickMultipleRaces">Let Players Pick From Multiple</label>
-                                <QuestionCircle className="icon" data-toggle="modal" data-target="#pickMultipleRacesModal" />
+                                <QuestionCircle className="icon" onClick={this.togglePickMultipleRacesHelp} />
                             </div>
                         </div>
                     </div>
@@ -371,7 +423,7 @@ class MoreInfo extends React.Component {
                         <QuestionCircle className="icon" data-toggle="modal" data-target="#shuffleBoardsModal" />
                     </div>
 
-                    <div id={"pickStyleModal"} title={"About Pick Style"}
+                    <HelpModal visible={this.state.pickStyleHelp} hideModal={this.togglePickStyleHelp} title={"About Pick Style"}
                          content='<p>Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the board style) it is put closer to home worlds to facilitate availiable assets.
                        <br>
                        <br>Random: Tiles are completely randomly ordered. Expect chaotic and unbalanced maps.
@@ -379,22 +431,22 @@ class MoreInfo extends React.Component {
                        <br>Influence: Similar to "resource", tiles are ordered primarily by their influence values.
                        <br>Tas: A custom weight which favors resources above all else, but more accurately factors in tech specialties and influence as trade-offs to the "resource" pick.</p>'
                     />
-                    <div id={"playerNamesModal"} title={"Set Player Names"}
+                    <HelpModal visible={this.state.setPlayerNamesHelp} hideModal={this.toggleSetPlayerNamesHelp} title={"Set Player Names"}
                          content={playerNames}
                     />
-                    <div id={"includedRacesModal"} title={"Set Races to Generate From"}
+                    <HelpModal visible={this.state.setRacesHelp} hideModal={this.toggleSetRacesHelp} title={"Set Races to Generate From"}
                          content={racesOptions}
                     />
-                    <div id={"boardStyleModal"} title={"About Board Style"}
+                    <HelpModal visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
                          content='<p>Board style is how the board is actually pictured. Changing this value would cause you to expect weighted tiles to be placed in certain positions, or some tiles not to be placed at all (especially in lower player counts). For example, 6-player "Normal" places important tiles closer to home worlds, while 6-player "Warzone" places the most valuable planets close to Mecatol Rex, forcing you to fight for your assets.</p>'
                     />
-                    <div id={"pickRacesModal"} title={"About Picking Races"}
+                    <HelpModal visible={this.state.pickRacesHelp} hideModal={this.togglePickRacesHelp} title={"About Picking Races"}
                          content="<p>Automatically assigns races to the players on the boards.</p>"
                     />
-                    <div id={"pickMultipleRacesModal"} title={"About Picking Multiple Races"}
+                    <HelpModal visible={this.state.pickMultipleRacesHelp} hideModal={this.togglePickMultipleRacesHelp} title={"About Picking Multiple Races"}
                          content="<p>Divides all the races evenly up amongst the players in the game, so that they can choose from a selection instead of being specifically assigned one race.</p>"
                     />
-                    <div id={"shuffleBoardsModal"} title={"About Shuffling Priority"}
+                    <HelpModal visible={this.state.shufflePriorityHelp} hideModal={this.toggleShufflePriorityHelp} title={"About Shuffling Priority"}
                          content='<p>When using the priority queues of important planets per player, activating this will shuffle who gets first pick from the set of tiles. If unactivated, then tiles are picked in double-back style order. For the primary tiles, Player 1 gets first pick, and the last player gets last pick. After the first round of placements is complete, the person who had last pick gets first pick, and the round continues in reverse pick order. Proceed using this double-back picking strategy until the board is filled.</p>'
                     />
             
