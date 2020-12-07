@@ -280,9 +280,7 @@ body {
     --options-width: 0px;
     --extra-tiles-width: 0px;
   }
-  /* Trigger hamburger menu */
   #options, #extraTiles, #moreInfo {
-    display: none;
     width: 100%;
     z-index: 1001;
   }

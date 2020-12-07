@@ -23,12 +23,15 @@ class App extends React.Component {
             moreInfoVisible: false,
             tiles: Array.apply(-1, Array(37)).fill(-1),
             overlayVisible: false,
-            zoom: 1.0
+            zoom: 1.0,
+            mobileBreakpoint: 700,
+            isMobileView: false
         };
     
         this.drawMap = this.drawMap.bind(this);
 
         this.onPopState = this.onPopState.bind(this);
+        this.checkResize = this.checkResize.bind(this);
 
         this.updateTiles = this.updateTiles.bind(this);
         this.validateTiles = this.validateTiles.bind(this);
@@ -60,7 +63,28 @@ class App extends React.Component {
         window.onpopstate = this.onPopState
         this.onPopState()
 
-        window.addEventListener('resize', this.drawMap)
+        this.checkResize()
+
+        window.addEventListener('resize', this.checkResize)
+    }
+    checkResize() {
+        if (window.innerWidth < this.state.mobileBreakpoint) {
+            if (!this.state.isMobileView) {
+                // Just transitioned into mobile state, so hide the options menu
+                this.setState({
+                    isMobileView: true,
+                    isOptionsMenuShowing: false
+                })
+                document.documentElement.style.setProperty('--options-width', "0px");
+            } // else { // We went from mobile to mobile, don't need to do anything
+        } else {
+            this.setState({
+                isMobileView: false,
+                isOptionsMenuShowing: true
+            })
+            document.documentElement.style.setProperty('--options-width', "400px");
+        }
+        this.drawMap()
     }
     componentWillUnmount() {
         // As you leave the page
@@ -85,9 +109,16 @@ class App extends React.Component {
     
     updateTiles(newTiles) {
         window.history.pushState({}, null, window.location.pathname + '?tiles=' + newTiles.toString());
-        
+
+        let newOptionsMenuState = this.state.isOptionsMenuShowing
+        console.log(this.state.isMobileView)
+        if (this.state.isMobileView) {
+            newOptionsMenuState = false
+        }
+
         this.setState({
-            tiles: newTiles
+            tiles: newTiles,
+            isOptionsMenuShowing: newOptionsMenuState
         }, () => {
             this.showExtraTiles();
             this.drawMap();
@@ -119,8 +150,10 @@ class App extends React.Component {
     
     toggleOptionsMenu() {
         // Set the css variable for options width
-        let optionsSize = this.state.isOptionsMenuShowing ? "0px" : "400px";
-        document.documentElement.style.setProperty('--options-width', optionsSize);
+        if (window.innerWidth >= this.state.mobileBreakpoint) {
+            let optionsSize = this.state.isOptionsMenuShowing ? "0px" : "400px";
+            document.documentElement.style.setProperty('--options-width', optionsSize);
+        }
         
         // Update the map so that it correctly uses the new width
         this.drawMap();
@@ -465,7 +498,7 @@ class App extends React.Component {
         return (
             <div>
                     
-                <OptionsControls visible={this.state.isOptionsMenuShowing} toggleOptions={this.toggleOptionsMenu} />
+                <OptionsControls visible={this.state.isOptionsMenuShowing} isMobileView={this.state.isMobileView} toggleOptions={this.toggleOptionsMenu} />
                 
                 <div id="mainContent" className="justify-content-center align-items-center">
                     <MainOverview visible={this.state.overviewVisible}/>

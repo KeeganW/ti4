@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
       content="Generate a custom, unique, and balanced Twilight Imperium 4 galaxy map to use in your next game!"
@@ -10,7 +11,6 @@
     <meta name="author" content="Keegan Williams" />
 
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
@@ -23,41 +23,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
     <!--  Preload normal map tiles, but not home worlds.  -->
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_-1.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_0.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_18.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_19.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_20.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_21.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_22.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_23.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_24.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_25.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_26.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_27.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_28.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_29.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_30.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_31.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_32.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_33.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_34.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_35.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_36.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_37.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_38.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_39.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_40.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_41.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_42.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_43.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_44.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_45.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_46.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_47.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_48.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_49.png" as="image">
-    <link rel="preload" href="%PUBLIC_URL%/tiles/ST_50.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_-1.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_undefined.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_0.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_18.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_19.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_20.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_21.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_22.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_23.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_24.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_25.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_26.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_27.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_28.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_29.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_30.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_31.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_32.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_33.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_34.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_35.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_36.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_37.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_38.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_39.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_40.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_41.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_42.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_43.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_44.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_45.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_46.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_47.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_48.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_49.png" as="image">
+    <link rel="preload" media="(min-width: 700px)" href="%PUBLIC_URL%/tiles/ST_50.png" as="image">
   </head>
   <body class="d-flex flex-column h-100">
     <noscript>You need to enable JavaScript to run this app.</noscript>
