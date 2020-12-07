@@ -4,8 +4,10 @@ import boardData from "./boardData.json";
 import tileData from "./tileData.json";
 import raceData from "./raceData.json";
 import HelpModal from "./HelpModal";
+import Form from "react-bootstrap/Modal";
 
-class MoreInfo extends React.Component {
+
+class MapOptions extends React.Component {
     constructor(props) {
         super(props);
         const startingValues = {
@@ -20,7 +22,7 @@ class MoreInfo extends React.Component {
                 7: ["normal"],
                 8: ["normal"],
             },
-            pickStyles: ['random', 'resource', 'influence', 'balanced'],
+            pickStyles: ["balanced", "random", "resource", "influence", "custom"],
             races: raceData["races"],
             pokRaces: raceData["pokRaces"],
             homeworlds: raceData["homeworlds"],
@@ -49,13 +51,20 @@ class MoreInfo extends React.Component {
             setRacesHelp: false,
             pickMultipleRacesHelp: false,
             shufflePriorityHelp: false,
+
+            resourceWeight: 50,
+            influenceWeight: 50,
+            planetCountWeight: 50,
+            specialtyWeight: 50,
+            anomalyWeight: 50,
+            wormholeWeight: 50,
         };
         
         this.handleInputChange = this.handleInputChange.bind(this);
         this.updatePok = this.updatePok.bind(this);
         this.updatePlayerCount = this.updatePlayerCount.bind(this);
         this.updateSeed = this.updateSeed.bind(this);
-        
+
         this.updateBoardStyleOptions = this.updateBoardStyleOptions.bind(this); // TODO is the bind needed?
 
         this.generateBoard = this.generateBoard.bind(this);
@@ -222,35 +231,45 @@ class MoreInfo extends React.Component {
             case "random":
                 possiblePlanets = this.shuffle(possiblePlanets, this.state.currentSeed)
                 return possiblePlanets
+            case "custom":
+                weights = {
+                    "resource": this.state.resourceWeight,
+                    "influence": this.state.influenceWeight,
+                    "planet_count": this.state.planetCountWeight,
+                    "specialty": this.state.specialtyWeight,
+                    "anomaly": this.state.anomalyWeight,
+                    "wormhole": this.state.wormholeWeight
+                }
+                break;
             case "resource":
                 weights = {
-                    "resource": 1.0,
-                    "influence": 0.1,
-                    "planet_count": 0.1,
-                    "specialty": 0.1,
-                    "anomaly": 0.1,
-                    "wormhole": 0.1
+                    "resource": 100,
+                    "influence": 10,
+                    "planet_count": 10,
+                    "specialty": 10,
+                    "anomaly": 10,
+                    "wormhole": 10
                 }
                 break;
             case "influence":
                 weights = {
-                    "resource": 0.1,
-                    "influence": 1.0,
-                    "planet_count": 0.1,
-                    "specialty": 0.1,
-                    "anomaly": 0.1,
-                    "wormhole": 0.1
+                    "resource": 10,
+                    "influence": 100,
+                    "planet_count": 10,
+                    "specialty": 10,
+                    "anomaly": 10,
+                    "wormhole": 10
                 }
                 break;
             case "balanced":
             default:
                 weights = {
-                    "resource": 1.0,
-                    "influence": 0.4,
-                    "planet_count": 0.4,
-                    "specialty": 0.6,
-                    "anomaly": 0.1,
-                    "wormhole": 0.1
+                    "resource": 60,
+                    "influence": 30,
+                    "planet_count": 10,
+                    "specialty": 60,
+                    "anomaly": 40,
+                    "wormhole": 20
                 }
                 break;
         }
@@ -391,6 +410,27 @@ class MoreInfo extends React.Component {
                             {this.state.optionsPossible.pickStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
                     </div>
+                    <div className={"ml-2 collapse " + (this.state.currentPickStyle === "custom" ? "show" : "")} id="customPickStyle">
+                        <div className="card card-body">
+                            <label htmlFor="customResource">Resource</label>
+                            <input type="range" className="custom-range" name="resourceWeight" value={this.state.resourceWeight} onChange={this.handleInputChange} />
+
+                            <label htmlFor="customInfluence">Influence</label>
+                            <input type="range" className="custom-range" name="influenceWeight" value={this.state.influenceWeight} onChange={this.handleInputChange} />
+
+                            <label htmlFor="customPlanetCount">Planet Count</label>
+                            <input type="range" className="custom-range" name="planetCountWeight" value={this.state.planetCountWeight} onChange={this.handleInputChange} />
+
+                            <label htmlFor="customSpecialty">Specialty</label>
+                            <input type="range" className="custom-range" name="specialtyWeight" value={this.state.specialtyWeight} onChange={this.handleInputChange} />
+
+                            <label htmlFor="customAnomaly">Anomaly</label>
+                            <input type="range" className="custom-range" name="anomalyWeight" value={this.state.anomalyWeight} onChange={this.handleInputChange} />
+
+                            <label htmlFor="customWormhole">Wormhole</label>
+                            <input type="range" className="custom-range" name="wormholeWeight" value={this.state.wormholeWeight} onChange={this.handleInputChange} />
+                        </div>
+                    </div>
             
             
                     <div className="form-group">
@@ -406,9 +446,9 @@ class MoreInfo extends React.Component {
                     <div className={"ml-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
                         <div className="card card-body">
                             {/*<button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>*/}
-                    
+
                             {/*<button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>*/}
-                    
+
                             <div className="custom-control custom-checkbox d-flex">
                                 <input type="checkbox" className="custom-control-input" id="pickMultipleRaces" name="pickMultipleRaces" checked={this.state.pickMultipleRaces} onChange={this.handleInputChange} />
                                 <label className="custom-control-label" htmlFor="pickMultipleRaces">Let Players Pick From Multiple</label>
@@ -456,4 +496,4 @@ class MoreInfo extends React.Component {
         );
     }
 }
-export default MoreInfo;
+export default MapOptions;
