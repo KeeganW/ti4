@@ -20,7 +20,7 @@ class MoreInfo extends React.Component {
                 7: ["normal"],
                 8: ["normal"],
             },
-            pickStyles: ['random', 'resource', 'influence', 'tas'],
+            pickStyles: ['random', 'resource', 'influence', 'balanced'],
             races: raceData["races"],
             pokRaces: raceData["pokRaces"],
             homeworlds: raceData["homeworlds"],
@@ -242,7 +242,7 @@ class MoreInfo extends React.Component {
                     "wormhole": 0.1
                 }
                 break;
-            case "tas":
+            case "balanced":
             default:
                 weights = {
                     "resource": 1.0,
