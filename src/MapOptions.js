@@ -52,12 +52,12 @@ class MapOptions extends React.Component {
             pickMultipleRacesHelp: false,
             shufflePriorityHelp: false,
 
-            resourceWeight: 50,
-            influenceWeight: 50,
-            planetCountWeight: 50,
-            specialtyWeight: 50,
-            anomalyWeight: 50,
-            wormholeWeight: 50,
+            resourceWeight: 60,
+            influenceWeight: 30,
+            planetCountWeight: 10,
+            specialtyWeight: 60,
+            anomalyWeight: 40,
+            wormholeWeight: 20,
         };
         
         this.handleInputChange = this.handleInputChange.bind(this);

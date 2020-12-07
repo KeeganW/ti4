@@ -111,7 +111,6 @@ class App extends React.Component {
         window.history.pushState({}, null, window.location.pathname + '?tiles=' + newTiles.toString());
 
         let newOptionsMenuState = this.state.isOptionsMenuShowing
-        console.log(this.state.isMobileView)
         if (this.state.isMobileView) {
             newOptionsMenuState = false
         }
