@@ -3,7 +3,6 @@ import exampleMap from './exampleMap.png';
 import exampleMapNumbered from './exampleMapNumbered.png';
 import dragAndDrop from './dragAndDrop.png';
 import st82 from './ST_82.png';
-import extraTiles from './extraTiles.png';
 
 class MainOverview extends React.Component {
     render() {
@@ -56,7 +55,6 @@ class MainOverview extends React.Component {
                         <p className={"text-left p-3"}>
                             After you have made your custom map, just copy the url and send it to your friends!
                         </p>
-                        {/*<img className={"overview-image"} src={exampleMap} alt="TI4 Generated Map"/>*/}
                     </div>
                 </div>
 
@@ -67,7 +65,6 @@ class MainOverview extends React.Component {
                             Do you really like the gravity rift anomaly and not see it on the board? Click the "Show unused
                             tiles" button to see any tiles not currently being used in the map, and drag and drop them to add them!
                         </p>
-                        {/*<img className={"overview-image"} src={extraTiles} alt="TI4 Generated Map"/>*/}
                     </div>
                 </div>
 
@@ -92,7 +89,6 @@ class MainOverview extends React.Component {
                             it <a href="https://github.com/KeeganW/ti4/issues/new">to my issue tracker</a>. Thanks for checking
                             this out!
                         </p>
-                        {/*<img className={"overview-image"} src={exampleMap} alt="TI4 Generated Map"/>*/}
                     </div>
                 </div>
             </div>
