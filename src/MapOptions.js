@@ -534,7 +534,7 @@ class MapOptions extends React.Component {
                          Divides all the races evenly up amongst the players in the game (with no overflow), so that they can choose from a selection instead of being specifically assigned one race.
                          <br>
                          <br>
-                         Some groups prefer to have a draft pick of sorts, where every player is given a few races to pick between. This lets them pick the races that they want to play, but not have any conflicts with other players about playing a certain race.
+                         Some groups prefer to have a draft, where every player is given a few races to pick between. This lets them pick the races that they want to play, but not have any conflicts with other players about playing a certain race.
                          </p>"
                     />
                     <HelpModal visible={this.state.shufflePriorityHelp} hideModal={this.toggleShufflePriorityHelp} title={"About Shuffling Priority"}
@@ -553,7 +553,7 @@ class MapOptions extends React.Component {
                          Reverses which tiles are placed first in pick order.
                          <br>
                          <br>
-                         Tiles are normally placed in priority (see randomize priority help). This reverses the order, so that the last picks are first, and the first picks are last.
+                         Tiles are normally placed in priority (see randomize priority help). This reverses the order, so that the last picks are first, which has the effect of pushing the morre valuable tiles towards the center of the galaxy.
                          </p>'
                     />
             
