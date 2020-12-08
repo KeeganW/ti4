@@ -13,8 +13,8 @@ class HelpModal extends React.Component {
                         {this.props.currentPlayerNames.map((x, i) => {
                             return (
                                 <div className={"form-group"}>
-                                    <label htmlFor={"player" + i + "Name"}>Player {i}</label>
-                                    <input className={"form-control"} name={"playerName" + i} type={"text"} placeholder={"P" + i} defaultValue={x} onChange={this.props.handleNameChange} />
+                                    <label htmlFor={"player" + (i+1) + "Name"}>Player {(i+1)}</label>
+                                    <input className={"form-control"} name={"playerName" + i} type={"text"} placeholder={"P" + (i+1)} defaultValue={x} onChange={this.props.handleNameChange} />
                                 </div>
                             )
                         })}
