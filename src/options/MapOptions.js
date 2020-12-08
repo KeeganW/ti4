@@ -5,6 +5,7 @@ import tileData from "../data/tileData.json";
 import raceData from "../data/raceData.json";
 import HelpModal from "./HelpModal";
 import SetPlayerNameModal from "./SetPlayerNameModal";
+import SetRacesModal from "./SetRacesModal";
 
 
 class MapOptions extends React.Component {
@@ -23,8 +24,8 @@ class MapOptions extends React.Component {
                 8: ["normal"],
             },
             pickStyles: ["balanced", "random", "resource", "influence", "custom"],
-            races: raceData["races"],
-            pokRaces: raceData["pokRaces"],
+            races: [...raceData["races"]],
+            pokRaces: [...raceData["pokRaces"]],
             homeworlds: raceData["homeworlds"],
             pokHomeworlds: raceData["pokHomeworlds"]
         }
@@ -36,7 +37,6 @@ class MapOptions extends React.Component {
             currentBoardStyleOptions: startingValues["boardStyles"]["6"],
             currentBoardStyle: startingValues["boardStyles"]["6"][0],
             currentPickStyle: startingValues["pickStyles"][0],
-            currentRaces: startingValues["races"],
             currentSeed: "",
             userSetSeed: false,
             pickRaces: false,
@@ -63,6 +63,7 @@ class MapOptions extends React.Component {
         
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleRacesChange = this.handleRacesChange.bind(this);
         this.updatePok = this.updatePok.bind(this);
         this.updatePlayerCount = this.updatePlayerCount.bind(this);
         this.updateSeed = this.updateSeed.bind(this);
@@ -99,11 +100,25 @@ class MapOptions extends React.Component {
             currentPlayerNames: newPlayerNames
         })
     }
+    handleRacesChange(event){
+        let race = event.target.name;
+        let newCurrentRaces = this.props.currentRaces;
+        let indexToToggle = newCurrentRaces.indexOf(race)
+        if (indexToToggle >= 0) {
+            newCurrentRaces.splice(indexToToggle, 1)
+        } else {
+            newCurrentRaces.push(race)
+        }
+
+        this.setState({
+            currentRaces: newCurrentRaces
+        })
+    }
     updatePok(event) {
         if (event.target.checked) {
             this.setState({
                 currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers),
-                currentRaces: this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
+                currentRaces: [...this.state.optionsPossible.races].concat([...this.state.optionsPossible.pokRaces])
             }, this.props.toggleProphecyOfKings);
         } else {
             this.setState({
@@ -111,7 +126,7 @@ class MapOptions extends React.Component {
                 currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers,
                 currentBoardStyle: this.state.currentNumberOfPlayers > 6 ? this.state.optionsPossible.boardStyles["6"][0] : this.state.currentBoardStyle,
                 currentBoardStyleOptions: this.state.currentNumberOfPlayers > 6 ? this.state.optionsPossible.boardStyles["6"] : this.state.currentBoardStyleOptions,
-                currentRaces: this.state.optionsPossible.races
+                currentRaces: [...this.state.optionsPossible.races]
             }, this.props.toggleProphecyOfKings);
         }
     }
@@ -190,7 +205,7 @@ class MapOptions extends React.Component {
         }
 
         // Get current races for placing races, and shuffle them around
-        let currentRaces = [...this.state.currentRaces]
+        let currentRaces = [...this.props.currentRaces]
         currentRaces = this.shuffle(currentRaces, currentSeed)
 
         // Place data for the homeworlds from board data
@@ -475,7 +490,7 @@ class MapOptions extends React.Component {
                         <div className="card card-body">
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
 
-                            {/*<button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>*/}
+                            <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
 
                             <div className="custom-control custom-checkbox d-flex">
                                 <input type="checkbox" className="custom-control-input" id="pickMultipleRaces" name="pickMultipleRaces" checked={this.state.pickMultipleRaces} onChange={this.handleInputChange} />
@@ -509,10 +524,13 @@ class MapOptions extends React.Component {
                          </p>'
 
                     />
-                    <SetPlayerNameModal visible={this.state.setPlayerNamesHelp} hideModal={this.toggleSetPlayerNamesHelp} currentPlayerNames={this.props.currentPlayerNames} handleNameChange={this.handleNameChange}
+                    <SetPlayerNameModal visible={this.state.setPlayerNamesHelp} currentPlayerNames={this.props.currentPlayerNames}
+                                        hideModal={this.toggleSetPlayerNamesHelp} handleNameChange={this.handleNameChange}
                     />
-                    <HelpModal visible={this.state.setRacesHelp} hideModal={this.toggleSetRacesHelp} title={"Set Races to Generate From"}
-                         content={racesOptions}
+                    <SetRacesModal visible={this.state.setRacesHelp} races={this.state.optionsPossible.races}
+                                   pokRaces={this.state.optionsPossible.pokRaces} useProphecyOfKings={this.props.useProphecyOfKings}
+                                   currentRaces={this.props.currentRaces}
+                                   hideModal={this.toggleSetRacesHelp} handleRacesChange={this.handleRacesChange}
                     />
                     <HelpModal visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
                          content='<p>

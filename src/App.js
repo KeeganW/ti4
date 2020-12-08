@@ -10,6 +10,7 @@ import MapControls from "./map/MapControls";
 import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
 import tileData from "./data/tileData.json";
+import raceData from "./data/raceData.json";
 
 class App extends React.Component {
     constructor(props) {
@@ -27,6 +28,7 @@ class App extends React.Component {
             mobileBreakpoint: 700,
             isMobileView: false,
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
+            currentRaces: [...raceData["races"]]
         };
     
         this.drawMap = this.drawMap.bind(this);
@@ -521,7 +523,7 @@ class App extends React.Component {
                 <MoreInfo visible={this.state.moreInfoVisible} tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}/>
                 
                 <MapOptions visible={this.state.isOptionsMenuShowing}  useProphecyOfKings={this.state.useProphecyOfKings}
-                            currentPlayerNames={this.state.currentPlayerNames}
+                            currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
                             toggleProphecyOfKings={this.toggleProphecyOfKings} updateTiles={this.updateTiles}
                             showExtraTiles={this.showExtraTiles} />
             
