@@ -2,14 +2,14 @@ import React from 'react';
 import $ from 'jquery';
 import './App.css';
 import BootstrapScripts from "./BootstrapScripts";
-import MoreInfo from "./MoreInfo";
-import ExtraTiles from "./ExtraTiles";
-import MainOverview from "./MainOverview";
-import MainMap from "./MainMap";
-import MapControls from "./MapControls";
-import OptionsControls from "./OptionsControls";
-import MapOptions from "./MapOptions";
-import tileData from "./tileData.json";
+import MoreInfo from "./panels/MoreInfo";
+import ExtraTiles from "./panels/ExtraTiles";
+import MainOverview from "./overview/MainOverview";
+import MainMap from "./map/MainMap";
+import MapControls from "./map/MapControls";
+import OptionsControls from "./options/OptionsControls";
+import MapOptions from "./options/MapOptions";
+import tileData from "./data/tileData.json";
 
 class App extends React.Component {
     constructor(props) {

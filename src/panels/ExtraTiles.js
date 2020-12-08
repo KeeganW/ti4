@@ -1,5 +1,5 @@
 import React from "react";
-import tileData from "./tileData.json";
+import tileData from "../data/tileData.json";
 
 class MoreInfo extends React.Component {
     constructor(props) {

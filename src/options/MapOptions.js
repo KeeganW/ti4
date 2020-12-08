@@ -1,8 +1,8 @@
 import React from "react";
 import {QuestionCircle} from "react-bootstrap-icons";
-import boardData from "./boardData.json";
-import tileData from "./tileData.json";
-import raceData from "./raceData.json";
+import boardData from "../data/boardData.json";
+import tileData from "../data/tileData.json";
+import raceData from "../data/raceData.json";
 import HelpModal from "./HelpModal";
 import Form from "react-bootstrap/Modal";
 

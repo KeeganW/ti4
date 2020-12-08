@@ -1,5 +1,5 @@
 import React from "react";
-import boardData from "./boardData.json";
+import boardData from "../data/boardData.json";
 
 class MoreInfo extends React.Component {
     render() {
