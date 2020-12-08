@@ -26,12 +26,21 @@
 /*    --options-width: 400px;*/
 /*}*/
 
+/* Handel Gothic is the typeface that twilight imperium uses */
+@import url(//db.onlinewebfonts.com/c/83637255adf8b8192d61945c8b301f7c?family=Handel+Gothic);
+@font-face {font-family: "Handel Gothic"; src: url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.eot"); src: url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.woff") format("woff"), url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.svg#Handel Gothic") format("svg"); }
+
 /* Set height for mobile address bar issues*/
 html, body {margin: 0; height: 100%;}
+
+/* Set base background, colors, and fonts*/
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: "Open Sans", sans-serif;
   background-color: var(--background-color);
   color: black;
+}
+h1, h2, h3, h4, h5 {
+    font-family: Handel Gothic, sans-serif;
 }
 
 /* Settings for button customization */
@@ -279,28 +288,53 @@ a:hover {
     color: var(--hover-color);
 }
 
+.overview-panel {
+    background-color: rgba(74, 111, 144, 0.42);
+    max-width: 650px;
+}
+.overview-image {
+    padding: 15px;
+    width: 250px;
+}
+
 /* Display certain maps based on browser size, so it fits on the page. */
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1080px) {
+
+    .overview-panel {
+        background-color: rgba(74, 111, 144, 0.42);
+        width: 300px;
+    }
+    .overview-image {
+        width: 0;
+    }
 }
 @media screen and (max-width: 700px) {
-  :root {
-    --options-width: 0px;
-    --extra-tiles-width: 0px;
-  }
-  #options, #extraTiles, #moreInfo {
-    width: 100%;
-    z-index: 1001;
-  }
-  #mainContent {
-    width: 100%;
-  }
-  #mainContent .title h2 {
-    margin-right: calc(35px + var(--scroll-bar-distance));
-  }
-  #description {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
+    :root {
+        --options-width: 0px;
+        --extra-tiles-width: 0px;
+    }
+    .overview-panel {
+        background-color: rgba(74, 111, 144, 0.42);
+        width: calc(100% - (var(--scroll-bar-distance) * 2));
+    }
+    .overview-image {
+        width: 0;
+    }
+
+    #options, #extraTiles, #moreInfo {
+        width: 100%;
+        z-index: 1001;
+    }
+    #mainContent {
+        width: 100%;
+    }
+    #mainContent .title h2 {
+        margin-right: calc(35px + var(--scroll-bar-distance));
+    }
+    #description {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 }
 @media screen and (max-width: 500px) {
 }
