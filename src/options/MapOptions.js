@@ -4,7 +4,7 @@ import boardData from "../data/boardData.json";
 import tileData from "../data/tileData.json";
 import raceData from "../data/raceData.json";
 import HelpModal from "./HelpModal";
-import Form from "react-bootstrap/Modal";
+import SetPlayerNameModal from "./SetPlayerNameModal";
 
 
 class MapOptions extends React.Component {
@@ -36,7 +36,6 @@ class MapOptions extends React.Component {
             currentBoardStyleOptions: startingValues["boardStyles"]["6"],
             currentBoardStyle: startingValues["boardStyles"]["6"][0],
             currentPickStyle: startingValues["pickStyles"][0],
-            currentPlayerNames: ["P1", "P2", "P3", "P4", "P5", "P6"],
             currentRaces: startingValues["races"],
             currentSeed: "",
             userSetSeed: false,
@@ -63,6 +62,7 @@ class MapOptions extends React.Component {
         };
         
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleNameChange = this.handleNameChange.bind(this);
         this.updatePok = this.updatePok.bind(this);
         this.updatePlayerCount = this.updatePlayerCount.bind(this);
         this.updateSeed = this.updateSeed.bind(this);
@@ -89,6 +89,15 @@ class MapOptions extends React.Component {
         this.setState({
             [name]: value
         });
+    }
+    handleNameChange(event){
+        let nameIndex = parseInt(event.target.name.substring(10))
+        let newPlayerNames = this.props.currentPlayerNames
+        newPlayerNames[nameIndex] = event.target.value
+
+        this.setState({
+            currentPlayerNames: newPlayerNames
+        })
     }
     updatePok(event) {
         if (event.target.checked) {
@@ -129,35 +138,35 @@ class MapOptions extends React.Component {
             });
         }
     }
-    
+
     capitalize(str){
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
-    
+
     shuffle(array, seed) {
         var m = array.length, t, i;
-        
+
         // While there remain elements to shuffle…
         while (m) {
-            
+
             // Pick a remaining element…
             i = Math.floor(this.random(seed) * m--);
-            
+
             // And swap it with the current element.
             t = array[m];
             array[m] = array[i];
             array[i] = t;
             ++seed
         }
-        
+
         return array;
     }
-    
+
     random(seed) {
         var x = Math.sin(seed++) * 10000;
         return x - Math.floor(x);
     }
-    
+
     generateBoard(e) {
         // Don't actually submit the form
         e.preventDefault();
@@ -167,19 +176,19 @@ class MapOptions extends React.Component {
         if (!this.state.userSetSeed) {
             currentSeed = Math.floor(Math.random() * Math.floor(9999));
         }
-        
+
         // Get a list of board spaces that need to have non-homeworld planets assigned to them
         let planetIndexesToPlace = this.getPlanetIndexesToPlace(currentSeed)
-        
+
         // Get an ordered list of planets to use to fill board with
         let possiblePlanets = this.getPossiblePlanets()
-        
+
         // Place planets one at a time, using the indexes to place combined with the ordered planet list
         let newTiles = Array.apply(-1, Array(this.props.useProphecyOfKings ? boardData.pokSize : boardData.size)).fill(-1);  // Reset tiles to be empty
         for (let planetIndex in planetIndexesToPlace){
             newTiles[planetIndexesToPlace[planetIndex]] = possiblePlanets.shift()
         }
-        
+
         // Get current races for placing races, and shuffle them around
         let currentRaces = [...this.state.currentRaces]
         currentRaces = this.shuffle(currentRaces, currentSeed)
@@ -205,20 +214,20 @@ class MapOptions extends React.Component {
             currentSeed: currentSeed
         }, this.props.updateTiles(newTiles));
     }
-    
+
     getPlanetIndexesToPlace(currentSeed) {
         // Copy all the tile arrays from board data
         let primary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['primary_tiles']]
         let secondary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['secondary_tiles']]
         let tertiary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['tertiary_tiles']]
-        
+
         // If shuffling, we need to shuffle primary, secondary, and tertiary indexes.
         if (this.state.shuffleBoards) {
             primary = this.shuffle(primary, currentSeed)
             secondary = this.shuffle(secondary, currentSeed)
             tertiary = this.shuffle(tertiary, currentSeed)
         }
-        
+
         // Return this list of planet tiles to populate
         if (this.state.reversePlacementOrder) {
             return tertiary.concat(secondary).concat(primary)
@@ -226,7 +235,7 @@ class MapOptions extends React.Component {
             return primary.concat(secondary).concat(tertiary)
         }
     }
-    
+
     getPossiblePlanets() {
         // Get the list of planets to evaluate
         let possiblePlanets = []
@@ -298,12 +307,12 @@ class MapOptions extends React.Component {
         for (let planetTileNumber in possiblePlanets) {
             planetWeights.push([possiblePlanets[planetTileNumber], this.getWeight(possiblePlanets[planetTileNumber], weights)])
         }
-        
+
         // Sort the returned list by weight, with higher weighted planets being first
         planetWeights.sort(function(a, b) {
             return b[1] - a[1];
         })
-        
+
         // Convert from tuple down to just the tile number
         let orderedPlanets = [];
         for (let weightedPlanet in planetWeights) {
@@ -312,7 +321,7 @@ class MapOptions extends React.Component {
 
         return orderedPlanets
     }
-    
+
     getWeight(planetTileNumber, weights) {
         let total_weight = 0
         let tile = tileData.all[planetTileNumber.toString()]
@@ -381,15 +390,8 @@ class MapOptions extends React.Component {
             reversePlacementOrderHelp: !this.state.reversePlacementOrderHelp
         })
     }
-    
+
     render() {
-        const playerNames = "" +
-            "<form id=\"playerNameForm\">\n" +
-            "                                    <div class=\"form-group\">\n" +
-            "                                        <label for=\"player{{ number }}Name\">Player {{ number }}</label>\n" +
-            "                                        <input class=\"form-control\" id=\"player{{ number }}Name\" name=\"player-{{ number }}-name\" type=\"text\" placeholder=\"P{{ number }}\">\n" +
-            "                                    </div>\n" +
-            "                            </form>"
         const racesOptions = "" +
             "<form id=\"includedRacesForm\">\n" +
             "                                <div class=\"form-group\">\n" +
@@ -406,19 +408,19 @@ class MapOptions extends React.Component {
                     <h4 className="text-center">Generation Options</h4>
                 </div>
                 <form id="generateForm" onSubmit={this.generateBoard}>
-            
+
                     <div className="custom-control custom-checkbox mb-3">
                         <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.props.useProphecyOfKings} onChange={this.updatePok} />
                         <label className="custom-control-label" htmlFor="pokExpansion">Use Prophecy of Kings Expansion</label>
                     </div>
-            
+
                     <div className="form-group">
                         <label htmlFor="playerCount">Number of Players</label>
                         <select className="form-control" id="playerCount" name="currentNumberOfPlayers" value={this.state.currentNumberOfPlayers} onChange={this.updatePlayerCount}>
                             {this.state.currentNumberOfPlayersOptions.map((x) => <option key={x} value={x}>{x}</option>)}
                         </select>
                     </div>
-            
+
                     <div className="form-group">
                         <label htmlFor="boardStyle" className="d-flex">Board Style
                             <QuestionCircle className="icon" onClick={this.toggleBoardStyleHelp} />
@@ -427,7 +429,7 @@ class MapOptions extends React.Component {
                             {this.state.currentBoardStyleOptions.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
                     </div>
-            
+
                     <div className="form-group">
                         <label htmlFor="pickStyle" className="d-flex">Picking Style
                             <QuestionCircle className="icon" onClick={this.togglePickStyleHelp} />
@@ -457,13 +459,13 @@ class MapOptions extends React.Component {
                             <input type="range" className="custom-range" name="wormholeWeight" value={this.state.wormholeWeight} onChange={this.handleInputChange} />
                         </div>
                     </div>
-            
-            
+
+
                     <div className="form-group">
                         <label htmlFor="seed">Specific Seed</label>
                         <input className="form-control" id="seed" name="updateSeed" type="text" placeholder="Enter a number to seed generation..." value={this.state.currentSeed} onChange={this.updateSeed} />
                     </div>
-            
+
                     <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="pickRaces" name="pickRaces" checked={this.state.pickRaces} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="pickRaces">Pick Races for Players</label>
@@ -471,7 +473,7 @@ class MapOptions extends React.Component {
                     </div>
                     <div className={"ml-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
                         <div className="card card-body">
-                            {/*<button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>*/}
+                            <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
 
                             {/*<button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>*/}
 
@@ -482,7 +484,7 @@ class MapOptions extends React.Component {
                             </div>
                         </div>
                     </div>
-            
+
                     <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="shuffleBoards" name="shuffleBoards" checked={this.state.shuffleBoards} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="shuffleBoards">Randomize Priorities Before Placement</label>
@@ -507,8 +509,7 @@ class MapOptions extends React.Component {
                          </p>'
 
                     />
-                    <HelpModal visible={this.state.setPlayerNamesHelp} hideModal={this.toggleSetPlayerNamesHelp} title={"Set Player Names"}
-                         content={playerNames}
+                    <SetPlayerNameModal visible={this.state.setPlayerNamesHelp} hideModal={this.toggleSetPlayerNamesHelp} currentPlayerNames={this.props.currentPlayerNames} handleNameChange={this.handleNameChange}
                     />
                     <HelpModal visible={this.state.setRacesHelp} hideModal={this.toggleSetRacesHelp} title={"Set Races to Generate From"}
                          content={racesOptions}

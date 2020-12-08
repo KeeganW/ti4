@@ -25,7 +25,8 @@ class App extends React.Component {
             overlayVisible: false,
             zoom: 1.0,
             mobileBreakpoint: 700,
-            isMobileView: false
+            isMobileView: false,
+            currentPlayerNames: ["", "", "", "", "", "", "", ""],
         };
     
         this.drawMap = this.drawMap.bind(this);
@@ -346,7 +347,7 @@ class App extends React.Component {
         let offsets = calculateOffsets(constraintWidth, constraintHeight)
 
         // Loop over tiles to assign various values to them
-        let currentPlayerNumber = 1;
+        let currentPlayerNumber = 0;
         for (let tileNumber = 0; tileNumber < offsets.length; tileNumber++) {
             let tile = $("#tile-" + tileNumber);
             let numOverlay = $("#num-" + tileNumber);
@@ -385,7 +386,8 @@ class App extends React.Component {
             } else {
                 if (this.state.tiles[tileNumber] === 0) {
                     // Show the player name
-                    numOverlay.html("P" + currentPlayerNumber);
+                    let name = this.state.currentPlayerNames[currentPlayerNumber];
+                    numOverlay.html(name === "" ? "P" + (currentPlayerNumber + 1) : name);
                     currentPlayerNumber += 1;
                 }
 
@@ -516,9 +518,10 @@ class App extends React.Component {
                             updateTiles={this.updateTiles}
                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}/>
                 
-                <MoreInfo visible={this.state.moreInfoVisible} useProphecyOfKings={this.state.useProphecyOfKings}/>
+                <MoreInfo visible={this.state.moreInfoVisible} tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}/>
                 
                 <MapOptions visible={this.state.isOptionsMenuShowing}  useProphecyOfKings={this.state.useProphecyOfKings}
+                            currentPlayerNames={this.state.currentPlayerNames}
                             toggleProphecyOfKings={this.toggleProphecyOfKings} updateTiles={this.updateTiles}
                             showExtraTiles={this.showExtraTiles} />
             
