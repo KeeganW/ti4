@@ -272,6 +272,13 @@ body {
   position: relative;
 }
 
+a {
+    color: var(--primary-color);
+}
+a:hover {
+    color: var(--hover-color);
+}
+
 /* Display certain maps based on browser size, so it fits on the page. */
 @media screen and (max-width: 1000px) {
 }

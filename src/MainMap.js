@@ -15,7 +15,7 @@ class MoreInfo extends React.Component {
                          draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop}
                          onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter}
                          onDragLeave={this.props.dragLeave}
-                         alt=""
+                         alt={"Twilight Imperium 4 Tile Number " + index}
                     />
                     <svg id={"underlay-" + index} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="underlay" fill="currentColor">
                         <polygon points="269.51 0 89.84 0 0 155.6 89.84 311.2 269.51 311.2 359.35 155.6 269.51 0" />

@@ -223,18 +223,18 @@ class App extends React.Component {
     drawMap() {
         // Check to see if there are any tiles to render currently
         if (this.state === undefined || this.state.tiles.length <= 0) {
-            this.setState(state => ({
+            this.setState({
                 overviewVisible: true,
                 mapVisible: false,
                 mapControlsVisible: false,
-            }));
+            });
             return;
         } else {
-            this.setState(state => ({
+            this.setState({
                 overviewVisible: false,
                 mapVisible: true,
                 mapControlsVisible: true,
-            }));
+            });
         }
 
         // Configuration options for magic numbers
@@ -499,7 +499,7 @@ class App extends React.Component {
                 <OptionsControls visible={this.state.isOptionsMenuShowing} isMobileView={this.state.isMobileView} toggleOptions={this.toggleOptionsMenu} />
                 
                 <div id="mainContent" className="justify-content-center align-items-center">
-                    <MainOverview visible={this.state.overviewVisible}/>
+                    <MainOverview visible={this.state.overviewVisible} />
                     
                     <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
                              tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}

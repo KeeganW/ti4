@@ -18,7 +18,7 @@ class MapOptions extends React.Component {
                 3: ["normal", "compact", "manta"],
                 4: ["normal", "horizontal", "vertical", "gaps"],
                 5: ["normal", "diamond"],
-                6: ["normal", "warzone"],
+                6: ["normal"],
                 7: ["normal"],
                 8: ["normal"],
             },
@@ -43,6 +43,7 @@ class MapOptions extends React.Component {
             pickRaces: false,
             pickMultipleRaces: false,
             shuffleBoards: true,
+            reversePlacementOrder: false,
 
             pickRacesHelp: false,
             boardStyleHelp: false,
@@ -51,13 +52,14 @@ class MapOptions extends React.Component {
             setRacesHelp: false,
             pickMultipleRacesHelp: false,
             shufflePriorityHelp: false,
+            reversePlacementOrderHelp: false,
 
             resourceWeight: 60,
             influenceWeight: 30,
-            planetCountWeight: 10,
-            specialtyWeight: 60,
-            anomalyWeight: 40,
-            wormholeWeight: 20,
+            planetCountWeight: 15,
+            specialtyWeight: 50,
+            anomalyWeight: 10,
+            wormholeWeight: 25,
         };
         
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -76,6 +78,7 @@ class MapOptions extends React.Component {
         this.toggleSetRacesHelp = this.toggleSetRacesHelp.bind(this);
         this.togglePickMultipleRacesHelp = this.togglePickMultipleRacesHelp.bind(this);
         this.toggleShufflePriorityHelp = this.toggleShufflePriorityHelp.bind(this);
+        this.toggleReversePlacementOrderHelp = this.toggleReversePlacementOrderHelp.bind(this);
     }
     
     handleInputChange(event) {
@@ -105,22 +108,26 @@ class MapOptions extends React.Component {
     }
     updatePlayerCount(event) {
         this.setState({
-            currentNumberOfPlayers: parseInt(event.target.value)
+            currentNumberOfPlayers: parseInt(event.target.value),
         }, () => {
             this.updateBoardStyleOptions()
-            this.generateBoard(event)
+            // this.generateBoard(event)
         });
     }
     updateBoardStyleOptions() {
         this.setState(state => ({
-            currentBoardStyleOptions: this.state.optionsPossible.boardStyles[this.state.currentNumberOfPlayers]
+            currentBoardStyleOptions: this.state.optionsPossible.boardStyles[this.state.currentNumberOfPlayers],
+            currentBoardStyle: this.state.optionsPossible.boardStyles[this.state.currentNumberOfPlayers][0],
         }));
     }
     updateSeed(event) {
-        this.setState(state => ({
-            currentSeed: event.target.value,
-            userSetSeed: event.target.value !== ""  // Ignore user entry if the value is blank
-        }));
+        let newSeed = parseInt(event.target.value)
+        if (!isNaN(newSeed) || event.target.value === "") {
+            this.setState({
+                currentSeed: event.target.value,
+                userSetSeed: event.target.value !== ""  // Ignore user entry if the value is blank
+            });
+        }
     }
     
     capitalize(str){
@@ -213,7 +220,11 @@ class MapOptions extends React.Component {
         }
         
         // Return this list of planet tiles to populate
-        return primary.concat(secondary).concat(tertiary)
+        if (this.state.reversePlacementOrder) {
+            return tertiary.concat(secondary).concat(primary)
+        } else {
+            return primary.concat(secondary).concat(tertiary)
+        }
     }
     
     getPossiblePlanets() {
@@ -233,12 +244,12 @@ class MapOptions extends React.Component {
                 return possiblePlanets
             case "custom":
                 weights = {
-                    "resource": this.state.resourceWeight,
-                    "influence": this.state.influenceWeight,
-                    "planet_count": this.state.planetCountWeight,
-                    "specialty": this.state.specialtyWeight,
-                    "anomaly": this.state.anomalyWeight,
-                    "wormhole": this.state.wormholeWeight
+                    "resource": parseInt(this.state.resourceWeight),
+                    "influence": parseInt(this.state.influenceWeight),
+                    "planet_count": parseInt(this.state.planetCountWeight),
+                    "specialty": parseInt(this.state.specialtyWeight),
+                    "anomaly": parseInt(this.state.anomalyWeight),
+                    "wormhole": parseInt(this.state.wormholeWeight)
                 }
                 break;
             case "resource":
@@ -266,10 +277,10 @@ class MapOptions extends React.Component {
                 weights = {
                     "resource": 60,
                     "influence": 30,
-                    "planet_count": 10,
-                    "specialty": 60,
-                    "anomaly": 40,
-                    "wormhole": 20
+                    "planet_count": 15,
+                    "specialty": 50,
+                    "anomaly": 10,
+                    "wormhole": 25
                 }
                 break;
         }
@@ -309,15 +320,25 @@ class MapOptions extends React.Component {
         // Go over all the planets in this tile and add up their values
         for (let planetIndex in tile['planets']) {
             let planet = tile['planets'][planetIndex]
-            total_weight += planet['resources'] * weights['resource']
-            total_weight += planet['influence'] * weights['influence']
-            total_weight += weights['planet_count']
+            total_weight += (planet['resources'] / 4) * weights['resource']
+            total_weight += (planet['influence'] / 4) * weights['influence']
+            total_weight += (weights['planet_count'] / 2)
             total_weight += planet['specialty'] ? weights['specialty'] : 0
         }
 
-        total_weight += tile['type'] === 'anomaly' ? weights['anomaly'] : 0
+        // Handle anomalies
+        if (tile['type'] === 'anomaly') {
+            total_weight += 30;
+            if (tile['anomaly'] === null
+                || tile['anomaly'] === 'asteroid-field'
+                || tile['anomaly'] === 'gravity-rift') {
+                // Give an extra boost to these anomalies, as they are easier to cross than others
+                total_weight += 20;
+            }
+
+        }
         total_weight += tile['wormhole'] ? weights['wormhole'] : 0
-        
+
         return total_weight
     }
     togglePickRacesHelp(event) {
@@ -353,6 +374,11 @@ class MapOptions extends React.Component {
     toggleShufflePriorityHelp(event) {
         this.setState({
             shufflePriorityHelp: !this.state.shufflePriorityHelp
+        })
+    }
+    toggleReversePlacementOrderHelp(event) {
+        this.setState({
+            reversePlacementOrderHelp: !this.state.reversePlacementOrderHelp
         })
     }
     
@@ -460,16 +486,26 @@ class MapOptions extends React.Component {
                     <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="shuffleBoards" name="shuffleBoards" checked={this.state.shuffleBoards} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="shuffleBoards">Randomize Priorities Before Placement</label>
-                        <QuestionCircle className="icon" data-toggle="modal" data-target="#shuffleBoardsModal" />
+                        <QuestionCircle className="icon" onClick={this.toggleShufflePriorityHelp} />
+                    </div>
+
+                    <div className="custom-control custom-checkbox mb-3 d-flex">
+                        <input type="checkbox" className="custom-control-input" id="reversePlacementOrder" name="reversePlacementOrder" checked={this.state.reversePlacementOrder} onChange={this.handleInputChange} />
+                        <label className="custom-control-label" htmlFor="reversePlacementOrder">Reverse Placement Order</label>
+                        <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
                     </div>
 
                     <HelpModal visible={this.state.pickStyleHelp} hideModal={this.togglePickStyleHelp} title={"About Pick Style"}
-                         content='<p>Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the board style) it is put closer to home worlds to facilitate availiable assets.
-                       <br>
-                       <br>Random: Tiles are completely randomly ordered. Expect chaotic and unbalanced maps.
-                       <br>Resource: Tiles are ordered primarily by their resource values. Higher resource planets are more coveted, and so are more important.
-                       <br>Influence: Similar to "resource", tiles are ordered primarily by their influence values.
-                       <br>Tas: A custom weight which favors resources above all else, but more accurately factors in tech specialties and influence as trade-offs to the "resource" pick.</p>'
+                         content='<p>
+                         Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the board style) it is put closer to home worlds to facilitate available assets.
+                         <br>
+                         <br><b>Balanced:</b> A custom weight which favors resources and planet count more than anomalies. This more accurately factors in tech specialties and influence as trade-offs to the "Resource" pick.
+                         <br><b>Resource:</b> Tiles are ordered primarily by their resource values. Higher resource planets are more coveted, and so are more important.
+                         <br><b>Influence:</b> Similar to "Resource", tiles are ordered primarily by their influence values.
+                         <br><b>Random:</b> Tiles are completely randomly ordered. Expect chaotic and unbalanced maps.
+                         <br><b>Custom:</b> Enter your own values in for balancing tradeoffs between various tile qualities.
+                         </p>'
+
                     />
                     <HelpModal visible={this.state.setPlayerNamesHelp} hideModal={this.toggleSetPlayerNamesHelp} title={"Set Player Names"}
                          content={playerNames}
@@ -478,16 +514,47 @@ class MapOptions extends React.Component {
                          content={racesOptions}
                     />
                     <HelpModal visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
-                         content='<p>Board style is how the board is actually pictured. Changing this value would cause you to expect weighted tiles to be placed in certain positions, or some tiles not to be placed at all (especially in lower player counts). For example, 6-player "Normal" places important tiles closer to home worlds, while 6-player "Warzone" places the most valuable planets close to Mecatol Rex, forcing you to fight for your assets.</p>'
+                         content='<p>
+                         Board style changes how the tiles are actually laid out on a newly generated map.
+                         <br>
+                         <br>
+                         Changing this would cause you to expect more valuable tiles to be placed in certain positions. For example, 6-player "Normal" places important tiles closer to home worlds, while 6-player "Warzone" places the most valuable planets close to Mecatol Rex, forcing you to fight for your assets. It also might exclude placing certain tiles entirely, to create non traditional map shapes (which happens more in lower player counts).
+                         </p>'
                     />
                     <HelpModal visible={this.state.pickRacesHelp} hideModal={this.togglePickRacesHelp} title={"About Picking Races"}
-                         content="<p>Automatically assigns races to the players on the boards.</p>"
+                         content="<p>
+                         Automatically assigns races to the players on the boards.
+                         <br>
+                         <br>
+                         From the set of races, turning this on will assign every player a random race (designated by assigning them the homeworld tile of that race). You should pick which player sits at a certain position before turning this on.
+                         </p>"
                     />
                     <HelpModal visible={this.state.pickMultipleRacesHelp} hideModal={this.togglePickMultipleRacesHelp} title={"About Picking Multiple Races"}
-                         content="<p>Divides all the races evenly up amongst the players in the game, so that they can choose from a selection instead of being specifically assigned one race.</p>"
+                         content="<p>
+                         Divides all the races evenly up amongst the players in the game (with no overflow), so that they can choose from a selection instead of being specifically assigned one race.
+                         <br>
+                         <br>
+                         Some groups prefer to have a draft pick of sorts, where every player is given a few races to pick between. This lets them pick the races that they want to play, but not have any conflicts with other players about playing a certain race.
+                         </p>"
                     />
                     <HelpModal visible={this.state.shufflePriorityHelp} hideModal={this.toggleShufflePriorityHelp} title={"About Shuffling Priority"}
-                         content='<p>When using the priority queues of important planets per player, activating this will shuffle who gets first pick from the set of tiles. If unactivated, then tiles are picked in double-back style order. For the primary tiles, Player 1 gets first pick, and the last player gets last pick. After the first round of placements is complete, the person who had last pick gets first pick, and the round continues in reverse pick order. Proceed using this double-back picking strategy until the board is filled.</p>'
+                         content='<p>
+                         Randomizes the priority picks for each picking round.
+                         <br>
+                         <br>
+                         Normally when placing tiles, this tool attempts to place the tiles so player 1 does not always get the best tiles. To do this, it gives player 1 first pick from the list of tiles weighted by picking style, player 2 second pick and so on for the first round of placing tiles. Once the last player has placed a tile, they then get to place another. The tiles are then placed in reverse order from there. So in a 6-player game, player 1 gets to place tile 1 and 12, while player 6 gets to place tile 6 and 7. This is a similar strategy to placing opening settlements in Settlers of Catan.
+                         <br>
+                         <br>
+                         Turning this on stops this from happening, and instead completely randomizes the placement order.
+                         </p>'
+                    />
+                    <HelpModal visible={this.state.reversePlacementOrderHelp} hideModal={this.toggleReversePlacementOrderHelp} title={"About Reverse Placement Order"}
+                         content='<p>
+                         Reverses which tiles are placed first in pick order.
+                         <br>
+                         <br>
+                         Tiles are normally placed in priority (see randomize priority help). This reverses the order, so that the last picks are first, and the first picks are last.
+                         </p>'
                     />
             
                     <button type="submit" className="btn btn-primary">Generate</button>
