@@ -1,30 +1,17 @@
 :root {
-  --primary-color: #FAA126;
-  /*--primary-color: #BFA62A;*/
-  /*--primary-color: #3778b8;*/
-  --secondary-color: #3778b8;
-  --tertiary-color: #e6e8ea;
-  --border-color: #efefef;
-  --background-color: #3B4859;
-  --hover-color: #AD6300;
-  /*--hover-color: #8f790f;*/
-  --scroll-bar-distance: 17px;
-  --title-height: 60px;
-  --options-width: 400px;
-  --extra-tiles-width: 0px;
-  --more-info-width: 0px;
+    --primary-color: #eb7522;
+    --secondary-color: #1071b5;
+    --tertiary-color: #e6e8ea;
+    --border-color: #efefef;
+    --hover-color: #794100;
+    --background-color: #3B4859;
+
+    --scroll-bar-distance: 17px;
+    --title-height: 60px;
+    --options-width: 400px;
+    --extra-tiles-width: 0px;
+    --more-info-width: 0px;
 }
-/*:root {*/
-/*    --primary-color: #315D89;*/
-/*    --secondary-color: #505050;*/
-/*    --tertiary-color: #736e70;*/
-/*    --border-color: #cbcbcb;*/
-/*    --background-color: #31313b;*/
-/*    --highlight-color: #BFA62A;*/
-/*    --scroll-bar-distance: 17px;*/
-/*    --title-height: 60px;*/
-/*    --options-width: 400px;*/
-/*}*/
 
 /* Handel Gothic is the typeface that twilight imperium uses */
 @import url(//db.onlinewebfonts.com/c/83637255adf8b8192d61945c8b301f7c?family=Handel+Gothic);
@@ -192,6 +179,7 @@ h1, h2, h3, h4, h5 {
   left: 0;
 }
 .overlay {
+  font-family: Handel Gothic, sans-serif;
   position: absolute;
   text-align: center;
   z-index: 2; /* Raise above images */
