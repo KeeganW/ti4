@@ -23,7 +23,7 @@ class MoreInfo extends React.Component {
     getAdjacent(tileNumber) {
         // TODO rewrite this to calculate adjacencies, not reference them from a data file
         let adjacencies = [...adjacencyData[tileNumber]];
-        adjacencies.push(tileNumber);
+        // adjacencies.push(tileNumber);  // Add back in if we want to add the home system to these calcs
 
         let planets = 0;
         let resources = 0;
