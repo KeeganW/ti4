@@ -379,6 +379,7 @@ class App extends React.Component {
                     .css("margin-top", offsets[tileNumber][1])
                     .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
                     .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
+                    .css({'transform' : 'rotate(0)'})  // Reset any rotations from other hyperlanes
 
                 tile.show()
 
