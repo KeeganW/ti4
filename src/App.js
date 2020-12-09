@@ -374,6 +374,7 @@ class App extends React.Component {
                 .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
                 .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
                 .css("display", "none")
+                // .html(tileNumber)
                 .html(this.state.tiles[tileNumber])
 
             underlay.css("width", constraintWidth + 6)
@@ -522,7 +523,8 @@ class App extends React.Component {
                             updateTiles={this.updateTiles}
                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}/>
                 
-                <MoreInfo visible={this.state.moreInfoVisible} tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}/>
+                <MoreInfo visible={this.state.moreInfoVisible} tiles={this.state.tiles}
+                          useProphecyOfKings={this.state.useProphecyOfKings} currentPlayerNames={this.state.currentPlayerNames} />
                 
                 <MapOptions visible={this.state.isOptionsMenuShowing}  useProphecyOfKings={this.state.useProphecyOfKings}
                             currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
