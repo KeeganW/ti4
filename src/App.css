@@ -208,7 +208,7 @@ h1, h2, h3, h4, h5 {
     position: fixed;
     top: var(--title-height);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
-    z-index: 1000;
+    z-index: 1002;
 }
 #zoomButtons .btn:focus {
     box-shadow: none;
@@ -217,19 +217,19 @@ h1, h2, h3, h4, h5 {
     position: fixed;
     top: calc(var(--title-height) + 60px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
-    z-index: 1000;
+    z-index: 1002;
 }
 #moreInfoButton {
     position: fixed;
     top: calc(var(--title-height) + 130px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
-    z-index: 1000;
+    z-index: 1002;
 }
 #extraTilesButton {
     position: fixed;
     top: calc(var(--title-height) + 95px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
-    z-index: 1000;
+    z-index: 1002;
 }
 #hexOverlay .btn:focus {
     box-shadow: none;
