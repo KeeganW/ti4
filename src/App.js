@@ -388,7 +388,13 @@ class App extends React.Component {
                 .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
                 .css("display", "none")
                 // .html(tileNumber)
-                .html(this.state.tiles[tileNumber])
+
+            if (typeof this.state.tiles[tileNumber] === "string") {
+                numOverlay.html(this.state.tiles[tileNumber].split("-")[0])
+            } else {
+                numOverlay.html(this.state.tiles[tileNumber])
+            }
+
 
             underlay.css("width", constraintWidth + 6)
                 .css("height", constraintHeight + 6)
@@ -407,7 +413,7 @@ class App extends React.Component {
                     currentPlayerNumber += 1;
                 }
 
-                if (this.state.tiles[tileNumber] >= 0) {
+                if (this.state.tiles[tileNumber] !== -1) {
                     numOverlay.show();
                 }
             }
