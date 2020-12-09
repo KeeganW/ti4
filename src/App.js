@@ -415,6 +415,8 @@ class App extends React.Component {
                 // Use default map values
             }
 
+            // TODO find what the mouse is hovering nearest to, or over. Get that element, and zoom in. Something like this? https://stackoverflow.com/questions/6519043/get-mouse-position-on-scroll
+
             // Center Mecatol Rex on the screen
             $("#tile-0").get(0).scrollIntoView({behavior: "smooth", block:"center", inline: "center"});
         } else {
