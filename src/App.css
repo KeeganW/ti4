@@ -22,255 +22,255 @@ html, body {margin: 0; height: 100%;}
 
 /* Set base background, colors, and fonts*/
 body {
-  font-family: "Open Sans", sans-serif;
-  background-color: var(--background-color);
-  color: black;
+    font-family: "Open Sans", sans-serif;
+    background-color: var(--background-color);
+    color: black;
 }
 h1, h2, h3, h4, h5 {
-    font-family: Handel Gothic, sans-serif;
+        font-family: Handel Gothic, sans-serif;
 }
 
 /* Settings for button customization */
 .btn-primary, .btn-outline-primary:hover, .btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle, .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
-  color: white;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+    color: white;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 .btn-outline-primary {
-  color: var(--primary-color);
-  border-color: var(--primary-color);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 .btn-primary:hover {
-  background-color: var(--hover-color);
-  border-color: var(--hover-color);
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
 }
 .custom-checkbox .custom-control-input:checked~.custom-control-label::before{
-  /* Change the background on checkboxes to be the same as buttons*/
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+    /* Change the background on checkboxes to be the same as buttons*/
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 .custom-control-label {
-  /* Change the label for checkboxes to be a pointer */
-  cursor: pointer;
+    /* Change the label for checkboxes to be a pointer */
+    cursor: pointer;
 }
 
 /* Icon specific configurations */
 .icon {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-  display: block;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    display: block;
 }
 .d-flex > .icon {
-  margin-top: 5px;
-  margin-left: 5px;
+    margin-top: 5px;
+    margin-left: 5px;
 }
 
 /* Set the top headers to be the same height, but have different colors */
 .title {
-  height: 60px;
-  background-color: var(--primary-color);
+    height: 60px;
+    background-color: var(--primary-color);
 }
 #mainContent .title {
-  padding-top: 8px;
-  background-color: var(--secondary-color);
+    padding-top: 8px;
+    background-color: var(--secondary-color);
 }
 #options .title, #extraTilesContainer .title, #moreInfoContainer .title {
-  color: white;
-  padding-top: 15px;
+    color: white;
+    padding-top: 15px;
 }
 
 /* Place the options board on the right side of the screen */
 /*  Debate about this, but modeling after twitch's chat popout */
 /*  Could also consider a bottom bar, but vertical page height is too important*/
 #options {
-  color: black;
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: var(--options-width);
-  overflow: scroll;
-  background-color: var(--tertiary-color);
+    color: black;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: var(--options-width);
+    overflow: scroll;
+    background-color: var(--tertiary-color);
 }
 #extraTilesContainer {
-  color: black;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: var(--extra-tiles-width);
-  overflow: scroll;
-  background-color: var(--tertiary-color);
+    color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--extra-tiles-width);
+    overflow: scroll;
+    background-color: var(--tertiary-color);
 }
 #moreInfoContainer {
-  color: black;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: var(--more-info-width);
-  overflow: scroll;
-  background-color: var(--tertiary-color);
+    color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--more-info-width);
+    overflow: scroll;
+    background-color: var(--tertiary-color);
 }
 #generateForm, #tileForm, #extraTiles {
-  padding: var(--scroll-bar-distance);
+    padding: var(--scroll-bar-distance);
 }
 
 /* Where the toggle option is visible */
 #toggleOptions {
-  position: fixed;
-  z-index: 1002;
-  top: 17px;
-  user-select: none;
-  /* Normally, the button should be on the left side of the options menu */
-  right: calc(var(--options-width) - 35px - var(--scroll-bar-distance));
+    position: fixed;
+    z-index: 1002;
+    top: 17px;
+    user-select: none;
+    /* Normally, the button should be on the left side of the options menu */
+    right: calc(var(--options-width) - 35px - var(--scroll-bar-distance));
 }
 #toggleOptions.full-screen {
-  right: calc(100% - 35px - var(--scroll-bar-distance));
+    right: calc(100% - 35px - var(--scroll-bar-distance));
 }
 #toggleOptions.hidden, #toggleOptions.full-screen.hidden {
-  right: var(--scroll-bar-distance);
+    right: var(--scroll-bar-distance);
 }
 /* Pure css solution to which icon is showing, based on a single class being added*/
 #toggleOptions .icon-expand, #toggleOptions.hidden .icon-contract {
-  display: none;
+    display: none;
 }
 #toggleOptions.hidden .icon-expand, #toggleOptions .icon-contract {
-  display: block;
+    display: block;
 }
 
 
 .overlay-cls-1 {
-  fill:none;
-  stroke:#fff;
-  stroke-miterlimit:10;
-  stroke-width:8px;
+    fill:none;
+    stroke:#fff;
+    stroke-miterlimit:10;
+    stroke-width:8px;
 }
 .overlay-cls-2 {
-  font-size:148.63px;
-  fill:#fff;
-  font-family:MyriadPro-Regular, Myriad Pro;
-  letter-spacing:-0.1em;
+    font-size:148.63px;
+    fill:#fff;
+    font-family:MyriadPro-Regular, Myriad Pro;
+    letter-spacing:-0.1em;
 }
 
 /* Place the overview in the middle of the left div*/
 #mainContent {
-  position: fixed;
-  top: 0;
-  right: var(--options-width);
-  width: calc(100% - var(--options-width) - var(--extra-tiles-width) - var(--more-info-width));
-  height: 100%;
-  text-align: center;
-  overflow: scroll;
-  background-color: var(--background-color);
-  color: white;
+    position: fixed;
+    top: 0;
+    right: var(--options-width);
+    width: calc(100% - var(--options-width) - var(--extra-tiles-width) - var(--more-info-width));
+    height: 100%;
+    text-align: center;
+    overflow: scroll;
+    background-color: var(--background-color);
+    color: white;
 }
 #description {
-  padding-top: 10px;
-  padding-left: 20%;
-  padding-right: 20%;
+    padding-top: 10px;
+    padding-left: 20%;
+    padding-right: 20%;
 }
 
 /* Make map positioned centered relative to enclosing container. */
 .map {
-  position: absolute;
-  top: 0;
-  left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 .overlay {
-  font-family: Handel Gothic, sans-serif;
-  position: absolute;
-  text-align: center;
-  z-index: 2; /* Raise above images */
-  text-shadow:2px 2px 0 #000,
-  -2px -2px 0 #000,
-  2px -2px 0 #000,
-  -2px 2px 0 #000,
-  0px 2px 0 #000,
-  2px 0px 0 #000,
-  0px -2px 0 #000,
-  -2px 0px 0 #000,
-  2px 2px 5px #000;
+    font-family: Handel Gothic, sans-serif;
+    position: absolute;
+    text-align: center;
+    z-index: 2; /* Raise above images */
+    text-shadow:2px 2px 0 #000,
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    0px 2px 0 #000,
+    2px 0px 0 #000,
+    0px -2px 0 #000,
+    -2px 0px 0 #000,
+    2px 2px 5px #000;
 }
 .center-map {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .center-map-horizontal {
-  left: 50%;
-  transform: translate(-50%, 0);
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 .center-map-vertical {
-  top: 50%;
-  transform: translate(0, -50%);
+    top: 50%;
+    transform: translate(0, -50%);
 }
 
 /* Add the zoom buttons for the map to work with */
 #zoomButtons {
-  position: fixed;
-  top: var(--title-height);
-  right: calc(var(--options-width) + var(--scroll-bar-distance));
-  z-index: 1000;
+    position: fixed;
+    top: var(--title-height);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1000;
 }
 #zoomButtons .btn:focus {
-  box-shadow: none;
+    box-shadow: none;
 }
 #hexOverlay {
-  position: fixed;
-  top: calc(var(--title-height) + 60px);
-  right: calc(var(--options-width) + var(--scroll-bar-distance));
-  z-index: 1000;
+    position: fixed;
+    top: calc(var(--title-height) + 60px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1000;
 }
 #moreInfoButton {
-  position: fixed;
-  top: calc(var(--title-height) + 130px);
-  right: calc(var(--options-width) + var(--scroll-bar-distance));
-  z-index: 1000;
+    position: fixed;
+    top: calc(var(--title-height) + 130px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1000;
 }
 #extraTilesButton {
-  position: fixed;
-  top: calc(var(--title-height) + 95px);
-  right: calc(var(--options-width) + var(--scroll-bar-distance));
-  z-index: 1000;
+    position: fixed;
+    top: calc(var(--title-height) + 95px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1000;
 }
 #hexOverlay .btn:focus {
-  box-shadow: none;
+    box-shadow: none;
 }
 #moreInfo {
     overflow: scroll;
 }
 
 /* Always position the map images relative to the map container.
-    Use margin-left and right to position exactly. */
+        Use margin-left and right to position exactly. */
 .tile {
     position: absolute;
     cursor: pointer;
 }
 .tile:hover {
-  z-index: 100;
+    z-index: 100;
 }
 .tile-target {
-  z-index: 102;
+    z-index: 102;
 }
 .underlay {
-  color: var(--secondary-color);
-  display: none;
-  position: absolute;
-  z-index: -1;
+    color: var(--secondary-color);
+    display: none;
+    position: absolute;
+    z-index: -1;
 }
 .tile:hover + .underlay {
-  z-index: 98;
-  display: block;
+    z-index: 98;
+    display: block;
 }
 .underlay-target {
-  color: var(--primary-color);
-  z-index: 101;
-  display: block;
+    color: var(--primary-color);
+    z-index: 101;
+    display: block;
 }
 .tile-wrapper {
-  position: relative;
+    position: relative;
 }
 
 a {
@@ -291,7 +291,6 @@ a:hover {
 
 /* Display certain maps based on browser size, so it fits on the page. */
 @media screen and (max-width: 1080px) {
-
     .overview-panel {
         background-color: rgba(74, 111, 144, 0.42);
         width: 300px;
@@ -312,7 +311,6 @@ a:hover {
     .overview-image {
         width: 0;
     }
-
     #options, #extraTiles, #moreInfo {
         width: 100%;
         z-index: 1001;
