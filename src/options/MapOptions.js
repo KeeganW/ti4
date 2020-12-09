@@ -19,6 +19,13 @@ class MapOptions extends React.Component {
                 3: Object.keys(boardData.styles["3"]).map((key) => key),
                 4: Object.keys(boardData.styles["4"]).map((key) => key),
                 5: Object.keys(boardData.styles["5"]).map((key) => key),
+                6: Object.keys(boardData.styles["6"]).map((key) => key === "large" ? null : key).filter(x => x),
+            },
+            boardStylesPok: {
+                2: Object.keys(boardData.styles["2"]).map((key) => key),
+                3: Object.keys(boardData.styles["3"]).map((key) => key),
+                4: Object.keys(boardData.styles["4"]).map((key) => key),
+                5: Object.keys(boardData.styles["5"]).map((key) => key),
                 6: Object.keys(boardData.styles["6"]).map((key) => key),
                 7: Object.keys(boardData.styles["7"]).map((key) => key),
                 8: Object.keys(boardData.styles["8"]).map((key) => key),
@@ -117,19 +124,23 @@ class MapOptions extends React.Component {
         })
     }
     updatePok(event) {
+        let boardOptions = this.state.optionsPossible.boardStyles;
         if (event.target.checked) {
+            boardOptions = this.state.optionsPossible.boardStylesPok;
             this.setState({
                 currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers),
-                currentRaces: [...this.state.optionsPossible.races].concat([...this.state.optionsPossible.pokRaces])
-            }, this.props.toggleProphecyOfKings);
+                currentRaces: [...this.state.optionsPossible.races].concat([...this.state.optionsPossible.pokRaces]),
+                currentBoardStyle: boardOptions[this.state.currentNumberOfPlayers][0],
+                currentBoardStyleOptions: boardOptions[this.state.currentNumberOfPlayers],
+            }, this.props.toggleProphecyOfKings(event));
         } else {
             this.setState({
                 currentNumberOfPlayers: this.state.currentNumberOfPlayers > 6 ? 6 : this.state.currentNumberOfPlayers,
                 currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers,
-                currentBoardStyle: this.state.currentNumberOfPlayers > 6 ? this.state.optionsPossible.boardStyles["6"][0] : this.state.currentBoardStyle,
-                currentBoardStyleOptions: this.state.currentNumberOfPlayers > 6 ? this.state.optionsPossible.boardStyles["6"] : this.state.currentBoardStyleOptions,
-                currentRaces: [...this.state.optionsPossible.races]
-            }, this.props.toggleProphecyOfKings);
+                currentBoardStyle: this.state.currentNumberOfPlayers > 6 ? boardOptions["6"][0] : this.state.currentBoardStyle,
+                currentBoardStyleOptions: this.state.currentNumberOfPlayers > 6 ? boardOptions["6"] : boardOptions[this.state.currentNumberOfPlayers],
+                currentRaces: [...this.state.optionsPossible.races],
+            }, this.props.toggleProphecyOfKings(event));
         }
     }
     updatePlayerCount(event) {
@@ -149,9 +160,13 @@ class MapOptions extends React.Component {
         });
     }
     updateBoardStyleOptions(event) {
+        let boardOptions = this.state.optionsPossible.boardStyles;
+        if (this.props.useProphecyOfKings) {
+            boardOptions = this.state.optionsPossible.boardStylesPok;
+        }
         this.setState({
-            currentBoardStyleOptions: this.state.optionsPossible.boardStyles[this.state.currentNumberOfPlayers],
-            currentBoardStyle: this.state.optionsPossible.boardStyles[this.state.currentNumberOfPlayers][0],
+            currentBoardStyleOptions: boardOptions[this.state.currentNumberOfPlayers],
+            currentBoardStyle: boardOptions[this.state.currentNumberOfPlayers][0],
         }, () => {
             if (this.state.generated) {
                 this.generateBoard(event)

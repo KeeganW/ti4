@@ -202,6 +202,16 @@
                 "secondary_tiles": [28, 31, 34, 19, 22, 25, 27, 24, 21, 36, 33, 30],
                 "tertiary_tiles": [4, 6, 2, 3, 5, 1],
                 "hyperlane_tiles": []
+            },
+            "large": {
+                "description": "The large version using the expansion tiles.",
+                "source": "Base Rules",
+                "empty_tiles": [],
+                "home_worlds": [37, 41, 45, 49, 53, 57],
+                "primary_tiles": [38, 42, 46, 50, 54, 58, 56, 52, 48, 44, 40, 60],
+                "secondary_tiles": [34, 31, 28, 25, 22, 19, 20, 23, 26, 29, 32, 35, 33, 30, 27, 24, 21, 36],
+                "tertiary_tiles": [51, 47, 43, 39, 59, 55, 1, 3, 5, 2, 6, 4, 13, 7, 16, 10, 18, 12, 14, 8, 15, 9, 11, 17],
+                "hyperlane_tiles": []
             }
         },
         "7": {
@@ -242,7 +252,7 @@
                 "source": "Game Rules",
                 "empty_tiles": [],
                 "home_worlds": [37, 40, 43, 46, 49, 52, 55, 58, 37],
-                "primary_tiles": [19, 21, 44, 26, 28, 30, 56, 35, 19],
+                "primary_tiles": [19, 21, 44, 26, 28, 30, 56, 35],
                 "secondary_tiles": [50, 31, 59, 38, 22, 47, 25, 23, 39, 60, 34, 32, 51, 48],
                 "tertiary_tiles": [3, 6, 7, 13, 8, 14, 9, 15, 10, 16, 11, 17, 12, 18, 27, 29, 20, 36],
                 "hyperlane_tiles": [[1, "87A", 5], [2, "90B", 3], [4, "88A", 4], [5, "89B", 0], [24, "85B", 1], [33, "83B", 1]]
