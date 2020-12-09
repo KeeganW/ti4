@@ -49,8 +49,8 @@ class MoreInfo extends React.Component {
                     planets += 1;
                     resources += planet["resources"];
                     influence += planet["influence"];
-                    specialties[planet["specialty"]] += specialties[planet["specialty"]] + 1;
-                    traits[planet["trait"]] = traits[planet["trait"]] + 1;
+                    specialties[planet["specialty"]] += 1;
+                    traits[planet["trait"]] += 1;
                 }
             }
         }
