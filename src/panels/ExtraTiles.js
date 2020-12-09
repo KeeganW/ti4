@@ -27,21 +27,25 @@ class ExtraTiles extends React.Component {
 
         const tileObjects = []
         for (const [index, value] of tileNumbers.entries()) {
+            let tileNumber = value
+            if (isNaN(Number(tileNumber)) && tileNumber !== undefined) {
+                tileNumber = value.split("-")[0]
+            }
             tileObjects.push(
                 <div className="tile-wrapper">
-                    <span id={"num-" + value} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")}>{value}</span>
-                    <img id={"extra-" + value}
+                    <span id={"num-" + tileNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")}>{tileNumber}</span>
+                    <img id={"extra-" + tileNumber}
                          width="105px"
                          height="91px"
                          className="tile"
-                         src={window.location.origin + window.location.pathname + "/tiles/ST_" + value + ".png"}
+                         src={window.location.origin + window.location.pathname + "/tiles/ST_" + tileNumber + ".png"}
                          draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop}
                          onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter}
                          onDragLeave={this.props.dragLeave}
                          alt=""
                          style={this.tileStyle}
                     />
-                    <svg id={"extra-underlay-" + value} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="underlay" fill="currentColor"
+                    <svg id={"extra-underlay-" + tileNumber} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="underlay" fill="currentColor"
                          style={this.underlayStyle}>
                         <polygon points="269.51 0 89.84 0 0 155.6 89.84 311.2 269.51 311.2 359.35 155.6 269.51 0" />
                     </svg>
