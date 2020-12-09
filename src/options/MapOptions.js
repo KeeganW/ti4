@@ -321,7 +321,7 @@ class MapOptions extends React.Component {
             case "balanced":
             default:
                 weights = {
-                    "resource": 70,
+                    "resource": 80,
                     "influence": 30,
                     "planet_count": 15,
                     "specialty": 50,
@@ -559,7 +559,7 @@ class MapOptions extends React.Component {
                          Board style changes how the tiles are actually laid out on a newly generated map.
                          <br>
                          <br>
-                         Changing this would cause you to expect more valuable tiles to be placed in certain positions. For example, 6-player "Normal" places important tiles closer to home worlds, while 6-player "Warzone" places the most valuable planets close to Mecatol Rex, forcing you to fight for your assets. It also might exclude placing certain tiles entirely, to create non traditional map shapes (which happens more in lower player counts).
+                         Changing this would cause you to expect different hex layouts, such as different patterns of tiles, usage of hyperlanes, or unorthodox placement of home worlds.
                          </p>'
                     />
                     <HelpModal visible={this.state.pickRacesHelp} hideModal={this.togglePickRacesHelp} title={"About Picking Races"}
