@@ -1,65 +1,53 @@
 # TI4 Generator
-A tool to generate Twilight Imperium 4 game boards and assign races to players. This tool has a web client generator, as
-well as 2 classes for picking races and for generating maps. The race picker and map generator can be run seperately
-from the web client, however the web client makes everything easier.
+A web tool to generate Twilight Imperium 4 game boards through many custom settings.
 
 ## Web Quick Start
 
+Visit the [web page located on github pages](https://keeganw.github.io/ti4/). This is running from the `gh-pages` branch.
+
+## Development Setup
+
+1. Install Node and NPM for your OS using [their website](https://nodejs.org/en/) or brew on Mac
+1. In the root directory of the cloned project, run `npm install`
+1. Once it is done, you can start the development server with `npm start`. If a web page is not automatically opened, go to [localhost:3000/ti4](http://localhost:3000/ti4)
+
+## Using the Tool
+
+The tool has many features, go poke around! Here is a list of notable features
+
+- Automatic map generation based on user input. Options include:
+    - Using new Prophecy of Kings content
+    - Setting the player count
+    - Setting what the board will look like from various custom maps
+    - Setting how tiles are places by working with their weights
+    - Seeding the generation with a custom number between 1-10,000
+    - Automatically picking races for players
+    - Set player names for showing on the map
+    - Set races that can be picked from
+    - Randomization of how tiles are placed
+    - Moving better planets towards the middle
+- Drag and drop tiles to customize your board
+- Zoom in and out to get a better idea of what certain tiles are
+- Show an overlay with the tilenumbers for when you are ready to build your board
+- Replace any tiles on the board with any unused tiles
+- Show detailed information about the adjacenct planets to each home system
+- Sharable links to send to your friends
+
+## Pushing Changes to Github Pages
+
 ```bash
-docker run -p 8080:80 -d --rm --name ti4 keeganwilliams/ti4:latest
-```
-Open you local browser to [localhost:8080](http://localhost:8080/)
-
-To turn off, kill it with `docker stop ti4`.
-
-## Map and Race Generator Quick Start
-
-Assuming that python is installed locally (if it is not, see a guide to install it for your OS), simply run the 
-following commands in your terminal.
-
-```bash
-python ti4_map_generator.py  # Starts the map generator
-python ti4_race_picker.py  # Picks races for players
+npm run build
+git checkout gh-pages
+# rm everything BUT ./build/*, ./node_modules, and ./.*
+mv -r ./build/* .
+git add -A
+git commit -m "Your commit message"
+git push
 ```
 
-Both of these can be configured in the `if __name__ == '__main__':` section of their respective files.
-
-### Race Picker Configuration
-
-Depending on how many players you are playing with, you can change the `players` variable so that it reflects 
-the names of the players in your game.
-
-You can add races to `exluded_races` to keep them out of the random draw. This lets you pull out "OP" races that your 
-group would rather not play with. You can also use this to keep things fresh, and exclude any races which you have used 
-in previous games with the same group.
-
-By changing `race_seed` you can randomize which races are found. This is useful if you find that one person has a set of 
-"OP" races that you think should be balanced accross the group of players. I recomend that you ask members inside your 
-group to suggest a random value for this.
-
-By changing `player_seat_seed` you change which players get which set of randomly selected races.
-
-### Map Generator Configuration
-
-You can change your `player_count` to reflect the number of players you plan to play the game with. Be aware that this
-will affect what game boards you can play on. You can see `get_board_styles` for possible options with your current 
-player count.
-
-Set the `pick_style` to reflect what you value most in a game. If your group prefers to play favoring resources, set it
-to `resource`. For a balanced pick style, use `tas`.
-
-Set `board_style` to pick the specific layout of the board you want to populate. Most player counts have some variations
-that prioritize different hexes, which can be used to place the more heavily weighted tiles (based on `pick_style`)
-closer to the tiles you care about.
-
-Finally, set the `seed` if you want to have repeatable results to consult with your friends with when playing the game.
-
-## Additional Useful Commands
-
-To upload the latest version to docker, use the following commands (replacing the version with a new iteration of the
-version count)
-```shell script
-docker build --tag keeganwilliams/ti4:latest --tag keeganwilliams/ti4:<new version> . 
-docker push keeganwilliams/ti4:1.1
-docker push keeganwilliams/ti4:latest
-```
+1. From the root directory, run `npm run build`
+1. Switch to the `gh-pages` branch
+1. Remove everything BUT the build folder, node_modules folder, and hidden files
+1. Move all the content in the `build` folder into the root page
+1. Add and commit all files
+1. Push to remote
