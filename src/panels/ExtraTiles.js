@@ -1,7 +1,7 @@
 import React from "react";
 import tileData from "../data/tileData.json";
 
-class MoreInfo extends React.Component {
+class ExtraTiles extends React.Component {
     constructor(props) {
         super(props);
         this.underlayStyle = {
@@ -61,4 +61,4 @@ class MoreInfo extends React.Component {
         );
     }
 }
-export default MoreInfo;
+export default ExtraTiles;

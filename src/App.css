@@ -250,6 +250,9 @@ h1, h2, h3, h4, h5 {
 #hexOverlay .btn:focus {
   box-shadow: none;
 }
+#moreInfo {
+    overflow: scroll;
+}
 
 /* Always position the map images relative to the map container.
     Use margin-left and right to position exactly. */

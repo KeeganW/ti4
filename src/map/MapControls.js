@@ -34,11 +34,11 @@ class MoreInfo extends React.Component {
                     </button>
                 </div>
 
-                {/*<div id="moreInfoButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.toggleMoreInfo}>*/}
-                {/*    <button className="btn btn-primary" id="showMoreInfo" data-tip="Extra Map Information">*/}
-                {/*        <InfoCircle className="icon" />*/}
-                {/*    </button>*/}
-                {/*</div>*/}
+                <div id="moreInfoButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.toggleMoreInfo}>
+                    <button className="btn btn-primary" id="showMoreInfo" data-tip="Extra Map Information">
+                        <InfoCircle className="icon" />
+                    </button>
+                </div>
             </div>
         );
     }

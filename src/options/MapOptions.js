@@ -55,7 +55,7 @@ class MapOptions extends React.Component {
             shufflePriorityHelp: false,
             reversePlacementOrderHelp: false,
 
-            resourceWeight: 60,
+            resourceWeight: 70,
             influenceWeight: 30,
             planetCountWeight: 15,
             specialtyWeight: 50,
@@ -315,7 +315,7 @@ class MapOptions extends React.Component {
             case "balanced":
             default:
                 weights = {
-                    "resource": 60,
+                    "resource": 70,
                     "influence": 30,
                     "planet_count": 15,
                     "specialty": 50,
@@ -508,11 +508,11 @@ class MapOptions extends React.Component {
 
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
 
-                            <div className="custom-control custom-checkbox d-flex">
-                                <input type="checkbox" className="custom-control-input" id="pickMultipleRaces" name="pickMultipleRaces" checked={this.state.pickMultipleRaces} onChange={this.handleInputChange} />
-                                <label className="custom-control-label" htmlFor="pickMultipleRaces">Let Players Pick From Multiple</label>
-                                <QuestionCircle className="icon" onClick={this.togglePickMultipleRacesHelp} />
-                            </div>
+                            {/*<div className="custom-control custom-checkbox d-flex">*/}
+                            {/*    <input type="checkbox" className="custom-control-input" id="pickMultipleRaces" name="pickMultipleRaces" checked={this.state.pickMultipleRaces} onChange={this.handleInputChange} />*/}
+                            {/*    <label className="custom-control-label" htmlFor="pickMultipleRaces">Let Players Pick From Multiple</label>*/}
+                            {/*    <QuestionCircle className="icon" onClick={this.togglePickMultipleRacesHelp} />*/}
+                            {/*</div>*/}
                         </div>
                     </div>
 
