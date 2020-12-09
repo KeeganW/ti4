@@ -15,13 +15,13 @@ class MapOptions extends React.Component {
             numberOfPlayers: [2, 3, 4, 5, 6],
             pokNumberOfPlayers: [7, 8],
             boardStyles: {
-                2: ["normal"],
-                3: ["normal", "compact", "manta"],
-                4: ["normal", "horizontal", "vertical", "gaps"],
-                5: ["normal", "diamond"],
-                6: ["normal"],
-                7: ["normal"],
-                8: ["normal"],
+                2: Object.keys(boardData.styles["2"]).map((key) => key),
+                3: Object.keys(boardData.styles["3"]).map((key) => key),
+                4: Object.keys(boardData.styles["4"]).map((key) => key),
+                5: Object.keys(boardData.styles["5"]).map((key) => key),
+                6: Object.keys(boardData.styles["6"]).map((key) => key),
+                7: Object.keys(boardData.styles["7"]).map((key) => key),
+                8: Object.keys(boardData.styles["8"]).map((key) => key),
             },
             pickStyles: ["balanced", "random", "resource", "influence", "custom"],
             races: [...raceData["races"]],
@@ -29,6 +29,7 @@ class MapOptions extends React.Component {
             homeworlds: raceData["homeworlds"],
             pokHomeworlds: raceData["pokHomeworlds"]
         }
+        console.log(startingValues.boardStyles)
         
         this.state = {
             optionsPossible: startingValues,
@@ -43,6 +44,7 @@ class MapOptions extends React.Component {
             pickMultipleRaces: false,
             shuffleBoards: true,
             reversePlacementOrder: false,
+            generated: false,
 
             pickRacesHelp: false,
             boardStyleHelp: false,
@@ -66,6 +68,7 @@ class MapOptions extends React.Component {
         this.handleRacesChange = this.handleRacesChange.bind(this);
         this.updatePok = this.updatePok.bind(this);
         this.updatePlayerCount = this.updatePlayerCount.bind(this);
+        this.updateBoardStyle = this.updateBoardStyle.bind(this);
         this.updateSeed = this.updateSeed.bind(this);
 
         this.updateBoardStyleOptions = this.updateBoardStyleOptions.bind(this); // TODO is the bind needed?
@@ -134,15 +137,27 @@ class MapOptions extends React.Component {
         this.setState({
             currentNumberOfPlayers: parseInt(event.target.value),
         }, () => {
-            this.updateBoardStyleOptions()
-            // this.generateBoard(event)
+            this.updateBoardStyleOptions(event)
         });
     }
-    updateBoardStyleOptions() {
-        this.setState(state => ({
+    updateBoardStyle(event) {
+        this.setState({
+            currentBoardStyle: event.target.value,
+        }, () => {
+            if (this.state.generated) {
+                this.generateBoard(event)
+            }
+        });
+    }
+    updateBoardStyleOptions(event) {
+        this.setState({
             currentBoardStyleOptions: this.state.optionsPossible.boardStyles[this.state.currentNumberOfPlayers],
             currentBoardStyle: this.state.optionsPossible.boardStyles[this.state.currentNumberOfPlayers][0],
-        }));
+        }, () => {
+            if (this.state.generated) {
+                this.generateBoard(event)
+            }
+        });
     }
     updateSeed(event) {
         let newSeed = parseInt(event.target.value)
@@ -199,7 +214,7 @@ class MapOptions extends React.Component {
         let possiblePlanets = this.getPossiblePlanets()
 
         // Place planets one at a time, using the indexes to place combined with the ordered planet list
-        let newTiles = Array.apply(-1, Array(this.props.useProphecyOfKings ? boardData.pokSize : boardData.size)).fill(-1);  // Reset tiles to be empty
+        let newTiles = [...boardData.blankMap] // Reset tiles to be empty
         for (let planetIndex in planetIndexesToPlace){
             newTiles[planetIndexesToPlace[planetIndex]] = possiblePlanets.shift()
         }
@@ -226,7 +241,8 @@ class MapOptions extends React.Component {
 
         // Update the seed we are using (so it is displayed) and then update the tiles
         this.setState({
-            currentSeed: currentSeed
+            currentSeed: currentSeed,
+            generated: true
         }, this.props.updateTiles(newTiles));
     }
 
@@ -440,7 +456,7 @@ class MapOptions extends React.Component {
                         <label htmlFor="boardStyle" className="d-flex">Board Style
                             <QuestionCircle className="icon" onClick={this.toggleBoardStyleHelp} />
                         </label>
-                        <select className="form-control" id="boardStyle" name="currentBoardStyle" value={this.state.currentBoardStyle} onChange={this.handleInputChange}>
+                        <select className="form-control" id="boardStyle" name="currentBoardStyle" value={this.state.currentBoardStyle} onChange={this.updateBoardStyle}>
                             {this.state.currentBoardStyleOptions.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
                     </div>
