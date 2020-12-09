@@ -537,6 +537,12 @@ class App extends React.Component {
             <div>
                     
                 <OptionsControls visible={this.state.isOptionsMenuShowing} isMobileView={this.state.isMobileView} toggleOptions={this.toggleOptionsMenu} />
+
+                <MapControls visible={this.state.mapControlsVisible} overlayVisible={this.state.overlayVisible}
+                             moreInfoVisible={this.state.moreInfoVisible} extraTilesVisible={this.state.extraTilesVisible}
+                             toggleOverlay={this.toggleOverlay}
+                             toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
+                             zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick} />
                 
                 <div id="mainContent" className="justify-content-center align-items-center">
                     <MainOverview visible={this.state.overviewVisible} />
@@ -544,13 +550,6 @@ class App extends React.Component {
                     <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
                              tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}
                              drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}/>
-                    
-                    {/* TODO can these controls be moved into MainMap? */}
-                    <MapControls visible={this.state.mapControlsVisible} overlayVisible={this.state.overlayVisible}
-                                 moreInfoVisible={this.state.moreInfoVisible} extraTilesVisible={this.state.extraTilesVisible}
-                                 toggleOverlay={this.toggleOverlay}
-                                 toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
-                                 zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick} />
                 </div>
                 
                 <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}
