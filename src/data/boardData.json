@@ -97,7 +97,7 @@
                 "primary_tiles": [9, 11, 15, 17, 36, 29, 27, 20],
                 "secondary_tiles": [14, 18, 8, 12, 13, 7],
                 "tertiary_tiles": [6, 5, 3, 2, 10, 16],
-                "hyperlane_tiles": [1, 4]
+                "hyperlane_tiles": [[1, "87A", 5], [4, "88A", 4]]
             },
             "double warp": {
                 "description": "Split sides of the galaxy with many hyperlanes connecting the sides.",
@@ -107,7 +107,7 @@
                 "primary_tiles": [9, 11, 15, 17, 7, 13],
                 "secondary_tiles": [35, 30, 26, 21, 23, 24, 32, 33],
                 "tertiary_tiles": [3, 5, 6, 2, 10, 16],
-                "hyperlane_tiles": [1, 4, 8, 12, 14, 18]
+                "hyperlane_tiles": [[8, "89B", 1], [12, "87B", 2], [14, "90B", 4], [18, "91B", 5]]
             },
             "mini warp": {
                 "description": "S more standard 4 player map, but with 4 hyperlanes to bring neighbors closer.",
@@ -117,7 +117,7 @@
                 "primary_tiles": [18, 10, 12, 16, 31, 28, 22, 19],
                 "secondary_tiles": [13, 15, 7, 9, 24, 35, 33, 26],
                 "tertiary_tiles": [1, 3, 5, 2, 6, 4, 17, 11, 20, 29, 21, 30],
-                "hyperlane_tiles": [8, 14, 25, 34]
+                "hyperlane_tiles": [[8, "83B", 1], [14, "84B", 1], [25, "85A", 1], [34, "86A", 4]]
             }
         },
         "5": {
@@ -139,7 +139,7 @@
                 "primary_tiles": [7, 9, 11, 15, 17],
                 "secondary_tiles": [13, 16, 18, 8, 10, 1, 3, 5, 2, 6],
                 "tertiary_tiles": [20, 23, 26, 30, 32, 35, 33, 30, 24, 21, 36],
-                "hyperlane_tiles": [4, 12, 14, 27, 28, 29]
+                "hyperlane_tiles": [[4, "86A", 0], [12, "88A", 0], [14, "87A", 0], [27, "83A", 0], [28, "85A", 0], [29, "84A", 0]]
             },
             "diamond": {
                 "description": "A slightly smaller map than normal, which focuses on being closer to Mecatol Rex.",
@@ -213,7 +213,7 @@
                 "primary_tiles": [19, 34, 32, 30, 26, 24, 22],
                 "secondary_tiles": [38, 41, 44, 47, 53, 56, 57, 59, 54, 51, 45, 42, 39, 60],
                 "tertiary_tiles": [4, 2, 6, 1, 3, 5, 7, 9, 11, 15, 17, 18, 16, 14, 12, 10, 8, 20, 21, 23, 25, 28, 31, 33, 35, 36],
-                "hyperlane_tiles": [13, 27, 29, 48, 49, 50]
+                "hyperlane_tiles": [[13, "86A", 0], [27, "88A", 0], [29, "87A", 0], [48, "83A", 0], [49, "85A", 0], [50, "84A", 0]]
             },
             "warp": {
                 "description": "The alternate map to use with 7 players which uses different hyperlanes.",
@@ -223,7 +223,7 @@
                 "primary_tiles": [19, 9, 11, 28, 30, 56, 35, 59, 32, 51, 48, 26, 21, 38],
                 "secondary_tiles": [60, 23, 24, 50, 31, 34, 17, 16, 15, 29, 10, 36],
                 "tertiary_tiles": [6, 2, 3, 7, 13, 8, 14, 18, 12],
-                "hyperlane_tiles": [1, 4, 5, 20, 27, 33]
+                "hyperlane_tiles": [[1, "85B", 0], [4, "84B", 0], [5, "90B", 0], [20, "88B", 0], [27, "86B", 0], [33, "83B", 1]]
             }
         },
         "8": {
@@ -245,7 +245,7 @@
                 "primary_tiles": [19, 21, 44, 26, 28, 30, 56, 35, 19],
                 "secondary_tiles": [50, 31, 59, 38, 22, 47, 25, 23, 39, 60, 34, 32, 51, 48],
                 "tertiary_tiles": [3, 6, 7, 13, 8, 14, 9, 15, 10, 16, 11, 17, 12, 18, 27, 29, 20, 36],
-                "hyperlane_tiles": [1, 2, 4, 5, 24, 33]
+                "hyperlane_tiles": [[1, "87A", 5], [2, "90B", 3], [4, "88A", 4], [5, "89B", 0], [24, "85B", 1], [33, "83B", 1]]
             }
         }
     }

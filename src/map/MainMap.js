@@ -6,12 +6,16 @@ class MoreInfo extends React.Component {
         const tileNumbers = Array.from({length: boardData.pokSize}, (_, i) => i);
         const tileObjects = []
         for (const [index, value] of tileNumbers.entries()) {
+            let tile = this.props.tiles[index]
+            if (isNaN(Number(tile)) && tile !== undefined) {
+                tile = this.props.tiles[index].split("-")[0]
+            }
             tileObjects.push(
                 <div className="tile-wrapper">
                     <span id={"num-" + index} className={"overlay"}>{index}</span>
                     <img id={"tile-" + index}
                          className="tile"
-                         src={window.location.origin + window.location.pathname + "/tiles/ST_" + this.props.tiles[index] + ".png"}
+                         src={window.location.origin + window.location.pathname + "/tiles/ST_" + tile + ".png"}
                          draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop}
                          onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter}
                          onDragLeave={this.props.dragLeave}

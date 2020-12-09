@@ -29,8 +29,7 @@ class MapOptions extends React.Component {
             homeworlds: raceData["homeworlds"],
             pokHomeworlds: raceData["pokHomeworlds"]
         }
-        console.log(startingValues.boardStyles)
-        
+
         this.state = {
             optionsPossible: startingValues,
             currentNumberOfPlayers: 6,
@@ -217,6 +216,13 @@ class MapOptions extends React.Component {
         let newTiles = [...boardData.blankMap] // Reset tiles to be empty
         for (let planetIndex in planetIndexesToPlace){
             newTiles[planetIndexesToPlace[planetIndex]] = possiblePlanets.shift()
+        }
+
+        // Place hyperlanes in their specific layout
+        // TODO in the future, can this be random? Can they rotate?
+        for (let index = 0; index < boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['hyperlane_tiles'].length; index++) {
+            let hyperlaneData = boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['hyperlane_tiles'][index]
+            newTiles[hyperlaneData[0]] = hyperlaneData[1] + "-" + hyperlaneData[2]
         }
 
         // Get current races for placing races, and shuffle them around

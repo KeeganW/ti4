@@ -143,9 +143,13 @@ class App extends React.Component {
         }
         
         // Now split on commas
-        tiles = tiles.split(',').map( Number );
-        
-        return tiles;
+        tiles = tiles.split(',');
+        let newTiles = []
+        for (let tileIndex in tiles) {
+            let parsed = Number(tiles[tileIndex])
+            newTiles.push(isNaN(parsed) ? tiles[tileIndex] : parsed)
+        }
+        return newTiles;
     }
     
     /* BUTTON ACTIONS */
@@ -354,14 +358,23 @@ class App extends React.Component {
             let tile = $("#tile-" + tileNumber);
             let numOverlay = $("#num-" + tileNumber);
             let underlay = $("#underlay-" + tileNumber);
-            if (this.state.tiles[tileNumber] >= 0) {
+            if (this.state.tiles[tileNumber] >= 0 || typeof this.state.tiles[tileNumber] === "string") {
                 tile.attr("width", constraintWidth)
                     .attr("height", constraintHeight)
                     .css("margin-left", offsets[tileNumber][0])
                     .css("margin-top", offsets[tileNumber][1])
                     .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
                     .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
+
                 tile.show()
+
+                if (typeof this.state.tiles[tileNumber] === "string") {
+                    // Hyperlane, so remove the last section and check if it needs to be rotated
+                    if (this.state.tiles[tileNumber].split("-")[1] !== "0") {
+                        let degrees = 60 * Number(this.state.tiles[tileNumber].split("-")[1]);
+                        tile.css({'transform' : 'rotate(-'+ degrees +'deg)'})
+                    }
+                }
             } else {
                 tile.hide()
             }
