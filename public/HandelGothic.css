@@ -1,0 +1,28 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 3985268, 2020-12-09T11:10:18-0500
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: HandelGothicBTWXX-Regular by Bitstream
+ * URL: https://www.myfonts.com/fonts/bitstream/handel-gothic/handel-gothic/
+ * Copyright: Copyright 1990-2003 Bitstream Inc. All rights reserved.
+ * 
+ * 
+ * 
+ * © 2020 MyFonts Inc
+*/
+
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("//hello.myfonts.net/count/3ccf74");
+  
+@font-face {
+  font-family: "Handel Gothic";
+  src: url("fonts/HandelGothic/font.woff2") format("woff2"), url("fonts/HandelGothic/font.woff") format("woff");
+}
+

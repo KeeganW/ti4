@@ -2,6 +2,17 @@ import React from "react";
 import adjacencyData from "../data/adjacencyData.json";
 import tileData from "../data/tileData.json";
 
+import influence from './icons/influence.png';
+import planet from './icons/planet.png';
+import resource from './icons/resource.png';
+import specialtyBiotic from './icons/specialty-biotic.png';
+import specialtyWarfare from './icons/specialty-warfare.png';
+import specialtyPropulsion from './icons/specialty-propulsion.png';
+import specialtyCybernetic from './icons/specialty-cybernetic.png';
+import traitCultural from './icons/trait-cultural.png';
+import traitHazardous from './icons/trait-hazardous.png';
+import traitIndustrial from './icons/trait-industrial.png';
+
 class MoreInfo extends React.Component {
     constructor(props) {
         super(props);
@@ -17,7 +28,12 @@ class MoreInfo extends React.Component {
         let planets = 0;
         let resources = 0;
         let influence = 0;
-        let specialties = 0;
+        let specialties = {
+            "biotic": 0,
+            "warfare": 0,
+            "propulsion": 0,
+            "cybernetic": 0
+        };
         let traits = {
             "cultural": 0,
             "industrial": 0,
@@ -33,8 +49,8 @@ class MoreInfo extends React.Component {
                     planets += 1;
                     resources += planet["resources"];
                     influence += planet["influence"];
-                    specialties += planet["specialty"] ? 1 : 0;
-                    traits[planet["trait"]] = traits[planet["trait"]] + 1
+                    specialties[planet["specialty"]] += specialties[planet["specialty"]] + 1;
+                    traits[planet["trait"]] = traits[planet["trait"]] + 1;
                 }
             }
         }
@@ -64,10 +80,20 @@ class MoreInfo extends React.Component {
                         <th scope="row">{playerName}</th>
                         <td>{adjacentInfo.resources}</td>
                         <td>{adjacentInfo.influence}</td>
-                        <td>{adjacentInfo.planets}</td>
-                        <td>{adjacentInfo.specialties}</td>
                         <td>
-                            <span className={"text-nowrap"}>C: {adjacentInfo.traits.cultural} | I: {adjacentInfo.traits.industrial} | H: {adjacentInfo.traits.hazardous}</span>
+                            <span className={"d-flex"}>
+                                {[...Array(adjacentInfo.traits.cultural)].map((e, i) => <img className={"icon"} src={traitCultural} alt={"C"}/>)}
+                                {[...Array(adjacentInfo.traits.hazardous)].map((e, i) => <img className={"icon"} src={traitHazardous} alt={"H"}/>)}
+                                {[...Array(adjacentInfo.traits.industrial)].map((e, i) => <img className={"icon"} src={traitIndustrial} alt={"I"}/>)}
+                            </span>
+                        </td>
+                        <td>
+                            <span className={"d-flex"}>
+                                {[...Array(adjacentInfo.specialties.biotic)].map((e, i) => <img className={"icon"} src={specialtyBiotic} alt={"B"}/>)}
+                                {[...Array(adjacentInfo.specialties.warfare)].map((e, i) => <img className={"icon"} src={specialtyWarfare} alt={"W"}/>)}
+                                {[...Array(adjacentInfo.specialties.propulsion)].map((e, i) => <img className={"icon"} src={specialtyPropulsion} alt={"P"}/>)}
+                                {[...Array(adjacentInfo.specialties.cybernetic)].map((e, i) => <img className={"icon"} src={specialtyCybernetic} alt={"C"}/>)}
+                            </span>
                         </td>
                     </tr>
                 );
@@ -84,11 +110,10 @@ class MoreInfo extends React.Component {
                         <thead>
                             <tr>
                                 <th scope="col"></th>
-                                <th scope="col">Resources</th>
-                                <th scope="col">Influence</th>
-                                <th scope="col">Planets</th>
-                                <th scope="col">Tech</th>
-                                <th scope="col">Traits</th>
+                                <th scope="col"><img className={"icon"} src={resource} alt={"Res."}/></th>
+                                <th scope="col"><img className={"icon"} src={influence} alt={"Inf."}/></th>
+                                <th scope="col"><img className={"icon"} src={planet} alt={"Planets"}/></th>
+                                <th scope="col"><img className={"icon"} src={specialtyWarfare} alt={"Tech"}/></th>
                             </tr>
                         </thead>
                         <tbody>

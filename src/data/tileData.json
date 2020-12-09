@@ -377,7 +377,7 @@
                     "resources": 1,
                     "influence": 1,
                     "trait": "industrial",
-                    "specialty": "blue",
+                    "specialty": "propulsion",
                     "legendary": false
                 }
             ]
@@ -391,7 +391,7 @@
                     "resources": 1,
                     "influence": 1,
                     "trait": "industrial",
-                    "specialty": "green",
+                    "specialty": "biotic",
                     "legendary": false
                 }
             ]
@@ -419,7 +419,7 @@
                     "resources": 1,
                     "influence": 3,
                     "trait": "hazardous",
-                    "specialty": "red",
+                    "specialty": "warfare",
                     "legendary": false
                 }
             ]
@@ -461,7 +461,7 @@
                     "resources": 1,
                     "influence": 1,
                     "trait": "industrial",
-                    "specialty": "green",
+                    "specialty": "biotic",
                     "legendary": false
                 },
                 {
@@ -549,7 +549,7 @@
                     "resources": 1,
                     "influence": 0,
                     "trait": "industrial",
-                    "specialty": "yellow",
+                    "specialty": "cybernetic",
                     "legendary": false
                 },
                 {
@@ -623,7 +623,7 @@
                     "resources": 1,
                     "influence": 1,
                     "trait": "industrial",
-                    "specialty": "blue",
+                    "specialty": "propulsion",
                     "legendary": false
                 }
             ]
@@ -689,7 +689,7 @@
                     "resources": 0,
                     "influence": 4,
                     "trait": "hazardous",
-                    "specialty": "red",
+                    "specialty": "warfare",
                     "legendary": false
                 }
             ]
@@ -951,7 +951,7 @@
                     "resources": 1,
                     "influence": 3,
                     "trait": "hazardous",
-                    "specialty": "blue",
+                    "specialty": "propulsion",
                     "legendary": false
                 }
             ]
@@ -979,7 +979,7 @@
                     "resources": 2,
                     "influence": 0,
                     "trait": "industrial",
-                    "specialty": "red",
+                    "specialty": "warfare",
                     "legendary": false
                 }
             ]
@@ -993,7 +993,7 @@
                     "resources": 3,
                     "influence": 2,
                     "trait": "cultural",
-                    "specialty": "yellow",
+                    "specialty": "cybernetic",
                     "legendary": false
                 }
             ]
@@ -1007,7 +1007,7 @@
                     "resources": 0,
                     "influence": 2,
                     "trait": "cultural",
-                    "specialty": "green",
+                    "specialty": "biotic",
                     "legendary": false
                 }
             ]
@@ -1167,7 +1167,7 @@
                     "resources": 2,
                     "influence": 1,
                     "trait": "industrial",
-                    "specialty": "red",
+                    "specialty": "warfare",
                     "legendary": false
                 }
             ]
@@ -1181,7 +1181,7 @@
                     "resources": 0,
                     "influence": 2,
                     "trait": "cultural",
-                    "specialty": "yellow",
+                    "specialty": "cybernetic",
                     "legendary": false
                 },
                 {
@@ -1211,7 +1211,7 @@
                     "resources": 1,
                     "influence": 2,
                     "trait": "cultural",
-                    "specialty": "blue",
+                    "specialty": "propulsion",
                     "legendary": false
                 }
             ]
@@ -1271,7 +1271,7 @@
                     "resources": 1,
                     "influence": 1,
                     "trait": "industrial",
-                    "specialty": "green",
+                    "specialty": "biotic",
                     "legendary": false
                 }
             ]

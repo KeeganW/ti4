@@ -13,10 +13,6 @@
     --more-info-width: 0px;
 }
 
-/* Handel Gothic is the typeface that twilight imperium uses */
-@import url(//db.onlinewebfonts.com/c/83637255adf8b8192d61945c8b301f7c?family=Handel+Gothic);
-@font-face {font-family: "Handel Gothic"; src: url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.eot"); src: url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.woff") format("woff"), url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/83637255adf8b8192d61945c8b301f7c.svg#Handel Gothic") format("svg"); }
-
 /* Set height for mobile address bar issues*/
 html, body {margin: 0; height: 100%;}
 
@@ -27,7 +23,7 @@ body {
     color: black;
 }
 h1, h2, h3, h4, h5 {
-        font-family: Handel Gothic, sans-serif;
+        font-family: HandelGothic, Slider, sans-serif;
 }
 
 /* Settings for button customization */
@@ -150,7 +146,7 @@ h1, h2, h3, h4, h5 {
 .overlay-cls-2 {
     font-size:148.63px;
     fill:#fff;
-    font-family:MyriadPro-Regular, Myriad Pro;
+    font-family:MyriadPro-Regular, Myriad Pro, serif;
     letter-spacing:-0.1em;
 }
 
@@ -179,7 +175,7 @@ h1, h2, h3, h4, h5 {
     left: 0;
 }
 .overlay {
-    font-family: Handel Gothic, sans-serif;
+    font-family: HandelGothic, Slider, sans-serif;
     position: absolute;
     text-align: center;
     z-index: 2; /* Raise above images */
@@ -240,6 +236,11 @@ h1, h2, h3, h4, h5 {
 }
 #moreInfo {
     overflow: scroll;
+}
+
+#showHexOverlay.active, #showExtraTiles.active, #showMoreInfo.active {
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
 }
 
 /* Always position the map images relative to the map container.

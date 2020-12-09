@@ -179,20 +179,34 @@ class App extends React.Component {
             useProphecyOfKings: !this.state.useProphecyOfKings,
         }, this.showExtraTiles);
     }
-    toggleMoreInfo(event) {
+    toggleMoreInfo(event, justTriggeredTiles) {
+        justTriggeredTiles = justTriggeredTiles === undefined ? false : justTriggeredTiles
+
         let optionsSize = this.state.moreInfoVisible ? "0px" : "400px";
         document.documentElement.style.setProperty('--more-info-width', optionsSize);
-        this.setState(state => ({
-            moreInfoVisible: !this.state.moreInfoVisible,
-        }));
+
+        this.setState({
+            moreInfoVisible: !this.state.moreInfoVisible
+        }, () => {
+            if (this.state.extraTilesVisible && !justTriggeredTiles) {
+                this.toggleExtraTiles(event, true);
+            }
+        });
     }
-    toggleExtraTiles(event) {
+    toggleExtraTiles(event, justTriggeredInfo) {
+        justTriggeredInfo = justTriggeredInfo === undefined ? false : justTriggeredInfo
+
         this.showExtraTiles();
         
         let optionsSize = this.state.extraTilesVisible ? "0px" : "150px";
         document.documentElement.style.setProperty('--extra-tiles-width', optionsSize);
+
         this.setState({
-            extraTilesVisible: !this.state.extraTilesVisible,
+            extraTilesVisible: !this.state.extraTilesVisible
+        }, () => {
+            if (this.state.moreInfoVisible && !justTriggeredInfo) {
+                this.toggleMoreInfo(event, true);
+            }
         });
     }
     showExtraTiles() {
@@ -532,7 +546,9 @@ class App extends React.Component {
                              drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}/>
                     
                     {/* TODO can these controls be moved into MainMap? */}
-                    <MapControls visible={this.state.mapControlsVisible} toggleOverlay={this.toggleOverlay}
+                    <MapControls visible={this.state.mapControlsVisible} overlayVisible={this.state.overlayVisible}
+                                 moreInfoVisible={this.state.moreInfoVisible} extraTilesVisible={this.state.extraTilesVisible}
+                                 toggleOverlay={this.toggleOverlay}
                                  toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
                                  zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick} />
                 </div>

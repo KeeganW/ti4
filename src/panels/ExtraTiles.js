@@ -33,7 +33,7 @@ class ExtraTiles extends React.Component {
             }
             tileObjects.push(
                 <div className="tile-wrapper">
-                    <span id={"num-" + tileNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")}>{tileNumber}</span>
+                    {/*<span id={"num-" + tileNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")}>{tileNumber}</span>*/}
                     <img id={"extra-" + tileNumber}
                          width="105px"
                          height="91px"
