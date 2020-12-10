@@ -67,8 +67,10 @@ class MapOptions extends React.Component {
             specialtyWeight: 50,
             anomalyWeight: 10,
             wormholeWeight: 25,
+
+            shuffleThreshold: 5,
         };
-        
+
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleRacesChange = this.handleRacesChange.bind(this);
@@ -76,6 +78,9 @@ class MapOptions extends React.Component {
         this.updatePlayerCount = this.updatePlayerCount.bind(this);
         this.updateBoardStyle = this.updateBoardStyle.bind(this);
         this.updateSeed = this.updateSeed.bind(this);
+
+        this.ensureAnomalies = this.ensureAnomalies.bind(this);
+        this.ensureWormholesForType = this.ensureWormholesForType.bind(this);
 
         this.updateBoardStyleOptions = this.updateBoardStyleOptions.bind(this); // TODO is the bind needed?
 
@@ -90,17 +95,18 @@ class MapOptions extends React.Component {
         this.toggleShufflePriorityHelp = this.toggleShufflePriorityHelp.bind(this);
         this.toggleReversePlacementOrderHelp = this.toggleReversePlacementOrderHelp.bind(this);
     }
-    
+
     handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-        
+
         this.setState({
             [name]: value
         });
     }
-    handleNameChange(event){
+
+    handleNameChange(event) {
         let nameIndex = parseInt(event.target.name.substring(10))
         let newPlayerNames = this.props.currentPlayerNames
         newPlayerNames[nameIndex] = event.target.value
@@ -109,7 +115,8 @@ class MapOptions extends React.Component {
             currentPlayerNames: newPlayerNames
         })
     }
-    handleRacesChange(event){
+
+    handleRacesChange(event) {
         let race = event.target.name;
         let newCurrentRaces = this.props.currentRaces;
         let indexToToggle = newCurrentRaces.indexOf(race)
@@ -123,6 +130,7 @@ class MapOptions extends React.Component {
             currentRaces: newCurrentRaces
         })
     }
+
     updatePok(event) {
         let boardOptions = this.state.optionsPossible.boardStyles;
         if (event.target.checked) {
@@ -143,6 +151,7 @@ class MapOptions extends React.Component {
             }, this.props.toggleProphecyOfKings(event));
         }
     }
+
     updatePlayerCount(event) {
         this.setState({
             currentNumberOfPlayers: parseInt(event.target.value),
@@ -150,6 +159,7 @@ class MapOptions extends React.Component {
             this.updateBoardStyleOptions(event)
         });
     }
+
     updateBoardStyle(event) {
         this.setState({
             currentBoardStyle: event.target.value,
@@ -159,6 +169,7 @@ class MapOptions extends React.Component {
             }
         });
     }
+
     updateBoardStyleOptions(event) {
         let boardOptions = this.state.optionsPossible.boardStyles;
         if (this.props.useProphecyOfKings) {
@@ -173,6 +184,7 @@ class MapOptions extends React.Component {
             }
         });
     }
+
     updateSeed(event) {
         let newSeed = parseInt(event.target.value)
         if (!isNaN(newSeed) || event.target.value === "") {
@@ -183,7 +195,7 @@ class MapOptions extends React.Component {
         }
     }
 
-    capitalize(str){
+    capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
@@ -225,15 +237,25 @@ class MapOptions extends React.Component {
         let planetIndexesToPlace = this.getPlanetIndexesToPlace(currentSeed)
 
         // Get an ordered list of planets to use to fill board with
-        let possiblePlanets = this.getPossiblePlanets()
+        let possibleTiles = this.getPossiblePlanets()
+
+        // Check that we will have enough anomalies in our placed planets, if not, then reverse replace until there are enough anomalies
+        possibleTiles = this.ensureAnomalies(possibleTiles, planetIndexesToPlace.length)
+
+        // Ensure that if we have an alpha wormhole, then we have at least two of them
+        possibleTiles = this.ensureWormholesForType(possibleTiles, [26], this.props.useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes], [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)]);
+
+        // Ensure that if we have an alpha wormhole, then we have at least two of them
+        possibleTiles = this.ensureWormholesForType(possibleTiles, [25, 64], this.props.useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes], [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)]);
+
+        let newTiles = [...boardData.blankMap]
 
         // Place planets one at a time, using the indexes to place combined with the ordered planet list
-        let newTiles = [...boardData.blankMap] // Reset tiles to be empty
-        for (let planetIndex in planetIndexesToPlace){
-            newTiles[planetIndexesToPlace[planetIndex]] = possiblePlanets.shift()
+        for (let planetIndex in planetIndexesToPlace) {
+            newTiles[planetIndexesToPlace[planetIndex]] = possibleTiles.shift();
         }
 
-        // Place hyperlanes in their specific layout
+        // Place hyperlanes in their specific layout and orientation
         // TODO in the future, can this be random? Can they rotate?
         for (let index = 0; index < boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['hyperlane_tiles'].length; index++) {
             let hyperlaneData = boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['hyperlane_tiles'][index]
@@ -260,11 +282,143 @@ class MapOptions extends React.Component {
         // Put Mecatol Rex in the middle
         newTiles[0] = 18
 
+        // Planets have been placed, time to do post processing checks to make sure things are good to go.
+        // TODO Maintain that two anomalies are not adjacent
+        // Go through the list from back to front, looking at tiles
+            // At every tile, check for adjacency. If something is adjacent, then kickoff another loop (or maybe recursion?)
+                // Look for adjacent tile which is not an anomaly.
+                    // Check if it has any anomalies adjacent. If not, then swap with it. Keep a list of unswapable tiles (those adjacent to homeworlds, 0, -1, or hyperlanes)
+                    // If it has anomalies adjacent, then look at its adjacent tiles
+
+        // TODO Maintain that two wormholes of the same kind are not adjacent
+        // Alpha, at least one wormhole is a "empty tile" so swap it with a blank tile
+        // Beta at least one planet wormhole, so swap it with another planet of equal resource value
+
         // Update the seed we are using (so it is displayed) and then update the tiles
         this.setState({
             currentSeed: currentSeed,
             generated: true
         }, this.props.updateTiles(newTiles));
+    }
+
+    ensureWormholesForType(possibleTiles, planetWormholes, allWormholes, oppositeWormholes) {
+        let allAnomalyList = this.props.useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
+        let unusedWormholes = [];
+        let usedWormholes = [];
+
+        // Get an array of all unused wormholes
+        for (let wormholeIndex in allWormholes) {
+            possibleTiles.indexOf(allWormholes[wormholeIndex]) < 0 ?
+                unusedWormholes.push(allWormholes[wormholeIndex]) : usedWormholes.push(allWormholes[wormholeIndex]);
+        }
+
+        // If there is only one wormhole, then we need to add a new one in
+        if (usedWormholes.length === 1) {
+            console.log("Error! Only one wormhole!")
+            /*
+            Lets do some tricky logic here. If we are using a planet wormhole tile, then we want to replace
+            another anomaly with one of the other one (pok: two) anomaly wormholes. If we are not using the planet tile,
+            then we can try to find a planet to replace with any remaining wormhole tiles.
+             */
+            unusedWormholes = this.shuffle(unusedWormholes, this.state.currentSeed);
+            let excludedTiles = [...allWormholes.concat(oppositeWormholes)];
+
+            // Check that the single used wormhole is not a planet. If not, try to replace some other planet with a planet wormhole
+            if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
+                unusedWormholes = planetWormholes;
+                excludedTiles = excludedTiles.concat(allAnomalyList);
+            } // else { // Using a planet, so try to replace the lowest weight tiles with any wormhole tile }
+            possibleTiles = this.reverseReplace(possibleTiles, 1, unusedWormholes, excludedTiles, false);
+        }
+
+        return possibleTiles;
+    }
+
+    ensureAnomalies(possibleTiles, numPlanetsToPlace) {
+        // Only care about the tiles we will actually place
+        possibleTiles = possibleTiles.slice(0, numPlanetsToPlace);
+
+        // Check that there is a minimum number of anomalies on the board
+        let blueTileRatio = 2;
+        let redTileRatio = 1;
+        // For 3, 4, and 6 player games, there is a different ratio
+        switch (this.state.currentNumberOfPlayers) {
+            case(3):
+                blueTileRatio = 3
+                redTileRatio = 1
+                break;
+            case(4):
+                blueTileRatio = 5
+                redTileRatio = 3
+                break;
+            case(6):
+                blueTileRatio = 3
+                redTileRatio = 2
+                break;
+        }
+        let numAnomaliesLeftToBePlaced = (numPlanetsToPlace / (blueTileRatio + redTileRatio)) * redTileRatio;
+
+        // If there is no anomalies to add, then we are done
+        if (numAnomaliesLeftToBePlaced < 0) {
+            return possibleTiles
+        }
+
+        // Still have to add a certain number of anomalies in. Get a list of possible anomalies we can add to the tile list
+        let allAnomalyList = this.props.useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
+
+        // Remove all current anomalies in use from this list
+        let possibleAnomalies = []
+        for (let anomalyIndex in allAnomalyList) {
+            if (possibleTiles.indexOf(allAnomalyList[anomalyIndex]) < 0) {
+                // Not using this anomaly yet, so we can add it
+                possibleAnomalies.push(allAnomalyList[anomalyIndex])
+            } else {
+                // Anomaly is already being used
+                numAnomaliesLeftToBePlaced -= 1;
+            }
+        }
+
+        // Randomize, so anomalies we are using are not always the same
+        possibleAnomalies = this.shuffle(possibleAnomalies, this.state.currentSeed);
+
+        return this.reverseReplace(possibleTiles, numAnomaliesLeftToBePlaced, possibleAnomalies, allAnomalyList, false)
+
+    }
+
+    /**
+     * Replace tiles starting from the lowest weight (bottom of the list being defined by reversPlacementOrder)
+     * @param possibleTiles {Int8Array} The ordered list of tiles, cut to the needed size
+     * @param numTilesToReplace {Number} The number of tiles we need to try to replace from replacement into possible
+     * @param replacementTiles {Int8Array} An array of all the tiles we can pick from to put into possibleTiles
+     * @param excludedTiles {Int8Array} An array of tiles we do not want to replace in possible
+     * @param reverseBeforeAndAfter {Boolean} Whether we want to reverse the list before and after replacement
+     * @returns {Int8Array} An ordered list of tiles, with some tiles being replaced
+     */
+    reverseReplace (possibleTiles, numTilesToReplace, replacementTiles, excludedTiles, reverseBeforeAndAfter) {
+        // If we aren't placing in reverse order, we want to start changing the worst tiles (which are usually last)
+        if (reverseBeforeAndAfter) {
+            possibleTiles = possibleTiles.reverse()
+        }
+        let currentTileIndex = possibleTiles.length - 1;
+
+        // While there are anomalies to place and a place to put them...
+        while (numTilesToReplace > 0 && replacementTiles.length > 0 && currentTileIndex > 0) {
+            // Check the index to see that it is not an anomaly or a 0 or -1 or 18 or hyperlane
+            let tileOfInterest = possibleTiles[currentTileIndex]
+            if (excludedTiles.indexOf(tileOfInterest) < 0 && tileOfInterest !== -1  && tileOfInterest !== 18 && tileOfInterest !== 0 && typeof tileOfInterest !== "string") {
+                // It is a replaceable tile, so fill it from the new anomalies list
+                possibleTiles[currentTileIndex] = replacementTiles.shift()
+                numTilesToReplace -= 1;
+            }
+            currentTileIndex -= 1;
+        }
+
+        // Undo the reverse from before
+        if (reverseBeforeAndAfter) {
+            possibleTiles = possibleTiles.reverse()
+        }
+
+        return possibleTiles
     }
 
     getPlanetIndexesToPlace(currentSeed) {
@@ -297,7 +451,6 @@ class MapOptions extends React.Component {
         }
 
         // Get the preset weighting format based on the current pick style
-        // TODO react-ify this when adding custom weighting
         let weights = {};
         switch (this.state.currentPickStyle) {
             case "random":
@@ -335,13 +488,24 @@ class MapOptions extends React.Component {
                 break;
             case "balanced":
             default:
-                weights = {
-                    "resource": 80,
-                    "influence": 30,
-                    "planet_count": 15,
-                    "specialty": 50,
-                    "anomaly": 10,
-                    "wormhole": 25
+                if (this.props.useProphecyOfKings) {
+                    weights = {
+                        "resource": 80,
+                        "influence": 30,
+                        "planet_count": 15,
+                        "specialty": 50,
+                        "anomaly": 40,
+                        "wormhole": 25
+                    }
+                } else {
+                    weights = {
+                        "resource": 80,
+                        "influence": 30,
+                        "planet_count": 15,
+                        "specialty": 50,
+                        "anomaly": 10,
+                        "wormhole": 25
+                    }
                 }
                 break;
         }
@@ -365,10 +529,35 @@ class MapOptions extends React.Component {
             return b[1] - a[1];
         })
 
+        // Do a little post process shuffling for roughly similar planets
+        let currentIndex = 0;
+        let currentHighValue = planetWeights[0][1];
+        let currentSetToShuffle = [];
+        let postPossiblePlanets = [];
+        while (currentIndex < planetWeights.length) {
+            let planetWeight = planetWeights[currentIndex];
+            // Something in this array, lets see if we add to it
+            if (planetWeight[1] >= (currentHighValue - this.state.shuffleThreshold)) {
+                // Add this item to the array to shuffle
+                currentSetToShuffle.push(planetWeight);
+            } else {
+                // We are now outside our shuffle range. So shuffle what we have, and add it to the post
+                currentSetToShuffle = this.shuffle(currentSetToShuffle, this.state.currentSeed)
+                postPossiblePlanets = postPossiblePlanets.concat(currentSetToShuffle)
+                currentSetToShuffle = [planetWeight]
+                currentHighValue = planetWeight[1]
+            }
+
+            currentIndex += 1;
+        }
+        currentSetToShuffle = this.shuffle(currentSetToShuffle, this.state.currentSeed)
+        postPossiblePlanets = postPossiblePlanets.concat(currentSetToShuffle)
+
+
         // Convert from tuple down to just the tile number
         let orderedPlanets = [];
-        for (let weightedPlanet in planetWeights) {
-            orderedPlanets.push(planetWeights[weightedPlanet][0]);
+        for (let weightedPlanet in postPossiblePlanets) {
+            orderedPlanets.push(postPossiblePlanets[weightedPlanet][0]);
         }
 
         return orderedPlanets
@@ -389,14 +578,14 @@ class MapOptions extends React.Component {
 
         // Handle anomalies
         if (tile['type'] === 'anomaly') {
-            total_weight += 30;
-            if (tile['anomaly'] === null
-                || tile['anomaly'] === 'asteroid-field'
-                || tile['anomaly'] === 'gravity-rift') {
-                // Give an extra boost to these anomalies, as they are easier to cross than others
-                total_weight += 20;
-            }
-
+            total_weight += weights['anomaly'] + 40;
+            // Providing bonuses to these sections mean the other ones are never used
+            // if (tile['anomaly'] === null
+            //     || tile['anomaly'] === 'asteroid-field'
+            //     || tile['anomaly'] === 'gravity-rift') {
+            //     // Give an extra boost to these anomalies, as they are easier to cross than others
+            //     total_weight += 20;  // Change total back to 30 if using this
+            // }
         }
         total_weight += tile['wormhole'] ? weights['wormhole'] : 0
 
