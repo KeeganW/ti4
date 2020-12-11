@@ -689,8 +689,8 @@ class MapOptions extends React.Component {
                         "resource": 80,
                         "influence": 30,
                         "planet_count": 15,
-                        "specialty": 50,
-                        "anomaly": 10,
+                        "specialty": 40,
+                        "anomaly": 30,
                         "wormhole": 25
                     }
                 }
