@@ -44,6 +44,7 @@ class App extends React.Component {
         this.toggleOverlay = this.toggleOverlay.bind(this);
         this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
         this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
+        this.copyTilesToClipboard = this.copyTilesToClipboard.bind(this);
         this.showExtraTiles = this.showExtraTiles.bind(this);
         this.zoomPlusClick = this.zoomPlusClick.bind(this);
         this.zoomMinusClick = this.zoomMinusClick.bind(this);
@@ -192,6 +193,16 @@ class App extends React.Component {
                 this.toggleExtraTiles(event, true);
             }
         });
+    }
+    copyTilesToClipboard(event) {
+        let tileString = this.state.tiles;
+        tileString.shift();
+        tileString = tileString.toString();
+        tileString = tileString.replaceAll("-1", "0");
+        tileString = tileString.replaceAll(",", " ");
+        console.log("Here is your tile string for use with this TTS Mod (https://steamcommunity.com/sharedfiles/filedetails/?id=1466689117):")
+        console.log(tileString)
+        navigator.clipboard.writeText(tileString)
     }
     toggleExtraTiles(event, justTriggeredInfo) {
         justTriggeredInfo = justTriggeredInfo === undefined ? false : justTriggeredInfo
@@ -541,7 +552,7 @@ class App extends React.Component {
 
                 <MapControls visible={this.state.mapControlsVisible} overlayVisible={this.state.overlayVisible}
                              moreInfoVisible={this.state.moreInfoVisible} extraTilesVisible={this.state.extraTilesVisible}
-                             toggleOverlay={this.toggleOverlay}
+                             toggleOverlay={this.toggleOverlay} copyTilesToClipboard={this.copyTilesToClipboard}
                              toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
                              zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick} />
                 

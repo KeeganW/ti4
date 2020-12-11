@@ -1,5 +1,5 @@
 import React from "react";
-import {Dash, InfoCircle, Plus} from "react-bootstrap-icons";
+import {ClipboardPlus, Dash, InfoCircle, Plus} from "react-bootstrap-icons";
 import ReactTooltip from 'react-tooltip';
 
 class MoreInfo extends React.Component {
@@ -37,6 +37,12 @@ class MoreInfo extends React.Component {
                 <div id="moreInfoButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.toggleMoreInfo}>
                     <button className={"btn btn-primary" + (this.props.moreInfoVisible ? " active": "")} id="showMoreInfo" data-tip="Assets Adjacent to Home">
                         <InfoCircle id="showMoreInfoSvg" className="icon" />
+                    </button>
+                </div>
+
+                <div id="copyTileStringButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.copyTilesToClipboard}>
+                    <button className={"btn btn-primary"} id="copyTileStringInfo" data-tip="Copy Tile String to Clipboard">
+                        <ClipboardPlus id="copyTileStringSvg" className="icon" />
                     </button>
                 </div>
             </div>

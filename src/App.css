@@ -219,15 +219,21 @@ h1, h2, h3, h4, h5 {
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
+#extraTilesButton {
+    position: fixed;
+    top: calc(var(--title-height) + 95px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1002;
+}
 #moreInfoButton {
     position: fixed;
     top: calc(var(--title-height) + 130px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#extraTilesButton {
+#copyTileStringButton {
     position: fixed;
-    top: calc(var(--title-height) + 95px);
+    top: calc(var(--title-height) + 165px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
