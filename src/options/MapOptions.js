@@ -3,6 +3,7 @@ import {QuestionCircle} from "react-bootstrap-icons";
 import boardData from "../data/boardData.json";
 import tileData from "../data/tileData.json";
 import raceData from "../data/raceData.json";
+import adjacencyData from "../data/adjacencyData.json";
 import HelpModal from "./HelpModal";
 import SetPlayerNameModal from "./SetPlayerNameModal";
 import SetRacesModal from "./SetRacesModal";
@@ -36,13 +37,14 @@ class MapOptions extends React.Component {
             homeworlds: raceData["homeworlds"],
             pokHomeworlds: raceData["pokHomeworlds"]
         }
+        const startingPlayers = 6;
 
         this.state = {
             optionsPossible: startingValues,
-            currentNumberOfPlayers: 6,
+            currentNumberOfPlayers: startingPlayers,
             currentNumberOfPlayersOptions: startingValues["numberOfPlayers"],
-            currentBoardStyleOptions: startingValues["boardStyles"]["6"],
-            currentBoardStyle: startingValues["boardStyles"]["6"][0],
+            currentBoardStyleOptions: startingValues["boardStyles"][startingPlayers],
+            currentBoardStyle: startingValues["boardStyles"][startingPlayers][0],
             currentPickStyle: startingValues["pickStyles"][0],
             currentSeed: "",
             userSetSeed: false,
@@ -243,10 +245,13 @@ class MapOptions extends React.Component {
         possibleTiles = this.ensureAnomalies(possibleTiles, planetIndexesToPlace.length)
 
         // Ensure that if we have an alpha wormhole, then we have at least two of them
-        possibleTiles = this.ensureWormholesForType(possibleTiles, [26], this.props.useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes], [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)]);
+        const allAlphaWormholes = this.props.useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
+        const allBetaWormholes = this.props.useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
+
+        possibleTiles = this.ensureWormholesForType(possibleTiles, [26], allAlphaWormholes, allBetaWormholes);
 
         // Ensure that if we have an alpha wormhole, then we have at least two of them
-        possibleTiles = this.ensureWormholesForType(possibleTiles, [25, 64], this.props.useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes], [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)]);
+        possibleTiles = this.ensureWormholesForType(possibleTiles, [25, 64], allBetaWormholes, allAlphaWormholes);
 
         let newTiles = [...boardData.blankMap]
 
@@ -283,16 +288,197 @@ class MapOptions extends React.Component {
         newTiles[0] = 18
 
         // Planets have been placed, time to do post processing checks to make sure things are good to go.
-        // TODO Maintain that two anomalies are not adjacent
-        // Go through the list from back to front, looking at tiles
-            // At every tile, check for adjacency. If something is adjacent, then kickoff another loop (or maybe recursion?)
-                // Look for adjacent tile which is not an anomaly.
-                    // Check if it has any anomalies adjacent. If not, then swap with it. Keep a list of unswapable tiles (those adjacent to homeworlds, 0, -1, or hyperlanes)
-                    // If it has anomalies adjacent, then look at its adjacent tiles
+        // Get all anomalies that are adjacent to one another
+        let allTrueAnomalies = this.props.useProphecyOfKings ? [...tileData.trueAnomaly.concat(tileData.pokTrueAnomaly)] : [...tileData.trueAnomaly];
+        for (let anomaly of allTrueAnomalies) {
+            let anomalyTileNumber = newTiles.indexOf(anomaly);
+            if (anomalyTileNumber >= 0) {
+                // anomaly exists in the map, so check it
+                let adjacentTiles = adjacencyData[anomalyTileNumber];
+                let adjacentAnomalies = [];
 
-        // TODO Maintain that two wormholes of the same kind are not adjacent
+                // Get a list of all adjacent anomalies to this one
+                for (let adjacentTileNumber of adjacentTiles) {
+                    let adjacentTile = newTiles[adjacentTileNumber];
+                    if (allTrueAnomalies.indexOf(adjacentTile) >= 0) {
+                        // This tile is an anomaly
+                        adjacentAnomalies.push(adjacentTile)
+                    }
+                }
+
+                // If tile is in conflict more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
+                let swapped = false;
+                let blankReds = this.props.useProphecyOfKings ? [...tileData.blankAnomaly.concat(tileData.pokBlankAnomaly)] : [...tileData.blankAnomaly];
+                if (adjacentAnomalies.length > 1) {
+                    let possibleBlanks = [];
+                    for (let blankRed of blankReds) {
+                        if (newTiles.indexOf(blankRed) < 0) {
+                            possibleBlanks.push(blankRed)
+                        }
+                    }
+                    possibleBlanks = this.shuffle(possibleBlanks, this.state.currentSeed);
+                    if (possibleBlanks.length > 0) {
+                        swapped = true;
+                        newTiles[anomalyTileNumber] = possibleBlanks[0];
+                    }
+                }
+
+                if (!swapped && adjacentAnomalies.length > 0) {
+                    // Look at all red back tiles on the board that are not anomalies, and see if they have adjacent anomalies
+                    // Test this code with 2 player, everything else base, seed of 9986
+                    for (let blankRed of blankReds) {
+                        let blankRedTileNumber = newTiles.indexOf(blankRed)
+                        if (blankRedTileNumber >= 0) {
+                            let adjacentTiles = adjacencyData[blankRedTileNumber];
+                            let swappable = true;
+                            for (let adjacentTile of adjacentTiles) {
+                                if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0 && adjacentTile !== anomalyTileNumber) {
+                                    // This blank has an adjacent anomaly, so throw it out
+                                    swappable = false;
+                                    break;
+                                }
+                            }
+                            if (swappable) {
+                                // This blank red has no other adjacent anomalies, so swap
+                                newTiles[anomalyTileNumber] = blankRed;
+                                newTiles[blankRedTileNumber] = anomaly;
+                                swapped = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!swapped) {
+                        /*
+                        There is a potential use for this strategy, but for now it seems pretty safe to just let it fail
+                        to swap on a blank. It is rare that it is impossible, and even when it is, its a pretty simple
+                        rule. Plus the rules let you place reds next to each other if moving them is impossible.
+                        btw, not sure this code below works properly. I believe there is a bug in it.
+                         */
+
+                        /*
+                        // Going in reverse, find the first tile with no anomalies adjacent, and swap
+                        newTiles.reverse()
+                        for (let tile of newTiles) {
+                            if (tile !== 0 && tile !== -1 && allTrueAnomalies.indexOf(tile) < 0 && blankReds.indexOf(tile) < 0) {
+                                console.log("Tile: " + tile)
+                                // This is a real tile, check for adjacency to other anomalies
+                                let blankRedTileNumber = newTiles.indexOf(tile)
+                                let adjacentTiles = adjacencyData[blankRedTileNumber];
+                                let swappable = true;
+                                for (let adjacentTile of adjacentTiles) {
+                                    if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0) {
+                                        // This blank has an adjacent anomaly, so throw it out
+                                        swappable = false;
+                                        break;
+                                    }
+                                }
+                                if (swappable) {
+                                    // No adjacency breaks found, go ahead and swap it
+                                    console.log(anomalyTileNumber)
+                                    console.log(blankRedTileNumber)
+                                    newTiles[anomalyTileNumber] = tile;
+                                    newTiles[blankRedTileNumber] = anomaly;
+                                    swapped = true;
+                                    break;
+                                }
+                            }
+                        }
+                        // If no swap possible, no problem. Continue on
+                        newTiles.reverse()
+                        */
+                    }
+                }
+            }
+        }
+
         // Alpha, at least one wormhole is a "empty tile" so swap it with a blank tile
+        for (let alphaWormhole of allAlphaWormholes) {
+            let alphaWormholeTileNumber = newTiles.indexOf(alphaWormhole);
+            if (alphaWormholeTileNumber >= 0 && tileData.all[alphaWormhole].planets.length === 0) {
+                // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
+                let adjacentTileNumbers = adjacencyData[alphaWormholeTileNumber];
+                let adjacentWormhole = false;
+                for (let adjacentTileNumber of adjacentTileNumbers) {
+                    if (allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
+                        adjacentWormhole = true;
+                        break;
+                    }
+                }
+                if (adjacentWormhole) {
+                    // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
+                    let blankReds = this.props.useProphecyOfKings ? [...tileData.blankAnomaly.concat(tileData.pokBlankAnomaly)] : [...tileData.blankAnomaly];
+                    // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
+                    blankReds = blankReds.filter( function( el ) {
+                        return allAlphaWormholes.indexOf( el ) < 0;
+                    } );
+                    blankReds = this.shuffle(blankReds, this.state.currentSeed);
+                    for (let blankRed of blankReds) {
+                        let blankRedTileNumber = newTiles.indexOf(blankRed)
+                        if (blankRedTileNumber >= 0) {
+                            let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
+                            let swappable = true;
+                            for (let adjacentTileNumber of adjacentTilesNumbers) {
+                                if (allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== alphaWormholeTileNumber) {
+                                    // This blank has an adjacent anomaly, so throw it out
+                                    swappable = false;
+                                    break;
+                                }
+                            }
+                            if (swappable) {
+                                // This blank red has no other adjacent anomalies, so swap
+                                newTiles[alphaWormholeTileNumber] = blankRed;
+                                newTiles[blankRedTileNumber] = alphaWormhole;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         // Beta at least one planet wormhole, so swap it with another planet of equal resource value
+        for (let betaWormhole of allBetaWormholes) {
+            let betaWormholeTileNumber = newTiles.indexOf(betaWormhole);
+            if (betaWormholeTileNumber >= 0 && tileData.all[betaWormhole].planets.length === 0) {
+                // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
+                let adjacentTileNumbers = adjacencyData[betaWormholeTileNumber];
+                let adjacentWormhole = false;
+                for (let adjacentTileNumber of adjacentTileNumbers) {
+                    if (allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
+                        adjacentWormhole = true;
+                        break;
+                    }
+                }
+                if (adjacentWormhole) {
+                    // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
+                    let blankReds = this.props.useProphecyOfKings ? [...tileData.safe.concat(tileData.pokSafe)] : [...tileData.safe];
+                    // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
+                    blankReds = blankReds.filter( function( el ) {
+                        return allBetaWormholes.indexOf( el ) < 0;
+                    } );
+                    blankReds = this.shuffle(blankReds, this.state.currentSeed);
+                    for (let blankRed of blankReds) {
+                        let blankRedTileNumber = newTiles.indexOf(blankRed)
+                        if (blankRedTileNumber >= 0) {
+                            let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
+                            let swappable = true;
+                            for (let adjacentTileNumber of adjacentTilesNumbers) {
+                                if (allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== betaWormholeTileNumber) {
+                                    // This blank has an adjacent anomaly, so throw it out
+                                    swappable = false;
+                                    break;
+                                }
+                            }
+                            if (swappable) {
+                                // This blank red has no other adjacent anomalies, so swap
+                                newTiles[betaWormholeTileNumber] = blankRed;
+                                newTiles[blankRedTileNumber] = betaWormhole;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // Update the seed we are using (so it is displayed) and then update the tiles
         this.setState({
