@@ -209,7 +209,7 @@ class App extends React.Component {
 
         this.showExtraTiles();
         
-        let optionsSize = this.state.extraTilesVisible ? "0px" : "150px";
+        let optionsSize = this.state.extraTilesVisible ? "0px" : "250px";
         document.documentElement.style.setProperty('--extra-tiles-width', optionsSize);
 
         this.setState({

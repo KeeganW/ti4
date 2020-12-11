@@ -5,15 +5,15 @@ class ExtraTiles extends React.Component {
     constructor(props) {
         super(props);
         this.underlayStyle = {
-            width: "111px",
-            height: "97px",
+            width: "210px",
+            height: "185px",
             position: "absolute",
             top: "0",
             left: "0",
         }
         this.tileStyle = {
             display: "none",
-            margin: "3px",
+            margin: "5px",
             position: "relative",
         }
     }
@@ -35,8 +35,8 @@ class ExtraTiles extends React.Component {
                 <div className="tile-wrapper">
                     {/*<span id={"num-" + tileNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")}>{tileNumber}</span>*/}
                     <img id={"extra-" + tileNumber}
-                         width="105px"
-                         height="91px"
+                         width="200px"
+                         height="175px"
                          className="tile"
                          src={window.location.origin + window.location.pathname + "/tiles/ST_" + tileNumber + ".png"}
                          draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop}
