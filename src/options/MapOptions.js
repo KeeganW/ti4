@@ -418,7 +418,7 @@ class MapOptions extends React.Component {
                             let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
                             let swappable = true;
                             for (let adjacentTileNumber of adjacentTilesNumbers) {
-                                if (allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== alphaWormholeTileNumber) {
+                                if ((allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== alphaWormholeTileNumber) || (allTrueAnomalies.indexOf(alphaWormhole) >= 0 && allTrueAnomalies.indexOf(newTiles[adjacentTileNumber]) >= 0)) {
                                     // This blank has an adjacent anomaly, so throw it out
                                     swappable = false;
                                     break;
@@ -462,8 +462,9 @@ class MapOptions extends React.Component {
                             let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
                             let swappable = true;
                             for (let adjacentTileNumber of adjacentTilesNumbers) {
-                                if (allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== betaWormholeTileNumber) {
-                                    // This blank has an adjacent anomaly, so throw it out
+                                // Check for adjacency to another wormhole (excluding itself) and other anomalies
+                                if ((allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== betaWormholeTileNumber)) {
+                                    //
                                     swappable = false;
                                     break;
                                 }
