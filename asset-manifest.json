@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/ti4/static/css/main.4c658581.chunk.css",
-    "main.js": "/ti4/static/js/main.954b5750.chunk.js",
-    "main.js.map": "/ti4/static/js/main.954b5750.chunk.js.map",
-    "runtime-main.js": "/ti4/static/js/runtime-main.a4df4a4b.js",
-    "runtime-main.js.map": "/ti4/static/js/runtime-main.a4df4a4b.js.map",
-    "static/js/2.626f9fe4.chunk.js": "/ti4/static/js/2.626f9fe4.chunk.js",
-    "static/js/2.626f9fe4.chunk.js.map": "/ti4/static/js/2.626f9fe4.chunk.js.map",
-    "static/js/3.e15236f2.chunk.js": "/ti4/static/js/3.e15236f2.chunk.js",
-    "static/js/3.e15236f2.chunk.js.map": "/ti4/static/js/3.e15236f2.chunk.js.map",
+    "main.css": "/ti4/static/css/main.3906dc18.chunk.css",
+    "main.js": "/ti4/static/js/main.40ec4a50.chunk.js",
+    "main.js.map": "/ti4/static/js/main.40ec4a50.chunk.js.map",
+    "runtime-main.js": "/ti4/static/js/runtime-main.add1da11.js",
+    "runtime-main.js.map": "/ti4/static/js/runtime-main.add1da11.js.map",
+    "static/js/2.b477c3b7.chunk.js": "/ti4/static/js/2.b477c3b7.chunk.js",
+    "static/js/2.b477c3b7.chunk.js.map": "/ti4/static/js/2.b477c3b7.chunk.js.map",
+    "static/js/3.689b80f1.chunk.js": "/ti4/static/js/3.689b80f1.chunk.js",
+    "static/js/3.689b80f1.chunk.js.map": "/ti4/static/js/3.689b80f1.chunk.js.map",
     "index.html": "/ti4/index.html",
-    "static/css/main.4c658581.chunk.css.map": "/ti4/static/css/main.4c658581.chunk.css.map",
-    "static/js/2.626f9fe4.chunk.js.LICENSE.txt": "/ti4/static/js/2.626f9fe4.chunk.js.LICENSE.txt",
+    "static/css/main.3906dc18.chunk.css.map": "/ti4/static/css/main.3906dc18.chunk.css.map",
+    "static/js/2.b477c3b7.chunk.js.LICENSE.txt": "/ti4/static/js/2.b477c3b7.chunk.js.LICENSE.txt",
     "static/media/ST_82.6bfdc511.png": "/ti4/static/media/ST_82.6bfdc511.png",
     "static/media/dragAndDrop.1f50c03f.png": "/ti4/static/media/dragAndDrop.1f50c03f.png",
     "static/media/exampleMap.939a66ea.png": "/ti4/static/media/exampleMap.939a66ea.png",
@@ -28,9 +28,9 @@
     "static/media/trait-industrial.37a31434.png": "/ti4/static/media/trait-industrial.37a31434.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.a4df4a4b.js",
-    "static/js/2.626f9fe4.chunk.js",
-    "static/css/main.4c658581.chunk.css",
-    "static/js/main.954b5750.chunk.js"
+    "static/js/runtime-main.add1da11.js",
+    "static/js/2.b477c3b7.chunk.js",
+    "static/css/main.3906dc18.chunk.css",
+    "static/js/main.40ec4a50.chunk.js"
   ]
 }
