@@ -7,13 +7,13 @@ Visit the [web page located on github pages](https://keeganw.github.io/ti4/). Th
 
 ## Development Setup
 
-1. Install Node and NPM for your OS using [their website](https://nodejs.org/en/) or brew on Mac
+1. Install Node and NPM for your OS using [their website](https://nodejs.org/en/) or brew on Mac (`brew install node`)
 1. In the root directory of the cloned project, run `npm install`
 1. Once it is done, you can start the development server with `npm start`. If a web page is not automatically opened, go to [localhost:3000/ti4](http://localhost:3000/ti4)
 
 ## Using the Tool
 
-The tool has many features, go poke around! Here is a list of notable features
+The tool has many features, go poke around! Here is a list of notable features:
 
 - Automatic map generation based on user input. Options include:
     - Using new Prophecy of Kings content
@@ -28,10 +28,11 @@ The tool has many features, go poke around! Here is a list of notable features
     - Moving better planets towards the middle
 - Drag and drop tiles to customize your board
 - Zoom in and out to get a better idea of what certain tiles are
-- Show an overlay with the tilenumbers for when you are ready to build your board
+- Show an overlay with the tile numbers for when you are ready to build your board
 - Replace any tiles on the board with any unused tiles
 - Show detailed information about the adjacenct planets to each home system
 - Sharable links to send to your friends
+- Copy the tile string to view in Table Top Simulator (TTS)
 
 ## Pushing Changes to Github Pages
 
