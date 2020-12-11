@@ -41,7 +41,7 @@ class MoreInfo extends React.Component {
                 </div>
 
                 <div id="copyTileStringButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.copyTilesToClipboard}>
-                    <button className={"btn btn-primary"} id="copyTileStringInfo" data-tip="Copy Tile String to Clipboard">
+                    <button className={"btn btn-primary"} id="copyTileStringInfo" data-tip="Copy TTS Tile String to Clipboard">
                         <ClipboardPlus id="copyTileStringSvg" className="icon" />
                     </button>
                 </div>
