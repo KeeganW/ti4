@@ -36,18 +36,7 @@ The tool has many features, go poke around! Here is a list of notable features
 ## Pushing Changes to Github Pages
 
 ```bash
-npm run build
-git checkout gh-pages
-# rm everything BUT ./build/*, ./node_modules, and ./.*
-mv -r ./build/* .
-git add -A
-git commit -m "Your commit message"
-git push
+npm run deploy
 ```
 
-1. From the root directory, run `npm run build`
-1. Switch to the `gh-pages` branch
-1. Remove everything BUT the build folder, node_modules folder, and hidden files
-1. Move all the content in the `build` folder into the root page
-1. Add and commit all files
-1. Push to remote
+Using react's `gh-pages` you can simply run the above command to deploy to the 
