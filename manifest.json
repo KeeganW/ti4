@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "TI4 Map Generator",
+  "name": "Generate a new Twilight Imperium (TI4) Map",
   "icons": [
     {
       "src": "favicon.ico",
