@@ -1,8 +1,4 @@
 import React from "react";
-import exampleMap from './exampleMap.png';
-import exampleMapNumbered from './exampleMapNumbered.png';
-import dragAndDrop from './dragAndDrop.png';
-import st82 from './ST_82.png';
 
 class MainOverview extends React.Component {
     render() {
@@ -22,7 +18,6 @@ class MainOverview extends React.Component {
                             by customizing settings via the generation panel on the right, and hit "Generate" to see a new
                             map.
                         </p>
-                        <img className={"overview-image"} src={exampleMap} alt="TI4 Generated Map"/>
                     </div>
                 </div>
 
@@ -34,7 +29,6 @@ class MainOverview extends React.Component {
                             a certain system? Just swap it with another tile by click and dragging one tile over the top of
                             another tile.
                         </p>
-                        <img className={"overview-image"} src={dragAndDrop} alt="Tile Drag Example"/>
                     </div>
                 </div>
 
@@ -45,7 +39,6 @@ class MainOverview extends React.Component {
                             The new expansion content for TI4, called Prophecy of Kings, was recently released. Check out
                             the new tiles and 7 and 8 player maps. Hyperlane additions are still a work in progress.
                         </p>
-                        <img className={"overview-image"} src={st82} alt="TI4 Generated Map"/>
                     </div>
                 </div>
 
@@ -75,7 +68,6 @@ class MainOverview extends React.Component {
                             It can be hard to know which tile is which when it is time to setup your new board. Click the
                             "Toggle Tile Number Overlay" button to see the numbers of every tile on your custom board.
                         </p>
-                        <img className={"overview-image"} src={exampleMapNumbered} alt="TI4 Generated Map"/>
                     </div>
                 </div>
 
