@@ -22,6 +22,7 @@ class App extends React.Component {
             overviewVisible: true,
             extraTilesVisible: false,
             moreInfoVisible: false,
+            backgroundAnimated: true,
             tiles: Array.apply(-1, Array(37)).fill(-1),
             overlayVisible: false,
             zoom: 1.0,
@@ -38,7 +39,8 @@ class App extends React.Component {
 
         this.updateTiles = this.updateTiles.bind(this);
         this.validateTiles = this.validateTiles.bind(this);
-    
+        this.toggleBackground = this.toggleBackground.bind(this);
+
         this.toggleOptionsMenu = this.toggleOptionsMenu.bind(this);
         this.toggleProphecyOfKings = this.toggleProphecyOfKings.bind(this);
         this.toggleOverlay = this.toggleOverlay.bind(this);
@@ -195,7 +197,7 @@ class App extends React.Component {
         });
     }
     copyTilesToClipboard(event) {
-        let tileString = this.state.tiles;
+        let tileString = [...this.state.tiles];
         tileString.shift();
         tileString = tileString.toString();
         tileString = tileString.replaceAll("-1", "0");
@@ -203,6 +205,20 @@ class App extends React.Component {
         console.log("Here is your tile string for use with this TTS Mod (https://steamcommunity.com/sharedfiles/filedetails/?id=1466689117):")
         console.log(tileString)
         navigator.clipboard.writeText(tileString)
+    }
+    toggleBackground(event) {
+        if (!this.state.backgroundAnimated) {
+            $("#stars").css("animation", "animateStar 50s linear infinite")
+            $("#stars2").css("animation", "animateStar 100s linear infinite")
+            $("#stars3").css("animation", "animateStar 150s linear infinite")
+        } else {
+            $("#stars").css("animation", "staticStar 50s linear infinite")
+            $("#stars2").css("animation", "staticStar 100s linear infinite")
+            $("#stars3").css("animation", "staticStar 150s linear infinite")
+        }
+        this.setState({
+            backgroundAnimated: !this.state.backgroundAnimated,
+        });
     }
     toggleExtraTiles(event, justTriggeredInfo) {
         justTriggeredInfo = justTriggeredInfo === undefined ? false : justTriggeredInfo
@@ -222,9 +238,9 @@ class App extends React.Component {
     }
     showExtraTiles() {
         let tileNumbers = []
-        tileNumbers = tileNumbers.concat(tileData.safe).concat(tileData.anomaly)
+        tileNumbers = tileNumbers.concat(tileData.blue).concat(tileData.red)
         if (this.state.useProphecyOfKings) {
-            tileNumbers = tileNumbers.concat(tileData.pokSafe).concat(tileData.pokAnomaly)
+            tileNumbers = tileNumbers.concat(tileData.pokBlue).concat(tileData.pokRed)
         }
 
         for (let tileNumberIndex in tileNumbers) {
@@ -554,7 +570,9 @@ class App extends React.Component {
                              moreInfoVisible={this.state.moreInfoVisible} extraTilesVisible={this.state.extraTilesVisible}
                              toggleOverlay={this.toggleOverlay} copyTilesToClipboard={this.copyTilesToClipboard}
                              toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
-                             zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick} />
+                             zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick}
+                             toggleBackground={this.toggleBackground}
+                />
                 
                 <div id="mainContent" className="justify-content-center align-items-center">
                     <MainOverview visible={this.state.overviewVisible} />

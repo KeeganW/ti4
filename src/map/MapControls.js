@@ -1,5 +1,5 @@
 import React from "react";
-import {ClipboardPlus, Dash, InfoCircle, Plus} from "react-bootstrap-icons";
+import {CardImage, ClipboardPlus, Dash, InfoCircle, Plus} from "react-bootstrap-icons";
 import ReactTooltip from 'react-tooltip';
 
 class MoreInfo extends React.Component {
@@ -7,6 +7,7 @@ class MoreInfo extends React.Component {
     render() {
         return (
             <div id={"map-controls"}>
+                <ReactTooltip place={"left"} effect={"solid"}/>
                 <div id="zoomButtons" className={"btn-group-justified btn-group-sm btn-group-vertical" + (this.props.visible ? "" : " d-none")}>
                     <button className="btn btn-primary" id="zoomPlus" onClick={this.props.zoomPlus}>
                         <Plus className="icon" />
@@ -23,7 +24,6 @@ class MoreInfo extends React.Component {
                             <text className="overlay-cls-2" transform="translate(27.09 132.03)">18</text>
                         </svg>
                     </button>
-                    <ReactTooltip place={"left"} effect={"solid"}/>
                 </div>
     
                 <div id="extraTilesButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.toggleExtraTiles}>
@@ -43,6 +43,14 @@ class MoreInfo extends React.Component {
                 <div id="copyTileStringButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.copyTilesToClipboard}>
                     <button className={"btn btn-primary"} id="copyTileStringInfo" data-tip="Copy TTS Tile String to Clipboard">
                         <ClipboardPlus id="copyTileStringSvg" className="icon" />
+                    </button>
+                </div>
+
+
+
+                <div id="toggleBackgroundButton" className={"btn-group-justified btn-group-sm"} onClick={this.props.toggleBackground}>
+                    <button className={"btn btn-primary"} id="toggleBackground" data-tip="Toggle Background Animation">
+                        <CardImage id="toggleBackgroundSvg" className="icon" />
                     </button>
                 </div>
             </div>
