@@ -65,7 +65,7 @@ class App extends React.Component {
     componentDidMount() {
         // Do something at the start
         this.$mapContainer =  $("#mainContent");
-        this.$tiMap = $("#tiMap");
+        this.$tiMap = $("#map");
 
         window.onpopstate = this.onPopState
         this.onPopState()
@@ -407,7 +407,7 @@ class App extends React.Component {
         let currentPlayerNumber = 0;
         for (let tileNumber = 0; tileNumber < offsets.length; tileNumber++) {
             let tile = $("#tile-" + tileNumber);
-            let numOverlay = $("#num-" + tileNumber);
+            let numOverlay = $("#number-" + tileNumber);
             let underlay = $("#underlay-" + tileNumber);
             if (this.state.tiles[tileNumber] >= 0 || typeof this.state.tiles[tileNumber] === "string") {
                 tile.attr("width", constraintWidth)

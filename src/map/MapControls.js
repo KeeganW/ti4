@@ -2,7 +2,7 @@ import React from "react";
 import {CardImage, ClipboardPlus, Dash, InfoCircle, Plus} from "react-bootstrap-icons";
 import ReactTooltip from 'react-tooltip';
 
-class MoreInfo extends React.Component {
+class MapControls extends React.Component {
     
     render() {
         return (
@@ -57,4 +57,4 @@ class MoreInfo extends React.Component {
         );
     }
 }
-export default MoreInfo;
+export default MapControls;

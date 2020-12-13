@@ -1,7 +1,7 @@
 import React from "react";
 import {ArrowBarLeft, ArrowBarRight} from "react-bootstrap-icons";
 
-class MoreInfo extends React.Component {
+class OptionsControls extends React.Component {
     render() {
         return (
             <div className="controls btn-group-justified btn-group-sm">
@@ -13,4 +13,4 @@ class MoreInfo extends React.Component {
         );
     }
 }
-export default MoreInfo;
+export default OptionsControls;

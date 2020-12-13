@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 
-class HelpModal extends React.Component {
+class SetRacesModal extends React.Component {
     render() {
         let visibleRaces = this.props.races
         if (this.props.useProphecyOfKings) {
@@ -25,7 +25,7 @@ class HelpModal extends React.Component {
                         {/*</div>*/}
                         {visibleRaces.map((raceName, raceIndex) => {
                             return (
-                                <div className={"custom-control custom-checkbox mb-3 races"} id={"wrapper" + raceName.replace(" ", "")}>
+                                <div className={"custom-control custom-checkbox mb-3 races"} key={"set-races-" + raceIndex}>
                                     <input className={"custom-control-input"} name={raceName} type={"checkbox"} id={"include" + raceName.replace(" ", "")} checked={this.props.currentRaces.indexOf(raceName) > -1} onChange={this.props.handleRacesChange} />
                                     <label className={"custom-control-label d-flex"} htmlFor={"include" + raceName.replace(" ", "")}>{raceName}</label>
                                 </div>
@@ -39,4 +39,4 @@ class HelpModal extends React.Component {
         );
     }
 }
-export default HelpModal;
+export default SetRacesModal;

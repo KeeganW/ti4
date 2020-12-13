@@ -76,23 +76,23 @@ class MoreInfo extends React.Component {
                     playerName = "P" + (moreInfoByPlayer.length + 1);
                 }
                 moreInfoByPlayer.push(
-                    <tr>
+                    <tr key={"more-info-" + playerName} >
                         <th scope="row">{playerName}</th>
                         <td>{adjacentInfo.resources}</td>
                         <td>{adjacentInfo.influence}</td>
                         <td>
                             <span className={"d-flex"}>
-                                {[...Array(adjacentInfo.traits.cultural)].map((e, i) => <img className={"icon"} src={traitCultural} alt={"C"}/>)}
-                                {[...Array(adjacentInfo.traits.hazardous)].map((e, i) => <img className={"icon"} src={traitHazardous} alt={"H"}/>)}
-                                {[...Array(adjacentInfo.traits.industrial)].map((e, i) => <img className={"icon"} src={traitIndustrial} alt={"I"}/>)}
+                                {[...Array(adjacentInfo.traits.cultural)].map((e, i) => <img key={playerName + "-cultural-" + i} className={"icon"} src={traitCultural} alt={"C"}/>)}
+                                {[...Array(adjacentInfo.traits.hazardous)].map((e, i) => <img key={playerName + "-hazardous-" + i} className={"icon"} src={traitHazardous} alt={"H"}/>)}
+                                {[...Array(adjacentInfo.traits.industrial)].map((e, i) => <img key={playerName + "-industrial-" + i} className={"icon"} src={traitIndustrial} alt={"I"}/>)}
                             </span>
                         </td>
                         <td>
                             <span className={"d-flex"}>
-                                {[...Array(adjacentInfo.specialties.biotic)].map((e, i) => <img className={"icon"} src={specialtyBiotic} alt={"B"}/>)}
-                                {[...Array(adjacentInfo.specialties.warfare)].map((e, i) => <img className={"icon"} src={specialtyWarfare} alt={"W"}/>)}
-                                {[...Array(adjacentInfo.specialties.propulsion)].map((e, i) => <img className={"icon"} src={specialtyPropulsion} alt={"P"}/>)}
-                                {[...Array(adjacentInfo.specialties.cybernetic)].map((e, i) => <img className={"icon"} src={specialtyCybernetic} alt={"C"}/>)}
+                                {[...Array(adjacentInfo.specialties.biotic)].map((e, i) => <img key={playerName + "-biotic-" + i} className={"icon"} src={specialtyBiotic} alt={"B"}/>)}
+                                {[...Array(adjacentInfo.specialties.warfare)].map((e, i) => <img key={playerName + "-warfare-" + i} className={"icon"} src={specialtyWarfare} alt={"W"}/>)}
+                                {[...Array(adjacentInfo.specialties.propulsion)].map((e, i) => <img key={playerName + "-propulsion-" + i} className={"icon"} src={specialtyPropulsion} alt={"P"}/>)}
+                                {[...Array(adjacentInfo.specialties.cybernetic)].map((e, i) => <img key={playerName + "-cybernetic-" + i} className={"icon"} src={specialtyCybernetic} alt={"C"}/>)}
                             </span>
                         </td>
                     </tr>

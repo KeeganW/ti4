@@ -542,6 +542,8 @@ class MapOptions extends React.Component {
                 blueTileRatio = 3
                 redTileRatio = 2
                 break;
+            default:
+                break;
         }
         let numAnomaliesLeftToBePlaced = (numPlanetsToPlace / (blueTileRatio + redTileRatio)) * redTileRatio;
 
@@ -820,16 +822,6 @@ class MapOptions extends React.Component {
     }
 
     render() {
-        const racesOptions = "" +
-            "<form id=\"includedRacesForm\">\n" +
-            "                                <div class=\"form-group\">\n" +
-            "                                    <input class=\"form-control\" id=\"filterRaces\" type=\"text\" placeholder=\"Filter Races...\">\n" +
-            "                                </div>\n" +
-            "                                    <div class=\"custom-control custom-checkbox mb-3 races\" id=\"wrapper{{ race|replace(' ', '') }}\">\n" +
-            "                                        <input type=\"checkbox\" class=\"custom-control-input\" id=\"include{{ race|replace(' ', '') }}\" name=\"race {{ race }}\" checked>\n" +
-            "                                        <label class=\"custom-control-label d-flex\" for=\"include{{ race|replace(' ', '') }}\">{{ race }}</label>\n" +
-            "                                    </div>\n" +
-            "                            </form>"
         return (
             <div id="options" className={this.props.visible ? "" : "d-none"}>
                 <div className="title">
@@ -925,7 +917,7 @@ class MapOptions extends React.Component {
                         <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
                     </div>
 
-                    <HelpModal visible={this.state.pickStyleHelp} hideModal={this.togglePickStyleHelp} title={"About Pick Style"}
+                    <HelpModal key={"help-pick"} visible={this.state.pickStyleHelp} hideModal={this.togglePickStyleHelp} title={"About Pick Style"}
                          content='<p>
                          Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the board style) it is put closer to home worlds to facilitate available assets.
                          <br>
@@ -945,7 +937,7 @@ class MapOptions extends React.Component {
                                    currentRaces={this.props.currentRaces}
                                    hideModal={this.toggleSetRacesHelp} handleRacesChange={this.handleRacesChange}
                     />
-                    <HelpModal visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
+                    <HelpModal key={"help-board"} visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
                          content='<p>
                          Board style changes how the tiles are actually laid out on a newly generated map.
                          <br>
@@ -953,7 +945,7 @@ class MapOptions extends React.Component {
                          Changing this would cause you to expect different hex layouts, such as different patterns of tiles, usage of hyperlanes, or unorthodox placement of home worlds.
                          </p>'
                     />
-                    <HelpModal visible={this.state.pickRacesHelp} hideModal={this.togglePickRacesHelp} title={"About Picking Races"}
+                    <HelpModal key={"help-races"} visible={this.state.pickRacesHelp} hideModal={this.togglePickRacesHelp} title={"About Picking Races"}
                          content="<p>
                          Automatically assigns races to the players on the boards.
                          <br>
@@ -961,7 +953,7 @@ class MapOptions extends React.Component {
                          From the set of races, turning this on will assign every player a random race (designated by assigning them the homeworld tile of that race). You should pick which player sits at a certain position before turning this on.
                          </p>"
                     />
-                    <HelpModal visible={this.state.pickMultipleRacesHelp} hideModal={this.togglePickMultipleRacesHelp} title={"About Picking Multiple Races"}
+                    <HelpModal key={"help-multiple"} visible={this.state.pickMultipleRacesHelp} hideModal={this.togglePickMultipleRacesHelp} title={"About Picking Multiple Races"}
                          content="<p>
                          Divides all the races evenly up amongst the players in the game (with no overflow), so that they can choose from a selection instead of being specifically assigned one race.
                          <br>
@@ -969,7 +961,7 @@ class MapOptions extends React.Component {
                          Some groups prefer to have a draft, where every player is given a few races to pick between. This lets them pick the races that they want to play, but not have any conflicts with other players about playing a certain race.
                          </p>"
                     />
-                    <HelpModal visible={this.state.shufflePriorityHelp} hideModal={this.toggleShufflePriorityHelp} title={"About Shuffling Priority"}
+                    <HelpModal key={"help-priority"} visible={this.state.shufflePriorityHelp} hideModal={this.toggleShufflePriorityHelp} title={"About Shuffling Priority"}
                          content='<p>
                          Randomizes the priority picks for each picking round.
                          <br>
@@ -980,7 +972,7 @@ class MapOptions extends React.Component {
                          Turning this on stops this from happening, and instead completely randomizes the placement order.
                          </p>'
                     />
-                    <HelpModal visible={this.state.reversePlacementOrderHelp} hideModal={this.toggleReversePlacementOrderHelp} title={"About Reverse Placement Order"}
+                    <HelpModal key={"help-reverse"} visible={this.state.reversePlacementOrderHelp} hideModal={this.toggleReversePlacementOrderHelp} title={"About Reverse Placement Order"}
                          content='<p>
                          Reverses which tiles are placed first in pick order.
                          <br>

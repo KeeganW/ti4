@@ -19,33 +19,35 @@ class ExtraTiles extends React.Component {
     }
     
     render() {
-        let tileNumbers = []
-        tileNumbers = tileNumbers.concat(tileData.blue).concat(tileData.red)
+        let systemNumbers = [];
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
         if (this.props.useProphecyOfKings) {
-            tileNumbers = tileNumbers.concat(tileData.pokBlue).concat(tileData.pokRed)
+            systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         }
 
         const tileObjects = []
-        for (const [index, value] of tileNumbers.entries()) {
-            let tileNumber = value
-            if (isNaN(Number(tileNumber)) && tileNumber !== undefined) {
-                tileNumber = value.split("-")[0]
+        for (let systemNumber of systemNumbers) {
+
+            // Handle hyperlanes differently. Pull out their tile number, separate from their rotation angle
+            if (isNaN(Number(systemNumber)) && systemNumber !== undefined) {
+                systemNumber = systemNumber.split("-")[0]
             }
+
             tileObjects.push(
-                <div className="tile-wrapper">
+                <div key={"extra-tile-wrapper-" + systemNumber} className="tile-wrapper">
                     {/*<span id={"num-" + tileNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")}>{tileNumber}</span>*/}
-                    <img id={"extra-" + tileNumber}
+                    <img id={"extra-" + systemNumber}
                          width="200px"
                          height="175px"
                          className="tile"
-                         src={window.location.origin + window.location.pathname + "/tiles/ST_" + tileNumber + ".png"}
+                         src={window.location.origin + window.location.pathname + "/tiles/ST_" + systemNumber + ".png"}
                          draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop}
                          onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter}
                          onDragLeave={this.props.dragLeave}
                          alt=""
                          style={this.tileStyle}
                     />
-                    <svg id={"extra-underlay-" + tileNumber} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="underlay" fill="currentColor"
+                    <svg id={"extra-underlay-" + systemNumber} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="underlay" fill="currentColor"
                          style={this.underlayStyle}>
                         <polygon points="269.51 0 89.84 0 0 155.6 89.84 311.2 269.51 311.2 359.35 155.6 269.51 0" />
                     </svg>
