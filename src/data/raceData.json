@@ -9,9 +9,9 @@
         "The Argent Flight", "The Empyrean", "The Mahact Gene-sorcerers", "The Naaz-Rokha Alliance", "The Nomad",
         "The Titans of Ul", "The Vuil'raith Cabal"
     ],
-    "homeworlds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
-    "pokHomeworlds": [52, 53, 54, 55, 56, 57, 58],
-    "homeworldToRaceMap": {
+    "homeSystems": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+    "pokHomeSystems": [52, 53, 54, 55, 56, 57, 58],
+    "homeSystemToRaceMap": {
         "1": "The Federation of Sol",
         "2": "The Mentak Coalition",
         "3": "The Yin Brotherhood",
@@ -37,7 +37,7 @@
         "57": "The Naaz-Rokha Alliance",
         "58": "The Argent Flight"
     },
-    "raceToHomeworldMap": {
+    "raceToHomeSystemMap": {
         "The Federation of Sol": 1,
         "The Mentak Coalition": 2,
         "The Yin Brotherhood": 3,

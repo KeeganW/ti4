@@ -20,9 +20,9 @@ class ExtraTiles extends React.Component {
     
     render() {
         let tileNumbers = []
-        tileNumbers = tileNumbers.concat(tileData.safe).concat(tileData.anomaly)
+        tileNumbers = tileNumbers.concat(tileData.blue).concat(tileData.red)
         if (this.props.useProphecyOfKings) {
-            tileNumbers = tileNumbers.concat(tileData.pokSafe).concat(tileData.pokAnomaly)
+            tileNumbers = tileNumbers.concat(tileData.pokBlue).concat(tileData.pokRed)
         }
 
         const tileObjects = []

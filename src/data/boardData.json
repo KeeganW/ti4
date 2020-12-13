@@ -2,7 +2,6 @@
     "size": 37,
     "pokSize": 61,
     "blankMap": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    "representation": "\n",
     "styles": {
         "2": {
             "normal": {
@@ -205,7 +204,7 @@
             },
             "large": {
                 "description": "The large version using the expansion tiles.",
-                "source": "Base Rules",
+                "source": "Game Rules",
                 "empty_tiles": [],
                 "home_worlds": [37, 41, 45, 49, 53, 57],
                 "primary_tiles": [38, 42, 46, 50, 54, 58, 56, 52, 48, 44, 40, 60],

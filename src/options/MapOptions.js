@@ -34,8 +34,8 @@ class MapOptions extends React.Component {
             pickStyles: ["balanced", "random", "resource", "influence", "custom"],
             races: [...raceData["races"]],
             pokRaces: [...raceData["pokRaces"]],
-            homeworlds: raceData["homeworlds"],
-            pokHomeworlds: raceData["pokHomeworlds"]
+            homeworlds: raceData["homeSystems"],
+            pokHomeworlds: raceData["pokHomeSystems"]
         }
         const startingPlayers = 6;
 
@@ -271,12 +271,12 @@ class MapOptions extends React.Component {
         let currentRaces = [...this.props.currentRaces]
         currentRaces = this.shuffle(currentRaces, currentSeed)
 
-        // Place data for the homeworlds from board data
+        // Place data for the homeSystems from board data
         for (let index = 0; index < boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'].length; index++) {
             let planetIndex = boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'][index]
             if (this.state.pickRaces && !this.state.pickMultipleRaces) {
                 // Convert races into race hexes and assign a random race to a player
-                newTiles[planetIndex] = raceData.raceToHomeworldMap[currentRaces[0]]
+                newTiles[planetIndex] = raceData.raceToHomeSystemMap[currentRaces[0]]
                 currentRaces.shift();
             } else {
                 // Set home worlds to 0, races to be decided later
@@ -289,7 +289,7 @@ class MapOptions extends React.Component {
 
         // Planets have been placed, time to do post processing checks to make sure things are good to go.
         // Get all anomalies that are adjacent to one another
-        let allTrueAnomalies = this.props.useProphecyOfKings ? [...tileData.trueAnomaly.concat(tileData.pokTrueAnomaly)] : [...tileData.trueAnomaly];
+        let allTrueAnomalies = this.props.useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
         for (let anomaly of allTrueAnomalies) {
             let anomalyTileNumber = newTiles.indexOf(anomaly);
             if (anomalyTileNumber >= 0) {
@@ -308,7 +308,7 @@ class MapOptions extends React.Component {
 
                 // If tile is in conflict more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
                 let swapped = false;
-                let blankReds = this.props.useProphecyOfKings ? [...tileData.blankAnomaly.concat(tileData.pokBlankAnomaly)] : [...tileData.blankAnomaly];
+                let blankReds = this.props.useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
                 if (adjacentAnomalies.length > 1) {
                     let possibleBlanks = [];
                     for (let blankRed of blankReds) {
@@ -406,7 +406,7 @@ class MapOptions extends React.Component {
                 }
                 if (adjacentWormhole) {
                     // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    let blankReds = this.props.useProphecyOfKings ? [...tileData.blankAnomaly.concat(tileData.pokBlankAnomaly)] : [...tileData.blankAnomaly];
+                    let blankReds = this.props.useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
                     // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
                     blankReds = blankReds.filter( function( el ) {
                         return allAlphaWormholes.indexOf( el ) < 0;
@@ -450,7 +450,7 @@ class MapOptions extends React.Component {
                 }
                 if (adjacentWormhole) {
                     // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    let blankReds = this.props.useProphecyOfKings ? [...tileData.safe.concat(tileData.pokSafe)] : [...tileData.safe];
+                    let blankReds = this.props.useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
                     // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
                     blankReds = blankReds.filter( function( el ) {
                         return allBetaWormholes.indexOf( el ) < 0;
@@ -632,9 +632,9 @@ class MapOptions extends React.Component {
     getPossiblePlanets() {
         // Get the list of planets to evaluate
         let possiblePlanets = []
-        possiblePlanets = possiblePlanets.concat(tileData.safe).concat(tileData.anomaly)
+        possiblePlanets = possiblePlanets.concat(tileData.blue).concat(tileData.red)
         if (this.props.useProphecyOfKings) {
-            possiblePlanets = possiblePlanets.concat(tileData.pokSafe).concat(tileData.pokAnomaly)
+            possiblePlanets = possiblePlanets.concat(tileData.pokBlue).concat(tileData.pokRed)
         }
 
         // Get the preset weighting format based on the current pick style
