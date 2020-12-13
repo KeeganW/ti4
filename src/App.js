@@ -40,6 +40,7 @@ class App extends React.Component {
         this.updateTiles = this.updateTiles.bind(this);
         this.validateTiles = this.validateTiles.bind(this);
         this.toggleBackground = this.toggleBackground.bind(this);
+        this.removeTrailing = this.removeTrailing.bind(this);
 
         this.toggleOptionsMenu = this.toggleOptionsMenu.bind(this);
         this.toggleProphecyOfKings = this.toggleProphecyOfKings.bind(this);
@@ -114,6 +115,7 @@ class App extends React.Component {
     /* TILE CHANGING FUNCTIONS */
     
     updateTiles(newTiles) {
+        newTiles = this.removeTrailing(newTiles)
         window.history.pushState({}, null, window.location.pathname + '?tiles=' + newTiles.toString());
 
         let newOptionsMenuState = this.state.isOptionsMenuShowing
@@ -129,6 +131,13 @@ class App extends React.Component {
             this.drawMap();
         });
     }
+    removeTrailing(tiles) {
+        while(tiles[tiles.length - 1] === -1){ // While the last element is a 0,
+            tiles.pop();                  // Remove that last element
+        }
+        return tiles
+    }
+
     /**
      * Attempts to validate a given tile string, by cleaning it up and turning it into an object.
      * @returns {number[]} An array of numbers representing tiles.
@@ -198,6 +207,7 @@ class App extends React.Component {
     }
     copyTilesToClipboard(event) {
         let tileString = [...this.state.tiles];
+        tileString = this.removeTrailing(tileString)
         tileString.shift();
         tileString = tileString.toString();
         tileString = tileString.replaceAll("-1", "0");
