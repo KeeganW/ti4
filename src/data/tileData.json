@@ -1,14 +1,14 @@
 {
-    "home": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 51],
-    "pokHome": [52, 53, 54, 55, 56, 57, 58],
-    "safe": [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-    "pokSafe": [59, 60, 61, 62, 63, 64, 65, 66, 69, 70, 71, 72, 73, 74, 75, 76],
-    "anomaly": [39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
-    "pokAnomaly": [67, 68, 77, 78, 79, 80],
-    "blankAnomaly": [39, 40, 46, 47, 48, 49, 50],
-    "pokBlankAnomaly": [77, 78],
-    "trueAnomaly": [41, 42, 43, 44, 45],
-    "pokTrueAnomaly": [67, 68, 79, 80],
+    "green": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 51],
+    "pokGreen": [52, 53, 54, 55, 56, 57, 58],
+    "blue": [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
+    "pokBlue": [59, 60, 61, 62, 63, 64, 65, 66, 69, 70, 71, 72, 73, 74, 75, 76],
+    "red": [39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
+    "pokRed": [67, 68, 77, 78, 79, 80],
+    "anomaly": [41, 42, 43, 44, 45],
+    "pokAnomaly": [67, 68, 79, 80],
+    "blankRed": [39, 40, 46, 47, 48, 49, 50],
+    "pokBlankRed": [77, 78],
     "alphaWormholes": [26, 39],
     "pokAlphaWormholes": [79],
     "betaWormholes": [25, 40],
@@ -16,7 +16,7 @@
     "hyperlanes": ["83A", "83B", "84A", "84B", "85A", "85B", "86A", "86B", "87A", "87B", "88A", "88B", "89A", "89B", "90A", "90B", "91A", "91B"],
     "all": {
         "1": {
-            "type": "home",
+            "type": "green",
             "race": "The Federation of Sol",
             "wormhole": null,
             "planets": [
@@ -31,7 +31,7 @@
             ]
         },
         "2": {
-            "type": "home",
+            "type": "green",
             "race": "The Mentak Coalition",
             "wormhole": null,
             "planets": [
@@ -46,7 +46,7 @@
             ]
         },
         "3": {
-            "type": "home",
+            "type": "green",
             "race": "The Yin Brotherhood",
             "wormhole": null,
             "planets": [
@@ -61,7 +61,7 @@
             ]
         },
         "4": {
-            "type": "home",
+            "type": "green",
             "race": "The Embers of Muaat",
             "wormhole": null,
             "planets": [
@@ -76,7 +76,7 @@
             ]
         },
         "5": {
-            "type": "home",
+            "type": "green",
             "race": "The Arborec",
             "wormhole": null,
             "planets": [
@@ -91,7 +91,7 @@
             ]
         },
         "6": {
-            "type": "home",
+            "type": "green",
             "race": "The Lizix Mindnet",
             "wormhole": null,
             "planets": [
@@ -106,7 +106,7 @@
             ]
         },
         "7": {
-            "type": "home",
+            "type": "green",
             "race": "The Winnu",
             "wormhole": null,
             "planets": [
@@ -121,7 +121,7 @@
             ]
         },
         "8": {
-            "type": "home",
+            "type": "green",
             "race": "The Nekro Virus",
             "wormhole": null,
             "planets": [
@@ -136,7 +136,7 @@
             ]
         },
         "9": {
-            "type": "home",
+            "type": "green",
             "race": "The Naalu Collective",
             "wormhole": null,
             "planets": [
@@ -159,7 +159,7 @@
             ]
         },
         "10": {
-            "type": "home",
+            "type": "green",
             "race": "The Barony of Letnev",
             "wormhole": null,
             "planets": [
@@ -182,7 +182,7 @@
             ]
         },
         "11": {
-            "type": "home",
+            "type": "green",
             "race": "The Clan of Saar",
             "wormhole": null,
             "planets": [
@@ -205,7 +205,7 @@
             ]
         },
         "12": {
-            "type": "home",
+            "type": "green",
             "race": "The Universities of Jol-Nar",
             "wormhole": null,
             "planets": [
@@ -228,7 +228,7 @@
             ]
         },
         "13": {
-            "type": "home",
+            "type": "green",
             "race": "Sardakk N'orr",
             "wormhole": null,
             "planets": [
@@ -251,7 +251,7 @@
             ]
         },
         "14": {
-            "type": "home",
+            "type": "green",
             "race": "The Xxcha Kingdom",
             "wormhole": null,
             "planets": [
@@ -274,7 +274,7 @@
             ]
         },
         "15": {
-            "type": "home",
+            "type": "green",
             "race": "The Yssaril Tribes",
             "wormhole": null,
             "planets": [
@@ -297,7 +297,7 @@
             ]
         },
         "16": {
-            "type": "home",
+            "type": "green",
             "race": "The Emirates of Hacan",
             "wormhole": null,
             "planets": [
@@ -328,14 +328,14 @@
             ]
         },
         "17": {
-            "type": "home",
+            "type": "green",
             "race": "The Ghosts of Creuss",
             "wormhole": "delta",
             "planets": [
             ]
         },
         "18": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -349,7 +349,7 @@
             ]
         },
         "19": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -363,7 +363,7 @@
             ]
         },
         "20": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -377,7 +377,7 @@
             ]
         },
         "21": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -391,7 +391,7 @@
             ]
         },
         "22": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -405,7 +405,7 @@
             ]
         },
         "23": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -419,7 +419,7 @@
             ]
         },
         "24": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -433,7 +433,7 @@
             ]
         },
         "25": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": "beta",
             "planets": [
                 {
@@ -447,7 +447,7 @@
             ]
         },
         "26": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": "alpha",
             "planets": [
                 {
@@ -461,7 +461,7 @@
             ]
         },
         "27": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -483,7 +483,7 @@
             ]
         },
         "28": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -505,7 +505,7 @@
             ]
         },
         "29": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -527,7 +527,7 @@
             ]
         },
         "30": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -549,7 +549,7 @@
             ]
         },
         "31": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -571,7 +571,7 @@
             ]
         },
         "32": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -593,7 +593,7 @@
             ]
         },
         "33": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -615,7 +615,7 @@
             ]
         },
         "34": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -637,7 +637,7 @@
             ]
         },
         "35": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -659,7 +659,7 @@
             ]
         },
         "36": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -681,7 +681,7 @@
             ]
         },
         "37": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -703,7 +703,7 @@
             ]
         },
         "38": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -725,91 +725,91 @@
             ]
         },
         "39": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": "alpha",
             "anomaly": null,
             "planets": [
             ]
         },
         "40": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": "beta",
             "anomaly": null,
             "planets": [
             ]
         },
         "41": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": "gravity-rift",
             "planets": [
             ]
         },
         "42": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": "nebula",
             "planets": [
             ]
         },
         "43": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": "supernova",
             "planets": [
             ]
         },
         "44": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": "asteroid-field",
             "planets": [
             ]
         },
         "45": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": "asteroid-field",
             "planets": [
             ]
         },
         "46": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": null,
             "planets": [
             ]
         },
         "47": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": null,
             "planets": [
             ]
         },
         "48": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": null,
             "planets": [
             ]
         },
         "49": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": null,
             "planets": [
             ]
         },
         "50": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": null,
             "planets": [
             ]
         },
         "51": {
-            "type": "home",
+            "type": "green",
             "wormhole": "delta",
             "planets": [
                 {
@@ -822,7 +822,7 @@
             ]
         },
         "52": {
-            "type": "home",
+            "type": "green",
             "race": "The Mahact Gene-sorcerers",
             "wormhole": null,
             "planets": [
@@ -837,7 +837,7 @@
             ]
         },
         "53": {
-            "type": "home",
+            "type": "green",
             "race": "The Nomad",
             "wormhole": null,
             "planets": [
@@ -852,7 +852,7 @@
             ]
         },
         "54": {
-            "type": "home",
+            "type": "green",
             "race": "The Vuil'raith Cabal",
             "wormhole": null,
             "planets": [
@@ -867,7 +867,7 @@
             ]
         },
         "55": {
-            "type": "home",
+            "type": "green",
             "race": "The Titans of Ul",
             "wormhole": null,
             "planets": [
@@ -882,7 +882,7 @@
             ]
         },
         "56": {
-            "type": "home",
+            "type": "green",
             "race": "The Empyrean",
             "wormhole": null,
             "planets": [
@@ -897,7 +897,7 @@
             ]
         },
         "57": {
-            "type": "home",
+            "type": "green",
             "race": "The Naaz-Rokha Alliance",
             "wormhole": null,
             "planets": [
@@ -920,7 +920,7 @@
             ]
         },
         "58": {
-            "type": "home",
+            "type": "green",
             "race": "The Argent Flight",
             "wormhole": null,
             "planets": [
@@ -951,7 +951,7 @@
             ]
         },
         "59": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -965,7 +965,7 @@
             ]
         },
         "60": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -979,7 +979,7 @@
             ]
         },
         "61": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -993,7 +993,7 @@
             ]
         },
         "62": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1007,7 +1007,7 @@
             ]
         },
         "63": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1021,7 +1021,7 @@
             ]
         },
         "64": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": "beta",
             "planets": [
                 {
@@ -1035,7 +1035,7 @@
             ]
         },
         "65": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1049,7 +1049,7 @@
             ]
         },
         "66": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1063,7 +1063,7 @@
             ]
         },
         "67": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": "gravity-rift",
             "planets": [
@@ -1078,7 +1078,7 @@
             ]
         },
         "68": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": "nebula",
             "planets": [
@@ -1093,7 +1093,7 @@
             ]
         },
         "69": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1115,7 +1115,7 @@
             ]
         },
         "70": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1137,7 +1137,7 @@
             ]
         },
         "71": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1159,7 +1159,7 @@
             ]
         },
         "72": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1181,7 +1181,7 @@
             ]
         },
         "73": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1203,7 +1203,7 @@
             ]
         },
         "74": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1225,7 +1225,7 @@
             ]
         },
         "75": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1255,7 +1255,7 @@
             ]
         },
         "76": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": null,
             "planets": [
                 {
@@ -1285,42 +1285,42 @@
             ]
         },
         "77": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": null,
             "planets": [
             ]
         },
         "78": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": null,
             "planets": [
             ]
         },
         "79": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": "alpha",
             "anomaly": "asteroid-field",
             "planets": [
             ]
         },
         "80": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": "supernova",
             "planets": [
             ]
         },
         "81": {
-            "type": "anomaly",
+            "type": "red",
             "wormhole": null,
             "anomaly": "muaat-supernova",
             "planets": [
             ]
         },
         "82": {
-            "type": "safe",
+            "type": "blue",
             "wormhole": "all",
             "planets": [
                 {

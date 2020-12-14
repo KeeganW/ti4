@@ -34,8 +34,8 @@ class MapOptions extends React.Component {
             pickStyles: ["balanced", "random", "resource", "influence", "custom"],
             races: [...raceData["races"]],
             pokRaces: [...raceData["pokRaces"]],
-            homeworlds: raceData["homeworlds"],
-            pokHomeworlds: raceData["pokHomeworlds"]
+            homeworlds: raceData["homeSystems"],
+            pokHomeworlds: raceData["pokHomeSystems"]
         }
         const startingPlayers = 6;
 
@@ -271,12 +271,12 @@ class MapOptions extends React.Component {
         let currentRaces = [...this.props.currentRaces]
         currentRaces = this.shuffle(currentRaces, currentSeed)
 
-        // Place data for the homeworlds from board data
+        // Place data for the homeSystems from board data
         for (let index = 0; index < boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'].length; index++) {
             let planetIndex = boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'][index]
             if (this.state.pickRaces && !this.state.pickMultipleRaces) {
                 // Convert races into race hexes and assign a random race to a player
-                newTiles[planetIndex] = raceData.raceToHomeworldMap[currentRaces[0]]
+                newTiles[planetIndex] = raceData.raceToHomeSystemMap[currentRaces[0]]
                 currentRaces.shift();
             } else {
                 // Set home worlds to 0, races to be decided later
@@ -289,7 +289,7 @@ class MapOptions extends React.Component {
 
         // Planets have been placed, time to do post processing checks to make sure things are good to go.
         // Get all anomalies that are adjacent to one another
-        let allTrueAnomalies = this.props.useProphecyOfKings ? [...tileData.trueAnomaly.concat(tileData.pokTrueAnomaly)] : [...tileData.trueAnomaly];
+        let allTrueAnomalies = this.props.useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
         for (let anomaly of allTrueAnomalies) {
             let anomalyTileNumber = newTiles.indexOf(anomaly);
             if (anomalyTileNumber >= 0) {
@@ -308,7 +308,7 @@ class MapOptions extends React.Component {
 
                 // If tile is in conflict more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
                 let swapped = false;
-                let blankReds = this.props.useProphecyOfKings ? [...tileData.blankAnomaly.concat(tileData.pokBlankAnomaly)] : [...tileData.blankAnomaly];
+                let blankReds = this.props.useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
                 if (adjacentAnomalies.length > 1) {
                     let possibleBlanks = [];
                     for (let blankRed of blankReds) {
@@ -406,7 +406,7 @@ class MapOptions extends React.Component {
                 }
                 if (adjacentWormhole) {
                     // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    let blankReds = this.props.useProphecyOfKings ? [...tileData.blankAnomaly.concat(tileData.pokBlankAnomaly)] : [...tileData.blankAnomaly];
+                    let blankReds = this.props.useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
                     // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
                     blankReds = blankReds.filter( function( el ) {
                         return allAlphaWormholes.indexOf( el ) < 0;
@@ -450,7 +450,7 @@ class MapOptions extends React.Component {
                 }
                 if (adjacentWormhole) {
                     // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    let blankReds = this.props.useProphecyOfKings ? [...tileData.safe.concat(tileData.pokSafe)] : [...tileData.safe];
+                    let blankReds = this.props.useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
                     // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
                     blankReds = blankReds.filter( function( el ) {
                         return allBetaWormholes.indexOf( el ) < 0;
@@ -542,6 +542,8 @@ class MapOptions extends React.Component {
                 blueTileRatio = 3
                 redTileRatio = 2
                 break;
+            default:
+                break;
         }
         let numAnomaliesLeftToBePlaced = (numPlanetsToPlace / (blueTileRatio + redTileRatio)) * redTileRatio;
 
@@ -632,9 +634,9 @@ class MapOptions extends React.Component {
     getPossiblePlanets() {
         // Get the list of planets to evaluate
         let possiblePlanets = []
-        possiblePlanets = possiblePlanets.concat(tileData.safe).concat(tileData.anomaly)
+        possiblePlanets = possiblePlanets.concat(tileData.blue).concat(tileData.red)
         if (this.props.useProphecyOfKings) {
-            possiblePlanets = possiblePlanets.concat(tileData.pokSafe).concat(tileData.pokAnomaly)
+            possiblePlanets = possiblePlanets.concat(tileData.pokBlue).concat(tileData.pokRed)
         }
 
         // Get the preset weighting format based on the current pick style
@@ -820,16 +822,6 @@ class MapOptions extends React.Component {
     }
 
     render() {
-        const racesOptions = "" +
-            "<form id=\"includedRacesForm\">\n" +
-            "                                <div class=\"form-group\">\n" +
-            "                                    <input class=\"form-control\" id=\"filterRaces\" type=\"text\" placeholder=\"Filter Races...\">\n" +
-            "                                </div>\n" +
-            "                                    <div class=\"custom-control custom-checkbox mb-3 races\" id=\"wrapper{{ race|replace(' ', '') }}\">\n" +
-            "                                        <input type=\"checkbox\" class=\"custom-control-input\" id=\"include{{ race|replace(' ', '') }}\" name=\"race {{ race }}\" checked>\n" +
-            "                                        <label class=\"custom-control-label d-flex\" for=\"include{{ race|replace(' ', '') }}\">{{ race }}</label>\n" +
-            "                                    </div>\n" +
-            "                            </form>"
         return (
             <div id="options" className={this.props.visible ? "" : "d-none"}>
                 <div className="title">
@@ -925,7 +917,7 @@ class MapOptions extends React.Component {
                         <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
                     </div>
 
-                    <HelpModal visible={this.state.pickStyleHelp} hideModal={this.togglePickStyleHelp} title={"About Pick Style"}
+                    <HelpModal key={"help-pick"} visible={this.state.pickStyleHelp} hideModal={this.togglePickStyleHelp} title={"About Pick Style"}
                          content='<p>
                          Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the board style) it is put closer to home worlds to facilitate available assets.
                          <br>
@@ -945,7 +937,7 @@ class MapOptions extends React.Component {
                                    currentRaces={this.props.currentRaces}
                                    hideModal={this.toggleSetRacesHelp} handleRacesChange={this.handleRacesChange}
                     />
-                    <HelpModal visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
+                    <HelpModal key={"help-board"} visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
                          content='<p>
                          Board style changes how the tiles are actually laid out on a newly generated map.
                          <br>
@@ -953,7 +945,7 @@ class MapOptions extends React.Component {
                          Changing this would cause you to expect different hex layouts, such as different patterns of tiles, usage of hyperlanes, or unorthodox placement of home worlds.
                          </p>'
                     />
-                    <HelpModal visible={this.state.pickRacesHelp} hideModal={this.togglePickRacesHelp} title={"About Picking Races"}
+                    <HelpModal key={"help-races"} visible={this.state.pickRacesHelp} hideModal={this.togglePickRacesHelp} title={"About Picking Races"}
                          content="<p>
                          Automatically assigns races to the players on the boards.
                          <br>
@@ -961,7 +953,7 @@ class MapOptions extends React.Component {
                          From the set of races, turning this on will assign every player a random race (designated by assigning them the homeworld tile of that race). You should pick which player sits at a certain position before turning this on.
                          </p>"
                     />
-                    <HelpModal visible={this.state.pickMultipleRacesHelp} hideModal={this.togglePickMultipleRacesHelp} title={"About Picking Multiple Races"}
+                    <HelpModal key={"help-multiple"} visible={this.state.pickMultipleRacesHelp} hideModal={this.togglePickMultipleRacesHelp} title={"About Picking Multiple Races"}
                          content="<p>
                          Divides all the races evenly up amongst the players in the game (with no overflow), so that they can choose from a selection instead of being specifically assigned one race.
                          <br>
@@ -969,7 +961,7 @@ class MapOptions extends React.Component {
                          Some groups prefer to have a draft, where every player is given a few races to pick between. This lets them pick the races that they want to play, but not have any conflicts with other players about playing a certain race.
                          </p>"
                     />
-                    <HelpModal visible={this.state.shufflePriorityHelp} hideModal={this.toggleShufflePriorityHelp} title={"About Shuffling Priority"}
+                    <HelpModal key={"help-priority"} visible={this.state.shufflePriorityHelp} hideModal={this.toggleShufflePriorityHelp} title={"About Shuffling Priority"}
                          content='<p>
                          Randomizes the priority picks for each picking round.
                          <br>
@@ -980,7 +972,7 @@ class MapOptions extends React.Component {
                          Turning this on stops this from happening, and instead completely randomizes the placement order.
                          </p>'
                     />
-                    <HelpModal visible={this.state.reversePlacementOrderHelp} hideModal={this.toggleReversePlacementOrderHelp} title={"About Reverse Placement Order"}
+                    <HelpModal key={"help-reverse"} visible={this.state.reversePlacementOrderHelp} hideModal={this.toggleReversePlacementOrderHelp} title={"About Reverse Placement Order"}
                          content='<p>
                          Reverses which tiles are placed first in pick order.
                          <br>

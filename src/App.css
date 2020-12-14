@@ -4,7 +4,7 @@
     --tertiary-color: #e6e8ea;
     --border-color: #efefef;
     --hover-color: #794100;
-    --background-color: #3B4859;
+    --background-color: #242222;
 
     --scroll-bar-distance: 17px;
     --title-height: 60px;
@@ -19,7 +19,7 @@ html, body {margin: 0; height: 100%;}
 /* Set base background, colors, and fonts*/
 body {
     font-family: "Open Sans", sans-serif;
-    background-color: var(--background-color);
+    /*background-color: var(--background-color);*/
     color: black;
 }
 h1, h2, h3, h4, h5 {
@@ -159,7 +159,7 @@ h1, h2, h3, h4, h5 {
     height: 100%;
     text-align: center;
     overflow: scroll;
-    background-color: var(--background-color);
+    /*background-color: var(--background-color);*/
     color: white;
 }
 #description {
@@ -234,6 +234,12 @@ h1, h2, h3, h4, h5 {
 #copyTileStringButton {
     position: fixed;
     top: calc(var(--title-height) + 165px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1002;
+}
+#toggleBackgroundButton {
+    position: fixed;
+    bottom: var(--scroll-bar-distance);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }

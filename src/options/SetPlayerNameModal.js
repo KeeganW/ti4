@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 
-class HelpModal extends React.Component {
+class SetPlayerNameModal extends React.Component {
     render() {
         return (
             <Modal show={this.props.visible} onHide={this.props.hideModal}>
@@ -12,7 +12,7 @@ class HelpModal extends React.Component {
                     <form id={"playerNameForm"}>
                         {this.props.currentPlayerNames.map((x, i) => {
                             return (
-                                <div className={"form-group"}>
+                                <div className={"form-group"} key={"set-names-" + i}>
                                     <label htmlFor={"player" + (i+1) + "Name"}>Player {(i+1)}</label>
                                     <input className={"form-control"} name={"playerName" + i} type={"text"} placeholder={"P" + (i+1)} defaultValue={x} onChange={this.props.handleNameChange} />
                                 </div>
@@ -26,4 +26,4 @@ class HelpModal extends React.Component {
         );
     }
 }
-export default HelpModal;
+export default SetPlayerNameModal;

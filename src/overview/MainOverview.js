@@ -1,8 +1,5 @@
 import React from "react";
-import exampleMap from './exampleMap.png';
-import exampleMapNumbered from './exampleMapNumbered.png';
-import dragAndDrop from './dragAndDrop.png';
-import st82 from './ST_82.png';
+import {ClipboardPlus} from "react-bootstrap-icons";
 
 class MainOverview extends React.Component {
     render() {
@@ -22,7 +19,6 @@ class MainOverview extends React.Component {
                             by customizing settings via the generation panel on the right, and hit "Generate" to see a new
                             map.
                         </p>
-                        <img className={"overview-image"} src={exampleMap} alt="TI4 Generated Map"/>
                     </div>
                 </div>
 
@@ -31,10 +27,9 @@ class MainOverview extends React.Component {
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
                             Unhappy with a wormhole next to a home world? Are two asteroids next to one another? Don't like
-                            a certain system? Just swap it with another tile by click and dragging one tile over the top of
+                            a certain system? Just swap it with another tile by clicking and dragging one tile over the top of
                             another tile.
                         </p>
-                        <img className={"overview-image"} src={dragAndDrop} alt="Tile Drag Example"/>
                     </div>
                 </div>
 
@@ -43,9 +38,9 @@ class MainOverview extends React.Component {
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
                             The new expansion content for TI4, called Prophecy of Kings, was recently released. Check out
-                            the new tiles and 7 and 8 player maps. Hyperlane additions are still a work in progress.
+                            the new tiles as well as the 7 and 8 player maps. Hyperlanes which connect systems together
+                            were also added, and are included on some non expansion board styles.
                         </p>
-                        <img className={"overview-image"} src={st82} alt="TI4 Generated Map"/>
                     </div>
                 </div>
 
@@ -53,7 +48,11 @@ class MainOverview extends React.Component {
                     <h4 className={"m-3"}>Share With Your Friends</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
-                            After you have made your custom map, just copy the url and send it to your friends!
+                            After you have made your custom map, just copy the url and send it to your friends! Or, if
+                            you are using Table Top Simulator (TTS), press the "Copy to Clipboard" button (
+                            <ClipboardPlus className="icon d-inline" />
+                             ) to get the full
+                            map string for the currently displayed map.
                         </p>
                     </div>
                 </div>
@@ -63,7 +62,11 @@ class MainOverview extends React.Component {
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
                             Do you really like the gravity rift anomaly and not see it on the board? Click the "Show unused
-                            tiles" button to see any tiles not currently being used in the map, and drag and drop them to add them!
+                            tiles" button (
+                            <svg id="showExtraTilesSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="icon d-inline" fill="currentColor">
+                                <polygon id="showExtraTilesPoly" points="269.51 0 89.84 0 0 155.6 89.84 311.2 269.51 311.2 359.35 155.6 269.51 0" />
+                            </svg>
+                            ) to see any tiles not currently being used in the map, and drag and drop them to add them!
                         </p>
                     </div>
                 </div>
@@ -73,9 +76,14 @@ class MainOverview extends React.Component {
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
                             It can be hard to know which tile is which when it is time to setup your new board. Click the
-                            "Toggle Tile Number Overlay" button to see the numbers of every tile on your custom board.
+                            "Toggle Tile Number Overlay" (
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.78 169.62" className="icon d-inline" fill="currentColor">
+                                <polygon className="overlay-cls-1" points="148.03 4 51.81 4 4.61 86.92 52.02 169.84 148.03 169.84 195.03 86.92 148.03 4"/>
+                                <text className="overlay-cls-2" transform="translate(27.09 132.03)">18</text>
+                            </svg>
+                            )
+                            button to see the numbers of every tile on your custom board.
                         </p>
-                        <img className={"overview-image"} src={exampleMapNumbered} alt="TI4 Generated Map"/>
                     </div>
                 </div>
 
