@@ -1,5 +1,8 @@
 import React from "react";
 
+/**
+ * Scripts for bootstrap and jquery integration.
+ */
 class BootstrapScripts extends React.Component {
     render() {
         return (

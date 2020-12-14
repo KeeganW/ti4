@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 import './App.css';
-import BootstrapScripts from "./BootstrapScripts";
+import BootstrapScripts from "./helpers/BootstrapScripts";
 import MoreInfo from "./panels/MoreInfo";
 import ExtraTiles from "./panels/ExtraTiles";
 import MainOverview from "./overview/MainOverview";
@@ -11,7 +11,13 @@ import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
 import tileData from "./data/tileData.json";
 import raceData from "./data/raceData.json";
+import boardData from "./data/boardData.json";
+import {calculateOffsets} from "./helpers/Helpers";
 
+/**
+ * The core application page. Holds the states for common objects like tile data and player names. Responsible for
+ * drawing the actual map.
+ */
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -23,13 +29,13 @@ class App extends React.Component {
             extraTilesVisible: false,
             moreInfoVisible: false,
             backgroundAnimated: true,
-            tiles: Array.apply(-1, Array(37)).fill(-1),
+            tiles: [...boardData.blankMap],
             overlayVisible: false,
             zoom: 1.0,
             mobileBreakpoint: 700,
             isMobileView: false,
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
-            currentRaces: [...raceData["races"]]
+            currentRaces: [...raceData.races]
         };
     
         this.drawMap = this.drawMap.bind(this);
@@ -314,10 +320,10 @@ class App extends React.Component {
         // Remove mecatol rex
         tileString.shift();
 
-        // Remove the -1s and replace them with zeros, then remove the commas
         tileString = tileString.toString();
-        tileString = tileString.replaceAll("-1", "0");
-        tileString = tileString.replaceAll(",", " ");
+        tileString = tileString.replaceAll("-1", "0");  // Remove the -1s because it is unused
+        tileString = tileString.replaceAll(",", " ");  // Remove commas from old array
+        tileString = tileString.replaceAll("-", "");  // Remove rotation dash in hyperlanes
 
         // Print to console in case the copy function doesnt actually work
         console.log("Here is your tile string for use with this TTS Mod (https://steamcommunity.com/sharedfiles/filedetails/?id=1466689117):");
@@ -391,8 +397,8 @@ class App extends React.Component {
         }
 
         // Set the map height based on which tiles are being used
-        let mapNumberTilesHeight = 1; // Every standard TI board is 7 tiles tall
-        let mapNumberTilesWidth = 1; // Every standard TI board is 5.5 tiles wide
+        let mapNumberTilesHeight = 1;
+        let mapNumberTilesWidth = 1;
         if (this.state.tiles[37] >= 0 || this.state.tiles[38] >= 0 || this.state.tiles[60] >= 0
             || this.state.tiles[48] >= 0 || this.state.tiles[49] >= 0 || this.state.tiles[50] >= 0) {
             mapNumberTilesHeight = 9;
@@ -429,90 +435,6 @@ class App extends React.Component {
         // Configure the map container to be this size
         this.$tiMap.css("width", constraintWidth * mapNumberTilesWidth)
             .css("height", constraintHeight * mapNumberTilesHeight);
-
-        /**
-         * Calculate offsets of the tiles in relation to Mecatol Rex (the center tile). This information
-         * is stored in an array of two value arrays. The two value arrays reperesent the margin left
-         * and margin right to offset the tile (based on size of of tiles).
-         * @param width The width (in pixels) of a single tile
-         * @param height The height (in pixels) of a single tile
-         * @returns {(number[]|(number)[])[]} an array of two value arrays.
-         */
-        function calculateOffsets(width, height) {
-            let leftWidth = -width
-            let topHeight = -height
-            let halfWidth = Math.ceil(leftWidth * 0.5)
-            let halfHeight = Math.ceil(topHeight * 0.5)
-            let treQuarWidth = Math.ceil(leftWidth * 0.75)
-
-            return [
-                [halfWidth, halfHeight],  // Mecatol Rex
-                // Inner ring
-                [halfWidth, halfHeight + topHeight],
-                [halfWidth - treQuarWidth, halfHeight + halfHeight],
-                [halfWidth - treQuarWidth, 0],
-                [halfWidth, halfHeight - topHeight],
-                [halfWidth + treQuarWidth, 0],
-                [halfWidth + treQuarWidth, halfHeight + halfHeight],
-                // Middle ring
-                [halfWidth, halfHeight + topHeight + topHeight],
-                [halfWidth - treQuarWidth, halfHeight + topHeight + halfHeight],
-                [halfWidth - leftWidth - halfWidth, halfHeight + topHeight],
-                [halfWidth - leftWidth - halfWidth, halfHeight],
-                [halfWidth - leftWidth - halfWidth, halfHeight - topHeight],
-                [halfWidth - treQuarWidth, halfHeight - topHeight - halfHeight],
-                [halfWidth, halfHeight - topHeight - topHeight],
-                [halfWidth + treQuarWidth, halfHeight - topHeight - halfHeight],
-                [halfWidth + leftWidth + halfWidth, halfHeight - topHeight],
-                [halfWidth + leftWidth + halfWidth, halfHeight],
-                [halfWidth + leftWidth + halfWidth, halfHeight + topHeight],
-                [halfWidth + treQuarWidth, halfHeight + topHeight + halfHeight],
-                // Outer Ring
-                [halfWidth, halfHeight + topHeight + topHeight + topHeight],
-                [halfWidth - treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
-                [halfWidth - leftWidth - halfWidth, halfHeight + topHeight + topHeight],
-                [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight + topHeight + halfHeight],
-                [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight + halfHeight],
-                [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight - halfHeight],
-                [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight - topHeight - halfHeight],
-                [halfWidth - leftWidth - halfWidth, halfHeight - topHeight - topHeight],
-                [halfWidth - treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
-                [halfWidth, halfHeight - topHeight - topHeight - topHeight],
-                [halfWidth + treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
-                [halfWidth + leftWidth + halfWidth, halfHeight - topHeight - topHeight],
-                [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight - topHeight - halfHeight],
-                [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight - halfHeight],
-                [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + halfHeight],
-                [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + topHeight + halfHeight],
-                [halfWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight],
-                [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
-                // Extended Ring
-                [halfWidth, halfHeight + topHeight + topHeight + topHeight + topHeight],
-                [halfWidth - treQuarWidth, halfHeight + topHeight + topHeight + topHeight + halfHeight],
-                [halfWidth - leftWidth - halfWidth, halfHeight + topHeight + topHeight + topHeight],
-                [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight + topHeight + topHeight + halfHeight],
-                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight + topHeight + topHeight],
-                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight + topHeight],
-                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight],
-                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight - topHeight],
-                [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight - topHeight - topHeight],
-                [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight - topHeight - topHeight - halfHeight],
-                [halfWidth - leftWidth - halfWidth, halfHeight - topHeight - topHeight - topHeight],
-                [halfWidth - treQuarWidth, halfHeight - topHeight - topHeight - topHeight - halfHeight],
-                [halfWidth, halfHeight - topHeight - topHeight - topHeight - topHeight],
-                [halfWidth + treQuarWidth, halfHeight - topHeight - topHeight - topHeight - halfHeight],
-                [halfWidth + leftWidth + halfWidth, halfHeight - topHeight - topHeight - topHeight],
-                [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight - topHeight - topHeight - halfHeight],
-                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight - topHeight - topHeight],
-                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight - topHeight],
-                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight],
-                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight + topHeight],
-                [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight + topHeight + topHeight],
-                [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight + halfHeight],
-                [halfWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight + topHeight],
-                [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + topHeight + halfHeight],
-            ]
-        }
 
         // Calculate the offset values for margin left and margin top per tile
         let offsets = calculateOffsets(constraintWidth, constraintHeight)
@@ -600,7 +522,8 @@ class App extends React.Component {
                 // Use default map values
             }
 
-            // TODO find what the mouse is hovering nearest to, or over. Get that element, and zoom in. Something like this? https://stackoverflow.com/questions/6519043/get-mouse-position-on-scroll
+            // TODO find what the mouse is hovering nearest to, or over. Get that element, and zoom in. Something like
+            //  this? https://stackoverflow.com/questions/6519043/get-mouse-position-on-scroll
 
             // Center Mecatol Rex on the screen
             $("#tile-0").get(0).scrollIntoView({behavior: "smooth", block:"center", inline: "center"});
@@ -686,6 +609,17 @@ class App extends React.Component {
     render() {
         return (
             <div>
+                <div id="mainContent" className="justify-content-center align-items-center">
+                    <MainOverview visible={this.state.overviewVisible}
+                    />
+                    
+                    <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
+                             tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}
+
+                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
+                    />
+                </div>
+
                 <OptionsControls visible={this.state.isOptionsMenuShowing} isMobileView={this.state.isMobileView}
                                  toggleOptions={this.toggleOptionsMenu}
                 />
@@ -698,17 +632,6 @@ class App extends React.Component {
                              zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick}
                              toggleBackground={this.toggleBackground}
                 />
-                
-                <div id="mainContent" className="justify-content-center align-items-center">
-                    <MainOverview visible={this.state.overviewVisible}
-                    />
-                    
-                    <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
-                             tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}
-
-                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
-                    />
-                </div>
                 
                 <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}
                             useProphecyOfKings={this.state.useProphecyOfKings}
