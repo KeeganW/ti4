@@ -316,6 +316,7 @@ class MapOptions extends React.Component {
                             possibleBlanks.push(blankRed)
                         }
                     }
+                    console.log(possibleBlanks)
                     possibleBlanks = this.shuffle(possibleBlanks, this.state.currentSeed);
                     if (possibleBlanks.length > 0) {
                         swapped = true;
@@ -348,12 +349,27 @@ class MapOptions extends React.Component {
                         }
                     }
                     if (!swapped) {
-                        /*
-                        There is a potential use for this strategy, but for now it seems pretty safe to just let it fail
-                        to swap on a blank. It is rare that it is impossible, and even when it is, its a pretty simple
-                        rule. Plus the rules let you place reds next to each other if moving them is impossible.
-                        btw, not sure this code below works properly. I believe there is a bug in it.
-                         */
+                        let blankReds = this.props.useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
+                        let possibleBlanks = [];
+                        for (let blankRed of blankReds) {
+                            if (newTiles.indexOf(blankRed) < 0) {
+                                possibleBlanks.push(blankRed)
+                            }
+                        }
+                        possibleBlanks = this.shuffle(possibleBlanks, this.state.currentSeed);
+                        if (possibleBlanks.length > 0) {
+                            swapped = true;
+                            newTiles[anomalyTileNumber] = possibleBlanks[0];
+                        }
+                        if (!swapped) {
+                            console.log("Unable to swap anomaly to a free position.")
+                        }
+                            /*
+                            There is a potential use for this strategy, but for now it seems pretty safe to just let it fail
+                            to swap on a blank. It is rare that it is impossible, and even when it is, its a pretty simple
+                            rule. Plus the rules let you place reds next to each other if moving them is impossible.
+                            btw, not sure this code below works properly. I believe there is a bug in it.
+                             */
 
                         /*
                         // Going in reverse, find the first tile with no anomalies adjacent, and swap
@@ -553,7 +569,7 @@ class MapOptions extends React.Component {
         }
 
         // Still have to add a certain number of anomalies in. Get a list of possible anomalies we can add to the tile list
-        let allAnomalyList = this.props.useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
+        let allAnomalyList = this.props.useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
 
         // Remove all current anomalies in use from this list
         let possibleAnomalies = []
