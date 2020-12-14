@@ -87,6 +87,7 @@ class MapOptions extends React.Component {
         this.updateBoardStyleOptions = this.updateBoardStyleOptions.bind(this); // TODO is the bind needed?
 
         this.generateBoard = this.generateBoard.bind(this);
+        this.getNewTiles = this.getNewTiles.bind(this);
 
         this.togglePickRacesHelp = this.togglePickRacesHelp.bind(this);
         this.toggleBoardStyleHelp = this.toggleBoardStyleHelp.bind(this);
@@ -201,12 +202,12 @@ class MapOptions extends React.Component {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    shuffle(array, seed) {
-        var m = array.length, t, i;
+    shuffle(array) {
+        let m = array.length, t, i;
+        let seed = this.state.currentSeed.valueOf();
 
         // While there remain elements to shuffle…
         while (m) {
-
             // Pick a remaining element…
             i = Math.floor(this.random(seed) * m--);
 
@@ -221,13 +222,13 @@ class MapOptions extends React.Component {
     }
 
     random(seed) {
-        var x = Math.sin(seed++) * 10000;
+        let x = Math.sin(seed++) * 10000;
         return x - Math.floor(x);
     }
 
-    generateBoard(e) {
+    generateBoard(event) {
         // Don't actually submit the form
-        e.preventDefault();
+        event.preventDefault();
 
         // Create a random seed to use unless the user has specified one
         let currentSeed = this.state.currentSeed
@@ -235,8 +236,17 @@ class MapOptions extends React.Component {
             currentSeed = Math.floor(Math.random() * Math.floor(9999));
         }
 
+        this.setState({
+            currentSeed: currentSeed,
+        }, () => {
+            this.getNewTiles(event)
+        });
+
+    }
+    getNewTiles(event) {
+
         // Get a list of board spaces that need to have non-homeworld planets assigned to them
-        let planetIndexesToPlace = this.getPlanetIndexesToPlace(currentSeed)
+        let planetIndexesToPlace = this.getPlanetIndexesToPlace()
 
         // Get an ordered list of planets to use to fill board with
         let possibleTiles = this.getPossiblePlanets()
@@ -269,7 +279,7 @@ class MapOptions extends React.Component {
 
         // Get current races for placing races, and shuffle them around
         let currentRaces = [...this.props.currentRaces]
-        currentRaces = this.shuffle(currentRaces, currentSeed)
+        currentRaces = this.shuffle(currentRaces)
 
         // Place data for the homeSystems from board data
         for (let index = 0; index < boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'].length; index++) {
@@ -317,7 +327,7 @@ class MapOptions extends React.Component {
                         }
                     }
                     console.log(possibleBlanks)
-                    possibleBlanks = this.shuffle(possibleBlanks, this.state.currentSeed);
+                    possibleBlanks = this.shuffle(possibleBlanks);
                     if (possibleBlanks.length > 0) {
                         swapped = true;
                         newTiles[anomalyTileNumber] = possibleBlanks[0];
@@ -356,7 +366,7 @@ class MapOptions extends React.Component {
                                 possibleBlanks.push(blankRed)
                             }
                         }
-                        possibleBlanks = this.shuffle(possibleBlanks, this.state.currentSeed);
+                        possibleBlanks = this.shuffle(possibleBlanks);
                         if (possibleBlanks.length > 0) {
                             swapped = true;
                             newTiles[anomalyTileNumber] = possibleBlanks[0];
@@ -427,7 +437,7 @@ class MapOptions extends React.Component {
                     blankReds = blankReds.filter( function( el ) {
                         return allAlphaWormholes.indexOf( el ) < 0;
                     } );
-                    blankReds = this.shuffle(blankReds, this.state.currentSeed);
+                    blankReds = this.shuffle(blankReds);
                     for (let blankRed of blankReds) {
                         let blankRedTileNumber = newTiles.indexOf(blankRed)
                         if (blankRedTileNumber >= 0) {
@@ -471,7 +481,7 @@ class MapOptions extends React.Component {
                     blankReds = blankReds.filter( function( el ) {
                         return allBetaWormholes.indexOf( el ) < 0;
                     } );
-                    blankReds = this.shuffle(blankReds, this.state.currentSeed);
+                    blankReds = this.shuffle(blankReds);
                     for (let blankRed of blankReds) {
                         let blankRedTileNumber = newTiles.indexOf(blankRed)
                         if (blankRedTileNumber >= 0) {
@@ -499,7 +509,6 @@ class MapOptions extends React.Component {
 
         // Update the seed we are using (so it is displayed) and then update the tiles
         this.setState({
-            currentSeed: currentSeed,
             generated: true
         }, this.props.updateTiles(newTiles));
     }
@@ -523,7 +532,7 @@ class MapOptions extends React.Component {
             another anomaly with one of the other one (pok: two) anomaly wormholes. If we are not using the planet tile,
             then we can try to find a planet to replace with any remaining wormhole tiles.
              */
-            unusedWormholes = this.shuffle(unusedWormholes, this.state.currentSeed);
+            unusedWormholes = this.shuffle(unusedWormholes);
             let excludedTiles = [...allWormholes.concat(oppositeWormholes)];
 
             // Check that the single used wormhole is not a planet. If not, try to replace some other planet with a planet wormhole
@@ -584,7 +593,7 @@ class MapOptions extends React.Component {
         }
 
         // Randomize, so anomalies we are using are not always the same
-        possibleAnomalies = this.shuffle(possibleAnomalies, this.state.currentSeed);
+        possibleAnomalies = this.shuffle(possibleAnomalies);
 
         return this.reverseReplace(possibleTiles, numAnomaliesLeftToBePlaced, possibleAnomalies, allAnomalyList, false)
 
@@ -626,7 +635,7 @@ class MapOptions extends React.Component {
         return possibleTiles
     }
 
-    getPlanetIndexesToPlace(currentSeed) {
+    getPlanetIndexesToPlace() {
         // Copy all the tile arrays from board data
         let primary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['primary_tiles']]
         let secondary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['secondary_tiles']]
@@ -634,9 +643,9 @@ class MapOptions extends React.Component {
 
         // If shuffling, we need to shuffle primary, secondary, and tertiary indexes.
         if (this.state.shuffleBoards) {
-            primary = this.shuffle(primary, currentSeed)
-            secondary = this.shuffle(secondary, currentSeed)
-            tertiary = this.shuffle(tertiary, currentSeed)
+            primary = this.shuffle(primary)
+            secondary = this.shuffle(secondary)
+            tertiary = this.shuffle(tertiary)
         }
 
         // Return this list of planet tiles to populate
@@ -659,7 +668,7 @@ class MapOptions extends React.Component {
         let weights = {};
         switch (this.state.currentPickStyle) {
             case "random":
-                possiblePlanets = this.shuffle(possiblePlanets, this.state.currentSeed)
+                possiblePlanets = this.shuffle(possiblePlanets)
                 return possiblePlanets
             case "custom":
                 weights = {
@@ -747,7 +756,7 @@ class MapOptions extends React.Component {
                 currentSetToShuffle.push(planetWeight);
             } else {
                 // We are now outside our shuffle range. So shuffle what we have, and add it to the post
-                currentSetToShuffle = this.shuffle(currentSetToShuffle, this.state.currentSeed)
+                currentSetToShuffle = this.shuffle(currentSetToShuffle)
                 postPossiblePlanets = postPossiblePlanets.concat(currentSetToShuffle)
                 currentSetToShuffle = [planetWeight]
                 currentHighValue = planetWeight[1]
@@ -755,7 +764,7 @@ class MapOptions extends React.Component {
 
             currentIndex += 1;
         }
-        currentSetToShuffle = this.shuffle(currentSetToShuffle, this.state.currentSeed)
+        currentSetToShuffle = this.shuffle(currentSetToShuffle)
         postPossiblePlanets = postPossiblePlanets.concat(currentSetToShuffle)
 
 
