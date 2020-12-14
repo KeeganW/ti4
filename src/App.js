@@ -61,81 +61,117 @@ class App extends React.Component {
     }
     
     /* URL CONTROLS */
-    
+
+    /**
+     * After all elements on the html page have been created, run this.
+     */
     componentDidMount() {
-        // Do something at the start
+        // Setup the main jquery selectors
+        // TODO move these or find a way to not use them
         this.$mapContainer =  $("#mainContent");
         this.$tiMap = $("#map");
 
+        // Grab the variables from the url on back/forward events
         window.onpopstate = this.onPopState
-        this.onPopState()
+        this.onPopState();
 
-        this.checkResize()
-
-        window.addEventListener('resize', this.checkResize)
+        // Change the map dimensions whenever the page size is different
+        window.onresize = this.checkResize
+        this.checkResize();
     }
+
+    /**
+     * We are done with the page, removing everything.
+     */
+    componentWillUnmount() {
+        window.onpopstate = () => {};
+    }
+
+    /**
+     * When the window size is changed, update various components to be better looking on mobile vs desktop.
+     */
     checkResize() {
         if (window.innerWidth < this.state.mobileBreakpoint) {
             if (!this.state.isMobileView) {
                 // Just transitioned into mobile state, so hide the options menu
                 this.setState({
                     isMobileView: true,
-                    isOptionsMenuShowing: false
+                    isOptionsMenuShowing: false,
                 })
                 document.documentElement.style.setProperty('--options-width', "0px");
             } // else { // We went from mobile to mobile, don't need to do anything
         } else {
+            // We are in desktop state
             this.setState({
                 isMobileView: false,
-                isOptionsMenuShowing: true
+                isOptionsMenuShowing: true,
             })
             document.documentElement.style.setProperty('--options-width', "400px");
         }
+
+        // Redraw with the new mobile conditions
         this.drawMap()
     }
-    componentWillUnmount() {
-        // As you leave the page
-        window.onpopstate = () => {}
-    }
-    // Whenever we go back, grab the tiles from the url bar, and set them as the current tiles
+
+    /**
+     * Whenever we go back, grab the tiles from the url bar, and set them as the current tiles.
+     * @param {*} event The event that triggered this function.
+     */
     onPopState(event) {
+        // Get the tiles from the url
         let url = new URL(document.location);
         let tiles = url.searchParams.get("tiles");
         
-        // Make sure the tiles parameter is set
+        // Make sure the tiles parameter is set to something
         const newTiles = tiles !== null ? this.validateTiles(tiles) : [];
-    
+
+        // Update the tiles in the state, and redraw the map
         if (newTiles !== []) {
             this.setState({
-                tiles: newTiles
+                tiles: newTiles,
             }, this.drawMap );
         }
     };
     
     /* TILE CHANGING FUNCTIONS */
-    
+
+    /**
+     * Updates the tiles state with a new set of tiles, and also pushes it to the url for sharable links
+     * @param {number[]} newTiles
+     */
     updateTiles(newTiles) {
-        newTiles = this.removeTrailing(newTiles)
+        // Remove the unused tile numbers at the end of the array
+        newTiles = this.removeTrailing(newTiles);
+
+        // Add it to the url as a parameter
         window.history.pushState({}, null, window.location.pathname + '?tiles=' + newTiles.toString());
 
+        // Hide the options menu when we are on mobile (for when the tiles update and the options menu is open)
         let newOptionsMenuState = this.state.isOptionsMenuShowing
         if (this.state.isMobileView) {
-            newOptionsMenuState = false
+            newOptionsMenuState = false;
         }
 
         this.setState({
             tiles: newTiles,
-            isOptionsMenuShowing: newOptionsMenuState
+            isOptionsMenuShowing: newOptionsMenuState,
         }, () => {
+            // Update the extra tiles menu, and draw a new map with the new tiles
             this.showExtraTiles();
             this.drawMap();
         });
     }
+
+    /**
+     * Removes any trailing -1s from a tile string.
+     * @param {number[]} tiles the tile string to clean
+     * @returns {number[]} the clean tile string
+     */
     removeTrailing(tiles) {
-        while(tiles[tiles.length - 1] === -1){ // While the last element is a 0,
-            tiles.pop();                  // Remove that last element
+        while(tiles[tiles.length - 1] === -1){
+            tiles.pop();
         }
-        return tiles
+        return tiles;
     }
 
     /**
@@ -156,18 +192,22 @@ class App extends React.Component {
         
         // Now split on commas
         tiles = tiles.split(',');
-        let newTiles = []
+        let newTiles = [];
         for (let tileIndex in tiles) {
-            let parsed = Number(tiles[tileIndex])
-            newTiles.push(isNaN(parsed) ? tiles[tileIndex] : parsed)
+            let parsed = Number(tiles[tileIndex]);
+            // If tile is a string (like a hyperlane), add it. Otherwise add it as a number
+            newTiles.push(isNaN(parsed) ? tiles[tileIndex] : parsed);
         }
         return newTiles;
     }
     
     /* BUTTON ACTIONS */
-    
+
+    /**
+     * Toggle the visibility of the options menu for both desktop and mobile clients.
+     */
     toggleOptionsMenu() {
-        // Set the css variable for options width
+        // Set the css variable for options width (for desktop only)
         if (window.innerWidth >= this.state.mobileBreakpoint) {
             let optionsSize = this.state.isOptionsMenuShowing ? "0px" : "400px";
             document.documentElement.style.setProperty('--options-width', optionsSize);
@@ -177,107 +217,162 @@ class App extends React.Component {
         this.drawMap();
         
         // Update the state to the new view
-        this.setState(state => ({
-            isOptionsMenuShowing: !state.isOptionsMenuShowing
-        }));
+        this.setState({
+            isOptionsMenuShowing: !this.state.isOptionsMenuShowing,
+        });
     }
-    toggleOverlay(event) {
+
+    /**
+     * Toggle the system number overlay.
+     */
+    toggleOverlay() {
         this.setState({
             overlayVisible: !this.state.overlayVisible,
         }, this.drawMap );
     }
-    toggleProphecyOfKings(event) {
+
+    /**
+     * Toggle whether we need to use the prophecy of kings expansion or not
+     */
+    toggleProphecyOfKings() {
         this.setState({
             useProphecyOfKings: !this.state.useProphecyOfKings,
         }, this.showExtraTiles);
     }
+
+    /**
+     * Toggle whether the more info side panel is visible. If the extra tiles panel had just been triggered, we just
+     * need to hide the more info panel.
+     * @param {*} event The event that triggered this function.
+     * @param {boolean} justTriggeredTiles Whether or not the extra tiles panel had just been opened.
+     */
     toggleMoreInfo(event, justTriggeredTiles) {
-        justTriggeredTiles = justTriggeredTiles === undefined ? false : justTriggeredTiles
+        // Guarantee that justTriggeredTiles is set
+        justTriggeredTiles = justTriggeredTiles === undefined ? false : justTriggeredTiles;
 
         let optionsSize = this.state.moreInfoVisible ? "0px" : "400px";
         document.documentElement.style.setProperty('--more-info-width', optionsSize);
 
         this.setState({
-            moreInfoVisible: !this.state.moreInfoVisible
+            moreInfoVisible: !this.state.moreInfoVisible,
         }, () => {
+            // Hide the extra tiles if the user just pressed the show more info button
             if (this.state.extraTilesVisible && !justTriggeredTiles) {
                 this.toggleExtraTiles(event, true);
             }
         });
     }
-    copyTilesToClipboard(event) {
-        let tileString = [...this.state.tiles];
-        tileString = this.removeTrailing(tileString)
-        tileString.shift();
-        tileString = tileString.toString();
-        tileString = tileString.replaceAll("-1", "0");
-        tileString = tileString.replaceAll(",", " ");
-        console.log("Here is your tile string for use with this TTS Mod (https://steamcommunity.com/sharedfiles/filedetails/?id=1466689117):")
-        console.log(tileString)
-        navigator.clipboard.writeText(tileString)
-    }
-    toggleBackground(event) {
-        if (!this.state.backgroundAnimated) {
-            $("#stars").css("animation", "animateStar 50s linear infinite")
-            $("#stars2").css("animation", "animateStar 100s linear infinite")
-            $("#stars3").css("animation", "animateStar 150s linear infinite")
-        } else {
-            $("#stars").css("animation", "staticStar 50s linear infinite")
-            $("#stars2").css("animation", "staticStar 100s linear infinite")
-            $("#stars3").css("animation", "staticStar 150s linear infinite")
-        }
-        this.setState({
-            backgroundAnimated: !this.state.backgroundAnimated,
-        });
-    }
-    toggleExtraTiles(event, justTriggeredInfo) {
-        justTriggeredInfo = justTriggeredInfo === undefined ? false : justTriggeredInfo
 
+    /**
+     * Toggle whether the extra tiles side panel is visible.
+     * @param {*} event The event that triggered this function.
+     * @param {boolean} justTriggeredInfo Whether or not the more info panel had just been opened.
+     */
+    toggleExtraTiles(event, justTriggeredInfo) {
+        justTriggeredInfo = justTriggeredInfo === undefined ? false : justTriggeredInfo;
+
+        // Update what tiles are going to be displayed
         this.showExtraTiles();
-        
+
         let optionsSize = this.state.extraTilesVisible ? "0px" : "250px";
         document.documentElement.style.setProperty('--extra-tiles-width', optionsSize);
 
         this.setState({
-            extraTilesVisible: !this.state.extraTilesVisible
+            extraTilesVisible: !this.state.extraTilesVisible,
         }, () => {
             if (this.state.moreInfoVisible && !justTriggeredInfo) {
                 this.toggleMoreInfo(event, true);
             }
         });
     }
+
+    /**
+     * Update what tiles are visible in the extra tiles panel based on the current tiles being used on the map
+     */
     showExtraTiles() {
-        let tileNumbers = []
-        tileNumbers = tileNumbers.concat(tileData.blue).concat(tileData.red)
+        let systemNumbers = []
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
         if (this.state.useProphecyOfKings) {
-            tileNumbers = tileNumbers.concat(tileData.pokBlue).concat(tileData.pokRed)
+            systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         }
 
-        for (let tileNumberIndex in tileNumbers) {
-            if (!this.state.tiles.includes(tileNumbers[tileNumberIndex])) {
-                $("#extra-" + tileNumbers[tileNumberIndex]).show();
-            } else {
-                $("#extra-" + tileNumbers[tileNumberIndex]).hide();
-            }
+        for (let systemNumber of systemNumbers) {
+            // If it is not on the map, show the system tile. Otherwise, hide it.
+            let systemSelector = $("#extra-" + systemNumber);
+            !this.state.tiles.includes(systemNumber) ? systemSelector.show() : systemSelector.hide();
         }
     }
+
+    /**
+     * Using writeText, copy the tiles currently being displayed to the user's clipboard.
+     */
+    copyTilesToClipboard() {
+        // Get the current tiles
+        let tileString = [...this.state.tiles];
+        tileString = this.removeTrailing(tileString);
+
+        // Remove mecatol rex
+        tileString.shift();
+
+        // Remove the -1s and replace them with zeros, then remove the commas
+        tileString = tileString.toString();
+        tileString = tileString.replaceAll("-1", "0");
+        tileString = tileString.replaceAll(",", " ");
+
+        // Print to console in case the copy function doesnt actually work
+        console.log("Here is your tile string for use with this TTS Mod (https://steamcommunity.com/sharedfiles/filedetails/?id=1466689117):");
+        console.log(tileString);
+
+        // Copy to the user's clipboard
+        navigator.clipboard.writeText(tileString);
+    }
+
+    /**
+     * Toggle the background animation, from moving stars to static, and visa versa
+     */
+    toggleBackground() {
+        if (!this.state.backgroundAnimated) {
+            $("#stars").css("animation", "animateStar 50s linear infinite");
+            $("#stars2").css("animation", "animateStar 100s linear infinite");
+            $("#stars3").css("animation", "animateStar 150s linear infinite");
+        } else {
+            $("#stars").css("animation", "staticStar 50s linear infinite");
+            $("#stars2").css("animation", "staticStar 100s linear infinite");
+            $("#stars3").css("animation", "staticStar 150s linear infinite");
+        }
+        this.setState({
+            backgroundAnimated: !this.state.backgroundAnimated,
+        });
+    }
+
+    /**
+     * Zoom the map in by a set amount, up until it is the same size as the original images. Then redraw the map.
+     */
     zoomPlusClick() {
         if (this.state.zoom < 3) {
             this.setState({
-                zoom: this.state.zoom + 0.75
+                zoom: this.state.zoom + 0.75,
             }, this.drawMap );
         }
     }
+
+    /**
+     * Zoom the map out by a set amount, up until it is too small to see. Then redraw the map.
+     */
     zoomMinusClick() {
         if (this.state.zoom > 0.5) {
             this.setState({
-                zoom: this.state.zoom - 0.75
+                zoom: this.state.zoom - 0.75,
             }, this.drawMap );
         }
     }
 
     /* MAP GENERATION */
 
+    /**
+     * The main rendering function for the map. Using the tile string, cleanly lays out a map that is centered in the
+     * map div.
+     */
     drawMap() {
         // Check to see if there are any tiles to render currently
         if (this.state === undefined || this.state.tiles.length <= 0) {
@@ -295,10 +390,29 @@ class App extends React.Component {
             });
         }
 
+        // Set the map height based on which tiles are being used
+        let mapNumberTilesHeight = 1; // Every standard TI board is 7 tiles tall
+        let mapNumberTilesWidth = 1; // Every standard TI board is 5.5 tiles wide
+        if (this.state.tiles[37] >= 0 || this.state.tiles[38] >= 0 || this.state.tiles[60] >= 0
+            || this.state.tiles[48] >= 0 || this.state.tiles[49] >= 0 || this.state.tiles[50] >= 0) {
+            mapNumberTilesHeight = 9;
+            mapNumberTilesWidth = 7;
+        } else if (this.state.tiles[19] >= 0 || this.state.tiles[20] >= 0 || this.state.tiles[36] >= 0
+            || this.state.tiles[27] >= 0 || this.state.tiles[28] >= 0 || this.state.tiles[29] >= 0) {
+            mapNumberTilesHeight = 7;
+            mapNumberTilesWidth = 5.5;
+        } else if (this.state.tiles[7] >= 0 || this.state.tiles[8] >= 0 || this.state.tiles[18] >= 0
+            || this.state.tiles[12] >= 0 || this.state.tiles[13] >= 0 || this.state.tiles[14] >= 0) {
+            mapNumberTilesHeight = 5;
+            mapNumberTilesWidth = 4;
+        } else if (this.state.tiles[1] >= 0 || this.state.tiles[2] >= 0 || this.state.tiles[6] >= 0
+            || this.state.tiles[3] >= 0 || this.state.tiles[4] >= 0 || this.state.tiles[5] >= 0) {
+            mapNumberTilesHeight = 3;
+            mapNumberTilesWidth = 2.5;
+        }
+
         // Configuration options for magic numbers
         let mapPadding = 0; // The amount of pad spacing to apply to the map edges
-        let mapNumberTilesHeight = 9; // Every TI board is 7 tiles tall
-        let mapNumberTilesWidth = 7; // Every TI board is 5.5 tiles wide
         let mapTileWidth = 364; // The width of every tile in the static folder
         let mapTileHeight = 317;
 
@@ -418,17 +532,17 @@ class App extends React.Component {
                     .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
                     .css({'transform' : 'rotate(0)'})  // Reset any rotations from other hyperlanes
 
-                tile.show()
+                tile.show();
 
                 if (typeof this.state.tiles[tileNumber] === "string") {
                     // Hyperlane, so remove the last section and check if it needs to be rotated
                     if (this.state.tiles[tileNumber].split("-")[1] !== "0") {
                         let degrees = 60 * Number(this.state.tiles[tileNumber].split("-")[1]);
-                        tile.css({'transform' : 'rotate(-'+ degrees +'deg)'})
+                        tile.css({'transform' : 'rotate(-'+ degrees +'deg)'});
                     }
                 }
             } else {
-                tile.hide()
+                tile.hide();
             }
 
             numOverlay.css("width", constraintWidth)
@@ -446,7 +560,6 @@ class App extends React.Component {
             } else {
                 numOverlay.html(this.state.tiles[tileNumber])
             }
-
 
             underlay.css("width", constraintWidth + 6)
                 .css("height", constraintHeight + 6)
@@ -472,17 +585,17 @@ class App extends React.Component {
         }
 
         // Clear any css classes on the map
-        this.$tiMap.removeClass("center-map")
-        this.$tiMap.removeClass("center-map-vertical")
-        this.$tiMap.removeClass("center-map-horizontal")
+        this.$tiMap.removeClass("center-map");
+        this.$tiMap.removeClass("center-map-vertical");
+        this.$tiMap.removeClass("center-map-horizontal");
 
         // Check to see if we are zoomed, or map is always screen size.
         if (this.state.zoom > 1.0) {
             // Check to see if we should still be horizontally or vertically centered
             if ((constraintWidth * mapNumberTilesWidth) < mapWidth) {
-                this.$tiMap.addClass("center-map-horizontal")
+                this.$tiMap.addClass("center-map-horizontal");
             } else if ((constraintHeight * mapNumberTilesHeight) < mapHeight) {
-                this.$tiMap.addClass("center-map-vertical")
+                this.$tiMap.addClass("center-map-vertical");
             } else {
                 // Use default map values
             }
@@ -493,12 +606,12 @@ class App extends React.Component {
             $("#tile-0").get(0).scrollIntoView({behavior: "smooth", block:"center", inline: "center"});
         } else {
             // No need to move the map around, just center it on the screen
-            this.$tiMap.addClass("center-map")
+            this.$tiMap.addClass("center-map");
         }
     }
-    
-    
-    // Drag and drop related functions, modified from https://www.w3schools.com/html/html5_draganddrop.asp
+
+    /* DRAG AND DROP FUNCTIONS, modified from https://www.w3schools.com/html/html5_draganddrop.asp */
+
     allowDrop(ev) {
         ev.preventDefault();
     }
@@ -573,11 +686,13 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                    
-                <OptionsControls visible={this.state.isOptionsMenuShowing} isMobileView={this.state.isMobileView} toggleOptions={this.toggleOptionsMenu} />
+                <OptionsControls visible={this.state.isOptionsMenuShowing} isMobileView={this.state.isMobileView}
+                                 toggleOptions={this.toggleOptionsMenu}
+                />
 
-                <MapControls visible={this.state.mapControlsVisible} overlayVisible={this.state.overlayVisible}
-                             moreInfoVisible={this.state.moreInfoVisible} extraTilesVisible={this.state.extraTilesVisible}
+                <MapControls visible={this.state.mapControlsVisible} extraTilesVisible={this.state.extraTilesVisible}
+                             moreInfoVisible={this.state.moreInfoVisible} overlayVisible={this.state.overlayVisible}
+
                              toggleOverlay={this.toggleOverlay} copyTilesToClipboard={this.copyTilesToClipboard}
                              toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
                              zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick}
@@ -585,25 +700,33 @@ class App extends React.Component {
                 />
                 
                 <div id="mainContent" className="justify-content-center align-items-center">
-                    <MainOverview visible={this.state.overviewVisible} />
+                    <MainOverview visible={this.state.overviewVisible}
+                    />
                     
                     <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
                              tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}
-                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}/>
+
+                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
+                    />
                 </div>
                 
                 <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}
                             useProphecyOfKings={this.state.useProphecyOfKings}
                             updateTiles={this.updateTiles}
-                            drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}/>
+
+                            drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
+                />
                 
-                <MoreInfo visible={this.state.moreInfoVisible} tiles={this.state.tiles}
-                          useProphecyOfKings={this.state.useProphecyOfKings} currentPlayerNames={this.state.currentPlayerNames} />
+                <MoreInfo visible={this.state.moreInfoVisible} currentPlayerNames={this.state.currentPlayerNames}
+                          useProphecyOfKings={this.state.useProphecyOfKings} tiles={this.state.tiles}
+                />
                 
-                <MapOptions visible={this.state.isOptionsMenuShowing}  useProphecyOfKings={this.state.useProphecyOfKings}
+                <MapOptions visible={this.state.isOptionsMenuShowing} useProphecyOfKings={this.state.useProphecyOfKings}
                             currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
+
                             toggleProphecyOfKings={this.toggleProphecyOfKings} updateTiles={this.updateTiles}
-                            showExtraTiles={this.showExtraTiles} />
+                            showExtraTiles={this.showExtraTiles}
+                />
             
                 <BootstrapScripts />
             </div>
