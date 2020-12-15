@@ -32,6 +32,7 @@ class MapOptions extends React.Component {
                 8: Object.keys(boardData.styles["8"]).map((key) => key),
             },
             pickStyles: ["balanced", "random", "resource", "influence", "custom"],
+            placementStyles: ["slice", "initial", "home", "random"],
             races: [...raceData["races"]],
             pokRaces: [...raceData["pokRaces"]],
             homeworlds: raceData["homeSystems"],
@@ -46,17 +47,19 @@ class MapOptions extends React.Component {
             currentBoardStyleOptions: startingValues["boardStyles"][startingPlayers],
             currentBoardStyle: startingValues["boardStyles"][startingPlayers][0],
             currentPickStyle: startingValues["pickStyles"][0],
+            currentPlacementStyle: startingValues["placementStyles"][0],
             currentSeed: "",
             userSetSeed: false,
             pickRaces: false,
             pickMultipleRaces: false,
-            shuffleBoards: true,
+            shuffleBoards: false,
             reversePlacementOrder: false,
             generated: false,
 
             pickRacesHelp: false,
             boardStyleHelp: false,
             pickStyleHelp: false,
+            placementStyleHelp: false,
             setPlayerNamesHelp: false,
             setRacesHelp: false,
             pickMultipleRacesHelp: false,
@@ -87,11 +90,12 @@ class MapOptions extends React.Component {
         this.updateBoardStyleOptions = this.updateBoardStyleOptions.bind(this); // TODO is the bind needed?
 
         this.generateBoard = this.generateBoard.bind(this);
-        this.getNewTiles = this.getNewTiles.bind(this);
+        this.getNewTileSet = this.getNewTileSet.bind(this);
 
         this.togglePickRacesHelp = this.togglePickRacesHelp.bind(this);
         this.toggleBoardStyleHelp = this.toggleBoardStyleHelp.bind(this);
         this.togglePickStyleHelp = this.togglePickStyleHelp.bind(this);
+        this.togglePlacementStyleHelp = this.togglePlacementStyleHelp.bind(this);
         this.toggleSetPlayerNamesHelp = this.toggleSetPlayerNamesHelp.bind(this);
         this.toggleSetRacesHelp = this.toggleSetRacesHelp.bind(this);
         this.togglePickMultipleRacesHelp = this.togglePickMultipleRacesHelp.bind(this);
@@ -129,9 +133,7 @@ class MapOptions extends React.Component {
             newCurrentRaces.push(race)
         }
 
-        this.setState({
-            currentRaces: newCurrentRaces
-        })
+        this.props.updateRaces(newCurrentRaces);
     }
 
     updatePok(event) {
@@ -140,18 +142,22 @@ class MapOptions extends React.Component {
             boardOptions = this.state.optionsPossible.boardStylesPok;
             this.setState({
                 currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers),
-                currentRaces: [...this.state.optionsPossible.races].concat([...this.state.optionsPossible.pokRaces]),
                 currentBoardStyle: boardOptions[this.state.currentNumberOfPlayers][0],
                 currentBoardStyleOptions: boardOptions[this.state.currentNumberOfPlayers],
-            }, this.props.toggleProphecyOfKings(event));
+            }, () => {
+                this.props.updateRaces([...this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)]);
+                this.props.toggleProphecyOfKings(event);
+            });
         } else {
             this.setState({
                 currentNumberOfPlayers: this.state.currentNumberOfPlayers > 6 ? 6 : this.state.currentNumberOfPlayers,
                 currentNumberOfPlayersOptions: this.state.optionsPossible.numberOfPlayers,
                 currentBoardStyle: this.state.currentNumberOfPlayers > 6 ? boardOptions["6"][0] : this.state.currentBoardStyle,
                 currentBoardStyleOptions: this.state.currentNumberOfPlayers > 6 ? boardOptions["6"] : boardOptions[this.state.currentNumberOfPlayers],
-                currentRaces: [...this.state.optionsPossible.races],
-            }, this.props.toggleProphecyOfKings(event));
+            }, () => {
+                this.props.updateRaces([...this.state.optionsPossible.races]);
+                this.props.toggleProphecyOfKings(event);
+            });
         }
     }
 
@@ -226,6 +232,10 @@ class MapOptions extends React.Component {
         return x - Math.floor(x);
     }
 
+    /**
+     * Create a new board using a custom seed.
+     * @param event The event which triggered this action, to be ignored.
+     */
     generateBoard(event) {
         // Don't actually submit the form
         event.preventDefault();
@@ -238,48 +248,275 @@ class MapOptions extends React.Component {
 
         this.setState({
             currentSeed: currentSeed,
+            generated: true,
         }, () => {
-            this.getNewTiles(event)
+            this.props.updateTiles(this.getNewTileSet());
         });
 
     }
-    getNewTiles(event) {
 
-        // Get a list of board spaces that need to have non-homeworld planets assigned to them
-        let planetIndexesToPlace = this.getPlanetIndexesToPlace()
+    /**
+     * Create a set of new tiles for the board based on the user's input.
+     */
+    getNewTileSet() {
+        // Get an ordered list of board spaces that need to have non-home systems assigned to them
+        let systemIndexes = this.getNewTilesToPlace()
 
-        // Get an ordered list of planets to use to fill board with
-        let possibleTiles = this.getPossiblePlanets()
+        // Get a set of systems to make the board with, ordered based on user supplied weights
+        let newSystems = this.getNewSystemsToPlace(systemIndexes.length)
 
-        // Check that we will have enough anomalies in our placed planets, if not, then reverse replace until there are enough anomalies
-        possibleTiles = this.ensureAnomalies(possibleTiles, planetIndexesToPlace.length)
+        // Copy a blank map to add to
+        let newTiles = [...boardData.blankMap]
 
-        // Ensure that if we have an alpha wormhole, then we have at least two of them
+        // Put Mecatol Rex in the middle
+        newTiles[0] = 18
+
+        // Place hyperlanes
+        this.placeHyperlanes(newTiles)
+
+        // Place home planets
+        this.placeHomeSystems(newTiles)
+
+        // Place planets one at a time, using the indexes to place combined with the ordered planet list
+        for (let systemIndex of systemIndexes) {
+            newTiles[systemIndex] = newSystems.shift();
+        }
+
+        // Check that anomalies and wormholes are not adjacent
+        this.checkAdjacencies(newTiles)
+
+        // Update the generated flag then update the tiles
+        return newTiles;
+    }
+
+    /**
+     * Generate a list of index on the board that need to be filled with tiles. The various inputs include:
+     * Board Data: Information about what this board looks like, the tiles split into 3 groupings of importance
+     * Random Priority: Whether the first player goes first, or who gets the various picks is randomized
+     * Placement Style: How the groupings of tiles should be added to the board
+     * Reverse Placement Order: Whether the groupsings should be added in reverse order
+     * @returns {number[]} A list of indexes on the board that need to be filled in with system tiles
+     */
+    getNewTilesToPlace() {
+        // Copy all the tile arrays from board data
+        let primary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]["primary_tiles"]];
+        let secondary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]["secondary_tiles"]];
+        let tertiary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]["tertiary_tiles"]];
+
+        // If shuffling, we need to shuffle primary, secondary, and tertiary indexes.
+        if (this.state.shuffleBoards) {
+            this.shuffle(primary);
+            this.shuffle(secondary);
+            this.shuffle(tertiary);
+        }
+
+        // Based on the placement style, generate the list of indexes to place
+        let systemIndexes = [];
+        switch(this.state.currentPlacementStyle) {
+            case("random"):
+                // Add them all together and shuffle them
+                if (this.state.reversePlacementOrder) {
+                    systemIndexes = tertiary.concat(secondary).concat(primary);
+                } else {
+                    systemIndexes = primary.concat(secondary).concat(tertiary);
+                }
+                this.shuffle(systemIndexes);
+                break;
+            case("initial"):
+                // Primary tiles are separate from the secondary shuffled tiles
+                if (this.state.reversePlacementOrder) {
+                    systemIndexes = this.shuffle(secondary.concat(tertiary)).concat(primary);
+                } else {
+                    systemIndexes = primary.concat(this.shuffle(secondary.concat(tertiary)));
+                }
+                break;
+            case("home"):
+                // Primary tiles are tiles adjacent to home systems
+                systemIndexes = primary.concat(secondary).concat(tertiary);
+
+                // Get home systems
+                let home = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]["home_worlds"]];
+                let newPrimary = [];
+                for (let homeSystem of home) {
+                    // Loop over adjacent systems
+                    let adjacentSystems = adjacencyData[homeSystem];
+                    for (let adjacentSystem of adjacentSystems) {
+                        // Remove the adjacent system from the complete list (if it exists), and add it to the front
+                        if (systemIndexes.indexOf(adjacentSystem) >= 0) {
+                            newPrimary.push(adjacentSystem);
+                            systemIndexes.splice(systemIndexes.indexOf(adjacentSystem), 1);
+                        }
+                    }
+                }
+
+                // Add the adjacent planets to the front of the list
+                this.shuffle(newPrimary);
+                if (this.state.reversePlacementOrder) {
+                    systemIndexes = systemIndexes.concat(newPrimary);
+                } else {
+                    systemIndexes = newPrimary.concat(systemIndexes);
+                }
+                break;
+            case("slice"):
+            default:
+                // Combine them in their listed order
+                if (this.state.reversePlacementOrder) {
+                    systemIndexes = tertiary.concat(secondary).concat(primary);
+                } else {
+                    systemIndexes = primary.concat(secondary).concat(tertiary);
+                }
+                break;
+        }
+
+        return systemIndexes;
+    }
+
+    /**
+     *
+     * Get an array of system tile numbers to place on the board.
+     * @param {number} numberOfSystems The number of systems to get.
+     * @returns {[]}
+     */
+    getNewSystemsToPlace(numberOfSystems) {
+        // Pick our a random set of systems, following the needed number of anomalies
+        let allBlues = this.props.useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
+        let allReds = this.props.useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
+
+        // Shuffle our tiles for randomness
+        this.shuffle(allBlues)
+        this.shuffle(allReds)
+
+        // Calculate how many reds we need based on player count
+        let blueTileRatio = 2;
+        let redTileRatio = 1;
+        // For 3, 4, and 6 player games, there is a different ratio
+        switch (this.state.currentNumberOfPlayers) {
+            case(3):
+                blueTileRatio = 3
+                redTileRatio = 1
+                break;
+            case(4):
+                blueTileRatio = 5
+                redTileRatio = 3
+                break;
+            case(6):
+                blueTileRatio = 3
+                redTileRatio = 2
+                break;
+            default:
+                break;
+        }
+        let redsToPlace = Math.round(Number((numberOfSystems / (blueTileRatio + redTileRatio)) * redTileRatio));
+        let bluesToPlace = Math.round(Number((numberOfSystems / (blueTileRatio + redTileRatio)) * blueTileRatio));
+
+        // If planet heavy system, then reduce number of anomalies
+        if (false) {
+            let newRedsToPlace = 2; // TODO make this user configurable
+            if (newRedsToPlace > redsToPlace) {
+                bluesToPlace = bluesToPlace - (newRedsToPlace - redsToPlace);
+            } else if (newRedsToPlace < redsToPlace) {
+                bluesToPlace = bluesToPlace + (redsToPlace - newRedsToPlace);
+            }
+            redsToPlace = newRedsToPlace
+        }
+
+        // Get only the needed blues and reds
+        let newSystems = []
+        if (redsToPlace > allReds.length) {
+            newSystems = allBlues.slice(0, bluesToPlace + (redsToPlace - allReds.length)).concat(allReds)
+        } else if (bluesToPlace > allBlues.length) {
+            newSystems = allBlues.concat(allReds.slice(0, redsToPlace + (bluesToPlace - allBlues.length)))
+        } else {
+            newSystems = allBlues.slice(0, bluesToPlace).concat(allReds.slice(0, redsToPlace))
+        }
+
+        // Ensure that if a wormhole is included, two are
         const allAlphaWormholes = this.props.useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
         const allBetaWormholes = this.props.useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
 
-        possibleTiles = this.ensureWormholesForType(possibleTiles, [26], allAlphaWormholes, allBetaWormholes);
+        newSystems = this.ensureWormholesForType(newSystems, [26], allAlphaWormholes, allBetaWormholes);
 
         // Ensure that if we have an alpha wormhole, then we have at least two of them
-        possibleTiles = this.ensureWormholesForType(possibleTiles, [25, 64], allBetaWormholes, allAlphaWormholes);
+        newSystems = this.ensureWormholesForType(newSystems, [25, 64], allBetaWormholes, allAlphaWormholes);
 
-        let newTiles = [...boardData.blankMap]
-
-        // Place planets one at a time, using the indexes to place combined with the ordered planet list
-        for (let planetIndex in planetIndexesToPlace) {
-            newTiles[planetIndexesToPlace[planetIndex]] = possibleTiles.shift();
+        // Based on the system style, order the systems according to their weights
+        let weights = {};
+        switch (this.state.currentPickStyle) {
+            case "random":
+                this.shuffle(newSystems)
+                return newSystems
+            case "custom":
+                weights = {
+                    "resource": parseInt(this.state.resourceWeight),
+                    "influence": parseInt(this.state.influenceWeight),
+                    "planet_count": parseInt(this.state.planetCountWeight),
+                    "specialty": parseInt(this.state.specialtyWeight),
+                    "anomaly": parseInt(this.state.anomalyWeight),
+                    "wormhole": parseInt(this.state.wormholeWeight)
+                }
+                break;
+            case "resource":
+                weights = {
+                    "resource": 100,
+                    "influence": 10,
+                    "planet_count": 10,
+                    "specialty": 10,
+                    "anomaly": 10,
+                    "wormhole": 10
+                }
+                break;
+            case "influence":
+                weights = {
+                    "resource": 10,
+                    "influence": 100,
+                    "planet_count": 10,
+                    "specialty": 10,
+                    "anomaly": 10,
+                    "wormhole": 10
+                }
+                break;
+            case "balanced":
+            default:
+                if (this.props.useProphecyOfKings) {
+                    weights = {
+                        "resource": 80,
+                        "influence": 30,
+                        "planet_count": 15,
+                        "specialty": 50,
+                        "anomaly": 40,
+                        "wormhole": 25
+                    }
+                } else {
+                    weights = {
+                        "resource": 80,
+                        "influence": 30,
+                        "planet_count": 15,
+                        "specialty": 40,
+                        "anomaly": 30,
+                        "wormhole": 25
+                    }
+                }
+                break;
         }
 
+        // Re-order the planets based on their weights
+        newSystems = this.getWeightedPlanetList(newSystems, weights)
+
+        return newSystems
+
+    }
+    placeHyperlanes(newTiles) {
         // Place hyperlanes in their specific layout and orientation
         // TODO in the future, can this be random? Can they rotate?
         for (let index = 0; index < boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['hyperlane_tiles'].length; index++) {
             let hyperlaneData = boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['hyperlane_tiles'][index]
             newTiles[hyperlaneData[0]] = hyperlaneData[1] + "-" + hyperlaneData[2]
         }
-
+    }
+    placeHomeSystems(newTiles) {
         // Get current races for placing races, and shuffle them around
         let currentRaces = [...this.props.currentRaces]
-        currentRaces = this.shuffle(currentRaces)
+        this.shuffle(currentRaces)
 
         // Place data for the homeSystems from board data
         for (let index = 0; index < boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'].length; index++) {
@@ -293,11 +530,8 @@ class MapOptions extends React.Component {
                 newTiles[planetIndex] = 0
             }
         }
-
-        // Put Mecatol Rex in the middle
-        newTiles[0] = 18
-
-        // Planets have been placed, time to do post processing checks to make sure things are good to go.
+    }
+    checkAdjacencies(newTiles) {// Planets have been placed, time to do post processing checks to make sure things are good to go.
         // Get all anomalies that are adjacent to one another
         let allTrueAnomalies = this.props.useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
         for (let anomaly of allTrueAnomalies) {
@@ -326,7 +560,6 @@ class MapOptions extends React.Component {
                             possibleBlanks.push(blankRed)
                         }
                     }
-                    console.log(possibleBlanks)
                     possibleBlanks = this.shuffle(possibleBlanks);
                     if (possibleBlanks.length > 0) {
                         swapped = true;
@@ -374,12 +607,12 @@ class MapOptions extends React.Component {
                         if (!swapped) {
                             console.log("Unable to swap anomaly to a free position.")
                         }
-                            /*
-                            There is a potential use for this strategy, but for now it seems pretty safe to just let it fail
-                            to swap on a blank. It is rare that it is impossible, and even when it is, its a pretty simple
-                            rule. Plus the rules let you place reds next to each other if moving them is impossible.
-                            btw, not sure this code below works properly. I believe there is a bug in it.
-                             */
+                        /*
+                        There is a potential use for this strategy, but for now it seems pretty safe to just let it fail
+                        to swap on a blank. It is rare that it is impossible, and even when it is, its a pretty simple
+                        rule. Plus the rules let you place reds next to each other if moving them is impossible.
+                        btw, not sure this code below works properly. I believe there is a bug in it.
+                         */
 
                         /*
                         // Going in reverse, find the first tile with no anomalies adjacent, and swap
@@ -416,6 +649,10 @@ class MapOptions extends React.Component {
                 }
             }
         }
+
+        const allAlphaWormholes = this.props.useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
+        const allBetaWormholes = this.props.useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
+
 
         // Alpha, at least one wormhole is a "empty tile" so swap it with a blank tile
         for (let alphaWormhole of allAlphaWormholes) {
@@ -506,11 +743,6 @@ class MapOptions extends React.Component {
                 }
             }
         }
-
-        // Update the seed we are using (so it is displayed) and then update the tiles
-        this.setState({
-            generated: true
-        }, this.props.updateTiles(newTiles));
     }
 
     ensureWormholesForType(possibleTiles, planetWormholes, allWormholes, oppositeWormholes) {
@@ -635,101 +867,6 @@ class MapOptions extends React.Component {
         return possibleTiles
     }
 
-    getPlanetIndexesToPlace() {
-        // Copy all the tile arrays from board data
-        let primary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['primary_tiles']]
-        let secondary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['secondary_tiles']]
-        let tertiary = [...boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['tertiary_tiles']]
-
-        // If shuffling, we need to shuffle primary, secondary, and tertiary indexes.
-        if (this.state.shuffleBoards) {
-            primary = this.shuffle(primary)
-            secondary = this.shuffle(secondary)
-            tertiary = this.shuffle(tertiary)
-        }
-
-        // Return this list of planet tiles to populate
-        if (this.state.reversePlacementOrder) {
-            return tertiary.concat(secondary).concat(primary)
-        } else {
-            return primary.concat(secondary).concat(tertiary)
-        }
-    }
-
-    getPossiblePlanets() {
-        // Get the list of planets to evaluate
-        let possiblePlanets = []
-        possiblePlanets = possiblePlanets.concat(tileData.blue).concat(tileData.red)
-        if (this.props.useProphecyOfKings) {
-            possiblePlanets = possiblePlanets.concat(tileData.pokBlue).concat(tileData.pokRed)
-        }
-
-        // Get the preset weighting format based on the current pick style
-        let weights = {};
-        switch (this.state.currentPickStyle) {
-            case "random":
-                possiblePlanets = this.shuffle(possiblePlanets)
-                return possiblePlanets
-            case "custom":
-                weights = {
-                    "resource": parseInt(this.state.resourceWeight),
-                    "influence": parseInt(this.state.influenceWeight),
-                    "planet_count": parseInt(this.state.planetCountWeight),
-                    "specialty": parseInt(this.state.specialtyWeight),
-                    "anomaly": parseInt(this.state.anomalyWeight),
-                    "wormhole": parseInt(this.state.wormholeWeight)
-                }
-                break;
-            case "resource":
-                weights = {
-                    "resource": 100,
-                    "influence": 10,
-                    "planet_count": 10,
-                    "specialty": 10,
-                    "anomaly": 10,
-                    "wormhole": 10
-                }
-                break;
-            case "influence":
-                weights = {
-                    "resource": 10,
-                    "influence": 100,
-                    "planet_count": 10,
-                    "specialty": 10,
-                    "anomaly": 10,
-                    "wormhole": 10
-                }
-                break;
-            case "balanced":
-            default:
-                if (this.props.useProphecyOfKings) {
-                    weights = {
-                        "resource": 80,
-                        "influence": 30,
-                        "planet_count": 15,
-                        "specialty": 50,
-                        "anomaly": 40,
-                        "wormhole": 25
-                    }
-                } else {
-                    weights = {
-                        "resource": 80,
-                        "influence": 30,
-                        "planet_count": 15,
-                        "specialty": 40,
-                        "anomaly": 30,
-                        "wormhole": 25
-                    }
-                }
-                break;
-        }
-
-        // Re-order the planets based on their weights
-        possiblePlanets = this.getWeightedPlanetList(possiblePlanets, weights)
-
-        return possiblePlanets
-    }
-
     // TODO rename from planet to tile
     getWeightedPlanetList(possiblePlanets, weights) {
         // Generate an array of tuples where the first element is the plant's tile number and the second is its weight
@@ -815,6 +952,11 @@ class MapOptions extends React.Component {
             boardStyleHelp: !this.state.boardStyleHelp
         })
     }
+    togglePlacementStyleHelp(event) {
+        this.setState({
+            placementStyleHelp: !this.state.placementStyleHelp
+        })
+    }
     togglePickStyleHelp(event) {
         this.setState({
             pickStyleHelp: !this.state.pickStyleHelp
@@ -876,13 +1018,23 @@ class MapOptions extends React.Component {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="pickStyle" className="d-flex">Picking Style
+                        <label htmlFor="placementStyle" className="d-flex">Placement Style
+                            <QuestionCircle className="icon" onClick={this.togglePlacementStyleHelp} />
+                        </label>
+                        <select className="form-control" id="placementStyle" name="currentPlacementStyle" value={this.state.currentPlacementStyle} onChange={this.handleInputChange}>
+                            {this.state.optionsPossible.placementStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="pickStyle" className="d-flex">System Weighting
                             <QuestionCircle className="icon" onClick={this.togglePickStyleHelp} />
                         </label>
                         <select className="form-control" id="pickStyle" name="currentPickStyle" value={this.state.currentPickStyle} onChange={this.handleInputChange}>
                             {this.state.optionsPossible.pickStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
                     </div>
+
                     <div className={"ml-2 collapse " + (this.state.currentPickStyle === "custom" ? "show" : "")} id="customPickStyle">
                         <div className="card card-body">
                             <label htmlFor="customResource">Resource</label>
@@ -942,18 +1094,6 @@ class MapOptions extends React.Component {
                         <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
                     </div>
 
-                    <HelpModal key={"help-pick"} visible={this.state.pickStyleHelp} hideModal={this.togglePickStyleHelp} title={"About Pick Style"}
-                         content='<p>
-                         Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the board style) it is put closer to home worlds to facilitate available assets.
-                         <br>
-                         <br><b>Balanced:</b> A custom weight which favors resources and planet count more than anomalies. This more accurately factors in tech specialties and influence as trade-offs to the "Resource" pick.
-                         <br><b>Resource:</b> Tiles are ordered primarily by their resource values. Higher resource planets are more coveted, and so are more important.
-                         <br><b>Influence:</b> Similar to "Resource", tiles are ordered primarily by their influence values.
-                         <br><b>Random:</b> Tiles are completely randomly ordered. Expect chaotic and unbalanced maps.
-                         <br><b>Custom:</b> Enter your own values in for balancing tradeoffs between various tile qualities.
-                         </p>'
-
-                    />
                     <SetPlayerNameModal visible={this.state.setPlayerNamesHelp} currentPlayerNames={this.props.currentPlayerNames}
                                         hideModal={this.toggleSetPlayerNamesHelp} handleNameChange={this.handleNameChange}
                     />
@@ -962,6 +1102,7 @@ class MapOptions extends React.Component {
                                    currentRaces={this.props.currentRaces}
                                    hideModal={this.toggleSetRacesHelp} handleRacesChange={this.handleRacesChange}
                     />
+
                     <HelpModal key={"help-board"} visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
                          content='<p>
                          Board style changes how the tiles are actually laid out on a newly generated map.
@@ -969,6 +1110,29 @@ class MapOptions extends React.Component {
                          <br>
                          Changing this would cause you to expect different hex layouts, such as different patterns of tiles, usage of hyperlanes, or unorthodox placement of home worlds.
                          </p>'
+                    />
+                    <HelpModal key={"help-placement"} visible={this.state.placementStyleHelp} hideModal={this.togglePlacementStyleHelp} title={"About Placement Style"}
+                         content='<p>
+                         Placement style dictates where important tiles are placed. Most revolve around having at least one tile near the homeworld with good resources.
+                         <br>
+                         <br>
+                         <br><b>Slice:</b> Places tiles like a normal player would. Prioritizes a good pathway to mecatol, and filling in the area around the home system with good tiles.
+                         <br><b>Initial:</b> Only guarantees a good tile right in front of the home system (on the way to mecatol). Everything else is random.
+                         <br><b>Home:</b> Prioritizes all of the adjacent tiles to the home system and everything else is random.
+                         <br><b>Random:</b> Shuffles the priority levels completely. No favoritism to tiles near the home system.
+                         </p>'
+                    />
+                    <HelpModal key={"help-pick"} visible={this.state.pickStyleHelp} hideModal={this.togglePickStyleHelp} title={"About Pick Style"}
+                               content='<p>
+                         Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the placement style) it is put closer to home worlds to facilitate available assets.
+                         <br>
+                         <br><b>Balanced:</b> A custom weight which favors resources and planet count more than anomalies. This more accurately factors in tech specialties and influence as trade-offs to the "Resource" pick.
+                         <br><b>Resource:</b> Tiles are ordered primarily by their resource values. Higher resource planets are more coveted, and so are more important.
+                         <br><b>Influence:</b> Similar to "Resource", tiles are ordered primarily by their influence values.
+                         <br><b>Random:</b> Tiles are completely randomly ordered. Expect chaotic and unbalanced maps.
+                         <br><b>Custom:</b> Enter your own values in for balancing tradeoffs between various tile qualities.
+                         </p>'
+
                     />
                     <HelpModal key={"help-races"} visible={this.state.pickRacesHelp} hideModal={this.togglePickRacesHelp} title={"About Picking Races"}
                          content="<p>
@@ -991,7 +1155,7 @@ class MapOptions extends React.Component {
                          Randomizes the priority picks for each picking round.
                          <br>
                          <br>
-                         Normally when placing tiles, this tool attempts to place the tiles so player 1 does not always get the best tiles. To do this, it gives player 1 first pick from the list of tiles weighted by picking style, player 2 second pick and so on for the first round of placing tiles. Once the last player has placed a tile, they then get to place another. The tiles are then placed in reverse order from there. So in a 6-player game, player 1 gets to place tile 1 and 12, while player 6 gets to place tile 6 and 7. This is a similar strategy to placing opening settlements in Settlers of Catan.
+                         Normally when placing tiles, this tool attempts to place the tiles so player 1 does not always get the best tiles. To do this, it follows the game setup rules and (in a 6 player game) player 1 gets to place tile 1 and 12, while player 6 gets to place tile 6 and 7.
                          <br>
                          <br>
                          Turning this on stops this from happening, and instead completely randomizes the placement order.
@@ -999,10 +1163,10 @@ class MapOptions extends React.Component {
                     />
                     <HelpModal key={"help-reverse"} visible={this.state.reversePlacementOrderHelp} hideModal={this.toggleReversePlacementOrderHelp} title={"About Reverse Placement Order"}
                          content='<p>
-                         Reverses which tiles are placed first in pick order.
+                         Reverses which tiles are placed first in placement order.
                          <br>
                          <br>
-                         Tiles are normally placed in priority (see randomize priority help). This reverses the order, so that the last picks are first, which has the effect of pushing the morre valuable tiles towards the center of the galaxy.
+                         Tiles are normally placed in priority (see randomize priority help). This reverses the order, so that the last picks are first, which generally has the effect of pushing the more valuable tiles towards the center of the galaxy.
                          </p>'
                     />
             

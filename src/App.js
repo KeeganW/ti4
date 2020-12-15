@@ -44,6 +44,7 @@ class App extends React.Component {
         this.checkResize = this.checkResize.bind(this);
 
         this.updateTiles = this.updateTiles.bind(this);
+        this.updateRaces = this.updateRaces.bind(this);
         this.validateTiles = this.validateTiles.bind(this);
         this.toggleBackground = this.toggleBackground.bind(this);
         this.removeTrailing = this.removeTrailing.bind(this);
@@ -373,6 +374,12 @@ class App extends React.Component {
         }
     }
 
+    updateRaces(races) {
+        this.setState({
+            currentRaces: races,
+        });
+    }
+
     /* MAP GENERATION */
 
     /**
@@ -648,7 +655,7 @@ class App extends React.Component {
                             currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
 
                             toggleProphecyOfKings={this.toggleProphecyOfKings} updateTiles={this.updateTiles}
-                            showExtraTiles={this.showExtraTiles}
+                            showExtraTiles={this.showExtraTiles} updateRaces={this.updateRaces}
                 />
             
                 <BootstrapScripts />
