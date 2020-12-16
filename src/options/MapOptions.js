@@ -89,6 +89,9 @@ class MapOptions extends React.Component {
 
         this.updateBoardStyleOptions = this.updateBoardStyleOptions.bind(this); // TODO is the bind needed?
 
+        this.encodeSettings = this.encodeSettings.bind(this);
+        this.decodeSettings = this.decodeSettings.bind(this);
+
         this.generateBoard = this.generateBoard.bind(this);
         this.getNewTileSet = this.getNewTileSet.bind(this);
 
@@ -232,13 +235,181 @@ class MapOptions extends React.Component {
         return x - Math.floor(x);
     }
 
+    encodeSettings() {
+        let encodedSettings = "";
+
+        encodedSettings += this.props.useProphecyOfKings ? "T" : "F";
+        encodedSettings += this.state.currentNumberOfPlayers.toString();
+        encodedSettings += this.state.currentBoardStyleOptions.indexOf(this.state.currentBoardStyle).toString();
+        encodedSettings += this.state.optionsPossible.placementStyles.indexOf(this.state.currentPlacementStyle).toString();
+        encodedSettings += this.state.optionsPossible.pickStyles.indexOf(this.state.currentPickStyle).toString();
+        if (this.state.currentPickStyle === "custom") {
+            encodedSettings += this.state.resourceWeight.toString().padStart(3, "0");
+            encodedSettings += this.state.influenceWeight.toString().padStart(3, "0");
+            encodedSettings += this.state.planetCountWeight.toString().padStart(3, "0");
+            encodedSettings += this.state.specialtyWeight.toString().padStart(3, "0");
+            encodedSettings += this.state.anomalyWeight.toString().padStart(3, "0");
+            encodedSettings += this.state.wormholeWeight.toString().padStart(3, "0");
+        }
+        encodedSettings += this.state.currentSeed.toString().padStart(4, "0");
+        encodedSettings += this.state.shuffleBoards ? "T" : "F";
+        encodedSettings += this.state.reversePlacementOrder ? "T" : "F";
+        encodedSettings += this.state.pickRaces ? "T" : "F";
+        if (this.state.pickRaces) {
+            let combinedRaces = this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
+            if ((this.props.useProphecyOfKings === false && this.props.currentRaces.length !== this.state.optionsPossible.races.length) ||
+                (this.props.useProphecyOfKings === true && this.props.currentRaces.length !== combinedRaces.length)) {
+                // Need to encode all races, because it is not the default
+                for (let race of this.props.currentRaces) {
+                    if (combinedRaces.indexOf(race) >= 0) {
+                        encodedSettings += combinedRaces.indexOf(race).toString().padStart(2, "0");
+                    }
+                }
+            }
+            let changedPlayerName = false;
+            let playerNames = "|"
+            for (let playerName of this.props.currentPlayerNames) {
+                if (playerName !== "") {
+                    changedPlayerName = true;
+                }
+                playerNames += playerName + "|";
+            }
+            if (changedPlayerName) {
+                encodedSettings += playerNames
+                encodedSettings = encodedSettings.slice(0, -1)
+            }
+        }
+
+        return encodedSettings;
+    }
+
+    decodeSettings(newSettings, newTiles) {
+        let currentIndex = 0;
+
+        // Prophecy of Kings
+        let useProphecyOfKings = newSettings[currentIndex] === "T";
+        currentIndex += 1;
+
+        // Number of Players
+        let currentNumberOfPlayers = Number(newSettings[currentIndex]);
+        currentIndex += 1;
+
+        // Board Style
+        let currentBoardStyleOptions = [];
+        if (useProphecyOfKings) {
+            currentBoardStyleOptions = this.state.optionsPossible.boardStylesPok[currentNumberOfPlayers];
+        } else {
+            currentBoardStyleOptions = this.state.optionsPossible.boardStyles[currentNumberOfPlayers];
+        }
+        let currentBoardStyle = currentBoardStyleOptions[Number(newSettings[currentIndex])]
+        currentIndex += 1;
+
+        // Placement Style
+        let currentPlacementStyle = this.state.optionsPossible.placementStyles[Number(newSettings[currentIndex])];
+        currentIndex += 1;
+
+        // Pick Style
+        let currentPickStyle = this.state.optionsPossible.pickStyles[Number(newSettings[currentIndex])];
+        currentIndex += 1;
+
+        let resourceWeight = this.state.resourceWeight;
+        let influenceWeight = this.state.influenceWeight;
+        let planetCountWeight = this.state.planetCountWeight;
+        let specialtyWeight = this.state.specialtyWeight;
+        let anomalyWeight = this.state.anomalyWeight;
+        let wormholeWeight = this.state.wormholeWeight;
+        if (currentPickStyle === "custom") {
+            resourceWeight = Number(newSettings.substring(currentIndex, currentIndex + 3));
+            currentIndex += 3;
+            influenceWeight = Number(newSettings.substring(currentIndex, currentIndex + 3));
+            currentIndex += 3;
+            planetCountWeight = Number(newSettings.substring(currentIndex, currentIndex + 3));
+            currentIndex += 3;
+            specialtyWeight = Number(newSettings.substring(currentIndex, currentIndex + 3));
+            currentIndex += 3;
+            anomalyWeight = Number(newSettings.substring(currentIndex, currentIndex + 3));
+            currentIndex += 3;
+            wormholeWeight = Number(newSettings.substring(currentIndex, currentIndex + 3));
+            currentIndex += 3;
+        }
+
+        // Current Seed
+        let currentSeed = Number(newSettings.substring(currentIndex, currentIndex + 4));
+        currentIndex += 4;
+
+        // Shuffle Boards
+        let shuffleBoards = newSettings[currentIndex] === "T";
+        currentIndex += 1;
+
+        // Reverse Placement Order
+        let reversePlacementOrder = newSettings[currentIndex] === "T";
+        currentIndex += 1;
+
+        // Pick Races
+        let pickRaces = newSettings[currentIndex] === "T";
+        currentIndex += 1;
+
+        let currentPlayerNames = this.props.currentPlayerNames;
+        let currentRaces = this.props.currentRaces;
+        if (pickRaces) {
+            if (newSettings[currentIndex] !== "|") {
+                // Get all of the races
+                currentRaces = [];
+                let combinedRaces = this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
+                while (newSettings[currentIndex] !== "|" && currentIndex !== newSettings.length) {
+                    currentRaces.push(combinedRaces[Number(newSettings.substring(currentIndex, currentIndex + 2))])
+                    currentIndex += 2
+                }
+            }
+            if (newSettings[currentIndex] === "|") {
+                currentPlayerNames = newSettings.substring(currentIndex).split("|").splice(1);
+            }
+        }
+
+
+        this.setState({
+            currentNumberOfPlayers: currentNumberOfPlayers,
+            currentBoardStyle: currentBoardStyle,
+            currentBoardStyleOptions: currentBoardStyleOptions,
+            currentPlacementStyle: currentPlacementStyle,
+            currentPickStyle: currentPickStyle,
+            resourceWeight: resourceWeight,
+            influenceWeight: influenceWeight,
+            planetCountWeight: planetCountWeight,
+            specialtyWeight: specialtyWeight,
+            anomalyWeight: anomalyWeight,
+            wormholeWeight: wormholeWeight,
+            currentSeed: currentSeed,
+            shuffleBoards: shuffleBoards,
+            reversePlacementOrder: reversePlacementOrder,
+            pickRaces: pickRaces,
+        }, () => {
+            if ((useProphecyOfKings && !this.props.useProphecyOfKings) || (!useProphecyOfKings && this.props.useProphecyOfKings)) {
+                this.props.toggleProphecyOfKings();
+            }
+            this.props.updateRaces(currentRaces);
+            this.props.updatePlayerNames(currentPlayerNames);
+
+            if (newTiles.length > 0) {
+                // Tiles were changed after rendering, so we need to display them
+                this.props.updateTiles(newTiles);
+            } else {
+                this.props.updateTiles(this.getNewTileSet());
+            }
+        })
+
+
+    }
+
     /**
      * Create a new board using a custom seed.
      * @param event The event which triggered this action, to be ignored.
      */
     generateBoard(event) {
         // Don't actually submit the form
-        event.preventDefault();
+        if (event !== undefined) {
+            event.preventDefault();
+        }
 
         // Create a random seed to use unless the user has specified one
         let currentSeed = this.state.currentSeed
@@ -250,7 +421,7 @@ class MapOptions extends React.Component {
             currentSeed: currentSeed,
             generated: true,
         }, () => {
-            this.props.updateTiles(this.getNewTileSet());
+            this.props.updateTiles(this.getNewTileSet(), this.encodeSettings());
         });
 
     }
