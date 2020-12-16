@@ -99,6 +99,10 @@ class MainOverview extends React.Component {
                         </p>
                     </div>
                 </div>
+
+                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                    &#169; Keegan Williams 2021
+                </div>
             </div>
         );
     }
