@@ -24,19 +24,23 @@ class App extends React.Component {
         
         this.state = {
             isOptionsMenuShowing: true,
-            useProphecyOfKings: false,
             overviewVisible: true,
             extraTilesVisible: false,
             moreInfoVisible: false,
             backgroundAnimated: true,
-            tiles: [...boardData.blankMap],
+            tiles: [],
             overlayVisible: false,
             zoom: 1.0,
             mobileBreakpoint: 700,
             isMobileView: false,
+            encodedOptions: "",
+
+            useProphecyOfKings: false,
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
-            currentRaces: [...raceData.races]
+            currentRaces: [...raceData.races],
         };
+
+        this.mapOptions = React.createRef();
     
         this.drawMap = this.drawMap.bind(this);
 
@@ -45,6 +49,7 @@ class App extends React.Component {
 
         this.updateTiles = this.updateTiles.bind(this);
         this.updateRaces = this.updateRaces.bind(this);
+        this.updatePlayerNames = this.updatePlayerNames.bind(this);
         this.validateTiles = this.validateTiles.bind(this);
         this.toggleBackground = this.toggleBackground.bind(this);
         this.removeTrailing = this.removeTrailing.bind(this);
@@ -127,16 +132,21 @@ class App extends React.Component {
     onPopState(event) {
         // Get the tiles from the url
         let url = new URL(document.location);
+        let settings = url.searchParams.get("settings");
         let tiles = url.searchParams.get("tiles");
-        
+
         // Make sure the tiles parameter is set to something
         const newTiles = tiles !== null ? this.validateTiles(tiles) : [];
-
-        // Update the tiles in the state, and redraw the map
-        if (newTiles !== []) {
+        if (settings !== null && settings !== undefined && settings !== "") {
             this.setState({
-                tiles: newTiles,
-            }, this.drawMap );
+                encodedOptions: settings,
+            }, () => {
+                this.mapOptions.current.decodeSettings(settings, newTiles);
+            })
+        } else if (newTiles.length > 0) {
+            this.setState({
+                tiles: newTiles
+            }, this.drawMap)
         }
     };
     
@@ -145,13 +155,22 @@ class App extends React.Component {
     /**
      * Updates the tiles state with a new set of tiles, and also pushes it to the url for sharable links
      * @param {number[]} newTiles
+     * @param encodeOptions the settings, encoded as a string
      */
-    updateTiles(newTiles) {
+    updateTiles(newTiles, newEncodedOptions) {
         // Remove the unused tile numbers at the end of the array
         newTiles = this.removeTrailing(newTiles);
 
         // Add it to the url as a parameter
-        window.history.pushState({}, null, window.location.pathname + '?tiles=' + newTiles.toString());
+        let params = '&tiles=' + newTiles.toString()
+        let encodedOptions = this.state.encodedOptions;
+        if (newEncodedOptions !== undefined) {
+            params = "?settings=" + newEncodedOptions
+            encodedOptions = newEncodedOptions
+        } else {
+            params = "?settings=" + encodedOptions + params
+        }
+        window.history.pushState({}, null, window.location.pathname + params);
 
         // Hide the options menu when we are on mobile (for when the tiles update and the options menu is open)
         let newOptionsMenuState = this.state.isOptionsMenuShowing
@@ -161,6 +180,7 @@ class App extends React.Component {
 
         this.setState({
             tiles: newTiles,
+            encodedOptions: encodedOptions,
             isOptionsMenuShowing: newOptionsMenuState,
         }, () => {
             // Update the extra tiles menu, and draw a new map with the new tiles
@@ -377,6 +397,12 @@ class App extends React.Component {
     updateRaces(races) {
         this.setState({
             currentRaces: races,
+        });
+    }
+
+    updatePlayerNames(playerNames) {
+        this.setState({
+            currentPlayerNames: playerNames,
         });
     }
 
@@ -653,8 +679,11 @@ class App extends React.Component {
                 <MapOptions visible={this.state.isOptionsMenuShowing} useProphecyOfKings={this.state.useProphecyOfKings}
                             currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
 
+                            ref={this.mapOptions}
+
                             toggleProphecyOfKings={this.toggleProphecyOfKings} updateTiles={this.updateTiles}
                             showExtraTiles={this.showExtraTiles} updateRaces={this.updateRaces}
+                            updatePlayerNames={this.updatePlayerNames}
                 />
             
                 <BootstrapScripts />
