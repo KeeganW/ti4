@@ -482,7 +482,6 @@ class App extends React.Component {
                 .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
                 .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
                 .css("display", "none")
-                // .html(tileNumber)
 
             if (typeof this.state.tiles[tileNumber] === "string") {
                 numOverlay.html(this.state.tiles[tileNumber].split("-")[0])
