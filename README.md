@@ -40,4 +40,4 @@ The tool has many features, go poke around! Here is a list of notable features:
 npm run deploy
 ```
 
-Using react's `gh-pages` you can simply run the above command to deploy to the 
+Using react's `gh-pages` you can simply run the above command to deploy to the github page.
