@@ -129,11 +129,21 @@ class MapOptions extends React.Component {
     handleRacesChange(event) {
         let race = event.target.name;
         let newCurrentRaces = this.props.currentRaces;
-        let indexToToggle = newCurrentRaces.indexOf(race)
-        if (indexToToggle >= 0) {
-            newCurrentRaces.splice(indexToToggle, 1)
+        if (race === "none") {  // The deselect all option
+            newCurrentRaces = []
+        } else if (race === "all") {  // The deselect all option
+            if (this.props.useProphecyOfKings) {
+                newCurrentRaces = [...this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)]
+            } else {
+                newCurrentRaces = [...this.state.optionsPossible.races]
+            }
         } else {
-            newCurrentRaces.push(race)
+            let indexToToggle = newCurrentRaces.indexOf(race)
+            if (indexToToggle >= 0) {
+                newCurrentRaces.splice(indexToToggle, 1)
+            } else {
+                newCurrentRaces.push(race)
+            }
         }
 
         this.props.updateRaces(newCurrentRaces);
@@ -1312,9 +1322,9 @@ class MapOptions extends React.Component {
                     </div>
                     <div className={"ml-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
                         <div className="card card-body">
-                            <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
-
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
+
+                            <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
 
                             {/*<div className="custom-control custom-checkbox d-flex">*/}
                             {/*    <input type="checkbox" className="custom-control-input" id="pickMultipleRaces" name="pickMultipleRaces" checked={this.state.pickMultipleRaces} onChange={this.handleInputChange} />*/}
