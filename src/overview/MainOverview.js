@@ -1,5 +1,5 @@
 import React from "react";
-import {ClipboardPlus} from "react-bootstrap-icons";
+import {ArrowRepeat, Check, ClipboardPlus, Lock, X} from "react-bootstrap-icons";
 
 class MainOverview extends React.Component {
     render() {
@@ -23,12 +23,33 @@ class MainOverview extends React.Component {
                 </div>
 
                 <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                    <h4 className={"m-3"}>Individual Tile Controls</h4>
+                    <div className={"d-flex"}>
+                        <p className={"text-left p-3"}>
+                            Modify individual tiles by clicking on them to pull up the tile control menu. Lock the tile in place
+                            with the (
+                            <Lock className="icon d-inline" />
+                            ) button. Include it in all future generations with the (
+                            <Check className="icon d-inline" />
+                            ) button. Exclude it from all future generations with the (
+                            <X className="icon d-inline" />
+                            ) button. Finally, swap it with a tile not on the board with the (
+                            <ArrowRepeat className="icon d-inline" />
+                            ) button. Controls reset on page refresh.
+                        </p>
+                    </div>
+                </div>
+
+                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
                     <h4 className={"m-3"}>Drag and Drop for Further Customization</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
                             Unhappy with a wormhole next to a home world? Are two asteroids next to one another? Don't like
                             a certain system? Just swap it with another tile by clicking and dragging one tile over the top of
-                            another tile.
+                            another tile. Alternatively, use the tile controls (click on a tile once to see them) and click
+                            the bottom middle "Swap with an extra tile" button (
+                            <ArrowRepeat className="icon d-inline" />
+                            ) to swap with a tile not on the board.
                         </p>
                     </div>
                 </div>
@@ -76,13 +97,13 @@ class MainOverview extends React.Component {
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
                             It can be hard to know which tile is which when it is time to setup your new board. Click the
-                            "Toggle Tile Number Overlay" (
+                            "Toggle Tile Number Overlay" button (
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.78 169.62" className="icon d-inline" fill="currentColor">
                                 <polygon className="overlay-cls-1" points="148.03 4 51.81 4 4.61 86.92 52.02 169.84 148.03 169.84 195.03 86.92 148.03 4"/>
                                 <text className="overlay-cls-2" transform="translate(27.09 132.03)">18</text>
                             </svg>
                             )
-                            button to see the numbers of every tile on your custom board.
+                             to see the numbers of every tile on your custom board.
                         </p>
                     </div>
                 </div>
