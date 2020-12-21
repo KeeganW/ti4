@@ -1,7 +1,7 @@
 import React from "react";
 import './MainMap.css';
 import boardData from "../data/boardData.json";
-import {Arrow90degLeft, Arrow90degRight, ArrowRepeat, Check, Lock, Unlock, X} from "react-bootstrap-icons";
+import {Arrow90degLeft, Arrow90degRight, ArrowRepeat, Check, Lock, X} from "react-bootstrap-icons";
 import ReactTooltip from "react-tooltip";
 import $ from "jquery";
 
@@ -113,12 +113,13 @@ class MainMap extends React.Component {
             obj.css("-ms-transform")     ||
             obj.css("-o-transform")      ||
             obj.css("transform");
+        let angle = 0;
         if(matrix !== 'none') {
             let values = matrix.split('(')[1].split(')')[0].split(',');
             let a = values[0];
             let b = values[1];
-            var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-        } else { var angle = 0; }
+            angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+        }
 
         if(angle < 0) angle +=360;
         return angle;
