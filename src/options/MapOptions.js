@@ -1001,7 +1001,6 @@ class MapOptions extends React.Component {
 
         // If there is only one wormhole, then we need to add a new one in
         if (usedWormholes.length === 1) {
-            console.log("Error! Only one wormhole.")
             /*
             Lets do some tricky logic here. If we are using a planet wormhole tile, then we want to replace
             another anomaly with one of the other one (pok: two) anomaly wormholes. If we are not using the planet tile,

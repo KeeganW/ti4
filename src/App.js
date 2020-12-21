@@ -183,7 +183,11 @@ class App extends React.Component {
         let params = '&tiles=' + newTiles.toString()
         let encodedOptions = this.state.encodedOptions;
         if (newEncodedOptions !== undefined) {
-            params = "?settings=" + newEncodedOptions
+            if (this.state.lockedTiles.length > 0 || this.state.includedTiles.length > 0) {
+                params = "?settings=" + encodedOptions + params
+            } else {
+                params = "?settings=" + newEncodedOptions
+            }
             encodedOptions = newEncodedOptions
         } else {
             params = "?settings=" + encodedOptions + params
