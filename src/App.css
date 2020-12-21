@@ -27,7 +27,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* Settings for button customization */
-.btn-primary, .btn-outline-primary:hover, .btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle, .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+.btn-primary, .btn-outline-primary:hover {
     color: white;
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -250,7 +250,7 @@ h1, h2, h3, h4, h5 {
     overflow: scroll;
 }
 
-#showHexOverlay.active, #showExtraTiles.active, #showMoreInfo.active {
+.btn-primary.active, .btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle, .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
     background-color: var(--hover-color);
     border-color: var(--hover-color);
 }
@@ -260,6 +260,8 @@ h1, h2, h3, h4, h5 {
 .tile {
     position: absolute;
     cursor: pointer;
+    width: 100%;
+    height: 100%;
 }
 .tile:hover {
     z-index: 100;

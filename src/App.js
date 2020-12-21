@@ -13,6 +13,7 @@ import tileData from "./data/tileData.json";
 import raceData from "./data/raceData.json";
 import boardData from "./data/boardData.json";
 import {calculateOffsets} from "./helpers/Helpers";
+import ReactTooltip from "react-tooltip";
 
 /**
  * The core application page. Holds the states for common objects like tile data and player names. Responsible for
@@ -29,6 +30,7 @@ class App extends React.Component {
             moreInfoVisible: false,
             backgroundAnimated: true,
             tiles: [],
+            unusedTiles: [],
             overlayVisible: false,
             zoom: 1.0,
             mobileBreakpoint: 700,
@@ -38,16 +40,24 @@ class App extends React.Component {
             useProphecyOfKings: false,
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
             currentRaces: [...raceData.races],
+
+            lockedTiles: [],
+            excludedTiles: [],
+            includedTiles: [],
+            tileClicked: -1,
         };
 
         this.mapOptions = React.createRef();
-    
+
         this.drawMap = this.drawMap.bind(this);
 
         this.onPopState = this.onPopState.bind(this);
         this.checkResize = this.checkResize.bind(this);
 
         this.updateTiles = this.updateTiles.bind(this);
+        this.updateLockedTiles = this.updateLockedTiles.bind(this);
+        this.updateInExcludedTiles = this.updateInExcludedTiles.bind(this);
+        this.updateTileClicked = this.updateTileClicked.bind(this);
         this.updateRaces = this.updateRaces.bind(this);
         this.updatePlayerNames = this.updatePlayerNames.bind(this);
         this.validateTiles = this.validateTiles.bind(this);
@@ -90,6 +100,13 @@ class App extends React.Component {
         // Change the map dimensions whenever the page size is different
         window.onresize = this.checkResize
         this.checkResize();
+
+        // add when mounted
+        document.addEventListener("mousedown", this.updateTileClicked);
+        // return function to be called when unmounted
+        return () => {
+            document.removeEventListener("mousedown", this.updateTileClicked);
+        };
     }
 
     /**
@@ -138,6 +155,7 @@ class App extends React.Component {
         // Make sure the tiles parameter is set to something
         const newTiles = tiles !== null ? this.validateTiles(tiles) : [];
         if (settings !== null && settings !== undefined && settings !== "") {
+            // Settings param is set, so make the tile
             this.setState({
                 encodedOptions: settings,
             }, () => {
@@ -155,7 +173,7 @@ class App extends React.Component {
     /**
      * Updates the tiles state with a new set of tiles, and also pushes it to the url for sharable links
      * @param {number[]} newTiles
-     * @param encodeOptions the settings, encoded as a string
+     * @param newEncodedOptions the settings, encoded as a string
      */
     updateTiles(newTiles, newEncodedOptions) {
         // Remove the unused tile numbers at the end of the array
@@ -178,8 +196,24 @@ class App extends React.Component {
             newOptionsMenuState = false;
         }
 
+        // Update the unused tiles list
+        let systemNumbers = []
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
+        if (this.state.useProphecyOfKings) {
+            systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
+        }
+        let unusedTiles = []
+        for (let systemNumber of systemNumbers) {
+            // If it is not on the map, show the system tile. Otherwise, hide it.
+            if (!newTiles.includes(systemNumber)) {
+                unusedTiles.push(systemNumber)
+            }
+        }
+
         this.setState({
             tiles: newTiles,
+            unusedTiles: unusedTiles,
+            tileClicked: -1,
             encodedOptions: encodedOptions,
             isOptionsMenuShowing: newOptionsMenuState,
         }, () => {
@@ -187,6 +221,31 @@ class App extends React.Component {
             this.showExtraTiles();
             this.drawMap();
         });
+    }
+
+    updateLockedTiles(newLockedTiles) {
+        this.setState({
+            lockedTiles: newLockedTiles,
+        })
+    }
+
+    updateTileClicked(newTileClicked) {
+        if (typeof newTileClicked !== "number" && newTileClicked.target.id === "mainContent") {
+            this.setState({
+                tileClicked: -1,
+            })
+        } else if (typeof newTileClicked === "number") {
+            this.setState({
+                tileClicked: newTileClicked,
+            })
+        }
+    }
+
+    updateInExcludedTiles(newIncludedTiles, newExcludedTiles) {
+        this.setState({
+            includedTiles: newIncludedTiles,
+            excludedTiles: newExcludedTiles,
+        })
     }
 
     /**
@@ -476,18 +535,24 @@ class App extends React.Component {
         let currentPlayerNumber = 0;
         for (let tileNumber = 0; tileNumber < offsets.length; tileNumber++) {
             let tile = $("#tile-" + tileNumber);
+            let tileWrapper = $("#tile-wrapper-" + tileNumber);
             let numOverlay = $("#number-" + tileNumber);
             let underlay = $("#underlay-" + tileNumber);
             if (this.state.tiles[tileNumber] >= 0 || typeof this.state.tiles[tileNumber] === "string") {
-                tile.attr("width", constraintWidth)
-                    .attr("height", constraintHeight)
+                tile
+                    .css("left", 0)
+                    .css("top", 0)
+                    .css({'transform' : 'rotate(0)'})  // Reset any rotations from other hyperlanes
+                    .show();
+
+                tileWrapper
+                    .css("width", constraintWidth)
+                    .css("height", constraintHeight)
                     .css("margin-left", offsets[tileNumber][0])
                     .css("margin-top", offsets[tileNumber][1])
                     .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
                     .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
-                    .css({'transform' : 'rotate(0)'})  // Reset any rotations from other hyperlanes
-
-                tile.show();
+                    .show()
 
                 if (typeof this.state.tiles[tileNumber] === "string") {
                     // Hyperlane, so remove the last section and check if it needs to be rotated
@@ -500,13 +565,9 @@ class App extends React.Component {
                 tile.hide();
             }
 
-            numOverlay.css("width", constraintWidth)
-                .css("height", constraintHeight)
-                .css("line-height", constraintHeight + "px")
-                .css("margin-left", offsets[tileNumber][0])
-                .css("margin-top", offsets[tileNumber][1])
-                .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
-                .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
+            numOverlay
+                .css("margin-left", "-10px")
+                .css("top", constraintHeight/2 - 10)
                 .css("display", "none")
 
             if (typeof this.state.tiles[tileNumber] === "string") {
@@ -517,10 +578,12 @@ class App extends React.Component {
 
             underlay.css("width", constraintWidth + 6)
                 .css("height", constraintHeight + 6)
-                .css("margin-left", offsets[tileNumber][0]-3)
-                .css("margin-top", offsets[tileNumber][1]-3)
-                .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
-                .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
+                .css("margin-left", "-3px")
+                .css("margin-top", "-3px")
+                // .css("margin-left", offsets[tileNumber][0]-3)
+                // .css("margin-top", offsets[tileNumber][1]-3)
+                // .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
+                // .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
 
             if (!this.state.overlayVisible) {
                 numOverlay.hide()
@@ -641,12 +704,18 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <div id="mainContent" className="justify-content-center align-items-center">
+                <div id="mainContent" className="justify-content-center align-items-center" onClick={this.updateTileClicked}>
                     <MainOverview visible={this.state.overviewVisible}
                     />
                     
                     <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
                              tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}
+
+                             unusedTiles={this.state.unusedTiles} updateTiles={this.updateTiles}
+                             lockedTiles={this.state.lockedTiles} updateLockedTiles={this.updateLockedTiles}
+                             includedTiles={this.state.includedTiles} updateInExcludedTiles={this.updateInExcludedTiles}
+                             excludedTiles={this.state.excludedTiles}
+                             tileClicked={this.state.tileClicked} updateTileClicked={this.updateTileClicked}
 
                              drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
                     />
@@ -678,6 +747,8 @@ class App extends React.Component {
                 
                 <MapOptions visible={this.state.isOptionsMenuShowing} useProphecyOfKings={this.state.useProphecyOfKings}
                             currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
+                            tiles={this.state.tiles} includedTiles={this.state.includedTiles}
+                            excludedTiles={this.state.excludedTiles} lockedTiles={this.state.lockedTiles}
 
                             ref={this.mapOptions}
 
@@ -685,7 +756,8 @@ class App extends React.Component {
                             showExtraTiles={this.showExtraTiles} updateRaces={this.updateRaces}
                             updatePlayerNames={this.updatePlayerNames}
                 />
-            
+
+                <ReactTooltip effect={"solid"}/>
                 <BootstrapScripts />
             </div>
         );
