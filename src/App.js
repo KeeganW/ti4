@@ -11,7 +11,6 @@ import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
 import tileData from "./data/tileData.json";
 import raceData from "./data/raceData.json";
-import boardData from "./data/boardData.json";
 import {calculateOffsets} from "./helpers/Helpers";
 import ReactTooltip from "react-tooltip";
 

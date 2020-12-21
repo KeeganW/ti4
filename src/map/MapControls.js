@@ -1,6 +1,5 @@
 import React from "react";
 import {CardImage, ClipboardPlus, Dash, InfoCircle, Plus} from "react-bootstrap-icons";
-import ReactTooltip from 'react-tooltip';
 
 class MapControls extends React.Component {
     

@@ -1,7 +1,7 @@
 import React from "react";
 import './MainMap.css';
 import boardData from "../data/boardData.json";
-import {Arrow90degLeft, Arrow90degRight, ArrowRepeat, Check, Lock, Unlock, X} from "react-bootstrap-icons";
+import {Arrow90degLeft, Arrow90degRight, ArrowRepeat, Check, Lock, X} from "react-bootstrap-icons";
 import ReactTooltip from "react-tooltip";
 import $ from "jquery";
 
@@ -113,12 +113,13 @@ class MainMap extends React.Component {
             obj.css("-ms-transform")     ||
             obj.css("-o-transform")      ||
             obj.css("transform");
+        let angle = 0;
         if(matrix !== 'none') {
             let values = matrix.split('(')[1].split(')')[0].split(',');
             let a = values[0];
             let b = values[1];
-            var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-        } else { var angle = 0; }
+            angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+        }
 
         if(angle < 0) angle +=360;
         return angle;
@@ -141,13 +142,13 @@ class MainMap extends React.Component {
             if (systemNumber !== -1 && systemNumber !== undefined) {
                 mapTiles.push(
                     <div key={"tile-wrapper-" + tileNumber} id={"tile-wrapper-" + tileNumber} className="tile-wrapper" style={style} onClick={this.toggleControls}>
-                        <button id={"rotate-left-" + tileNumber} className={"btn btn-primary tile-control rotate-left" + (this.props.tileClicked === tileNumber ? "" : " d-none")} data-tip="Rotate tile left" data-place="top" >
+                        <button id={"rotate-left-" + tileNumber} className={"btn btn-primary tile-control rotate-left" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none")} data-tip="Rotate tile left" data-place="top" >
                             <Arrow90degLeft id={"rotate-left-svg-" + tileNumber} className={"icon"}/>
                         </button>
-                        <button id={"lock-" + tileNumber} className={"btn btn-primary tile-control lock" + (this.props.tileClicked === tileNumber ? "" : " d-none") + (this.props.lockedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip="Keep tile here on generation" >
+                        <button id={"lock-" + tileNumber} className={"btn btn-primary tile-control lock" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none") + (this.props.lockedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip="Keep tile here on generation" >
                             <Lock id={"lock-svg-" + tileNumber} className={"icon"}/>
                         </button>
-                        <button id={"rotate-right-" + tileNumber} className={"btn btn-primary tile-control rotate-right" + (this.props.tileClicked === tileNumber ? "" : " d-none")} data-tip={"Rotate tile right"} >
+                        <button id={"rotate-right-" + tileNumber} className={"btn btn-primary tile-control rotate-right" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none")} data-tip={"Rotate tile right"} >
                             <Arrow90degRight id={"rotate-right-svg-" + tileNumber} className={"icon"}/>
                         </button>
                         <span id={"number-" + tileNumber} className={"overlay"}>{tileNumber}</span>
@@ -160,13 +161,13 @@ class MainMap extends React.Component {
                         <svg id={"underlay-" + tileNumber} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="underlay" fill="currentColor">
                             <polygon points="269.51 0 89.84 0 0 155.6 89.84 311.2 269.51 311.2 359.35 155.6 269.51 0" />
                         </svg>
-                        <button id={"exclude-" + tileNumber} className={"btn btn-primary tile-control exclude" + (this.props.tileClicked === tileNumber ? "" : " d-none") + (this.props.excludedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip={"Exclude from generation"} data-place="bottom" >
+                        <button id={"exclude-" + tileNumber} className={"btn btn-primary tile-control exclude" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none") + (this.props.excludedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip={"Exclude from generation"} data-place="bottom" >
                             <X id={"exclude-svg-" + tileNumber} className={"icon"}/>
                         </button>
-                        <button id={"swap-" + tileNumber} className={"btn btn-primary tile-control swap" + (this.props.tileClicked === tileNumber ? "" : " d-none")} data-tip={"Swap with an extra tile"} data-place="bottom" >
+                        <button id={"swap-" + tileNumber} className={"btn btn-primary tile-control swap" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none")} data-tip={"Swap with an extra tile"} data-place="bottom" >
                             <ArrowRepeat id={"swap-svg-" + tileNumber} className={"icon"}/>
                         </button>
-                        <button id={"include-" + tileNumber} className={"btn btn-primary tile-control include" + (this.props.tileClicked === tileNumber ? "" : " d-none") + (this.props.includedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip={"Always include in generation"} data-place="bottom" >
+                        <button id={"include-" + tileNumber} className={"btn btn-primary tile-control include" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none") + (this.props.includedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip={"Always include in generation"} data-place="bottom" >
                             <Check id={"include-svg-" + tileNumber} className={"icon"}/>
                         </button>
                     </div>
