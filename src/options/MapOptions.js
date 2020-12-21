@@ -293,6 +293,7 @@ class MapOptions extends React.Component {
         // Number of Players
         let currentNumberOfPlayers = Number(newSettings[currentIndex]);
         currentIndex += 1;
+        let currentNumberOfPlayersOptions = currentNumberOfPlayers > 6 ? this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers) : this.state.optionsPossible.numberOfPlayers;
 
         // Board Style
         let currentBoardStyleOptions = [];
@@ -369,6 +370,7 @@ class MapOptions extends React.Component {
 
         this.setState({
             currentNumberOfPlayers: currentNumberOfPlayers,
+            currentNumberOfPlayersOptions: currentNumberOfPlayersOptions,
             currentBoardStyle: currentBoardStyle,
             currentBoardStyleOptions: currentBoardStyleOptions,
             currentPlacementStyle: currentPlacementStyle,
@@ -384,17 +386,18 @@ class MapOptions extends React.Component {
             reversePlacementOrder: reversePlacementOrder,
             pickRaces: pickRaces,
         }, () => {
-            if ((useProphecyOfKings && !this.props.useProphecyOfKings) || (!useProphecyOfKings && this.props.useProphecyOfKings)) {
-                this.props.toggleProphecyOfKings();
-            }
             this.props.updateRaces(currentRaces);
             this.props.updatePlayerNames(currentPlayerNames);
 
+            if ((useProphecyOfKings && !this.props.useProphecyOfKings) || (!useProphecyOfKings && this.props.useProphecyOfKings)) {
+                this.props.toggleProphecyOfKings();
+            }
+
             if (newTiles.length > 0) {
                 // Tiles were changed after rendering, so we need to display them
-                this.props.updateTiles(newTiles);
+                this.props.updateTiles(newTiles, newSettings);
             } else {
-                this.props.updateTiles(this.getNewTileSet());
+                this.props.updateTiles(this.getNewTileSet(useProphecyOfKings), newSettings);
             }
         })
 
@@ -429,12 +432,16 @@ class MapOptions extends React.Component {
     /**
      * Create a set of new tiles for the board based on the user's input.
      */
-    getNewTileSet() {
+    getNewTileSet(useProphecyOfKings) {
+        if (useProphecyOfKings === undefined) {
+            useProphecyOfKings = this.props.useProphecyOfKings
+        }
+
         // Get an ordered list of board spaces that need to have non-home systems assigned to them
         let systemIndexes = this.getNewTilesToPlace()
 
         // Get a set of systems to make the board with, ordered based on user supplied weights
-        let newSystems = this.getNewSystemsToPlace(systemIndexes.length)
+        let newSystems = this.getNewSystemsToPlace(systemIndexes.length, useProphecyOfKings)
 
         // Copy a blank map to add to
         let newTiles = [...boardData.blankMap]
@@ -453,8 +460,11 @@ class MapOptions extends React.Component {
             newTiles[systemIndex] = newSystems.shift();
         }
 
+        // Place any systems that were locked from the previous generation
+        this.placeLockedSystems(newTiles)
+
         // Check that anomalies and wormholes are not adjacent
-        this.checkAdjacencies(newTiles)
+        this.checkAdjacencies(newTiles, useProphecyOfKings)
 
         // Update the generated flag then update the tiles
         return newTiles;
@@ -546,12 +556,22 @@ class MapOptions extends React.Component {
      *
      * Get an array of system tile numbers to place on the board.
      * @param {number} numberOfSystems The number of systems to get.
+     * @param {boolean} useProphecyOfKings TODO
      * @returns {[]}
      */
-    getNewSystemsToPlace(numberOfSystems) {
+    getNewSystemsToPlace(numberOfSystems, useProphecyOfKings) {
         // Pick our a random set of systems, following the needed number of anomalies
-        let allBlues = this.props.useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
-        let allReds = this.props.useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
+        let allBlues = useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
+        let allReds = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
+
+        // Remove excluded tiles
+        for (let system of this.props.excludedTiles) {
+            if (allReds.indexOf(system) >= 0) {
+                allReds.splice(allReds.indexOf(system), 1);
+            } else if (allBlues.indexOf(system) >= 0) {
+                allBlues.splice(allBlues.indexOf(system), 1);
+            }
+        }
 
         // Shuffle our tiles for randomness
         this.shuffle(allBlues)
@@ -581,34 +601,68 @@ class MapOptions extends React.Component {
         let bluesToPlace = Math.round(Number((numberOfSystems / (blueTileRatio + redTileRatio)) * blueTileRatio));
 
         // If planet heavy system, then reduce number of anomalies
-        if (false) {
-            let newRedsToPlace = 2; // TODO make this user configurable
-            if (newRedsToPlace > redsToPlace) {
-                bluesToPlace = bluesToPlace - (newRedsToPlace - redsToPlace);
-            } else if (newRedsToPlace < redsToPlace) {
-                bluesToPlace = bluesToPlace + (redsToPlace - newRedsToPlace);
+        // if (false) {
+        //     let newRedsToPlace = 2; // TODO make this user configurable
+        //     if (newRedsToPlace > redsToPlace) {
+        //         bluesToPlace = bluesToPlace - (newRedsToPlace - redsToPlace);
+        //     } else if (newRedsToPlace < redsToPlace) {
+        //         bluesToPlace = bluesToPlace + (redsToPlace - newRedsToPlace);
+        //     }
+        //     redsToPlace = newRedsToPlace
+        // }
+
+        // Start to get the new systems
+        let newSystems = [];
+
+        // Force add in the included tiles
+        for (let system of this.props.includedTiles) {
+            if (newSystems.indexOf(system) < 0) {
+                newSystems.push(system);
+
+                // Remove them from the pool to add
+                if (allReds.indexOf(system) >= 0) {
+                    allReds.splice(allReds.indexOf(system), 1);
+                    redsToPlace -= 1;
+                } else {
+                    allBlues.splice(allBlues.indexOf(system), 1);
+                    bluesToPlace -= 1;
+                }
             }
-            redsToPlace = newRedsToPlace
         }
 
-        // Get only the needed blues and reds
-        let newSystems = []
+        // Force add in the locked tiles
+        for (let system of this.props.lockedTiles) {
+            if (newSystems.indexOf(system) < 0) {
+                newSystems.push(system);
+
+                // Remove them from the pool to add
+                if (allReds.indexOf(system) >= 0) {
+                    allReds.splice(allReds.indexOf(system), 1);
+                    redsToPlace -= 1;
+                } else {
+                    allBlues.splice(allBlues.indexOf(system), 1);
+                    bluesToPlace -= 1;
+                }
+            }
+        }
+
+        // Place as many as possible from tile type if there is not enough to place
         if (redsToPlace > allReds.length) {
-            newSystems = allBlues.slice(0, bluesToPlace + (redsToPlace - allReds.length)).concat(allReds)
+            newSystems = newSystems.concat(allBlues.slice(0, bluesToPlace + (redsToPlace - allReds.length)).concat(allReds))
         } else if (bluesToPlace > allBlues.length) {
-            newSystems = allBlues.concat(allReds.slice(0, redsToPlace + (bluesToPlace - allBlues.length)))
+            newSystems = newSystems.concat(allBlues.concat(allReds.slice(0, redsToPlace + (bluesToPlace - allBlues.length))))
         } else {
-            newSystems = allBlues.slice(0, bluesToPlace).concat(allReds.slice(0, redsToPlace))
+            newSystems = newSystems.concat(allBlues.slice(0, bluesToPlace).concat(allReds.slice(0, redsToPlace)))
         }
 
         // Ensure that if a wormhole is included, two are
-        const allAlphaWormholes = this.props.useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
-        const allBetaWormholes = this.props.useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
+        const allAlphaWormholes = useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
+        const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
 
-        newSystems = this.ensureWormholesForType(newSystems, [26], allAlphaWormholes, allBetaWormholes);
+        newSystems = this.ensureWormholesForType(newSystems, [26], allAlphaWormholes, allBetaWormholes, useProphecyOfKings);
 
         // Ensure that if we have an alpha wormhole, then we have at least two of them
-        newSystems = this.ensureWormholesForType(newSystems, [25, 64], allBetaWormholes, allAlphaWormholes);
+        newSystems = this.ensureWormholesForType(newSystems, [25, 64], allBetaWormholes, allAlphaWormholes, useProphecyOfKings);
 
         // Based on the system style, order the systems according to their weights
         let weights = {};
@@ -648,7 +702,7 @@ class MapOptions extends React.Component {
                 break;
             case "balanced":
             default:
-                if (this.props.useProphecyOfKings) {
+                if (useProphecyOfKings) {
                     weights = {
                         "resource": 80,
                         "influence": 30,
@@ -702,68 +756,47 @@ class MapOptions extends React.Component {
             }
         }
     }
-    checkAdjacencies(newTiles) {// Planets have been placed, time to do post processing checks to make sure things are good to go.
+    placeLockedSystems(newTiles) {
+        for (let system of this.props.lockedTiles) {
+            // Get location in current tile set
+            let currentLocation = this.props.tiles.indexOf(system);
+            if (currentLocation >= 0) {
+                // It exists, so get its location on the current board
+                let newTilesLocation = newTiles.indexOf(system);
+
+                // Swap the two tiles
+                newTiles[newTilesLocation] = newTiles[currentLocation];
+                newTiles[currentLocation] = system;
+            }
+        }
+    }
+    checkAdjacencies(newTiles, useProphecyOfKings) {// Planets have been placed, time to do post processing checks to make sure things are good to go.
         // Get all anomalies that are adjacent to one another
-        let allTrueAnomalies = this.props.useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
+        let allTrueAnomalies = useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
+
         for (let anomaly of allTrueAnomalies) {
-            let anomalyTileNumber = newTiles.indexOf(anomaly);
-            if (anomalyTileNumber >= 0) {
-                // anomaly exists in the map, so check it
-                let adjacentTiles = adjacencyData[anomalyTileNumber];
-                let adjacentAnomalies = [];
+            // Ignore any anomalies in the locked or include list
+            if (this.props.includedTiles.indexOf(anomaly) < 0 && this.props.lockedTiles.indexOf(anomaly) < 0) {
 
-                // Get a list of all adjacent anomalies to this one
-                for (let adjacentTileNumber of adjacentTiles) {
-                    let adjacentTile = newTiles[adjacentTileNumber];
-                    if (allTrueAnomalies.indexOf(adjacentTile) >= 0) {
-                        // This tile is an anomaly
-                        adjacentAnomalies.push(adjacentTile)
-                    }
-                }
+                let anomalyTileNumber = newTiles.indexOf(anomaly);
+                if (anomalyTileNumber >= 0) {
+                    // anomaly exists in the map, so check it
+                    let adjacentTiles = adjacencyData[anomalyTileNumber];
+                    let adjacentAnomalies = [];
 
-                // If tile is in conflict more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
-                let swapped = false;
-                let blankReds = this.props.useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                if (adjacentAnomalies.length > 1) {
-                    let possibleBlanks = [];
-                    for (let blankRed of blankReds) {
-                        if (newTiles.indexOf(blankRed) < 0) {
-                            possibleBlanks.push(blankRed)
+                    // Get a list of all adjacent anomalies to this one
+                    for (let adjacentTileNumber of adjacentTiles) {
+                        let adjacentTile = newTiles[adjacentTileNumber];
+                        if (allTrueAnomalies.indexOf(adjacentTile) >= 0) {
+                            // This tile is an anomaly
+                            adjacentAnomalies.push(adjacentTile)
                         }
                     }
-                    possibleBlanks = this.shuffle(possibleBlanks);
-                    if (possibleBlanks.length > 0) {
-                        swapped = true;
-                        newTiles[anomalyTileNumber] = possibleBlanks[0];
-                    }
-                }
 
-                if (!swapped && adjacentAnomalies.length > 0) {
-                    // Look at all red back tiles on the board that are not anomalies, and see if they have adjacent anomalies
-                    // Test this code with 2 player, everything else base, seed of 9986
-                    for (let blankRed of blankReds) {
-                        let blankRedTileNumber = newTiles.indexOf(blankRed)
-                        if (blankRedTileNumber >= 0) {
-                            let adjacentTiles = adjacencyData[blankRedTileNumber];
-                            let swappable = true;
-                            for (let adjacentTile of adjacentTiles) {
-                                if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0 && adjacentTile !== anomalyTileNumber) {
-                                    // This blank has an adjacent anomaly, so throw it out
-                                    swappable = false;
-                                    break;
-                                }
-                            }
-                            if (swappable) {
-                                // This blank red has no other adjacent anomalies, so swap
-                                newTiles[anomalyTileNumber] = blankRed;
-                                newTiles[blankRedTileNumber] = anomaly;
-                                swapped = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!swapped) {
-                        let blankReds = this.props.useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
+                    // If tile is in conflict more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
+                    let swapped = false;
+                    let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
+                    if (adjacentAnomalies.length > 1) {
                         let possibleBlanks = [];
                         for (let blankRed of blankReds) {
                             if (newTiles.indexOf(blankRed) < 0) {
@@ -775,54 +808,93 @@ class MapOptions extends React.Component {
                             swapped = true;
                             newTiles[anomalyTileNumber] = possibleBlanks[0];
                         }
-                        if (!swapped) {
-                            console.log("Unable to swap anomaly to a free position.")
-                        }
-                        /*
-                        There is a potential use for this strategy, but for now it seems pretty safe to just let it fail
-                        to swap on a blank. It is rare that it is impossible, and even when it is, its a pretty simple
-                        rule. Plus the rules let you place reds next to each other if moving them is impossible.
-                        btw, not sure this code below works properly. I believe there is a bug in it.
-                         */
+                    }
 
-                        /*
-                        // Going in reverse, find the first tile with no anomalies adjacent, and swap
-                        newTiles.reverse()
-                        for (let tile of newTiles) {
-                            if (tile !== 0 && tile !== -1 && allTrueAnomalies.indexOf(tile) < 0 && blankReds.indexOf(tile) < 0) {
-                                console.log("Tile: " + tile)
-                                // This is a real tile, check for adjacency to other anomalies
-                                let blankRedTileNumber = newTiles.indexOf(tile)
+                    if (!swapped && adjacentAnomalies.length > 0) {
+                        // Look at all red back tiles on the board that are not anomalies, and see if they have adjacent anomalies
+                        for (let blankRed of blankReds) {
+                            let blankRedTileNumber = newTiles.indexOf(blankRed)
+                            if (blankRedTileNumber >= 0) {
                                 let adjacentTiles = adjacencyData[blankRedTileNumber];
                                 let swappable = true;
                                 for (let adjacentTile of adjacentTiles) {
-                                    if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0) {
+                                    if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0 && adjacentTile !== anomalyTileNumber) {
                                         // This blank has an adjacent anomaly, so throw it out
                                         swappable = false;
                                         break;
                                     }
                                 }
                                 if (swappable) {
-                                    // No adjacency breaks found, go ahead and swap it
-                                    console.log(anomalyTileNumber)
-                                    console.log(blankRedTileNumber)
-                                    newTiles[anomalyTileNumber] = tile;
+                                    // This blank red has no other adjacent anomalies, so swap
+                                    newTiles[anomalyTileNumber] = blankRed;
                                     newTiles[blankRedTileNumber] = anomaly;
                                     swapped = true;
                                     break;
                                 }
                             }
                         }
-                        // If no swap possible, no problem. Continue on
-                        newTiles.reverse()
-                        */
+                        if (!swapped) {
+                            let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
+                            let possibleBlanks = [];
+                            for (let blankRed of blankReds) {
+                                if (newTiles.indexOf(blankRed) < 0) {
+                                    possibleBlanks.push(blankRed)
+                                }
+                            }
+                            possibleBlanks = this.shuffle(possibleBlanks);
+                            if (possibleBlanks.length > 0) {
+                                swapped = true;
+                                newTiles[anomalyTileNumber] = possibleBlanks[0];
+                            }
+                            if (!swapped) {
+                                console.log("Error! Unable to swap anomaly to a free position.")
+                            }
+                            /*
+                            There is a potential use for this strategy, but for now it seems pretty safe to just let it fail
+                            to swap on a blank. It is rare that it is impossible, and even when it is, its a pretty simple
+                            rule. Plus the rules let you place reds next to each other if moving them is impossible.
+                            btw, not sure this code below works properly. I believe there is a bug in it.
+                             */
+
+                            /*
+                            // Going in reverse, find the first tile with no anomalies adjacent, and swap
+                            newTiles.reverse()
+                            for (let tile of newTiles) {
+                                if (tile !== 0 && tile !== -1 && allTrueAnomalies.indexOf(tile) < 0 && blankReds.indexOf(tile) < 0) {
+                                    console.log("Tile: " + tile)
+                                    // This is a real tile, check for adjacency to other anomalies
+                                    let blankRedTileNumber = newTiles.indexOf(tile)
+                                    let adjacentTiles = adjacencyData[blankRedTileNumber];
+                                    let swappable = true;
+                                    for (let adjacentTile of adjacentTiles) {
+                                        if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0) {
+                                            // This blank has an adjacent anomaly, so throw it out
+                                            swappable = false;
+                                            break;
+                                        }
+                                    }
+                                    if (swappable) {
+                                        // No adjacency breaks found, go ahead and swap it
+                                        console.log(anomalyTileNumber)
+                                        console.log(blankRedTileNumber)
+                                        newTiles[anomalyTileNumber] = tile;
+                                        newTiles[blankRedTileNumber] = anomaly;
+                                        swapped = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            // If no swap possible, no problem. Continue on
+                            newTiles.reverse()
+                            */
+                        }
                     }
                 }
             }
         }
 
-        const allAlphaWormholes = this.props.useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
-        const allBetaWormholes = this.props.useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
+        const allAlphaWormholes = useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
+        const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
 
 
         // Alpha, at least one wormhole is a "empty tile" so swap it with a blank tile
@@ -840,7 +912,7 @@ class MapOptions extends React.Component {
                 }
                 if (adjacentWormhole) {
                     // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    let blankReds = this.props.useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
+                    let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
                     // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
                     blankReds = blankReds.filter( function( el ) {
                         return allAlphaWormholes.indexOf( el ) < 0;
@@ -884,7 +956,7 @@ class MapOptions extends React.Component {
                 }
                 if (adjacentWormhole) {
                     // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    let blankReds = this.props.useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
+                    let blankReds = useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
                     // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
                     blankReds = blankReds.filter( function( el ) {
                         return allBetaWormholes.indexOf( el ) < 0;
@@ -916,8 +988,8 @@ class MapOptions extends React.Component {
         }
     }
 
-    ensureWormholesForType(possibleTiles, planetWormholes, allWormholes, oppositeWormholes) {
-        let allAnomalyList = this.props.useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
+    ensureWormholesForType(possibleTiles, planetWormholes, allWormholes, oppositeWormholes, useProphecyOfKings) {
+        let allAnomalyList = useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
         let unusedWormholes = [];
         let usedWormholes = [];
 
@@ -929,7 +1001,6 @@ class MapOptions extends React.Component {
 
         // If there is only one wormhole, then we need to add a new one in
         if (usedWormholes.length === 1) {
-            console.log("Error! Only one wormhole!")
             /*
             Lets do some tricky logic here. If we are using a planet wormhole tile, then we want to replace
             another anomaly with one of the other one (pok: two) anomaly wormholes. If we are not using the planet tile,
@@ -949,7 +1020,7 @@ class MapOptions extends React.Component {
         return possibleTiles;
     }
 
-    ensureAnomalies(possibleTiles, numPlanetsToPlace) {
+    ensureAnomalies(possibleTiles, numPlanetsToPlace, useProphecyOfKings) {
         // Only care about the tiles we will actually place
         possibleTiles = possibleTiles.slice(0, numPlanetsToPlace);
 
@@ -981,7 +1052,7 @@ class MapOptions extends React.Component {
         }
 
         // Still have to add a certain number of anomalies in. Get a list of possible anomalies we can add to the tile list
-        let allAnomalyList = this.props.useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
+        let allAnomalyList = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
 
         // Remove all current anomalies in use from this list
         let possibleAnomalies = []
@@ -1284,7 +1355,7 @@ class MapOptions extends React.Component {
                     />
                     <HelpModal key={"help-placement"} visible={this.state.placementStyleHelp} hideModal={this.togglePlacementStyleHelp} title={"About Placement Style"}
                          content='<p>
-                         Placement style dictates where important tiles are placed. Most revolve around having at least one tile near the homeworld with good resources.
+                         Placement style dictates where important tiles are placed. Most revolve around having at least one tile near the home system with good resources.
                          <br>
                          <br>
                          <br><b>Slice:</b> Places tiles like a normal player would. Prioritizes a good pathway to mecatol, and filling in the area around the home system with good tiles.

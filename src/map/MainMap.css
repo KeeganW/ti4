@@ -1,0 +1,28 @@
+.tile-control {
+    position: absolute;
+    z-index: 3000;
+}
+.tile-control.rotate-left {
+    top: -20px;
+    left: -20px;
+}
+.tile-control.lock {
+    top: -40px;
+    margin-left: -20px;
+}
+.tile-control.rotate-right {
+    top: -20px;
+    right: -20px;
+}
+.tile-control.exclude {
+    bottom: -20px;
+    left: -20px;
+}
+.tile-control.swap {
+    bottom: -40px;
+    margin-left: -20px;
+}
+.tile-control.include {
+    bottom: -20px;
+    right: -20px;
+}
