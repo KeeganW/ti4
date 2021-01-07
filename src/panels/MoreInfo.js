@@ -68,7 +68,7 @@ class MoreInfo extends React.Component {
 
         for (let tileNumber in this.props.tiles) {
             if ((this.props.tiles[tileNumber] >= 0 && this.props.tiles[tileNumber] < 18) ||
-                (this.props.tiles[tileNumber] >= 51 && this.props.tiles[tileNumber] < 58)) {
+                (this.props.tiles[tileNumber] >= 51 && this.props.tiles[tileNumber] < 59)) {
                 // This is a homeworld, so gather its info
                 let adjacentInfo = this.getAdjacent(tileNumber);
                 let playerName = this.props.currentPlayerNames[moreInfoByPlayer.length];
