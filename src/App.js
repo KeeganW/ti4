@@ -404,7 +404,7 @@ class App extends React.Component {
         tileString.shift();
 
         tileString = tileString.toString();
-        tileString = tileString.replaceAll("-1", "0");  // Remove the -1s because it is unused
+        tileString = tileString.replaceAll(",-1", ",0");  // Remove the -1s because it is unused
         tileString = tileString.replaceAll(",", " ");  // Remove commas from old array
         tileString = tileString.replaceAll("-", "");  // Remove rotation dash in hyperlanes
 
@@ -561,7 +561,7 @@ class App extends React.Component {
                     // Hyperlane, so remove the last section and check if it needs to be rotated
                     if (this.state.tiles[tileNumber].split("-")[1] !== "0") {
                         let degrees = 60 * Number(this.state.tiles[tileNumber].split("-")[1]);
-                        tile.css({'transform' : 'rotate(-'+ degrees +'deg)'});
+                        tile.css({'transform' : 'rotate('+ degrees +'deg)'});
                     }
                 }
             } else {
