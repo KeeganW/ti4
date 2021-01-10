@@ -86,7 +86,7 @@ h1, h2, h3, h4, h5 {
     right: 0;
     height: 100%;
     width: var(--options-width);
-    overflow: scroll;
+    overflow: auto;
     background-color: var(--tertiary-color);
 }
 #extraTilesContainer {
@@ -96,7 +96,7 @@ h1, h2, h3, h4, h5 {
     left: 0;
     height: 100%;
     width: var(--extra-tiles-width);
-    overflow: scroll;
+    overflow: auto;
     background-color: var(--tertiary-color);
 }
 #moreInfoContainer {
@@ -106,7 +106,7 @@ h1, h2, h3, h4, h5 {
     left: 0;
     height: 100%;
     width: var(--more-info-width);
-    overflow: scroll;
+    overflow: auto;
     background-color: var(--tertiary-color);
 }
 #generateForm, #tileForm, #extraTiles {
@@ -158,7 +158,7 @@ h1, h2, h3, h4, h5 {
     width: calc(100% - var(--options-width) - var(--extra-tiles-width) - var(--more-info-width));
     height: 100%;
     text-align: center;
-    overflow: scroll;
+    overflow: auto;
     /*background-color: var(--background-color);*/
     color: white;
 }
@@ -231,7 +231,7 @@ h1, h2, h3, h4, h5 {
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#copyTileStringButton {
+#shareMapButton {
     position: fixed;
     top: calc(var(--title-height) + 165px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
@@ -247,7 +247,7 @@ h1, h2, h3, h4, h5 {
     box-shadow: none;
 }
 #moreInfo {
-    overflow: scroll;
+    overflow: auto;
 }
 
 .btn-primary.active, .btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle, .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
