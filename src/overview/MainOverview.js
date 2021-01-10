@@ -1,5 +1,5 @@
 import React from "react";
-import {ArrowRepeat, Check, ClipboardPlus, Lock, X} from "react-bootstrap-icons";
+import {ArrowRepeat, Check, Share, Lock, X} from "react-bootstrap-icons";
 
 class MainOverview extends React.Component {
     render() {
@@ -69,11 +69,12 @@ class MainOverview extends React.Component {
                     <h4 className={"m-3"}>Share With Your Friends</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
-                            After you have made your custom map, just copy the url and send it to your friends! Or, if
-                            you are using Table Top Simulator (TTS), press the "Copy to Clipboard" button (
-                            <ClipboardPlus className="icon d-inline" />
-                             ) to get the full
-                            map string for the currently displayed map.
+                            After you have made your custom map, click on the "Share This Map" button (
+                            <Share className="icon d-inline" />
+                            ) to find out how to send it to your friends! You can share the url as a link, copy the
+                            Table Top Simulator string to use in the TI4 mod, or simply download an image of the map
+                            to post. If you toggle the tile overlay on, you can have the tile numbers appear in your
+                            downloaded image.
                         </p>
                     </div>
                 </div>

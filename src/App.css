@@ -250,13 +250,6 @@ h1, h2, h3, h4, h5 {
     overflow: auto;
 }
 
-#mapSingleImage {
-    height: auto;
-}
-#mapSingleButton {
-    height: calc(1.5em + .75rem + 2px);
-}
-
 .btn-primary.active, .btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle, .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
     background-color: var(--hover-color);
     border-color: var(--hover-color);

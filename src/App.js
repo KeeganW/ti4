@@ -13,7 +13,6 @@ import tileData from "./data/tileData.json";
 import raceData from "./data/raceData.json";
 import {calculateOffsets} from "./helpers/Helpers";
 import ReactTooltip from "react-tooltip";
-import { exportComponentAsPNG } from 'react-component-export-image';
 
 
 /**
