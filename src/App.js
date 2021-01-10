@@ -13,6 +13,8 @@ import tileData from "./data/tileData.json";
 import raceData from "./data/raceData.json";
 import {calculateOffsets} from "./helpers/Helpers";
 import ReactTooltip from "react-tooltip";
+import { exportComponentAsPNG } from 'react-component-export-image';
+
 
 /**
  * The core application page. Holds the states for common objects like tile data and player names. Responsible for
@@ -47,6 +49,7 @@ class App extends React.Component {
         };
 
         this.mapOptions = React.createRef();
+        this.map = React.createRef();
 
         this.drawMap = this.drawMap.bind(this);
 
@@ -68,7 +71,6 @@ class App extends React.Component {
         this.toggleOverlay = this.toggleOverlay.bind(this);
         this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
         this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
-        this.copyTilesToClipboard = this.copyTilesToClipboard.bind(this);
         this.showExtraTiles = this.showExtraTiles.bind(this);
         this.zoomPlusClick = this.zoomPlusClick.bind(this);
         this.zoomMinusClick = this.zoomMinusClick.bind(this);
@@ -392,29 +394,6 @@ class App extends React.Component {
         }
     }
 
-    /**
-     * Using writeText, copy the tiles currently being displayed to the user's clipboard.
-     */
-    copyTilesToClipboard() {
-        // Get the current tiles
-        let tileString = [...this.state.tiles];
-        tileString = this.removeTrailing(tileString);
-
-        // Remove mecatol rex
-        tileString.shift();
-
-        tileString = tileString.toString();
-        tileString = tileString.replaceAll(",-1", ",0");  // Remove the -1s because it is unused
-        tileString = tileString.replaceAll(",", " ");  // Remove commas from old array
-        tileString = tileString.replaceAll("-", "");  // Remove rotation dash in hyperlanes
-
-        // Print to console in case the copy function doesnt actually work
-        console.log("Here is your tile string for use with this TTS Mod (https://steamcommunity.com/sharedfiles/filedetails/?id=1466689117):");
-        console.log(tileString);
-
-        // Copy to the user's clipboard
-        navigator.clipboard.writeText(tileString);
-    }
 
     /**
      * Toggle the background animation, from moving stars to static, and visa versa
@@ -714,6 +693,8 @@ class App extends React.Component {
                     <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
                              tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}
 
+                             ref={this.map}
+
                              unusedTiles={this.state.unusedTiles} updateTiles={this.updateTiles}
                              lockedTiles={this.state.lockedTiles} updateLockedTiles={this.updateLockedTiles}
                              includedTiles={this.state.includedTiles} updateInExcludedTiles={this.updateInExcludedTiles}
@@ -730,8 +711,9 @@ class App extends React.Component {
 
                 <MapControls visible={this.state.mapControlsVisible} extraTilesVisible={this.state.extraTilesVisible}
                              moreInfoVisible={this.state.moreInfoVisible} overlayVisible={this.state.overlayVisible}
+                             tiles={this.state.tiles} map={this.map}
 
-                             toggleOverlay={this.toggleOverlay} copyTilesToClipboard={this.copyTilesToClipboard}
+                             toggleOverlay={this.toggleOverlay}
                              toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
                              zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick}
                              toggleBackground={this.toggleBackground}

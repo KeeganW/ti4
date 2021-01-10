@@ -1,8 +1,26 @@
 import React from "react";
-import {CardImage, ClipboardPlus, Dash, InfoCircle, Plus} from "react-bootstrap-icons";
+import {CardImage, ClipboardPlus, Dash, InfoCircle, Plus, Share} from "react-bootstrap-icons";
+import SetPlayerNameModal from "../options/SetPlayerNameModal";
+import ShareMapModal from "./ShareMapModal";
 
 class MapControls extends React.Component {
-    
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            shareMapHelp: false
+        }
+
+        this.toggleShareMapHelp = this.toggleShareMapHelp.bind(this);
+    }
+
+    toggleShareMapHelp(event) {
+        this.setState({
+            shareMapHelp: !this.state.shareMapHelp
+        })
+    }
+
     render() {
         return (
             <div id={"map-controls"}>
@@ -38,11 +56,15 @@ class MapControls extends React.Component {
                     </button>
                 </div>
 
-                <div id="copyTileStringButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.copyTilesToClipboard}>
-                    <button className={"btn btn-primary"} id="copyTileStringInfo" data-tip="Copy TTS Tile String to Clipboard" data-place="left" >
-                        <ClipboardPlus id="copyTileStringSvg" className="icon" />
+                <div id="shareMapButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.toggleShareMapHelp}>
+                    <button className={"btn btn-primary"} id="shareMapInfo" data-tip="Share This Map" data-place="left" >
+                        <Share id="shareMapSvg" className="icon" />
                     </button>
                 </div>
+
+                <ShareMapModal visible={this.state.shareMapHelp} hideModal={this.toggleShareMapHelp}
+                               tiles={this.props.tiles} map={this.props.map}
+                />
 
 
 
