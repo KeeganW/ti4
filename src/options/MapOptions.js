@@ -303,15 +303,10 @@ class MapOptions extends React.Component {
         // Number of Players
         let currentNumberOfPlayers = Number(newSettings[currentIndex]);
         currentIndex += 1;
-        let currentNumberOfPlayersOptions = currentNumberOfPlayers > 6 ? this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers) : this.state.optionsPossible.numberOfPlayers;
+        let currentNumberOfPlayersOptions = useProphecyOfKings ? this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers) : this.state.optionsPossible.numberOfPlayers;
 
         // Board Style
-        let currentBoardStyleOptions = [];
-        if (useProphecyOfKings) {
-            currentBoardStyleOptions = this.state.optionsPossible.boardStylesPok[currentNumberOfPlayers];
-        } else {
-            currentBoardStyleOptions = this.state.optionsPossible.boardStyles[currentNumberOfPlayers];
-        }
+        let currentBoardStyleOptions = useProphecyOfKings ? this.state.optionsPossible.boardStylesPok[currentNumberOfPlayers] : this.state.optionsPossible.boardStyles[currentNumberOfPlayers];
         let currentBoardStyle = currentBoardStyleOptions[Number(newSettings[currentIndex])]
         currentIndex += 1;
 
@@ -364,19 +359,22 @@ class MapOptions extends React.Component {
         let currentRaces = this.props.currentRaces;
         if (pickRaces) {
             if (newSettings[currentIndex] !== "|") {
-                // Get all of the races
-                currentRaces = [];
-                let combinedRaces = this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
-                while (newSettings[currentIndex] !== "|" && currentIndex !== newSettings.length) {
-                    currentRaces.push(combinedRaces[Number(newSettings.substring(currentIndex, currentIndex + 2))])
-                    currentIndex += 2
+                if (newSettings[currentIndex] !== undefined) {
+                    // Custom races, but not all of them
+                    currentRaces = [];
+                    let combinedRaces = this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
+                    while (newSettings[currentIndex] !== "|" && currentIndex !== newSettings.length) {
+                        currentRaces.push(combinedRaces[Number(newSettings.substring(currentIndex, currentIndex + 2))])
+                        currentIndex += 2
+                    }
+                } else {
+                    currentRaces = useProphecyOfKings ? this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces) : this.state.optionsPossible.races;
                 }
-            }
-            if (newSettings[currentIndex] === "|") {
+            } else {
+                // No custom races, but player names are specified, so parse them
                 currentPlayerNames = newSettings.substring(currentIndex).split("|").splice(1);
             }
         }
-
 
         this.setState({
             currentNumberOfPlayers: currentNumberOfPlayers,
@@ -407,7 +405,7 @@ class MapOptions extends React.Component {
                 // Tiles were changed after rendering, so we need to display them
                 this.props.updateTiles(newTiles, newSettings);
             } else {
-                this.props.updateTiles(this.getNewTileSet(useProphecyOfKings), newSettings);
+                this.props.updateTiles(this.getNewTileSet(useProphecyOfKings, currentRaces), newSettings);
             }
         })
 
@@ -442,7 +440,7 @@ class MapOptions extends React.Component {
     /**
      * Create a set of new tiles for the board based on the user's input.
      */
-    getNewTileSet(useProphecyOfKings) {
+    getNewTileSet(useProphecyOfKings, currentRaces) {
         if (useProphecyOfKings === undefined) {
             useProphecyOfKings = this.props.useProphecyOfKings
         }
@@ -463,7 +461,7 @@ class MapOptions extends React.Component {
         this.placeHyperlanes(newTiles)
 
         // Place home planets
-        this.placeHomeSystems(newTiles)
+        this.placeHomeSystems(newTiles, currentRaces)
 
         // Place planets one at a time, using the indexes to place combined with the ordered planet list
         for (let systemIndex of systemIndexes) {
@@ -748,9 +746,13 @@ class MapOptions extends React.Component {
             newTiles[hyperlaneData[0]] = hyperlaneData[1] + "-" + hyperlaneData[2]
         }
     }
-    placeHomeSystems(newTiles) {
+    placeHomeSystems(newTiles, currentRaces) {
         // Get current races for placing races, and shuffle them around
-        let currentRaces = [...this.props.currentRaces]
+        if (currentRaces === undefined) {
+            currentRaces = [...this.props.currentRaces]
+        } else {
+            currentRaces = [...currentRaces]
+        }
         this.shuffle(currentRaces)
 
         // Place data for the homeSystems from board data
