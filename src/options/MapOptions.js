@@ -1021,11 +1021,21 @@ class MapOptions extends React.Component {
             unusedWormholes = this.shuffle(unusedWormholes);
             let excludedTiles = [...allWormholes.concat(oppositeWormholes)];
 
-            // Check that the single used wormhole is not a planet. If not, try to replace some other planet with a planet wormhole
+            // Check that the single used wormhole is not a planet.
             if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
+                // Try to replace some other planet with a planet wormhole
                 unusedWormholes = planetWormholes;
                 excludedTiles = excludedTiles.concat(allAnomalyList);
-            } // else { // Using a planet, so try to replace the lowest weight tiles with any wormhole tile }
+            } else {
+                // Using a planet, so try to replace an anomaly with a wormhole
+                let wormholesToUse = []
+                for (let unusedWormhole of unusedWormholes) {
+                    if (planetWormholes.indexOf(unusedWormhole) < 0) {
+                        wormholesToUse.push(unusedWormhole)
+                    }
+                }
+                unusedWormholes = wormholesToUse
+            }
             possibleTiles = this.reverseReplace(possibleTiles, 1, unusedWormholes, excludedTiles, false);
         }
 
