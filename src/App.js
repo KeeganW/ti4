@@ -165,6 +165,11 @@ class App extends React.Component {
             this.setState({
                 tiles: newTiles
             }, this.drawMap)
+        } else {
+            // No tiles or settings to worry about, just bring us back to the main page
+            this.setState({
+                tiles: []
+            }, this.drawMap)
         }
     };
     
@@ -174,8 +179,9 @@ class App extends React.Component {
      * Updates the tiles state with a new set of tiles, and also pushes it to the url for sharable links
      * @param {number[]} newTiles
      * @param newEncodedOptions the settings, encoded as a string
+     * @param isNewGeneration A setting to be set when a new generation occurs, to trigger adding it to the history
      */
-    updateTiles(newTiles, newEncodedOptions) {
+    updateTiles(newTiles, newEncodedOptions, isNewGeneration) {
         // Remove the unused tile numbers at the end of the array
         newTiles = this.removeTrailing(newTiles);
 
@@ -192,7 +198,11 @@ class App extends React.Component {
         } else {
             params = "?settings=" + encodedOptions + params
         }
-        window.history.pushState({}, null, window.location.pathname + params);
+
+        if (isNewGeneration || newEncodedOptions === undefined) {
+            // This is a new generation, or we are moving tiles, so need to push the new state
+            window.history.pushState({}, null, window.location.pathname + params);
+        }
 
         // Hide the options menu when we are on mobile (for when the tiles update and the options menu is open)
         let newOptionsMenuState = this.state.isOptionsMenuShowing

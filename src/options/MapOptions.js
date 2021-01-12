@@ -405,7 +405,7 @@ class MapOptions extends React.Component {
                 // Tiles were changed after rendering, so we need to display them
                 this.props.updateTiles(newTiles, newSettings);
             } else {
-                this.props.updateTiles(this.getNewTileSet(useProphecyOfKings, currentRaces), newSettings);
+                this.props.updateTiles(this.getNewTileSet(useProphecyOfKings, currentRaces), newSettings, false);
             }
         })
 
@@ -432,7 +432,7 @@ class MapOptions extends React.Component {
             currentSeed: currentSeed,
             generated: true,
         }, () => {
-            this.props.updateTiles(this.getNewTileSet(), this.encodeSettings());
+            this.props.updateTiles(this.getNewTileSet(), this.encodeSettings(), true);
         });
 
     }
