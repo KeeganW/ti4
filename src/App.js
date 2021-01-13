@@ -230,7 +230,6 @@ class App extends React.Component {
         this.setState({
             tiles: newTiles,
             unusedTiles: unusedTiles,
-            tileClicked: -1,
             encodedOptions: encodedOptions,
             isOptionsMenuShowing: newOptionsMenuState,
         }, () => {
@@ -247,7 +246,8 @@ class App extends React.Component {
     }
 
     updateTileClicked(newTileClicked) {
-        if (typeof newTileClicked !== "number" && newTileClicked.target.id === "mainContent") {
+        if (typeof newTileClicked !== "number" &&
+            (newTileClicked.target.id === "mainContent" || newTileClicked.target.id === "map")) {
             this.setState({
                 tileClicked: -1,
             })
@@ -473,10 +473,14 @@ class App extends React.Component {
 
     /* MAP GENERATION */
 
-    getTileNumber(tile) {
+    getTileNumber(tile, numberOnly) {
         if (tile !== undefined) {
-            const regex = /\d+/gm;
-            return Number(regex.exec(tile)[0])
+            if (numberOnly) {
+                const regex = /\d+/gm;
+                return Number(regex.exec(tile)[0])
+            } else {
+                return String(tile).split("-")[0]
+            }
         } else {
             return -1
         }
@@ -506,20 +510,20 @@ class App extends React.Component {
         // Set the map height based on which tiles are being used
         let mapNumberTilesHeight = 1;
         let mapNumberTilesWidth = 1;
-        if (this.getTileNumber(this.state.tiles[37]) >= 0 || this.getTileNumber(this.state.tiles[38]) >= 0 || this.getTileNumber(this.state.tiles[60]) >= 0
-            || this.getTileNumber(this.state.tiles[48]) >= 0 || this.getTileNumber(this.state.tiles[49]) >= 0 || this.getTileNumber(this.state.tiles[50]) >= 0) {
+        if (this.getTileNumber(this.state.tiles[37], true) >= 0 || this.getTileNumber(this.state.tiles[38], true) >= 0 || this.getTileNumber(this.state.tiles[60], true) >= 0
+            || this.getTileNumber(this.state.tiles[48], true) >= 0 || this.getTileNumber(this.state.tiles[49], true) >= 0 || this.getTileNumber(this.state.tiles[50], true) >= 0, true) {
             mapNumberTilesHeight = 9;
             mapNumberTilesWidth = 7;
-        } else if (this.getTileNumber(this.state.tiles[19]) >= 0 || this.getTileNumber(this.state.tiles[20]) >= 0 || this.getTileNumber(this.state.tiles[36]) >= 0
-            || this.getTileNumber(this.state.tiles[27]) >= 0 || this.getTileNumber(this.state.tiles[28]) >= 0 || this.getTileNumber(this.state.tiles[29]) >= 0) {
+        } else if (this.getTileNumber(this.state.tiles[19], true) >= 0 || this.getTileNumber(this.state.tiles[20], true) >= 0 || this.getTileNumber(this.state.tiles[36], true) >= 0
+            || this.getTileNumber(this.state.tiles[27], true) >= 0 || this.getTileNumber(this.state.tiles[28], true) >= 0 || this.getTileNumber(this.state.tiles[29], true) >= 0, true) {
             mapNumberTilesHeight = 7;
             mapNumberTilesWidth = 5.5;
-        } else if (this.getTileNumber(this.state.tiles[7]) >= 0 || this.getTileNumber(this.state.tiles[8]) >= 0 || this.getTileNumber(this.state.tiles[18]) >= 0
-            || this.getTileNumber(this.state.tiles[12]) >= 0 || this.getTileNumber(this.state.tiles[13]) >= 0 || this.getTileNumber(this.state.tiles[14]) >= 0) {
+        } else if (this.getTileNumber(this.state.tiles[7], true) >= 0 || this.getTileNumber(this.state.tiles[8], true) >= 0 || this.getTileNumber(this.state.tiles[18], true) >= 0
+            || this.getTileNumber(this.state.tiles[12], true) >= 0 || this.getTileNumber(this.state.tiles[13], true) >= 0 || this.getTileNumber(this.state.tiles[14], true) >= 0, true) {
             mapNumberTilesHeight = 5;
             mapNumberTilesWidth = 4;
-        } else if (this.getTileNumber(this.state.tiles[1]) >= 0 || this.getTileNumber(this.state.tiles[2]) >= 0 || this.getTileNumber(this.state.tiles[6]) >= 0
-            || this.getTileNumber(this.state.tiles[3]) >= 0 || this.getTileNumber(this.state.tiles[4]) >= 0 || this.getTileNumber(this.state.tiles[5]) >= 0) {
+        } else if (this.getTileNumber(this.state.tiles[1], true) >= 0 || this.getTileNumber(this.state.tiles[2], true) >= 0 || this.getTileNumber(this.state.tiles[6], true) >= 0
+            || this.getTileNumber(this.state.tiles[3], true) >= 0 || this.getTileNumber(this.state.tiles[4], true) >= 0 || this.getTileNumber(this.state.tiles[5], true) >= 0) {
             mapNumberTilesHeight = 3;
             mapNumberTilesWidth = 2.5;
         }
@@ -754,6 +758,7 @@ class App extends React.Component {
                              includedTiles={this.state.includedTiles} updateInExcludedTiles={this.updateInExcludedTiles}
                              excludedTiles={this.state.excludedTiles}
                              tileClicked={this.state.tileClicked} updateTileClicked={this.updateTileClicked}
+                             getTileNumber={this.getTileNumber}
 
                              drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
                     />

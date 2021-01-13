@@ -31,6 +31,7 @@ class ShareMapModal extends React.Component {
         tileString = tileString.toString();
         tileString = tileString.replaceAll(",-1", ",0");  // Remove the -1s because it is unused
         tileString = tileString.replaceAll(",", " ");  // Remove commas from old array
+        tileString = tileString.replaceAll(/(\d+)-\d/gm, "$1");  // Remove rotation for non hyperlanes
         tileString = tileString.replaceAll("-", "");  // Remove rotation dash in hyperlanes
 
         return tileString

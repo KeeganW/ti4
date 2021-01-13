@@ -39,6 +39,13 @@ class MainMap extends React.Component {
             } else if (rotationDirection === "right") {
                 degrees += 60;
             }
+            if (degrees < 0) degrees += 360
+            let rotationAngle = (degrees/60) % 6
+
+            let newTiles = [...this.props.tiles];
+            newTiles[tileNumber] = this.props.getTileNumber(newTiles[tileNumber]) + "-" + rotationAngle;
+            this.props.updateTiles(newTiles)
+
             tile.css({'transform' : 'rotate('+ degrees +'deg)'});
         } else if (targetName === "swap") {
             if (this.props.unusedTiles.length > 0) {
