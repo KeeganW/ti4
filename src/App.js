@@ -29,6 +29,7 @@ class App extends React.Component {
             extraTilesVisible: false,
             moreInfoVisible: false,
             backgroundAnimated: true,
+            showAllExtraTiles: false,
             tiles: [],
             unusedTiles: [],
             overlayVisible: false,
@@ -64,12 +65,14 @@ class App extends React.Component {
         this.validateTiles = this.validateTiles.bind(this);
         this.toggleBackground = this.toggleBackground.bind(this);
         this.removeTrailing = this.removeTrailing.bind(this);
+        this.getTileNumber = this.getTileNumber.bind(this);
 
         this.toggleOptionsMenu = this.toggleOptionsMenu.bind(this);
         this.toggleProphecyOfKings = this.toggleProphecyOfKings.bind(this);
         this.toggleOverlay = this.toggleOverlay.bind(this);
         this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
         this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
+        this.toggleShowAllExtraTiles = this.toggleShowAllExtraTiles.bind(this);
         this.showExtraTiles = this.showExtraTiles.bind(this);
         this.zoomPlusClick = this.zoomPlusClick.bind(this);
         this.zoomMinusClick = this.zoomMinusClick.bind(this);
@@ -331,6 +334,12 @@ class App extends React.Component {
         }, this.drawMap );
     }
 
+    toggleShowAllExtraTiles() {
+        this.setState({
+            showAllExtraTiles: !this.state.showAllExtraTiles,
+        }, this.showExtraTiles );
+    }
+
     /**
      * Toggle whether we need to use the prophecy of kings expansion or not
      */
@@ -392,14 +401,20 @@ class App extends React.Component {
     showExtraTiles() {
         let systemNumbers = []
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
-        if (this.state.useProphecyOfKings) {
+        if (this.state.useProphecyOfKings || this.state.showAllExtraTiles) {
             systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         }
+        systemNumbers = systemNumbers.concat(tileData.hyperlanes);
 
         for (let systemNumber of systemNumbers) {
             // If it is not on the map, show the system tile. Otherwise, hide it.
             let systemSelector = $("#extra-" + systemNumber);
-            !this.state.tiles.includes(systemNumber) ? systemSelector.show() : systemSelector.hide();
+
+            if (this.state.showAllExtraTiles === true) {
+                systemSelector.show();
+            } else {
+                !this.state.tiles.includes(systemNumber) ? systemSelector.show() : systemSelector.hide();
+            }
         }
     }
 
@@ -458,6 +473,15 @@ class App extends React.Component {
 
     /* MAP GENERATION */
 
+    getTileNumber(tile) {
+        if (tile !== undefined) {
+            const regex = /\d+/gm;
+            return Number(regex.exec(tile)[0])
+        } else {
+            return -1
+        }
+    }
+
     /**
      * The main rendering function for the map. Using the tile string, cleanly lays out a map that is centered in the
      * map div.
@@ -482,20 +506,20 @@ class App extends React.Component {
         // Set the map height based on which tiles are being used
         let mapNumberTilesHeight = 1;
         let mapNumberTilesWidth = 1;
-        if (this.state.tiles[37] >= 0 || this.state.tiles[38] >= 0 || this.state.tiles[60] >= 0
-            || this.state.tiles[48] >= 0 || this.state.tiles[49] >= 0 || this.state.tiles[50] >= 0) {
+        if (this.getTileNumber(this.state.tiles[37]) >= 0 || this.getTileNumber(this.state.tiles[38]) >= 0 || this.getTileNumber(this.state.tiles[60]) >= 0
+            || this.getTileNumber(this.state.tiles[48]) >= 0 || this.getTileNumber(this.state.tiles[49]) >= 0 || this.getTileNumber(this.state.tiles[50]) >= 0) {
             mapNumberTilesHeight = 9;
             mapNumberTilesWidth = 7;
-        } else if (this.state.tiles[19] >= 0 || this.state.tiles[20] >= 0 || this.state.tiles[36] >= 0
-            || this.state.tiles[27] >= 0 || this.state.tiles[28] >= 0 || this.state.tiles[29] >= 0) {
+        } else if (this.getTileNumber(this.state.tiles[19]) >= 0 || this.getTileNumber(this.state.tiles[20]) >= 0 || this.getTileNumber(this.state.tiles[36]) >= 0
+            || this.getTileNumber(this.state.tiles[27]) >= 0 || this.getTileNumber(this.state.tiles[28]) >= 0 || this.getTileNumber(this.state.tiles[29]) >= 0) {
             mapNumberTilesHeight = 7;
             mapNumberTilesWidth = 5.5;
-        } else if (this.state.tiles[7] >= 0 || this.state.tiles[8] >= 0 || this.state.tiles[18] >= 0
-            || this.state.tiles[12] >= 0 || this.state.tiles[13] >= 0 || this.state.tiles[14] >= 0) {
+        } else if (this.getTileNumber(this.state.tiles[7]) >= 0 || this.getTileNumber(this.state.tiles[8]) >= 0 || this.getTileNumber(this.state.tiles[18]) >= 0
+            || this.getTileNumber(this.state.tiles[12]) >= 0 || this.getTileNumber(this.state.tiles[13]) >= 0 || this.getTileNumber(this.state.tiles[14]) >= 0) {
             mapNumberTilesHeight = 5;
             mapNumberTilesWidth = 4;
-        } else if (this.state.tiles[1] >= 0 || this.state.tiles[2] >= 0 || this.state.tiles[6] >= 0
-            || this.state.tiles[3] >= 0 || this.state.tiles[4] >= 0 || this.state.tiles[5] >= 0) {
+        } else if (this.getTileNumber(this.state.tiles[1]) >= 0 || this.getTileNumber(this.state.tiles[2]) >= 0 || this.getTileNumber(this.state.tiles[6]) >= 0
+            || this.getTileNumber(this.state.tiles[3]) >= 0 || this.getTileNumber(this.state.tiles[4]) >= 0 || this.getTileNumber(this.state.tiles[5]) >= 0) {
             mapNumberTilesHeight = 3;
             mapNumberTilesWidth = 2.5;
         }
@@ -644,43 +668,64 @@ class App extends React.Component {
         // Get the associated ids
         let fromId = ev.dataTransfer.getData("text");
         let targetId = ev.target.id;
-        
+
+        // Create selectors
         let targetSelector = $("#" + targetId);
         let fromSelector = $("#" + fromId);
         let targetUnderlay = $("#underlay-" + ev.target.id.split("-")[1]);
-        
-        // Temporarily store the target's source, and swap
-        let targetSource = targetSelector.attr('src');
-        targetSelector.attr('src', fromSelector.attr('src'));
-        fromSelector.attr('src', targetSource);
-        
+
+        // Get various variables for calculations
         let targetType = targetId.split("-")[0];
         let fromType = fromId.split("-")[0];
         let targetSecond = targetId.split("-")[1];
         let fromSecond = fromId.split("-")[1];
     
         let tilesCopy = [...this.state.tiles];
+        let swapSources = true;
+
+        // Determine what swap is happening
         if (fromType === "tile" && targetType === "tile") {
             // Both are on the main map, so simply swap their positions in the tile array
             let temp = tilesCopy[targetSecond];
             tilesCopy[targetSecond] = tilesCopy[fromSecond];
             tilesCopy[fromSecond] = temp;
         } else if (fromType === "extra" && targetType === "tile") {
+            console.log("In here")
             // Moving from the extra tiles onto the main map
             let temp = tilesCopy[targetSecond];
             tilesCopy[targetSecond] = parseInt(fromSecond);
             // Update the id of the tile
-            fromSelector.attr('id', 'extra-' + temp)
+            if (this.state.showAllExtraTiles) {
+                swapSources = false;
+            } else {
+                fromSelector.attr('id', 'extra-' + temp)
+            }
         } else if (fromType === "tile" && targetType === "extra") {
             // Moving from the main map to the tiles
             let temp = tilesCopy[fromSecond];
             tilesCopy[fromSecond] = parseInt(targetSecond);
             // Update the id of the tile
-            targetSelector.attr('id', 'extra-' + temp)
+            if (this.state.showAllExtraTiles) {
+                swapSources = false;
+            } else {
+                targetSelector.attr('id', 'extra-' + temp)
+            }
         } else {
-            // Swapping extra tiles... Just update the ids
-            targetSelector.attr('id', 'extra-' + fromSecond)
-            fromSelector.attr('id', 'extra-' + targetSecond)
+            if (this.state.showAllExtraTiles) {
+                swapSources = false;
+            } else {
+                // Swapping extra tiles... Just update the ids
+                targetSelector.attr('id', 'extra-' + fromSecond)
+                fromSelector.attr('id', 'extra-' + targetSecond)
+            }
+        }
+
+        // Only swap sources if we need to
+        if (swapSources) {
+            // Temporarily store the target's source, and swap
+            let targetSource = targetSelector.attr('src');
+            targetSelector.attr('src', fromSelector.attr('src'));
+            fromSelector.attr('src', targetSource);
         }
         
         // Clear the target classes
@@ -729,8 +774,8 @@ class App extends React.Component {
                 />
                 
                 <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}
-                            useProphecyOfKings={this.state.useProphecyOfKings}
-                            updateTiles={this.updateTiles}
+                            useProphecyOfKings={this.state.useProphecyOfKings} showAllExtraTiles={this.state.showAllExtraTiles}
+                            updateTiles={this.updateTiles} toggleShowAllExtraTiles={this.toggleShowAllExtraTiles}
 
                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
                 />

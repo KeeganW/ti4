@@ -5,11 +5,11 @@ class ExtraTiles extends React.Component {
     constructor(props) {
         super(props);
         this.underlayStyle = {
-            width: "210px",
-            height: "185px",
+            width: "232px",
+            height: "205px",
             position: "absolute",
-            top: "0",
-            left: "0",
+            top: "-3",
+            left: "-3",
         }
         this.tileStyle = {
             display: "none",
@@ -21,9 +21,10 @@ class ExtraTiles extends React.Component {
     render() {
         let systemNumbers = [];
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
-        if (this.props.useProphecyOfKings) {
+        if (this.props.useProphecyOfKings || this.props.showAllExtraTiles) {
             systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         }
+        systemNumbers = systemNumbers.concat(tileData.hyperlanes);
 
         const tileObjects = []
         for (let systemNumber of systemNumbers) {
@@ -60,6 +61,12 @@ class ExtraTiles extends React.Component {
                 <div className="title">
                     <h4 id="extraTitle" className="text-center">Extra Tiles</h4>
                 </div>
+
+                <div className="custom-control custom-checkbox mt-3 ml-3 mr-3 text-center">
+                    <input type="checkbox" className="custom-control-input" id="showAllExtraTiles" name="showAllExtraTiles" checked={this.props.showAllExtraTiles} onChange={this.props.toggleShowAllExtraTiles} />
+                    <label className="custom-control-label" htmlFor="showAllExtraTiles">Show All Tiles</label>
+                </div>
+
                 <div id="extraTiles" className="">
                     {tileObjects}
                 </div>

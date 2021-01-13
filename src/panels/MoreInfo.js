@@ -43,6 +43,7 @@ class MoreInfo extends React.Component {
         for (let adjacentIndex in adjacencies) {
             let adjacentTileNumber = adjacencies[adjacentIndex]
             let adjacentTile = this.props.tiles[adjacentTileNumber]
+            // TODO have a check for hyperlanes. Add appropriate tiles based on the hyperlane directions (factoring in rotation). Make this a while loop instead of for loop
             if (adjacentTile > 0) {
                 for (let planetIndex in tileData.all[adjacentTile]["planets"]) {
                     let planet = tileData.all[adjacentTile]["planets"][planetIndex];
