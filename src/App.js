@@ -226,10 +226,15 @@ class App extends React.Component {
                 unusedTiles.push(systemNumber)
             }
         }
+        let tileClicked = this.state.tileClicked;
+        if (isNewGeneration) {
+            tileClicked = -1
+        }
 
         this.setState({
             tiles: newTiles,
             unusedTiles: unusedTiles,
+            tileClicked: tileClicked,
             encodedOptions: encodedOptions,
             isOptionsMenuShowing: newOptionsMenuState,
         }, () => {

@@ -21,7 +21,8 @@ class MainMap extends React.Component {
         const splitArray = event.target.id.split("-")
         const targetName = splitArray[0];
         const tileNumber = Number(splitArray[splitArray.length - 1]);
-        const systemNumber = Number(this.props.tiles[tileNumber]);
+        const systemNumber = this.props.getTileNumber(this.props.tiles[tileNumber]);
+        // TODO there is probably something wrong here... Not converting to number
 
         if (targetName === "tile") {
             let newTileClicked = -1;
@@ -92,6 +93,7 @@ class MainMap extends React.Component {
             // Update the list
             this.props.updateInExcludedTiles(newIncludedTiles, newExcludedTiles)
         } else if (targetName === "include") {
+            console.log(systemNumber)
             // Get tile location in locked tiles list
             let includedIndex = this.props.includedTiles.indexOf(systemNumber);
             let newIncludedTiles = this.props.includedTiles;
