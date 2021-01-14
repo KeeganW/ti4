@@ -488,7 +488,9 @@ class App extends React.Component {
                 const regex = /\d+/gm;
                 return Number(regex.exec(tile)[0])
             } else {
-                return String(tile).split("-")[0]
+                let noRotationTile = String(tile).split("-")[0];
+                let asNumber = Number(noRotationTile);
+                return Number.isNaN(asNumber) ? noRotationTile : asNumber;
             }
         } else {
             return -1

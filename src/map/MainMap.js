@@ -22,7 +22,6 @@ class MainMap extends React.Component {
         const targetName = splitArray[0];
         const tileNumber = Number(splitArray[splitArray.length - 1]);
         const systemNumber = this.props.getTileNumber(this.props.tiles[tileNumber]);
-        // TODO there is probably something wrong here... Not converting to number
 
         if (targetName === "tile") {
             let newTileClicked = -1;
