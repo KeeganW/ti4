@@ -164,7 +164,7 @@ class MainMap extends React.Component {
                         <img id={"tile-" + tileNumber}
                              className="tile"
                              src={window.location.origin + window.location.pathname + "/tiles/ST_" + systemNumber + ".png"}
-                             draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop} onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter} onDragLeave={this.props.dragLeave}
+                             draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop} onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter} onDragLeave={this.props.dragLeave} onTouchMove={this.props.touchMove} onTouchEnd={this.props.touchEnd}
                              alt={"Twilight Imperium 4 Tile Number " + tileNumber + " and System Number " + systemNumber + "."}
                         />
                         <svg id={"underlay-" + tileNumber} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="underlay" fill="currentColor">

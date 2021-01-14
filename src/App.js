@@ -46,6 +46,7 @@ class App extends React.Component {
             excludedTiles: [],
             includedTiles: [],
             tileClicked: -1,
+            currentMobileHover: "",
         };
 
         this.mapOptions = React.createRef();
@@ -82,6 +83,9 @@ class App extends React.Component {
         this.dragEnter = this.dragEnter.bind(this);
         this.dragLeave = this.dragLeave.bind(this);
         this.allowDrop = this.allowDrop.bind(this);
+        this.handleDrop = this.handleDrop.bind(this);
+        this.handleTouchMove = this.handleTouchMove.bind(this);
+        this.handleTouchEnd = this.handleTouchEnd.bind(this);
 
     }
     
@@ -678,17 +682,20 @@ class App extends React.Component {
         let fromId = ev.dataTransfer.getData("text");
         let targetId = ev.target.id;
 
+        this.handleDrop(targetId, fromId)
+    }
+    handleDrop(targetId, fromId) {
         // Create selectors
         let targetSelector = $("#" + targetId);
         let fromSelector = $("#" + fromId);
-        let targetUnderlay = $("#underlay-" + ev.target.id.split("-")[1]);
+        let targetUnderlay = $("#underlay-" + targetId.split("-")[1]);
 
         // Get various variables for calculations
         let targetType = targetId.split("-")[0];
         let fromType = fromId.split("-")[0];
         let targetSecond = targetId.split("-")[1];
         let fromSecond = fromId.split("-")[1];
-    
+
         let tilesCopy = [...this.state.tiles];
         let swapSources = true;
 
@@ -699,7 +706,6 @@ class App extends React.Component {
             tilesCopy[targetSecond] = tilesCopy[fromSecond];
             tilesCopy[fromSecond] = temp;
         } else if (fromType === "extra" && targetType === "tile") {
-            console.log("In here")
             // Moving from the extra tiles onto the main map
             let temp = tilesCopy[targetSecond];
             tilesCopy[targetSecond] = parseInt(fromSecond);
@@ -736,13 +742,59 @@ class App extends React.Component {
             targetSelector.attr('src', fromSelector.attr('src'));
             fromSelector.attr('src', targetSource);
         }
-        
+
         // Clear the target classes
         targetSelector.removeClass("tile-target");
         targetUnderlay.removeClass("underlay-target");
-        
+
         // Update the tile string
-        this.updateTiles(tilesCopy);
+        this.setState({
+            tileClicked: -1,
+        }, () => {
+            this.updateTiles(tilesCopy);
+        } );
+    }
+    handleTouchMove(event) {
+        let changedTouch = event.changedTouches[0];
+        let elem = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+        console.log(elem.id)
+        if (elem.id !== undefined && elem.id !== "" && elem.id !== this.state.currentMobileHover) {
+            // At a transition stage
+            let targetSelector = $("#" + elem.id);
+            let targetUnderlay = $("#underlay-" + elem.id.split("-")[1]);
+            targetSelector.addClass("tile-target")
+            targetUnderlay.addClass("underlay-target")
+
+            if (this.state.currentMobileHover !== "") {
+                let targetSelector = $("#" + this.state.currentMobileHover);
+                let targetUnderlay = $("#underlay-" + this.state.currentMobileHover.split("-")[1]);
+                targetSelector.removeClass("tile-target")
+                targetUnderlay.removeClass("underlay-target")
+            }
+
+            this.setState({
+                currentMobileHover: elem.id,
+                tileClicked: -1,
+            });
+        }
+    }
+    handleTouchEnd(event) {
+        // event.preventDefault();
+        event.stopPropagation();
+        let changedTouch = event.changedTouches[0];
+        let elem = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+        this.handleDrop(event.target.id, elem.id)
+
+        if (this.state.currentMobileHover !== "") {
+            let targetSelector = $("#" + this.state.currentMobileHover);
+            let targetUnderlay = $("#underlay-" + this.state.currentMobileHover.split("-")[1]);
+            targetSelector.removeClass("tile-target")
+            targetUnderlay.removeClass("underlay-target")
+            this.setState({
+                currentMobileHover: "",
+                tileClicked: -1,
+            });
+        }
     }
     
 
@@ -765,7 +817,7 @@ class App extends React.Component {
                              tileClicked={this.state.tileClicked} updateTileClicked={this.updateTileClicked}
                              getTileNumber={this.getTileNumber}
 
-                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
+                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop} touchEnd={this.handleTouchEnd} touchMove={this.handleTouchMove}
                     />
                 </div>
 
