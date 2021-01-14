@@ -22,6 +22,7 @@ class MoreInfo extends React.Component {
 
     getAdjacent(tileNumber) {
         // TODO rewrite this to calculate adjacencies, not reference them from a data file
+        let originalAdjacencies = [...adjacencyData[tileNumber]];
         let adjacencies = [...adjacencyData[tileNumber]];
         // adjacencies.push(tileNumber);  // Add back in if we want to add the home system to these calcs
 
@@ -40,10 +41,31 @@ class MoreInfo extends React.Component {
             "hazardous": 0
         }
 
-        for (let adjacentIndex in adjacencies) {
-            let adjacentTileNumber = adjacencies[adjacentIndex]
+        while (adjacencies.length > 0) {
+            let adjacentTileNumber = adjacencies.splice(0, 1)[0]
             let adjacentTile = this.props.tiles[adjacentTileNumber]
-            // TODO have a check for hyperlanes. Add appropriate tiles based on the hyperlane directions (factoring in rotation). Make this a while loop instead of for loop
+            if (tileData.hyperlanes.indexOf(this.props.getTileNumber(adjacentTile)) >= 0) {
+                // This is a hyperlane, so add the tiles that are linked
+                let hyperlaneAdjacencies = [...adjacencyData[adjacentTileNumber]];
+                let tilePositionRelatedToHyperlane = hyperlaneAdjacencies.indexOf(Number(tileNumber)); // In the future this code can be adapted, with this tile number being the source tile
+                let hyperlaneLinks = tileData.all[this.props.getTileNumber(adjacentTile)]["hyperlanes"];
+                let currentRotation = Number(adjacentTile.split("-")[1])
+
+                for (let hyperlane of hyperlaneLinks) {
+                    let hyperlaneStart = (hyperlane[0] + currentRotation) % 6;
+                    let hyperlaneEnd = (hyperlane[1] + currentRotation) % 6;
+                    let hyperlaneStartTilenumber = hyperlaneAdjacencies[hyperlaneStart]
+                    let hyperlaneEndTilenumber = hyperlaneAdjacencies[hyperlaneEnd]
+
+                    if (hyperlaneStart === tilePositionRelatedToHyperlane && originalAdjacencies.indexOf(hyperlaneEndTilenumber) < 0) {
+                        // Add the tile on the other end of this hyperlane to be added to the total
+                        adjacencies.push(hyperlaneEndTilenumber)
+                    } else if (hyperlaneEnd === tilePositionRelatedToHyperlane && originalAdjacencies.indexOf(hyperlaneStartTilenumber) < 0) {
+                        // Add the tile on the other end of this hyperlane to be added to the total
+                        adjacencies.push(hyperlaneStartTilenumber)
+                    }
+                }
+            }
             if (adjacentTile > 0) {
                 for (let planetIndex in tileData.all[adjacentTile]["planets"]) {
                     let planet = tileData.all[adjacentTile]["planets"][planetIndex];

@@ -792,6 +792,7 @@ class App extends React.Component {
                 
                 <MoreInfo visible={this.state.moreInfoVisible} currentPlayerNames={this.state.currentPlayerNames}
                           useProphecyOfKings={this.state.useProphecyOfKings} tiles={this.state.tiles}
+                          getTileNumber={this.getTileNumber}
                 />
                 
                 <MapOptions visible={this.state.isOptionsMenuShowing} useProphecyOfKings={this.state.useProphecyOfKings}
