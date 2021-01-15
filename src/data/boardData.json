@@ -41,6 +41,15 @@
                 "secondary_tiles": [4, 3, 5, 27, 26, 30, 29, 32, 24],
                 "tertiary_tiles": [12, 10, 16, 14, 6, 2, 1],
                 "hyperlane_tiles": []
+            },
+            "rex": {
+                "description": "A competitive map with adjacencies.",
+                "source": "rex",
+                "home_worlds": [7, 11, 15],
+                "primary_tiles": [8, 12, 16, 6, 4, 2],
+                "secondary_tiles": [18, 10, 14, 31, 25, 19],
+                "tertiary_tiles": [9, 13, 17, 34, 28, 22],
+                "hyperlane_tiles": [[1, "90A", 0], [3, "90A", 2], [5, "90A", 1], [20, "85A", 4], [24, "85A", 4], [26, "85A", 0], [30, "85A", 0], [32, "85A", 2], [36, "85A", 2]]
             }
         },
         "4": {
