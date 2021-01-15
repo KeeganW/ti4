@@ -28,7 +28,7 @@ class MapControls extends React.Component {
         return (
             <div id={"map-controls"}>
                 <div id="zoomButtons" className={"btn-group-justified btn-group-sm btn-group-vertical" + (this.props.visible ? "" : " d-none")}>
-                    <button className="btn btn-primary" id="zoomPlus" onClick={this.props.zoomPlus}>
+                    <button className="btn btn-primary" id="zoomPlus" onClick={this.props.zoomPlus} data-tip="Or Hold CTRL and Use Scroll Wheel" data-place="left" >
                         <Plus className="icon" />
                     </button>
                     <button className="btn btn-primary" id="zoomMinus" onClick={this.props.zoomMinus}>

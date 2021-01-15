@@ -34,6 +34,7 @@ class App extends React.Component {
             unusedTiles: [],
             overlayVisible: false,
             zoom: 1.0,
+            lastCall: 0,
             mobileBreakpoint: 700,
             isMobileView: false,
             encodedOptions: "",
@@ -75,6 +76,7 @@ class App extends React.Component {
         this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
         this.toggleShowAllExtraTiles = this.toggleShowAllExtraTiles.bind(this);
         this.showExtraTiles = this.showExtraTiles.bind(this);
+        this.zoomScroll = this.zoomScroll.bind(this);
         this.zoomPlusClick = this.zoomPlusClick.bind(this);
         this.zoomMinusClick = this.zoomMinusClick.bind(this);
         
@@ -110,10 +112,7 @@ class App extends React.Component {
 
         // add when mounted
         document.addEventListener("mousedown", this.updateTileClicked);
-        // return function to be called when unmounted
-        return () => {
-            document.removeEventListener("mousedown", this.updateTileClicked);
-        };
+        document.addEventListener("wheel", this.zoomScroll, true);
     }
 
     /**
@@ -121,6 +120,8 @@ class App extends React.Component {
      */
     componentWillUnmount() {
         window.onpopstate = () => {};
+        document.removeEventListener("mousedown", this.updateTileClicked);
+        document.removeEventListener("wheel", this.zoomScroll);
     }
 
     /**
@@ -446,6 +447,28 @@ class App extends React.Component {
         });
     }
 
+    zoomScroll(event) {
+        if (this.state.lastCall < (Date.now() - 200) &&
+            event.ctrlKey &&
+            (event.target.id === "mainContent" || event.target.id === "map" || event.target.id.split("-")[0] === "tile")) {
+            if (event.deltaY < 0) {
+                if (this.state.zoom < 3) {
+                    this.setState({
+                        zoom: this.state.zoom + 0.20,
+                        lastCall: Date.now()
+                    }, this.drawMap );
+                }
+            } else if (event.deltaY > 0) {
+                if (this.state.zoom > 0.5) {
+                    this.setState({
+                        zoom: this.state.zoom - 0.20,
+                        lastCall: Date.now()
+                    }, this.drawMap );
+                }
+            }
+        }
+    }
+
     /**
      * Zoom the map in by a set amount, up until it is the same size as the original images. Then redraw the map.
      */
@@ -522,15 +545,15 @@ class App extends React.Component {
         let mapNumberTilesHeight = 1;
         let mapNumberTilesWidth = 1;
         if (this.getTileNumber(this.state.tiles[37], true) >= 0 || this.getTileNumber(this.state.tiles[38], true) >= 0 || this.getTileNumber(this.state.tiles[60], true) >= 0
-            || this.getTileNumber(this.state.tiles[48], true) >= 0 || this.getTileNumber(this.state.tiles[49], true) >= 0 || this.getTileNumber(this.state.tiles[50], true) >= 0, true) {
+            || this.getTileNumber(this.state.tiles[48], true) >= 0 || this.getTileNumber(this.state.tiles[49], true) >= 0 || this.getTileNumber(this.state.tiles[50], true) >= 0) {
             mapNumberTilesHeight = 9;
             mapNumberTilesWidth = 7;
         } else if (this.getTileNumber(this.state.tiles[19], true) >= 0 || this.getTileNumber(this.state.tiles[20], true) >= 0 || this.getTileNumber(this.state.tiles[36], true) >= 0
-            || this.getTileNumber(this.state.tiles[27], true) >= 0 || this.getTileNumber(this.state.tiles[28], true) >= 0 || this.getTileNumber(this.state.tiles[29], true) >= 0, true) {
+            || this.getTileNumber(this.state.tiles[27], true) >= 0 || this.getTileNumber(this.state.tiles[28], true) >= 0 || this.getTileNumber(this.state.tiles[29], true) >= 0) {
             mapNumberTilesHeight = 7;
             mapNumberTilesWidth = 5.5;
         } else if (this.getTileNumber(this.state.tiles[7], true) >= 0 || this.getTileNumber(this.state.tiles[8], true) >= 0 || this.getTileNumber(this.state.tiles[18], true) >= 0
-            || this.getTileNumber(this.state.tiles[12], true) >= 0 || this.getTileNumber(this.state.tiles[13], true) >= 0 || this.getTileNumber(this.state.tiles[14], true) >= 0, true) {
+            || this.getTileNumber(this.state.tiles[12], true) >= 0 || this.getTileNumber(this.state.tiles[13], true) >= 0 || this.getTileNumber(this.state.tiles[14], true) >= 0) {
             mapNumberTilesHeight = 5;
             mapNumberTilesWidth = 4;
         } else if (this.getTileNumber(this.state.tiles[1], true) >= 0 || this.getTileNumber(this.state.tiles[2], true) >= 0 || this.getTileNumber(this.state.tiles[6], true) >= 0
