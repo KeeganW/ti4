@@ -357,7 +357,7 @@
                     "resources": 1,
                     "influence": 2,
                     "trait": "industrial",
-                    "specialty": null,
+                    "specialty": "cybernetic",
                     "legendary": false
                 }
             ]
