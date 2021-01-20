@@ -517,13 +517,22 @@ class App extends React.Component {
 
     getTileNumber(tile, numberOnly) {
         if (tile !== undefined) {
-            if (numberOnly) {
-                const regex = /\d+/gm;
-                return Number(regex.exec(tile)[0])
+            let hyperlaneRegex = /^((8[3-9]|90|91)[AB])-?([0-5])?$/gm
+            let result = hyperlaneRegex.exec(tile);
+            if (result) {
+                if (numberOnly) {
+                    return Number(result[2]);
+                } else {
+                    return result[1];
+                }
             } else {
-                let noRotationTile = String(tile).split("-")[0];
-                let asNumber = Number(noRotationTile);
-                return Number.isNaN(asNumber) ? noRotationTile : asNumber;
+                let regex = /^([0-7][0-9]?|80|81|82|-1)-?([0-5])?$/gm
+                result = regex.exec(tile);
+                if (result) {
+                    return Number(result[1])
+                } else {
+                    return -1
+                }
             }
         } else {
             return -1
@@ -743,8 +752,7 @@ class App extends React.Component {
         } else if (fromType === "extra" && targetType === "tile") {
             // Moving from the extra tiles onto the main map
             let temp = tilesCopy[targetSecond];
-            tilesCopy[targetSecond] = parseInt(fromSecond);
-            console.log(fromSecond)
+            tilesCopy[targetSecond] = this.getTileNumber(fromSecond);
             // Update the id of the tile
             if (this.state.showAllExtraTiles || this.state.customMapBuilding) {
                 swapSources = false;
@@ -754,7 +762,7 @@ class App extends React.Component {
         } else if (fromType === "tile" && targetType === "extra") {
             // Moving from the main map to the tiles
             let temp = tilesCopy[fromSecond];
-            tilesCopy[fromSecond] = parseInt(targetSecond);
+            tilesCopy[fromSecond] = this.getTileNumber(targetSecond);
             // Update the id of the tile
             if (this.state.showAllExtraTiles || this.state.customMapBuilding) {
                 swapSources = false;
