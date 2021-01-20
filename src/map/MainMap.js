@@ -139,12 +139,7 @@ class MainMap extends React.Component {
 
         // Loop over 0 to pok board size, and add in the tile objects to be displayed
         for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
-            let systemNumber = this.props.tiles[tileNumber]
-
-            // Handle hyperlanes differently. Pull out their tile number, separate from their rotation angle
-            if (isNaN(Number(systemNumber)) && systemNumber !== undefined) {
-                systemNumber = this.props.tiles[tileNumber].split("-")[0]
-            }
+            let systemNumber = this.props.getTileNumber(this.props.tiles[tileNumber])
 
             // Add the tile to the array of tiles to be displayed, if they are valid tiles
             if (systemNumber !== -1 && systemNumber !== undefined) {

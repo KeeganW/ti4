@@ -4,7 +4,7 @@
     --tertiary-color: #e6e8ea;
     --border-color: #efefef;
     --hover-color: #794100;
-    --background-color: #242222;
+    --background-color: #141b24;
 
     --scroll-bar-distance: 17px;
     --title-height: 60px;
@@ -19,7 +19,7 @@ html, body {margin: 0; height: 100%;}
 /* Set base background, colors, and fonts*/
 body {
     font-family: "Open Sans", sans-serif;
-    /*background-color: var(--background-color);*/
+    background-color: var(--background-color);
     color: black;
 }
 h1, h2, h3, h4, h5 {
@@ -27,7 +27,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* Settings for button customization */
-.btn-primary, .btn-outline-primary:hover {
+.btn-primary, .btn-outline-primary:hover, .btn-primary:focus {
     color: white;
     background-color: var(--primary-color);
     border-color: var(--primary-color);

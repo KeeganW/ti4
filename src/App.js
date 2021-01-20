@@ -30,6 +30,7 @@ class App extends React.Component {
             moreInfoVisible: false,
             backgroundAnimated: true,
             showAllExtraTiles: false,
+            customMapBuilding: false,
             tiles: [],
             unusedTiles: [],
             overlayVisible: false,
@@ -75,6 +76,7 @@ class App extends React.Component {
         this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
         this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
         this.toggleShowAllExtraTiles = this.toggleShowAllExtraTiles.bind(this);
+        this.toggleCustomMapBuilding = this.toggleCustomMapBuilding.bind(this);
         this.showExtraTiles = this.showExtraTiles.bind(this);
         this.zoomScroll = this.zoomScroll.bind(this);
         this.zoomPlusClick = this.zoomPlusClick.bind(this);
@@ -350,6 +352,12 @@ class App extends React.Component {
         }, this.showExtraTiles );
     }
 
+    toggleCustomMapBuilding() {
+        this.setState({
+            customMapBuilding: !this.state.customMapBuilding,
+        }, this.showExtraTiles );
+    }
+
     /**
      * Toggle whether we need to use the prophecy of kings expansion or not
      */
@@ -414,13 +422,15 @@ class App extends React.Component {
         if (this.state.useProphecyOfKings || this.state.showAllExtraTiles) {
             systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         }
-        systemNumbers = systemNumbers.concat(tileData.hyperlanes);
+        if (this.state.customMapBuilding) {
+            systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
+        }
 
         for (let systemNumber of systemNumbers) {
             // If it is not on the map, show the system tile. Otherwise, hide it.
             let systemSelector = $("#extra-" + systemNumber);
 
-            if (this.state.showAllExtraTiles === true) {
+            if (this.state.showAllExtraTiles || this.state.customMapBuilding) {
                 systemSelector.show();
             } else {
                 !this.state.tiles.includes(systemNumber) ? systemSelector.show() : systemSelector.hide();
@@ -718,8 +728,8 @@ class App extends React.Component {
         // Get various variables for calculations
         let targetType = targetId.split("-")[0];
         let fromType = fromId.split("-")[0];
-        let targetSecond = targetId.split("-")[1];
-        let fromSecond = fromId.split("-")[1];
+        let targetSecond = targetId.slice(targetId.indexOf("-") + 1);
+        let fromSecond = fromId.slice(fromId.indexOf("-") + 1);
 
         let tilesCopy = [...this.state.tiles];
         let swapSources = true;
@@ -734,8 +744,9 @@ class App extends React.Component {
             // Moving from the extra tiles onto the main map
             let temp = tilesCopy[targetSecond];
             tilesCopy[targetSecond] = parseInt(fromSecond);
+            console.log(fromSecond)
             // Update the id of the tile
-            if (this.state.showAllExtraTiles) {
+            if (this.state.showAllExtraTiles || this.state.customMapBuilding) {
                 swapSources = false;
             } else {
                 fromSelector.attr('id', 'extra-' + temp)
@@ -745,13 +756,13 @@ class App extends React.Component {
             let temp = tilesCopy[fromSecond];
             tilesCopy[fromSecond] = parseInt(targetSecond);
             // Update the id of the tile
-            if (this.state.showAllExtraTiles) {
+            if (this.state.showAllExtraTiles || this.state.customMapBuilding) {
                 swapSources = false;
             } else {
                 targetSelector.attr('id', 'extra-' + temp)
             }
         } else {
-            if (this.state.showAllExtraTiles) {
+            if (this.state.showAllExtraTiles || this.state.customMapBuilding) {
                 swapSources = false;
             } else {
                 // Swapping extra tiles... Just update the ids
@@ -862,7 +873,10 @@ class App extends React.Component {
                 
                 <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}
                             useProphecyOfKings={this.state.useProphecyOfKings} showAllExtraTiles={this.state.showAllExtraTiles}
+                            customMapBuilding={this.state.customMapBuilding}
+
                             updateTiles={this.updateTiles} toggleShowAllExtraTiles={this.toggleShowAllExtraTiles}
+                            toggleCustomMapBuilding={this.toggleCustomMapBuilding}
 
                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
                 />

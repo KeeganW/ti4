@@ -24,7 +24,9 @@ class ExtraTiles extends React.Component {
         if (this.props.useProphecyOfKings || this.props.showAllExtraTiles) {
             systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         }
-        systemNumbers = systemNumbers.concat(tileData.hyperlanes);
+        if (this.props.customMapBuilding) {
+            systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
+        }
 
         const tileObjects = []
         for (let systemNumber of systemNumbers) {
@@ -65,6 +67,11 @@ class ExtraTiles extends React.Component {
                 <div className="custom-control custom-checkbox mt-3 ml-3 mr-3 text-center">
                     <input type="checkbox" className="custom-control-input" id="showAllExtraTiles" name="showAllExtraTiles" checked={this.props.showAllExtraTiles} onChange={this.props.toggleShowAllExtraTiles} />
                     <label className="custom-control-label" htmlFor="showAllExtraTiles">Show All Tiles</label>
+                </div>
+
+                <div className="custom-control custom-checkbox mt-3 ml-3 mr-3 text-center">
+                    <input type="checkbox" className="custom-control-input" id="customMapBuilding" name="customMapBuilding" checked={this.props.customMapBuilding} onChange={this.props.toggleCustomMapBuilding} />
+                    <label className="custom-control-label" htmlFor="customMapBuilding">Custom Map Building</label>
                 </div>
 
                 <div id="extraTiles" className="">
