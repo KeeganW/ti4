@@ -618,7 +618,7 @@ class App extends React.Component {
             let tileWrapper = $("#tile-wrapper-" + tileNumber);
             let numOverlay = $("#number-" + tileNumber);
             let underlay = $("#underlay-" + tileNumber);
-            if (this.state.tiles[tileNumber] >= 0 || typeof this.state.tiles[tileNumber] === "string") {
+            if (this.state.tiles[tileNumber] >= 0 || typeof this.state.tiles[tileNumber] === "string" || this.state.customMapBuilding) {
                 tile
                     .css("left", 0)
                     .css("top", 0)

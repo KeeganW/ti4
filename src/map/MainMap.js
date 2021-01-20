@@ -142,7 +142,7 @@ class MainMap extends React.Component {
             let systemNumber = this.props.getTileNumber(this.props.tiles[tileNumber])
 
             // Add the tile to the array of tiles to be displayed, if they are valid tiles
-            if (systemNumber !== -1 && systemNumber !== undefined) {
+            if (systemNumber !== undefined) {
                 mapTiles.push(
                     <div key={"tile-wrapper-" + tileNumber} id={"tile-wrapper-" + tileNumber} className="tile-wrapper" style={style} onClick={this.toggleControls}>
                         <button id={"rotate-left-" + tileNumber} className={"btn btn-primary tile-control rotate-left" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none")} data-tip="Rotate tile left" data-place="top" >
