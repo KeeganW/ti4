@@ -21,6 +21,11 @@ body {
     font-family: "Open Sans", sans-serif;
     background-color: var(--background-color);
     color: black;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+    display: none;
 }
 h1, h2, h3, h4, h5 {
         font-family: HandelGothic, Slider, sans-serif;

@@ -5,13 +5,15 @@ class ExtraTiles extends React.Component {
     constructor(props) {
         super(props);
         this.underlayStyle = {
-            width: "232px",
-            height: "205px",
+            width: "210px",
+            height: "185px",
             position: "absolute",
-            top: "-3",
-            left: "-3",
+            top: "0",
+            left: "0",
         }
         this.tileStyle = {
+            width: "200px",
+            height: "175px",
             display: "none",
             margin: "5px",
             position: "relative",
