@@ -429,11 +429,19 @@ class App extends React.Component {
         for (let systemNumber of systemNumbers) {
             // If it is not on the map, show the system tile. Otherwise, hide it.
             let systemSelector = $("#extra-" + systemNumber);
+            let overlaySelector = $("#extra-number-" + systemNumber);
 
             if (this.state.showAllExtraTiles || this.state.customMapBuilding) {
                 systemSelector.show();
+                overlaySelector.show();
             } else {
-                !this.state.tiles.includes(systemNumber) ? systemSelector.show() : systemSelector.hide();
+                if (!this.state.tiles.includes(systemNumber)) {
+                    systemSelector.show()
+                    overlaySelector.show();
+                } else {
+                    systemSelector.hide()
+                    overlaySelector.hide();
+                }
             }
         }
     }
@@ -658,7 +666,7 @@ class App extends React.Component {
                 // .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
 
             if (!this.state.overlayVisible) {
-                numOverlay.hide()
+                numOverlay.hide();
             } else {
                 if (this.state.tiles[tileNumber] === 0) {
                     // Show the player name

@@ -18,6 +18,11 @@ class ExtraTiles extends React.Component {
             margin: "5px",
             position: "relative",
         }
+        this.overlayStyle = {
+            height: "175px",
+            marginLeft: "92px",
+            top: "85px",
+        }
     }
     
     render() {
@@ -37,10 +42,13 @@ class ExtraTiles extends React.Component {
             if (isNaN(Number(systemNumber)) && systemNumber !== undefined) {
                 systemNumber = systemNumber.split("-")[0]
             }
+            
+            let systemOverlay = <span id={"extra-number-" + systemNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")} style={this.overlayStyle}>{systemNumber === -1 ? "Empty" : systemNumber}</span>;
+            
 
             tileObjects.push(
                 <div key={"extra-tile-wrapper-" + systemNumber} className="tile-wrapper">
-                    {/*<span id={"num-" + tileNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")}>{tileNumber}</span>*/}
+                    {systemOverlay}
                     <img id={"extra-" + systemNumber}
                          width="200px"
                          height="175px"

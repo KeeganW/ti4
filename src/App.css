@@ -104,6 +104,9 @@ h1, h2, h3, h4, h5 {
     overflow: auto;
     background-color: var(--tertiary-color);
 }
+#extraTiles {
+    color: white;
+}
 #moreInfoContainer {
     color: black;
     position: fixed;
