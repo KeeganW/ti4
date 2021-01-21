@@ -25,7 +25,9 @@ class MainMap extends React.Component {
 
         if (targetName === "tile") {
             let newTileClicked = -1;
-            if (this.props.tileClicked !== tileNumber) {
+            
+            // Ensure that the tile is a different tile, and it is not an empty tile
+            if (this.props.tileClicked !== tileNumber && systemNumber !== -1 && systemNumber !== 0) {
                 newTileClicked = tileNumber;
             }
             this.props.updateTileClicked(newTileClicked);
@@ -92,7 +94,6 @@ class MainMap extends React.Component {
             // Update the list
             this.props.updateInExcludedTiles(newIncludedTiles, newExcludedTiles)
         } else if (targetName === "include") {
-            console.log(systemNumber)
             // Get tile location in locked tiles list
             let includedIndex = this.props.includedTiles.indexOf(systemNumber);
             let newIncludedTiles = this.props.includedTiles;
@@ -146,13 +147,13 @@ class MainMap extends React.Component {
             if (systemNumber !== undefined) {
                 mapTiles.push(
                     <div key={"tile-wrapper-" + tileNumber} id={"tile-wrapper-" + tileNumber} className="tile-wrapper" style={style} onClick={this.toggleControls}>
-                        <button id={"rotate-left-" + tileNumber} className={"btn btn-primary tile-control rotate-left" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none")} data-tip="Rotate tile left" data-place="top" >
+                        <button id={"rotate-left-" + tileNumber} className={"btn btn-primary tile-control rotate-left" + (this.props.tileClicked === tileNumber ? "" : " d-none")} data-tip="Rotate tile left" data-place="top" >
                             <Arrow90degLeft id={"rotate-left-svg-" + tileNumber} className={"icon"}/>
                         </button>
-                        <button id={"lock-" + tileNumber} className={"btn btn-primary tile-control lock" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none") + (this.props.lockedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip="Keep tile here on generation" >
+                        <button id={"lock-" + tileNumber} className={"btn btn-primary tile-control lock" + (this.props.tileClicked === tileNumber ? "" : " d-none") + (this.props.lockedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip="Keep tile here on generation" >
                             <Lock id={"lock-svg-" + tileNumber} className={"icon"}/>
                         </button>
-                        <button id={"rotate-right-" + tileNumber} className={"btn btn-primary tile-control rotate-right" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none")} data-tip={"Rotate tile right"} >
+                        <button id={"rotate-right-" + tileNumber} className={"btn btn-primary tile-control rotate-right" + (this.props.tileClicked === tileNumber ? "" : " d-none")} data-tip={"Rotate tile right"} >
                             <Arrow90degRight id={"rotate-right-svg-" + tileNumber} className={"icon"}/>
                         </button>
                         <span id={"number-" + tileNumber} className={"overlay"} style={hidden}>{tileNumber}</span>
@@ -165,13 +166,13 @@ class MainMap extends React.Component {
                         <svg id={"underlay-" + tileNumber} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="underlay" fill="currentColor">
                             <polygon points="269.51 0 89.84 0 0 155.6 89.84 311.2 269.51 311.2 359.35 155.6 269.51 0" />
                         </svg>
-                        <button id={"exclude-" + tileNumber} className={"btn btn-primary tile-control exclude" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none") + (this.props.excludedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip={"Exclude from generation"} data-place="bottom" >
+                        <button id={"exclude-" + tileNumber} className={"btn btn-primary tile-control exclude" + (this.props.tileClicked === tileNumber ? "" : " d-none") + (this.props.excludedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip={"Exclude from generation"} data-place="bottom" >
                             <X id={"exclude-svg-" + tileNumber} className={"icon"}/>
                         </button>
-                        <button id={"swap-" + tileNumber} className={"btn btn-primary tile-control swap" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none")} data-tip={"Swap with an extra tile"} data-place="bottom" >
+                        <button id={"swap-" + tileNumber} className={"btn btn-primary tile-control swap" + (this.props.tileClicked === tileNumber ? "" : " d-none")} data-tip={"Swap with an extra tile"} data-place="bottom" >
                             <ArrowRepeat id={"swap-svg-" + tileNumber} className={"icon"}/>
                         </button>
-                        <button id={"include-" + tileNumber} className={"btn btn-primary tile-control include" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none") + (this.props.includedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip={"Always include in generation"} data-place="bottom" >
+                        <button id={"include-" + tileNumber} className={"btn btn-primary tile-control include" + (this.props.tileClicked === tileNumber ? "" : " d-none") + (this.props.includedTiles.indexOf(systemNumber) >= 0 ? " active" : "")} data-tip={"Always include in generation"} data-place="bottom" >
                             <Check id={"include-svg-" + tileNumber} className={"icon"}/>
                         </button>
                     </div>
