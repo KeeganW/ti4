@@ -370,7 +370,10 @@ class App extends React.Component {
     toggleCustomMapBuilding() {
         this.setState({
             customMapBuilding: !this.state.customMapBuilding,
-        }, this.showExtraTiles );
+        }, () => {
+            this.showExtraTiles();
+            this.drawMap();
+        } );
     }
 
     /**
