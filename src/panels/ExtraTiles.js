@@ -5,26 +5,36 @@ class ExtraTiles extends React.Component {
     constructor(props) {
         super(props);
         this.underlayStyle = {
-            width: "232px",
-            height: "205px",
+            width: "210px",
+            height: "185px",
             position: "absolute",
-            top: "-3",
-            left: "-3",
+            top: "0",
+            left: "0",
         }
         this.tileStyle = {
+            width: "200px",
+            height: "175px",
             display: "none",
             margin: "5px",
             position: "relative",
+        }
+        this.overlayStyle = {
+            height: "175px",
+            marginLeft: "92px",
+            top: "85px",
+            display: "none",
         }
     }
     
     render() {
         let systemNumbers = [];
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
-        if (this.props.useProphecyOfKings || this.props.showAllExtraTiles) {
+        if (this.props.useProphecyOfKings || this.props.showAllExtraTiles || this.props.customMapBuilding) {
             systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         }
-        systemNumbers = systemNumbers.concat(tileData.hyperlanes);
+        if (this.props.customMapBuilding) {
+            systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
+        }
 
         const tileObjects = []
         for (let systemNumber of systemNumbers) {
@@ -36,7 +46,7 @@ class ExtraTiles extends React.Component {
 
             tileObjects.push(
                 <div key={"extra-tile-wrapper-" + systemNumber} className="tile-wrapper">
-                    {/*<span id={"num-" + tileNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")}>{tileNumber}</span>*/}
+                    <span id={"extra-number-" + systemNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")} style={this.overlayStyle}>{systemNumber === -1 ? "Empty" : systemNumber}</span>
                     <img id={"extra-" + systemNumber}
                          width="200px"
                          height="175px"
@@ -65,6 +75,11 @@ class ExtraTiles extends React.Component {
                 <div className="custom-control custom-checkbox mt-3 ml-3 mr-3 text-center">
                     <input type="checkbox" className="custom-control-input" id="showAllExtraTiles" name="showAllExtraTiles" checked={this.props.showAllExtraTiles} onChange={this.props.toggleShowAllExtraTiles} />
                     <label className="custom-control-label" htmlFor="showAllExtraTiles">Show All Tiles</label>
+                </div>
+
+                <div className="custom-control custom-checkbox mt-3 ml-3 mr-3 text-center">
+                    <input type="checkbox" className="custom-control-input" id="customMapBuilding" name="customMapBuilding" checked={this.props.customMapBuilding} onChange={this.props.toggleCustomMapBuilding} />
+                    <label className="custom-control-label" htmlFor="customMapBuilding">Custom Map Building</label>
                 </div>
 
                 <div id="extraTiles" className="">

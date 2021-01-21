@@ -4,7 +4,7 @@
     --tertiary-color: #e6e8ea;
     --border-color: #efefef;
     --hover-color: #794100;
-    --background-color: #242222;
+    --background-color: #141b24;
 
     --scroll-bar-distance: 17px;
     --title-height: 60px;
@@ -19,15 +19,20 @@ html, body {margin: 0; height: 100%;}
 /* Set base background, colors, and fonts*/
 body {
     font-family: "Open Sans", sans-serif;
-    /*background-color: var(--background-color);*/
+    background-color: var(--background-color);
     color: black;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+    display: none;
 }
 h1, h2, h3, h4, h5 {
         font-family: HandelGothic, Slider, sans-serif;
 }
 
 /* Settings for button customization */
-.btn-primary, .btn-outline-primary:hover {
+.btn-primary, .btn-outline-primary:hover, .btn-primary:focus {
     color: white;
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -98,6 +103,9 @@ h1, h2, h3, h4, h5 {
     width: var(--extra-tiles-width);
     overflow: auto;
     background-color: var(--tertiary-color);
+}
+#extraTiles {
+    color: white;
 }
 #moreInfoContainer {
     color: black;
