@@ -22,13 +22,14 @@ class ExtraTiles extends React.Component {
             height: "175px",
             marginLeft: "92px",
             top: "85px",
+            display: "none",
         }
     }
     
     render() {
         let systemNumbers = [];
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
-        if (this.props.useProphecyOfKings || this.props.showAllExtraTiles) {
+        if (this.props.useProphecyOfKings || this.props.showAllExtraTiles || this.props.customMapBuilding) {
             systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         }
         if (this.props.customMapBuilding) {
@@ -42,13 +43,10 @@ class ExtraTiles extends React.Component {
             if (isNaN(Number(systemNumber)) && systemNumber !== undefined) {
                 systemNumber = systemNumber.split("-")[0]
             }
-            
-            let systemOverlay = <span id={"extra-number-" + systemNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")} style={this.overlayStyle}>{systemNumber === -1 ? "Empty" : systemNumber}</span>;
-            
 
             tileObjects.push(
                 <div key={"extra-tile-wrapper-" + systemNumber} className="tile-wrapper">
-                    {systemOverlay}
+                    <span id={"extra-number-" + systemNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")} style={this.overlayStyle}>{systemNumber === -1 ? "Empty" : systemNumber}</span>
                     <img id={"extra-" + systemNumber}
                          width="200px"
                          height="175px"

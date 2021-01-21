@@ -136,6 +136,7 @@ class MainMap extends React.Component {
     render() {
         const mapTiles = []
         const style = {position: "absolute"}
+        const hidden = {display: "none"}
 
         // Loop over 0 to pok board size, and add in the tile objects to be displayed
         for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
@@ -154,7 +155,7 @@ class MainMap extends React.Component {
                         <button id={"rotate-right-" + tileNumber} className={"btn btn-primary tile-control rotate-right" + (this.props.tileClicked === tileNumber && systemNumber !== 0 ? "" : " d-none")} data-tip={"Rotate tile right"} >
                             <Arrow90degRight id={"rotate-right-svg-" + tileNumber} className={"icon"}/>
                         </button>
-                        <span id={"number-" + tileNumber} className={"overlay"}>{tileNumber}</span>
+                        <span id={"number-" + tileNumber} className={"overlay"} style={hidden}>{tileNumber}</span>
                         <img id={"tile-" + tileNumber}
                              className="tile"
                              src={window.location.origin + window.location.pathname + "/tiles/ST_" + systemNumber + ".png"}

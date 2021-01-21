@@ -10,6 +10,7 @@ import MapControls from "./map/MapControls";
 import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
 import tileData from "./data/tileData.json";
+import boardData from "./data/boardData.json";
 import raceData from "./data/raceData.json";
 import {calculateOffsets} from "./helpers/Helpers";
 import ReactTooltip from "react-tooltip";
@@ -339,9 +340,23 @@ class App extends React.Component {
      * Toggle the system number overlay.
      */
     toggleOverlay() {
+        // Toggle the tile overlays
+        for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+            let numOverlay = $("#number-" + tileNumber);
+            if (this.state.overlayVisible) {
+                // Hiding all the tiles
+                numOverlay.hide()
+            } else {
+                // Showing relevant tiles
+                if (this.getTileNumber(this.state.tiles[tileNumber]) !== -1) {
+                    numOverlay.show();
+                }
+            }
+        }
+        
         this.setState({
             overlayVisible: !this.state.overlayVisible,
-        }, this.drawMap );
+        });
     }
 
     toggleShowAllExtraTiles() {
@@ -377,6 +392,19 @@ class App extends React.Component {
 
         let optionsSize = this.state.moreInfoVisible ? "0px" : "400px";
         document.documentElement.style.setProperty('--more-info-width', optionsSize);
+        
+        // Show the player names
+        for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+            if (this.state.tiles[tileNumber] === 0 && !this.state.overlayVisible) {
+                let numOverlay = $("#number-" + tileNumber);
+                if (!this.state.moreInfoVisible) {
+                    // more info button pressed, so show overlay
+                    numOverlay.show()
+                } else {
+                    numOverlay.hide()
+                }
+            }
+        }
 
         this.setState({
             moreInfoVisible: !this.state.moreInfoVisible,
@@ -612,10 +640,13 @@ class App extends React.Component {
         // Loop over tiles to assign various values to them
         let currentPlayerNumber = 0;
         for (let tileNumber = 0; tileNumber < offsets.length; tileNumber++) {
+            // Create the selectors
             let tile = $("#tile-" + tileNumber);
             let tileWrapper = $("#tile-wrapper-" + tileNumber);
             let numOverlay = $("#number-" + tileNumber);
             let underlay = $("#underlay-" + tileNumber);
+            
+            // Decide if we should be displaying this tile
             if (this.state.tiles[tileNumber] >= 0 || typeof this.state.tiles[tileNumber] === "string" || this.state.customMapBuilding) {
                 tile
                     .css("left", 0)
@@ -643,39 +674,23 @@ class App extends React.Component {
                 tile.hide();
             }
 
+            // Create the number overlay and the hover underlay for the tile
             numOverlay
                 .css("margin-left", "-10px")
                 .css("top", constraintHeight/2 - 10)
-                .css("display", "none")
-
-            if (typeof this.state.tiles[tileNumber] === "string") {
-                numOverlay.html(this.state.tiles[tileNumber].split("-")[0])
-            } else {
-                numOverlay.html(this.state.tiles[tileNumber])
-            }
+                .html(this.getTileNumber(this.state.tiles[tileNumber]))
 
             underlay.css("width", constraintWidth + 6)
                 .css("height", constraintHeight + 6)
                 .css("margin-left", "-3px")
                 .css("margin-top", "-3px")
-                // .css("margin-left", offsets[tileNumber][0]-3)
-                // .css("margin-top", offsets[tileNumber][1]-3)
-                // .css("left", (mapNumberTilesWidth / 2) * constraintWidth)
-                // .css("top", (mapNumberTilesHeight / 2) * constraintHeight)
-
-            if (!this.state.overlayVisible) {
-                numOverlay.hide();
-            } else {
-                if (this.state.tiles[tileNumber] === 0) {
-                    // Show the player name
-                    let name = this.state.currentPlayerNames[currentPlayerNumber];
-                    numOverlay.html(name === "" ? "P" + (currentPlayerNumber + 1) : name);
-                    currentPlayerNumber += 1;
-                }
-
-                if (this.state.tiles[tileNumber] !== -1) {
-                    numOverlay.show();
-                }
+    
+            // Set the names on the player home worlds to not be 0
+            if (this.state.tiles[tileNumber] === 0) {  // TODO should this override on selected races too?
+                // Show the player name
+                let name = this.state.currentPlayerNames[currentPlayerNumber];
+                numOverlay.html(name === "" ? "P" + (currentPlayerNumber + 1) : name);
+                currentPlayerNumber += 1;
             }
         }
 
@@ -812,7 +827,6 @@ class App extends React.Component {
     handleTouchMove(event) {
         let changedTouch = event.changedTouches[0];
         let elem = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
-        console.log(elem.id)
         if (elem.id !== undefined && elem.id !== "" && elem.id !== this.state.currentMobileHover) {
             // At a transition stage
             let targetSelector = $("#" + elem.id);
