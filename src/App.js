@@ -74,6 +74,7 @@ class App extends React.Component {
         this.toggleOptionsMenu = this.toggleOptionsMenu.bind(this);
         this.toggleProphecyOfKings = this.toggleProphecyOfKings.bind(this);
         this.toggleOverlay = this.toggleOverlay.bind(this);
+        this.updateTileNumberOverlays = this.updateTileNumberOverlays.bind(this);
         this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
         this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
         this.toggleShowAllExtraTiles = this.toggleShowAllExtraTiles.bind(this);
@@ -340,25 +341,32 @@ class App extends React.Component {
      * Toggle the system number overlay.
      */
     toggleOverlay() {
-        // Toggle the tile overlays
-        for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
-            let numOverlay = $("#number-" + tileNumber);
-            if (this.state.overlayVisible) {
-                // Hiding all the tiles
-                if (this.state.tiles[tileNumber] !== 0 || !this.state.moreInfoVisible) {
-                    numOverlay.hide()
-                }
-            } else {
-                // Showing relevant tiles
-                if (this.getTileNumber(this.state.tiles[tileNumber]) !== -1) {
-                    numOverlay.show();
-                }
-            }
-        }
+        this.updateTileNumberOverlays(!this.state.overlayVisible);
         
         this.setState({
             overlayVisible: !this.state.overlayVisible,
         });
+    }
+    
+    updateTileNumberOverlays(showTiles) {
+        // Toggle the tile overlays
+        for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+            let numOverlay = $("#number-" + tileNumber);
+            if (showTiles) {
+                // Want to show all the tiles
+                if (this.getTileNumber(this.state.tiles[tileNumber]) !== -1 || this.state.customMapBuilding) {
+                    numOverlay.show();
+                } else {
+                    // Hide the -1s when not custom map building
+                    numOverlay.hide()
+                }
+            } else {
+                // Currently showing all tiles, so with toggle we will be hiding them
+                if (this.state.tiles[tileNumber] !== 0 || !this.state.moreInfoVisible) {
+                    numOverlay.hide()
+                }
+            }
+        }
     }
 
     toggleShowAllExtraTiles() {
@@ -371,6 +379,7 @@ class App extends React.Component {
         this.setState({
             customMapBuilding: !this.state.customMapBuilding,
         }, () => {
+            this.updateTileNumberOverlays(this.state.customMapBuilding || this.state.overlayVisible);
             this.showExtraTiles();
             this.drawMap();
         } );
