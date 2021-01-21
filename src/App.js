@@ -345,7 +345,9 @@ class App extends React.Component {
             let numOverlay = $("#number-" + tileNumber);
             if (this.state.overlayVisible) {
                 // Hiding all the tiles
-                numOverlay.hide()
+                if (this.state.tiles[tileNumber] !== 0 || !this.state.moreInfoVisible) {
+                    numOverlay.hide()
+                }
             } else {
                 // Showing relevant tiles
                 if (this.getTileNumber(this.state.tiles[tileNumber]) !== -1) {
