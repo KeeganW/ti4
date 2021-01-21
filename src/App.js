@@ -308,10 +308,8 @@ class App extends React.Component {
         // Now split on commas
         tiles = tiles.split(',');
         let newTiles = [];
-        for (let tileIndex in tiles) {
-            let parsed = Number(tiles[tileIndex]);
-            // If tile is a string (like a hyperlane), add it. Otherwise add it as a number
-            newTiles.push(isNaN(parsed) ? tiles[tileIndex] : parsed);
+        for (let tile of tiles) {
+            newTiles.push(this.getTileNumber(tile));
         }
         return newTiles;
     }
@@ -798,6 +796,11 @@ class App extends React.Component {
         // Clear the target classes
         targetSelector.removeClass("tile-target");
         targetUnderlay.removeClass("underlay-target");
+    
+        // Check if we have empty tiles to fill in now. This can only happen with custom maps
+        if (this.state.customMapBuilding) {
+            tilesCopy = Array.from(tilesCopy, item => typeof item === 'undefined' ? -1 : item);
+        }
 
         // Update the tile string
         this.setState({
