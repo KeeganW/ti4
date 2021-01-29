@@ -1,7 +1,7 @@
 /**
  * Calculate offsets of the tiles in relation to Mecatol Rex (the center tile). This information
  * is stored in an array of two value arrays. The two value arrays reperesent the margin left
- * and margin right to offset the tile (based on size of of tiles).
+ * and margin top to offset the tile (based on size of of tiles).
  * @param width The width (in pixels) of a single tile
  * @param height The height (in pixels) of a single tile
  * @returns {(number[]|(number)[])[]} an array of two value arrays.
