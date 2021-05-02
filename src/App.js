@@ -574,7 +574,7 @@ class App extends React.Component {
                     return result[1];
                 }
             } else {
-                let regex = /^([0-7][0-9]?|80|81|82|-1)-?([0-5])?$/gm
+                let regex = /^(80|81|82|-1|[0-7]?[0-9])-?([0-5])?$/gm
                 result = regex.exec(tile);
                 if (result) {
                     return Number(result[1])
