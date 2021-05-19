@@ -588,23 +588,32 @@ class MapOptions extends React.Component {
         // Calculate how many reds we need based on player count
         let blueTileRatio = 2;
         let redTileRatio = 1;
-        // For 3, 4, and 6 player games, there is a different ratio
-        switch (this.state.currentNumberOfPlayers) {
-            case(3):
-                blueTileRatio = 3
-                redTileRatio = 1
-                break;
-            case(4):
-                blueTileRatio = 5
-                redTileRatio = 3
-                break;
-            case(6):
-                blueTileRatio = 3
-                redTileRatio = 2
-                break;
-            default:
-                break;
+
+        //If the board style overrides blue and red ratios we use those values, otherwise we go to the switch statement
+        const currentBoardStyle = boardData.styles[this.state.currentNumberOfPlayers][this.state.currentBoardStyle];
+        if(currentBoardStyle['overrideRatios'] !== undefined) {
+            blueTileRatio = currentBoardStyle['overrideRatios']['blueTileRatio'];
+            redTileRatio = currentBoardStyle['overrideRatios']['redTileRatio'];
+        } else {
+            // For 3, 4, and 6 player games, there is a different ratio
+            switch (this.state.currentNumberOfPlayers) {
+                case(3):
+                    blueTileRatio = 3
+                    redTileRatio = 1
+                    break;
+                case(4):
+                    blueTileRatio = 5
+                    redTileRatio = 3
+                    break;
+                case(6):
+                    blueTileRatio = 3
+                    redTileRatio = 2
+                    break;
+                default:
+                    break;
+            }
         }
+
         let redsToPlace = Math.round(Number((numberOfSystems / (blueTileRatio + redTileRatio)) * redTileRatio));
         let bluesToPlace = Math.round(Number((numberOfSystems / (blueTileRatio + redTileRatio)) * blueTileRatio));
 
