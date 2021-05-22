@@ -738,7 +738,8 @@ class MapOptions extends React.Component {
                     "planet_count": parseInt(this.state.planetCountWeight),
                     "specialty": parseInt(this.state.specialtyWeight),
                     "anomaly": parseInt(this.state.anomalyWeight),
-                    "wormhole": parseInt(this.state.wormholeWeight)
+                    "wormhole": parseInt(this.state.wormholeWeight),
+                    "racial": parseInt(this.state.wormholeWeight) - 5
                 }
                 break;
             case "resource":
@@ -748,7 +749,8 @@ class MapOptions extends React.Component {
                     "planet_count": 10,
                     "specialty": 10,
                     "anomaly": 10,
-                    "wormhole": 10
+                    "wormhole": 10,
+                    "racial": 5
                 }
                 break;
             case "influence":
@@ -758,7 +760,8 @@ class MapOptions extends React.Component {
                     "planet_count": 10,
                     "specialty": 10,
                     "anomaly": 10,
-                    "wormhole": 10
+                    "wormhole": 10,
+                    "racial": 5
                 }
                 break;
             case "balanced":
@@ -770,7 +773,8 @@ class MapOptions extends React.Component {
                         "planet_count": 15,
                         "specialty": 50,
                         "anomaly": 40,
-                        "wormhole": 25
+                        "wormhole": 25,
+                        "racial": 20
                     }
                 } else {
                     weights = {
@@ -779,14 +783,15 @@ class MapOptions extends React.Component {
                         "planet_count": 15,
                         "specialty": 40,
                         "anomaly": 30,
-                        "wormhole": 25
+                        "wormhole": 25,
+                        "racial": 20
                     }
                 }
                 break;
         }
 
         // Re-order the planets based on their weights
-        newSystems = this.getWeightedPlanetList(newSystems, weights)
+        newSystems = this.getWeightedPlanetList(newSystems, weights, ensuredAnomalies)
 
         return newSystems
 
@@ -1177,11 +1182,11 @@ class MapOptions extends React.Component {
     }
 
     // TODO rename from planet to tile
-    getWeightedPlanetList(possiblePlanets, weights) {
+    getWeightedPlanetList(possiblePlanets, weights, ensuredAnomalies) {
         // Generate an array of tuples where the first element is the plant's tile number and the second is its weight
         let planetWeights = [];
         for (let planetTileNumber in possiblePlanets) {
-            planetWeights.push([possiblePlanets[planetTileNumber], this.getWeight(possiblePlanets[planetTileNumber], weights)])
+            planetWeights.push([possiblePlanets[planetTileNumber], this.getWeight(possiblePlanets[planetTileNumber], weights, ensuredAnomalies)])
         }
 
         // Sort the returned list by weight, with higher weighted planets being first
@@ -1223,7 +1228,7 @@ class MapOptions extends React.Component {
         return orderedPlanets
     }
 
-    getWeight(planetTileNumber, weights) {
+    getWeight(planetTileNumber, weights, ensuredAnomalies) {
         let total_weight = 0
         let tile = tileData.all[planetTileNumber.toString()]
 
@@ -1237,7 +1242,7 @@ class MapOptions extends React.Component {
         }
 
         // Handle anomalies
-        if (tile['type'] === 'anomaly') {
+        if (tile['type'] === 'red') {
             total_weight += weights['anomaly'] + 40;
             // Providing bonuses to these sections mean the other ones are never used
             // if (tile['anomaly'] === null
@@ -1248,6 +1253,7 @@ class MapOptions extends React.Component {
             // }
         }
         total_weight += tile['wormhole'] ? weights['wormhole'] : 0
+        total_weight += ensuredAnomalies.indexOf(planetTileNumber) > -1 ? weights['racial'] : 0
 
         return total_weight
     }
