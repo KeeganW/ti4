@@ -54,6 +54,7 @@ class MapOptions extends React.Component {
             pickMultipleRaces: false,
             shuffleBoards: false,
             reversePlacementOrder: false,
+            ensureRacialAnomalies: false,
             generated: false,
 
             pickRacesHelp: false,
@@ -65,6 +66,7 @@ class MapOptions extends React.Component {
             pickMultipleRacesHelp: false,
             shufflePriorityHelp: false,
             reversePlacementOrderHelp: false,
+            ensureRacialAnomaliesHelp: false,
 
             resourceWeight: 70,
             influenceWeight: 30,
@@ -104,6 +106,7 @@ class MapOptions extends React.Component {
         this.togglePickMultipleRacesHelp = this.togglePickMultipleRacesHelp.bind(this);
         this.toggleShufflePriorityHelp = this.toggleShufflePriorityHelp.bind(this);
         this.toggleReversePlacementOrderHelp = this.toggleReversePlacementOrderHelp.bind(this);
+        this.toggleEnsureRacialAnomaliesHelp = this.toggleEnsureRacialAnomaliesHelp.bind(this);
     }
 
     handleInputChange(event) {
@@ -448,8 +451,17 @@ class MapOptions extends React.Component {
         // Get an ordered list of board spaces that need to have non-home systems assigned to them
         let systemIndexes = this.getNewTilesToPlace()
 
+        // Get current races for placing races, and shuffle them around
+        if (currentRaces === undefined) {
+            currentRaces = [...this.props.currentRaces]
+        } else {
+            currentRaces = [...currentRaces]
+        }
+        this.shuffle(currentRaces)
+        currentRaces = currentRaces.slice(0, this.state.currentNumberOfPlayers)
+
         // Get a set of systems to make the board with, ordered based on user supplied weights
-        let newSystems = this.getNewSystemsToPlace(systemIndexes.length, useProphecyOfKings)
+        let newSystems = this.getNewSystemsToPlace(systemIndexes.length, useProphecyOfKings, currentRaces)
 
         // Copy a blank map to add to
         let newTiles = [...boardData.blankMap]
@@ -567,7 +579,7 @@ class MapOptions extends React.Component {
      * @param {boolean} useProphecyOfKings TODO
      * @returns {[]}
      */
-    getNewSystemsToPlace(numberOfSystems, useProphecyOfKings) {
+    getNewSystemsToPlace(numberOfSystems, useProphecyOfKings, currentRaces) {
         // Pick our a random set of systems, following the needed number of anomalies
         let allBlues = useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
         let allReds = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
@@ -654,6 +666,47 @@ class MapOptions extends React.Component {
             }
         }
 
+        // These tiles are ensured for races and may not be replaced
+        const ensuredAnomalies = [];
+
+        if(this.state.ensureRacialAnomalies) {
+            currentRaces.forEach(race => {
+                let anomalies = []
+                let match = false;
+                // If The Clan of Saar are in the game, ensure we have an asteroid field
+                if(race === 'The Clan of Saar') {
+                    anomalies = useProphecyOfKings ? [...tileData.asteroidFields.concat(tileData.pokAsteroidFields)] : [...tileData.asteroidFields];
+                    match = true;
+                // If The Embers of Muaat are in the game, ensure we have a supernova
+                } else if(race === 'The Embers of Muaat') {
+                    anomalies = useProphecyOfKings ? [...tileData.supernovas.concat(tileData.pokSupernovas)] : [...tileData.supernovas];
+                    match = true;
+                // If The Empyrean are in the game, ensure we have a nebulae
+                } else if(race === 'The Empyrean') {
+                    anomalies = useProphecyOfKings ? [...tileData.nebulae.concat(tileData.pokNebulae)] : [...tileData.nebulae];
+                    match = true;
+                // If The Vuil'Raith Cabal are in the game, ensure we have a gravity rift
+                } else if(race === "The Vuil'Raith Cabal") {
+                    anomalies = useProphecyOfKings ? [...tileData.gravityRifts.concat(tileData.pokGravityRifts)] : [...tileData.gravityRifts];
+                    match = true;
+                }
+                if(match && redsToPlace > 0) {
+                    // Check if the tile is already included
+                    const found = anomalies.some(tile=> newSystems.includes(tile));
+                    // If not we add it
+                    if(!found) {
+                        this.shuffle(anomalies);
+                        newSystems.push(anomalies[0]);
+                        ensuredAnomalies.push(anomalies[0]);
+                        allReds.splice(allReds.indexOf(anomalies[0]), 1);
+                        redsToPlace -= 1;
+                    } else {
+                        ensuredAnomalies.push(newSystems.find(system => anomalies.includes(system)));
+                    }
+                }
+            });
+        }
+
         // Place as many as possible from tile type if there is not enough to place
         if (redsToPlace > allReds.length) {
             newSystems = newSystems.concat(allBlues.slice(0, bluesToPlace + (redsToPlace - allReds.length)).concat(allReds))
@@ -667,10 +720,10 @@ class MapOptions extends React.Component {
         const allAlphaWormholes = useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
         const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
 
-        newSystems = this.ensureWormholesForType(newSystems, [26], allAlphaWormholes, allBetaWormholes, useProphecyOfKings);
+        newSystems = this.ensureWormholesForType(newSystems, [26], allAlphaWormholes, allBetaWormholes, useProphecyOfKings, ensuredAnomalies);
 
         // Ensure that if we have an alpha wormhole, then we have at least two of them
-        newSystems = this.ensureWormholesForType(newSystems, [25, 64], allBetaWormholes, allAlphaWormholes, useProphecyOfKings);
+        newSystems = this.ensureWormholesForType(newSystems, [25, 64], allBetaWormholes, allAlphaWormholes, useProphecyOfKings, ensuredAnomalies);
 
         // Based on the system style, order the systems according to their weights
         let weights = {};
@@ -747,14 +800,6 @@ class MapOptions extends React.Component {
         }
     }
     placeHomeSystems(newTiles, currentRaces) {
-        // Get current races for placing races, and shuffle them around
-        if (currentRaces === undefined) {
-            currentRaces = [...this.props.currentRaces]
-        } else {
-            currentRaces = [...currentRaces]
-        }
-        this.shuffle(currentRaces)
-
         // Place data for the homeSystems from board data
         for (let index = 0; index < boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'].length; index++) {
             let planetIndex = boardData.styles[this.state.currentNumberOfPlayers.toString()][this.state.currentBoardStyle]['home_worlds'][index]
@@ -1000,7 +1045,7 @@ class MapOptions extends React.Component {
         }
     }
 
-    ensureWormholesForType(possibleTiles, planetWormholes, allWormholes, oppositeWormholes, useProphecyOfKings) {
+    ensureWormholesForType(possibleTiles, planetWormholes, allWormholes, oppositeWormholes, useProphecyOfKings, ensuredAnomalies) {
         let allAnomalyList = useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
         let unusedWormholes = [];
         let usedWormholes = [];
@@ -1019,7 +1064,7 @@ class MapOptions extends React.Component {
             then we can try to find a planet to replace with any remaining wormhole tiles.
              */
             unusedWormholes = this.shuffle(unusedWormholes);
-            let excludedTiles = [...allWormholes.concat(oppositeWormholes)];
+            let excludedTiles = [...allWormholes.concat(oppositeWormholes)].concat(ensuredAnomalies);
 
             // Check that the single used wormhole is not a planet.
             if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
@@ -1251,6 +1296,11 @@ class MapOptions extends React.Component {
             reversePlacementOrderHelp: !this.state.reversePlacementOrderHelp
         })
     }
+    toggleEnsureRacialAnomaliesHelp(event) {
+        this.setState({
+            ensureRacialAnomaliesHelp: !this.state.ensureRacialAnomaliesHelp
+        })
+    }
 
     render() {
         return (
@@ -1358,6 +1408,12 @@ class MapOptions extends React.Component {
                         <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
                     </div>
 
+                    <div className="custom-control custom-checkbox mb-3 d-flex">
+                        <input type="checkbox" className="custom-control-input" id="ensureRacialAnomalies" name="ensureRacialAnomalies" checked={this.state.ensureRacialAnomalies} onChange={this.handleInputChange} />
+                        <label className="custom-control-label" htmlFor="ensureRacialAnomalies">Ensure Racial Anomalies</label>
+                        <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
+                    </div>
+
                     <SetPlayerNameModal visible={this.state.setPlayerNamesHelp} currentPlayerNames={this.props.currentPlayerNames}
                                         hideModal={this.toggleSetPlayerNamesHelp} handleNameChange={this.handleNameChange}
                     />
@@ -1432,6 +1488,14 @@ class MapOptions extends React.Component {
                          <br>
                          Tiles are normally placed in priority (see randomize priority help). This reverses the order, so that the last picks are first, which generally has the effect of pushing the more valuable tiles towards the center of the galaxy.
                          </p>'
+                    />
+                    <HelpModal key={"help-racial-anomalies"} visible={this.state.ensureRacialAnomaliesHelp} hideModal={this.toggleEnsureRacialAnomaliesHelp} title={"About Ensure Racial Anomalies"}
+                         content="<p>
+                         Ensures that races get their beneficial anomalies
+                         <br>
+                         <br>
+                         This option makes it so that Muaat will always receive a supernova, Saar will always receive an asteroid field, Empyrean will always receive a nebulae and Vuil'Raith will always receive a gravity rift.
+                         </p>"
                     />
             
                     <button type="submit" className="btn btn-primary">Generate</button>
