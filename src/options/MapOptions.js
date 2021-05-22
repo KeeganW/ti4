@@ -669,7 +669,7 @@ class MapOptions extends React.Component {
         // These tiles are ensured for races and may not be replaced
         const ensuredAnomalies = [];
 
-        if(this.state.ensureRacialAnomalies) {
+        if(this.state.ensureRacialAnomalies && this.state.pickRaces) {
             currentRaces.forEach(race => {
                 let anomalies = []
                 let match = false;
