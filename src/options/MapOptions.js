@@ -1010,7 +1010,7 @@ class MapOptions extends React.Component {
     }
 
     ensureWormholesForType(possibleTiles, planetWormholes, allWormholes, oppositeWormholes, useProphecyOfKings) {
-        let allAnomalyList = useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
+        let allAnomalyList = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
         let unusedWormholes = [];
         let usedWormholes = [];
 
