@@ -54,7 +54,7 @@ class MapOptions extends React.Component {
             pickMultipleRaces: false,
             shuffleBoards: false,
             reversePlacementOrder: false,
-            ensureRacialAnomalies: false,
+            ensureRacialAnomalies: true,
             generated: false,
 
             pickRacesHelp: false,
@@ -269,6 +269,7 @@ class MapOptions extends React.Component {
         encodedSettings += this.state.reversePlacementOrder ? "T" : "F";
         encodedSettings += this.state.pickRaces ? "T" : "F";
         if (this.state.pickRaces) {
+            encodedSettings += this.state.ensureRacialAnomalies ? "T" : "F";
             let combinedRaces = this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
             if ((this.props.useProphecyOfKings === false && this.props.currentRaces.length !== this.state.optionsPossible.races.length) ||
                 (this.props.useProphecyOfKings === true && this.props.currentRaces.length !== combinedRaces.length)) {
@@ -360,7 +361,12 @@ class MapOptions extends React.Component {
 
         let currentPlayerNames = this.props.currentPlayerNames;
         let currentRaces = this.props.currentRaces;
+        let ensureRacialAnomalies = this.props.ensureRacialAnomalies;
         if (pickRaces) {
+            // Ensure Racial Anomalies
+            ensureRacialAnomalies = newSettings[currentIndex] === "T";
+            currentIndex += 1;
+            
             if (newSettings[currentIndex] !== "|") {
                 if (newSettings[currentIndex] !== undefined) {
                     // Custom races, but not all of them
@@ -396,6 +402,7 @@ class MapOptions extends React.Component {
             shuffleBoards: shuffleBoards,
             reversePlacementOrder: reversePlacementOrder,
             pickRaces: pickRaces,
+            ensureRacialAnomalies: ensureRacialAnomalies,
         }, () => {
             this.props.updateRaces(currentRaces);
             this.props.updatePlayerNames(currentPlayerNames);
@@ -1397,17 +1404,17 @@ class MapOptions extends React.Component {
                         <label className="custom-control-label" htmlFor="pickRaces">Pick Races for Players</label>
                         <QuestionCircle className="icon" onClick={this.togglePickRacesHelp} />
                     </div>
-                    <div className={"ml-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
+                    <div className={"ml-2 mb-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
                         <div className="card card-body">
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
 
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
-
-                            {/*<div className="custom-control custom-checkbox d-flex">*/}
-                            {/*    <input type="checkbox" className="custom-control-input" id="pickMultipleRaces" name="pickMultipleRaces" checked={this.state.pickMultipleRaces} onChange={this.handleInputChange} />*/}
-                            {/*    <label className="custom-control-label" htmlFor="pickMultipleRaces">Let Players Pick From Multiple</label>*/}
-                            {/*    <QuestionCircle className="icon" onClick={this.togglePickMultipleRacesHelp} />*/}
-                            {/*</div>*/}
+                            
+                            <div className="custom-control custom-checkbox d-flex">
+                                <input type="checkbox" className="custom-control-input" id="ensureRacialAnomalies" name="ensureRacialAnomalies" checked={this.state.ensureRacialAnomalies} onChange={this.handleInputChange} />
+                                <label className="custom-control-label" htmlFor="ensureRacialAnomalies">Ensure Racial Anomalies</label>
+                                <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
+                            </div>
                         </div>
                     </div>
 
@@ -1421,12 +1428,6 @@ class MapOptions extends React.Component {
                         <input type="checkbox" className="custom-control-input" id="reversePlacementOrder" name="reversePlacementOrder" checked={this.state.reversePlacementOrder} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="reversePlacementOrder">Reverse Placement Order</label>
                         <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
-                    </div>
-
-                    <div className="custom-control custom-checkbox mb-3 d-flex">
-                        <input type="checkbox" className="custom-control-input" id="ensureRacialAnomalies" name="ensureRacialAnomalies" checked={this.state.ensureRacialAnomalies} onChange={this.handleInputChange} />
-                        <label className="custom-control-label" htmlFor="ensureRacialAnomalies">Ensure Racial Anomalies</label>
-                        <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
                     </div>
 
                     <SetPlayerNameModal visible={this.state.setPlayerNamesHelp} currentPlayerNames={this.props.currentPlayerNames}
