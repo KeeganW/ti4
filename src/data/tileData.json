@@ -13,6 +13,14 @@
     "pokAlphaWormholes": [79],
     "betaWormholes": [25, 40],
     "pokBetaWormholes": [64],
+    "asteroidFields": [44, 45],
+    "pokAsteroidFields": [79],
+    "gravityRifts": [41],
+    "pokGravityRifts": [67],
+    "nebulae": [42],
+    "pokNebulae": [68],
+    "supernovas": [43],
+    "pokSupernovas": [80],
     "hyperlanes": ["83A", "83B", "84A", "84B", "85A", "85B", "86A", "86B", "87A", "87B", "88A", "88B", "89A", "89B", "90A", "90B", "91A", "91B"],
     "all": {
         "1": {
