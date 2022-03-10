@@ -36,6 +36,8 @@ class ExtraTiles extends React.Component {
             systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
         }
 
+        systemNumbers.sort();
+
         const tileObjects = []
         for (let systemNumber of systemNumbers) {
 
