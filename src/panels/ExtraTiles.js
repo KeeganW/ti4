@@ -36,6 +36,32 @@ class ExtraTiles extends React.Component {
             systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
         }
 
+        function parseSystemNumber(systemNumber) {
+            if (typeof systemNumber == "number") {
+                return [systemNumber, ""];
+            } else {
+                const [, numberPart, stringPart] = systemNumber.match(/(\d+)(.*)/);
+                return [numberPart, stringPart];
+            }
+        }
+
+        function compareSystemNumbers(a, b) {
+            const [numberA, stringA] = parseSystemNumber(a);
+            const [numberB, stringB] = parseSystemNumber(b);
+            if (numberA === numberB) {
+                if (stringA < stringB) {
+                    return -1;
+                }
+                if (stringA === stringB) {
+                    return 0;
+                }
+                return 1;
+            }
+            return numberA - numberB;
+        }
+
+        systemNumbers.sort(compareSystemNumbers);
+
         const tileObjects = []
         for (let systemNumber of systemNumbers) {
 
