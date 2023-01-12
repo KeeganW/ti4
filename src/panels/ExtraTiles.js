@@ -107,6 +107,11 @@ class ExtraTiles extends React.Component {
                     <input type="checkbox" className="custom-control-input" id="customMapBuilding" name="customMapBuilding" checked={this.props.customMapBuilding} onChange={this.props.toggleCustomMapBuilding} />
                     <label className="custom-control-label" htmlFor="customMapBuilding">Custom Map Building</label>
                 </div>
+                <div className={"mt-3 ml-3 mr-3 text-center " + (this.props.customMapBuilding ? "" : "d-none")}>
+                    <button className="btn btn-primary" id="unsetAllTilesButton" onClick={this.props.unsetAllTiles} >
+                        Unset All Tiles
+                    </button>
+                </div>
 
                 <div id="extraTiles" className="">
                     {tileObjects}

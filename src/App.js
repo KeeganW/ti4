@@ -80,6 +80,7 @@ class App extends React.Component {
         this.toggleShowAllExtraTiles = this.toggleShowAllExtraTiles.bind(this);
         this.toggleCustomMapBuilding = this.toggleCustomMapBuilding.bind(this);
         this.showExtraTiles = this.showExtraTiles.bind(this);
+        this.unsetAllTiles = this.unsetAllTiles.bind(this);
         this.zoomScroll = this.zoomScroll.bind(this);
         this.zoomPlusClick = this.zoomPlusClick.bind(this);
         this.zoomMinusClick = this.zoomMinusClick.bind(this);
@@ -192,10 +193,13 @@ class App extends React.Component {
      * @param {number[]} newTiles
      * @param newEncodedOptions the settings, encoded as a string
      * @param isNewGeneration A setting to be set when a new generation occurs, to trigger adding it to the history
+     * @param skipTrailing Don't remove trailing tiles
      */
-    updateTiles(newTiles, newEncodedOptions, isNewGeneration) {
+    updateTiles(newTiles, newEncodedOptions, isNewGeneration, skipTrailing) {
         // Remove the unused tile numbers at the end of the array
-        newTiles = this.removeTrailing(newTiles);
+        if (!skipTrailing) {
+            newTiles = this.removeTrailing(newTiles);
+        }
 
         // Add it to the url as a parameter
         let params = '&tiles=' + newTiles.toString()
@@ -373,6 +377,18 @@ class App extends React.Component {
         this.setState({
             showAllExtraTiles: !this.state.showAllExtraTiles,
         }, this.showExtraTiles );
+    }
+
+    /**
+     * Set all tiles to -1, then redraw, effectively resetting the map.
+     */
+    unsetAllTiles() {
+        // Update the tile string
+        this.setState({
+            tileClicked: -1,
+        }, () => {
+            this.updateTiles(new Array(this.state.tiles.length).fill(-1), undefined, false, true);
+        } );
     }
 
     toggleCustomMapBuilding() {
@@ -609,8 +625,8 @@ class App extends React.Component {
         }
 
         // Set the map height based on which tiles are being used
-        let mapNumberTilesHeight = 1;
-        let mapNumberTilesWidth = 1;
+        let mapNumberTilesHeight = 9;
+        let mapNumberTilesWidth = 7;
         if (this.getTileNumber(this.state.tiles[37], true) >= 0 || this.getTileNumber(this.state.tiles[38], true) >= 0 || this.getTileNumber(this.state.tiles[60], true) >= 0
             || this.getTileNumber(this.state.tiles[48], true) >= 0 || this.getTileNumber(this.state.tiles[49], true) >= 0 || this.getTileNumber(this.state.tiles[50], true) >= 0) {
             mapNumberTilesHeight = 9;
@@ -923,7 +939,7 @@ class App extends React.Component {
                             customMapBuilding={this.state.customMapBuilding}
 
                             updateTiles={this.updateTiles} toggleShowAllExtraTiles={this.toggleShowAllExtraTiles}
-                            toggleCustomMapBuilding={this.toggleCustomMapBuilding}
+                            toggleCustomMapBuilding={this.toggleCustomMapBuilding} unsetAllTiles={this.unsetAllTiles}
 
                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop}
                 />
