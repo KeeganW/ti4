@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/ti4/static/css/main.2cc022f6.chunk.css",
-    "main.js": "/ti4/static/js/main.62312fae.chunk.js",
-    "main.js.map": "/ti4/static/js/main.62312fae.chunk.js.map",
-    "runtime-main.js": "/ti4/static/js/runtime-main.7a16165c.js",
-    "runtime-main.js.map": "/ti4/static/js/runtime-main.7a16165c.js.map",
-    "static/css/2.1a02f21c.chunk.css": "/ti4/static/css/2.1a02f21c.chunk.css",
-    "static/js/2.92b7eaca.chunk.js": "/ti4/static/js/2.92b7eaca.chunk.js",
-    "static/js/2.92b7eaca.chunk.js.map": "/ti4/static/js/2.92b7eaca.chunk.js.map",
-    "static/js/3.bb28f85b.chunk.js": "/ti4/static/js/3.bb28f85b.chunk.js",
-    "static/js/3.bb28f85b.chunk.js.map": "/ti4/static/js/3.bb28f85b.chunk.js.map",
+    "main.css": "/ti4/static/css/main.01beb31e.chunk.css",
+    "main.js": "/ti4/static/js/main.30da8f7d.chunk.js",
+    "main.js.map": "/ti4/static/js/main.30da8f7d.chunk.js.map",
+    "runtime-main.js": "/ti4/static/js/runtime-main.6c1a0743.js",
+    "runtime-main.js.map": "/ti4/static/js/runtime-main.6c1a0743.js.map",
+    "static/css/2.c4e73993.chunk.css": "/ti4/static/css/2.c4e73993.chunk.css",
+    "static/js/2.bc9b29d9.chunk.js": "/ti4/static/js/2.bc9b29d9.chunk.js",
+    "static/js/2.bc9b29d9.chunk.js.map": "/ti4/static/js/2.bc9b29d9.chunk.js.map",
+    "static/js/3.36dfbda1.chunk.js": "/ti4/static/js/3.36dfbda1.chunk.js",
+    "static/js/3.36dfbda1.chunk.js.map": "/ti4/static/js/3.36dfbda1.chunk.js.map",
     "index.html": "/ti4/index.html",
-    "static/css/2.1a02f21c.chunk.css.map": "/ti4/static/css/2.1a02f21c.chunk.css.map",
-    "static/css/main.2cc022f6.chunk.css.map": "/ti4/static/css/main.2cc022f6.chunk.css.map",
-    "static/js/2.92b7eaca.chunk.js.LICENSE.txt": "/ti4/static/js/2.92b7eaca.chunk.js.LICENSE.txt",
+    "static/css/2.c4e73993.chunk.css.map": "/ti4/static/css/2.c4e73993.chunk.css.map",
+    "static/css/main.01beb31e.chunk.css.map": "/ti4/static/css/main.01beb31e.chunk.css.map",
+    "static/js/2.bc9b29d9.chunk.js.LICENSE.txt": "/ti4/static/js/2.bc9b29d9.chunk.js.LICENSE.txt",
     "static/media/influence.d1f8e76f.png": "/ti4/static/media/influence.d1f8e76f.png",
     "static/media/planet.7203e647.png": "/ti4/static/media/planet.7203e647.png",
     "static/media/resource.4e66e6d4.png": "/ti4/static/media/resource.4e66e6d4.png",
@@ -26,10 +26,10 @@
     "static/media/trait-industrial.37a31434.png": "/ti4/static/media/trait-industrial.37a31434.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.7a16165c.js",
-    "static/css/2.1a02f21c.chunk.css",
-    "static/js/2.92b7eaca.chunk.js",
-    "static/css/main.2cc022f6.chunk.css",
-    "static/js/main.62312fae.chunk.js"
+    "static/js/runtime-main.6c1a0743.js",
+    "static/css/2.c4e73993.chunk.css",
+    "static/js/2.bc9b29d9.chunk.js",
+    "static/css/main.01beb31e.chunk.css",
+    "static/js/main.30da8f7d.chunk.js"
   ]
 }
