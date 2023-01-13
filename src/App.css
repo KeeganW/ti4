@@ -245,6 +245,12 @@ h1, h2, h3, h4, h5 {
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
+#loadMapButton {
+    position: fixed;
+    top: calc(var(--title-height) + 200px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1002;
+}
 #toggleBackgroundButton {
     position: fixed;
     bottom: var(--scroll-bar-distance);

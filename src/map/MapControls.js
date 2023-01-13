@@ -1,6 +1,7 @@
 import React from "react";
-import {CardImage, Dash, InfoCircle, Plus, Share} from "react-bootstrap-icons";
+import {CardImage, Dash, InfoCircle, Plus, Share, Upload} from "react-bootstrap-icons";
 import ShareMapModal from "./ShareMapModal";
+import LoadMapModal from "./LoadMapModal";
 
 class MapControls extends React.Component {
 
@@ -8,10 +9,12 @@ class MapControls extends React.Component {
         super(props);
 
         this.state = {
-            shareMapHelp: false
+            shareMapHelp: false,
+            loadMapHelp: false,
         }
 
         this.toggleShareMapHelp = this.toggleShareMapHelp.bind(this);
+        this.toggleLoadMapHelp = this.toggleLoadMapHelp.bind(this);
     }
 
     /**
@@ -21,6 +24,16 @@ class MapControls extends React.Component {
     toggleShareMapHelp(event) {
         this.setState({
             shareMapHelp: !this.state.shareMapHelp
+        })
+    }
+
+    /**
+     * Toggle the modal for the load map page.
+     * @param event The event trigger for the toggle.
+     */
+    toggleLoadMapHelp(event) {
+        this.setState({
+            loadMapHelp: !this.state.loadMapHelp
         })
     }
 
@@ -65,8 +78,19 @@ class MapControls extends React.Component {
                     </button>
                 </div>
 
+                <div id="loadMapButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.toggleLoadMapHelp}>
+                    <button className={"btn btn-primary"} id="loadMapInfo" data-tip="Load a Map" data-place="left" >
+                        <Upload id="loadMapSvg" className="icon" />
+                    </button>
+                </div>
+
                 <ShareMapModal visible={this.state.shareMapHelp} hideModal={this.toggleShareMapHelp}
                                tiles={this.props.tiles} map={this.props.map}
+                />
+
+                <LoadMapModal visible={this.state.loadMapHelp} hideModal={this.toggleLoadMapHelp}
+                              tiles={this.props.tiles} updateTiles={this.props.updateTiles}
+                              removeTrailing={this.props.removeTrailing}
                 />
 
                 <div id="toggleBackgroundButton" className={"btn-group-justified btn-group-sm"} onClick={this.props.toggleBackground}>

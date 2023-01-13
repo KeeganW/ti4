@@ -931,7 +931,8 @@ class App extends React.Component {
                              toggleOverlay={this.toggleOverlay}
                              toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
                              zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick}
-                             toggleBackground={this.toggleBackground}
+                             toggleBackground={this.toggleBackground} updateTiles={this.updateTiles}
+                             removeTrailing={this.removeTrailing}
                 />
                 
                 <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}

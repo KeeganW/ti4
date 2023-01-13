@@ -107,7 +107,7 @@ class ShareMapModal extends React.Component {
                 <Modal.Body>
                     <div className="input-group mb-3">
                         <input type="text" className="form-control" value={window.location.href} readOnly
-                               aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                               aria-label="Page Link" aria-describedby="basic-addon2" />
                         <div className="input-group-append">
                             <button className="btn btn-primary" type="button" onClick={this.copyLinkToClipboard}>Copy Link</button>
                         </div>
@@ -115,7 +115,7 @@ class ShareMapModal extends React.Component {
 
                     <div className="input-group mb-3">
                         <input type="text" className="form-control" value={tileString} readOnly
-                               aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                               aria-label="Tile String" aria-describedby="basic-addon2" />
                         <div className="input-group-append">
                             <button className="btn btn-primary" type="button" onClick={this.copyTileStringToClipboard}>Copy TTS String</button>
                         </div>
