@@ -123,6 +123,25 @@ class MainOverview extends React.Component {
                 </div>
 
                 <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                    <h4 className={"m-3"}>Contributors</h4>
+                    <div className={"d-flex"}>
+                        <p className={"text-left p-2"}>
+                            Thank you to all the contributors to this project
+                        </p>
+                    </div>
+                    <div className={"d-flex justify-content-center"}>
+                        <ul className={"text-left"}>
+                            <li>dotlogix</li>
+                            <li>nicolajv</li>
+                            <li>ninevra</li>
+                            <li>qbixsd</li>
+                            <li>shenanigans-be</li>
+                            <li>tomb1125</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
                     &#169; Keegan Williams 2021
                 </div>
             </div>
