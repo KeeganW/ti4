@@ -315,7 +315,7 @@ class App extends React.Component {
         tiles = tiles.split(',');
         let newTiles = [];
         for (let tile of tiles) {
-            newTiles.push(this.getTileNumber(tile));
+            newTiles.push(this.getTileNumber(tile, false, true));
         }
         return newTiles;
     }
@@ -579,13 +579,15 @@ class App extends React.Component {
 
     /* MAP GENERATION */
 
-    getTileNumber(tile, numberOnly) {
+    getTileNumber(tile, numberOnly, withDash) {
         if (tile !== undefined) {
             let hyperlaneRegex = /^((8[3-9]|90|91)[AB])-?([0-5])?$/gm
             let result = hyperlaneRegex.exec(tile);
             if (result) {
                 if (numberOnly) {
                     return Number(result[2]);
+                } else if (withDash) {
+                    return result[0];
                 } else {
                     return result[1];
                 }
@@ -916,7 +918,8 @@ class App extends React.Component {
                              tileClicked={this.state.tileClicked} updateTileClicked={this.updateTileClicked}
                              getTileNumber={this.getTileNumber}
 
-                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave} allowDrop={this.allowDrop} touchEnd={this.handleTouchEnd} touchMove={this.handleTouchMove}
+                             drag={this.drag} drop={this.drop} dragEnter={this.dragEnter} dragLeave={this.dragLeave}
+                             allowDrop={this.allowDrop} touchEnd={this.handleTouchEnd} touchMove={this.handleTouchMove}
                     />
                 </div>
 

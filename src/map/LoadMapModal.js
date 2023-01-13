@@ -30,11 +30,17 @@ class LoadMapModal extends React.Component {
         // Add m-rex to the front, which TTS doesn't include
         inputTiles.unshift("18")
 
-        // TODO: deal with hyperlanes
-        // inputTiles = inputTiles.map((value, index) => {
-        //     let newValue = value
-        //     return newValue
-        // })
+        inputTiles = inputTiles.map((value, index) => {
+            let newValue = value
+            const aIndex = newValue.indexOf("A")
+            const bIndex = newValue.indexOf("B")
+            if (aIndex >= 0 || bIndex >= 0) {
+                const sideLocation = aIndex >= 0 ? aIndex : bIndex
+                const rotation = newValue.substring(sideLocation + 1)
+                newValue = newValue.substring(0, sideLocation + 1) + "-" + rotation
+            }
+            return newValue
+        })
 
         // Use these new tiles to update the map
         this.setState({
