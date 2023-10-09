@@ -221,33 +221,42 @@ h1, h2, h3, h4, h5 {
 #zoomButtons .btn:focus {
     box-shadow: none;
 }
+#rotateButtons {
+    position: fixed;
+    top: calc(var(--title-height)  + 60px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1002;
+}
+#rotateButtons .btn:focus {
+    box-shadow: none;
+}
 #hexOverlay {
     position: fixed;
-    top: calc(var(--title-height) + 60px);
+    top: calc(var(--title-height) + 120px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
 #extraTilesButton {
     position: fixed;
-    top: calc(var(--title-height) + 95px);
+    top: calc(var(--title-height) + 155px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
 #moreInfoButton {
     position: fixed;
-    top: calc(var(--title-height) + 130px);
+    top: calc(var(--title-height) + 190px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
 #shareMapButton {
     position: fixed;
-    top: calc(var(--title-height) + 165px);
+    top: calc(var(--title-height) + 225px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
 #loadMapButton {
     position: fixed;
-    top: calc(var(--title-height) + 200px);
+    top: calc(var(--title-height) + 260px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
