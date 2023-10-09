@@ -650,6 +650,7 @@ class App extends React.Component {
 
         // Rotate the map the specified number of times.
         let rotatedTileArray = [];
+        const hyperlaneTiles = ["83A","83B","84A","84B","85A","85B","86A","86B","87A","87B","88A","88B","89A","89B","90A","90B","91A","91B"];
         for (let i = 0; i < rotations; i++) {
             if (i == 0) {
                 // Use the current map for the first rotation.
@@ -657,6 +658,25 @@ class App extends React.Component {
             } else {
                 // Pass the previously rotated map for subsequent iterations.
                 rotatedTileArray = rotateTileArray(rotatedTileArray);
+            }
+
+            // Iterate through all tiles and rotate the hyperlanes by one.
+            for (let j = 0; j < rotatedTileArray.length; j++) {
+                // Coerce all the tiles to strings for easier checking.
+                const tile = rotatedTileArray[j] + "";
+
+                if (hyperlaneTiles.includes(tile.split('-')[0])) {
+                    // Check if the tile already has any rotation.
+                    const hasRotation = tile.includes('-');
+
+                    let newRotation = 1;
+                    if (hasRotation) {
+                        const currentRotation = parseInt(tile.split('-')[1]);
+                        newRotation = (currentRotation + 1) % 6;
+                    }
+
+                    rotatedTileArray[j] = `${tile.split('-')[0]}-${newRotation}`;
+                }
             }
         }
         return rotatedTileArray;
@@ -666,6 +686,7 @@ class App extends React.Component {
      * Rotates the map in a clockwise direction.
      */
     rotateClockwise() {
+        // console.log(this.state.tiles);
         // Update the tile string
         this.setState({
             tileClicked: -1,
