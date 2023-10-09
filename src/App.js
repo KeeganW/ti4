@@ -84,6 +84,8 @@ class App extends React.Component {
         this.zoomScroll = this.zoomScroll.bind(this);
         this.zoomPlusClick = this.zoomPlusClick.bind(this);
         this.zoomMinusClick = this.zoomMinusClick.bind(this);
+        this.rotateClockwise = this.rotateClockwise.bind(this);
+        this.rotateCounterClockwise = this.rotateCounterClockwise.bind(this);
         
         this.drag = this.drag.bind(this);
         this.drop = this.drop.bind(this);
@@ -565,6 +567,125 @@ class App extends React.Component {
         }
     }
 
+    generateRotatedMap(rotations = 1) {
+        // Performs a single map rotation. Supports up to 4 rows/rings.
+        let rotateTileArray = (tilesOverride = []) => {
+            let rotatedTileArray = [];
+
+            // Central tile.
+            rotatedTileArray.push(tilesOverride[0] ?? this.state.tiles[0]);
+
+            // First row of tiles.
+            rotatedTileArray.push(tilesOverride[6] ?? this.state.tiles[6]);
+            rotatedTileArray.push(tilesOverride[1] ?? this.state.tiles[1]);
+            rotatedTileArray.push(tilesOverride[2] ?? this.state.tiles[2]);
+            rotatedTileArray.push(tilesOverride[3] ?? this.state.tiles[3]);
+            rotatedTileArray.push(tilesOverride[4] ?? this.state.tiles[4]);
+            rotatedTileArray.push(tilesOverride[5] ?? this.state.tiles[5]);
+
+            // Second row of tiles.
+            rotatedTileArray.push(tilesOverride[17] ?? this.state.tiles[17]);
+            rotatedTileArray.push(tilesOverride[18] ?? this.state.tiles[18]);
+            rotatedTileArray.push(tilesOverride[7] ?? this.state.tiles[7]);
+            rotatedTileArray.push(tilesOverride[8] ?? this.state.tiles[8]);
+            rotatedTileArray.push(tilesOverride[9] ?? this.state.tiles[9]);
+            rotatedTileArray.push(tilesOverride[10] ?? this.state.tiles[10]);
+            rotatedTileArray.push(tilesOverride[11] ?? this.state.tiles[11]);
+            rotatedTileArray.push(tilesOverride[12] ?? this.state.tiles[12]);
+            rotatedTileArray.push(tilesOverride[13] ?? this.state.tiles[13]);
+            rotatedTileArray.push(tilesOverride[14] ?? this.state.tiles[14]);
+            rotatedTileArray.push(tilesOverride[15] ?? this.state.tiles[15]);
+            rotatedTileArray.push(tilesOverride[16] ?? this.state.tiles[16]);
+
+            // Third row of tiles.
+            rotatedTileArray.push(tilesOverride[34] ?? this.state.tiles[34]);
+            rotatedTileArray.push(tilesOverride[35] ?? this.state.tiles[35]);
+            rotatedTileArray.push(tilesOverride[36] ?? this.state.tiles[36]);
+            rotatedTileArray.push(tilesOverride[19] ?? this.state.tiles[19]);
+            rotatedTileArray.push(tilesOverride[20] ?? this.state.tiles[20]);
+            rotatedTileArray.push(tilesOverride[21] ?? this.state.tiles[21]);
+            rotatedTileArray.push(tilesOverride[22] ?? this.state.tiles[22]);
+            rotatedTileArray.push(tilesOverride[23] ?? this.state.tiles[23]);
+            rotatedTileArray.push(tilesOverride[24] ?? this.state.tiles[24]);
+            rotatedTileArray.push(tilesOverride[25] ?? this.state.tiles[25]);
+            rotatedTileArray.push(tilesOverride[26] ?? this.state.tiles[26]);
+            rotatedTileArray.push(tilesOverride[27] ?? this.state.tiles[27]);
+            rotatedTileArray.push(tilesOverride[28] ?? this.state.tiles[28]);
+            rotatedTileArray.push(tilesOverride[29] ?? this.state.tiles[29]);
+            rotatedTileArray.push(tilesOverride[30] ?? this.state.tiles[30]);
+            rotatedTileArray.push(tilesOverride[31] ?? this.state.tiles[31]);
+            rotatedTileArray.push(tilesOverride[32] ?? this.state.tiles[32]);
+            rotatedTileArray.push(tilesOverride[33] ?? this.state.tiles[33]);
+
+            // Fourth row of tiles?
+            if (this.state.tiles.length > 37) {
+                rotatedTileArray.push(tilesOverride[57] ?? this.state.tiles[57]);
+                rotatedTileArray.push(tilesOverride[58] ?? this.state.tiles[58]);
+                rotatedTileArray.push(tilesOverride[59] ?? this.state.tiles[59]);
+                rotatedTileArray.push(tilesOverride[60] ?? this.state.tiles[60]);
+                rotatedTileArray.push(tilesOverride[37] ?? this.state.tiles[37]);
+                rotatedTileArray.push(tilesOverride[38] ?? this.state.tiles[38]);
+                rotatedTileArray.push(tilesOverride[39] ?? this.state.tiles[39]);
+                rotatedTileArray.push(tilesOverride[40] ?? this.state.tiles[40]);
+                rotatedTileArray.push(tilesOverride[41] ?? this.state.tiles[41]);
+                rotatedTileArray.push(tilesOverride[42] ?? this.state.tiles[42]);
+                rotatedTileArray.push(tilesOverride[43] ?? this.state.tiles[43]);
+                rotatedTileArray.push(tilesOverride[44] ?? this.state.tiles[44]);
+                rotatedTileArray.push(tilesOverride[45] ?? this.state.tiles[45]);
+                rotatedTileArray.push(tilesOverride[46] ?? this.state.tiles[46]);
+                rotatedTileArray.push(tilesOverride[47] ?? this.state.tiles[47]);
+                rotatedTileArray.push(tilesOverride[48] ?? this.state.tiles[48]);
+                rotatedTileArray.push(tilesOverride[49] ?? this.state.tiles[49]);
+                rotatedTileArray.push(tilesOverride[50] ?? this.state.tiles[50]);
+                rotatedTileArray.push(tilesOverride[51] ?? this.state.tiles[51]);
+                rotatedTileArray.push(tilesOverride[52] ?? this.state.tiles[52]);
+                rotatedTileArray.push(tilesOverride[53] ?? this.state.tiles[53]);
+                rotatedTileArray.push(tilesOverride[54] ?? this.state.tiles[54]);
+                rotatedTileArray.push(tilesOverride[55] ?? this.state.tiles[55]);
+                rotatedTileArray.push(tilesOverride[56] ?? this.state.tiles[56]);
+            }
+
+            return rotatedTileArray;
+        }
+
+        // Rotate the map the specified number of times.
+        let rotatedTileArray = [];
+        for (let i = 0; i < rotations; i++) {
+            if (i == 0) {
+                // Use the current map for the first rotation.
+                rotatedTileArray = rotateTileArray();
+            } else {
+                // Pass the previously rotated map for subsequent iterations.
+                rotatedTileArray = rotateTileArray(rotatedTileArray);
+            }
+        }
+        return rotatedTileArray;
+    }
+
+    /**
+     * Rotates the map in a clockwise direction.
+     */
+    rotateClockwise() {
+        // Update the tile string
+        this.setState({
+            tileClicked: -1,
+        }, () => {
+            this.updateTiles(this.generateRotatedMap(), undefined, false, true);
+        } );
+    }
+
+    /**
+     * Rotates the map in a counter-clockwise direction.
+     */
+    rotateCounterClockwise() {
+        // Update the tile string
+        this.setState({
+            tileClicked: -1,
+        }, () => {
+            this.updateTiles(this.generateRotatedMap(5), undefined, false, true);
+        } );
+    }
+
     updateRaces(races) {
         this.setState({
             currentRaces: races,
@@ -934,6 +1055,7 @@ class App extends React.Component {
                              toggleOverlay={this.toggleOverlay}
                              toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
                              zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick}
+                             rotateClockwise={this.rotateClockwise} rotateCounterClockwise={this.rotateCounterClockwise}
                              toggleBackground={this.toggleBackground} updateTiles={this.updateTiles}
                              removeTrailing={this.removeTrailing}
                 />

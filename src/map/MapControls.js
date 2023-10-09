@@ -50,10 +50,10 @@ class MapControls extends React.Component {
                 </div>
 
                 <div id="rotateButtons" className={"btn-group-justified btn-group-sm btn-group-vertical" + (this.props.visible ? "" : " d-none")}>
-                    <button className="btn btn-primary" id="rotateLeft" onClick={this.props.zoomPlus} data-place="left" >
+                    <button className="btn btn-primary" id="rotateClockwise" onClick={this.props.rotateClockwise} data-place="left" >
                         <ArrowClockwise className="icon" />
                     </button>
-                    <button className="btn btn-primary" id="rotateRight" onClick={this.props.zoomMinus}>
+                    <button className="btn btn-primary" id="rotateCounterClockwise" onClick={this.props.rotateCounterClockwise}>
                         <ArrowCounterclockwise className="icon" />
                     </button>
                 </div>
