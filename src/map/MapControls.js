@@ -1,5 +1,5 @@
 import React from "react";
-import {Arrow90degLeft, Arrow90degRight, CardImage, Dash, InfoCircle, Plus, Share, Upload} from "react-bootstrap-icons";
+import {ArrowClockwise, ArrowCounterclockwise, CardImage, Dash, InfoCircle, Plus, Share, Upload} from "react-bootstrap-icons";
 import ShareMapModal from "./ShareMapModal";
 import LoadMapModal from "./LoadMapModal";
 
@@ -51,10 +51,10 @@ class MapControls extends React.Component {
 
                 <div id="rotateButtons" className={"btn-group-justified btn-group-sm btn-group-vertical" + (this.props.visible ? "" : " d-none")}>
                     <button className="btn btn-primary" id="rotateLeft" onClick={this.props.zoomPlus} data-place="left" >
-                        <Arrow90degLeft className="icon" />
+                        <ArrowClockwise className="icon" />
                     </button>
                     <button className="btn btn-primary" id="rotateRight" onClick={this.props.zoomMinus}>
-                        <Arrow90degRight className="icon" />
+                        <ArrowCounterclockwise className="icon" />
                     </button>
                 </div>
     
