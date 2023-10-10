@@ -654,25 +654,22 @@ class App extends React.Component {
      * Returns a tile array where all hyperlanes tiles have been rotated clockwise.
      */
     rotateHyperlaneTiles(tileArray, rotations = 1) {
-        const hyperlaneTiles = ["83A","83B","84A","84B","85A","85B","86A","86B","87A","87B","88A","88B","89A","89B","90A","90B","91A","91B"];
         const updatedTileArray = [...tileArray];
 
         // Iterate through all tiles and rotate the hyperlanes by N rotations.
         for (let j = 0; j < updatedTileArray.length; j++) {
-            // Coerce all the tiles to strings for easier checking.
-            const tile = updatedTileArray[j] + "";
-
-            if (hyperlaneTiles.includes(tile.split('-')[0])) {
+            // Only hyperlane tiles are strings / aren't numbers.
+            if (typeof updatedTileArray[j] === "string") {
                 // Check if the tile already has any rotation.
-                const hasRotation = tile.includes('-');
+                const hasRotation = updatedTileArray[j].includes('-');
 
                 let newRotation = 1;
                 if (hasRotation) {
-                    const currentRotation = parseInt(tile.split('-')[1]);
+                    const currentRotation = parseInt(updatedTileArray[j].split('-')[1]);
                     newRotation = (currentRotation + rotations) % 6;
                 }
 
-                updatedTileArray[j] = `${tile.split('-')[0]}-${newRotation}`;
+                updatedTileArray[j] = `${updatedTileArray[j].split('-')[0]}-${newRotation}`;
             }
         }
 
