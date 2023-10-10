@@ -681,6 +681,8 @@ class App extends React.Component {
      */
     generateRotatedMap(rotations = 1) {
         let rotatedTileArray = [];
+
+        // Rotate the hex grid the required number of times.
         for (let i = 0; i < rotations; i++) {
             if (i === 0) {
                 // Use the current map for the first rotation.
@@ -690,8 +692,10 @@ class App extends React.Component {
                 rotatedTileArray = this.rotateHexGrid(rotatedTileArray);
             }
 
+            // Rotate the hyperlane tiles so that connections are preserved.
             rotatedTileArray = this.rotateHyperlaneTiles(rotatedTileArray);
         }
+
         return rotatedTileArray;
     }
 
