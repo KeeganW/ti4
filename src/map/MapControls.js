@@ -50,14 +50,14 @@ class MapControls extends React.Component {
                 </div>
 
                 <div id="rotateButtons" className={"btn-group-justified btn-group-sm btn-group-vertical" + (this.props.visible ? "" : " d-none")}>
-                    <button className="btn btn-primary" id="rotateClockwise" onClick={this.props.rotateClockwise} data-place="left" >
+                    <button className="btn btn-primary" id="rotateClockwise" onClick={this.props.rotateClockwise} data-tip="Rotate Map Clockwise" data-place="left" >
                         <ArrowClockwise className="icon" />
                     </button>
-                    <button className="btn btn-primary" id="rotateCounterClockwise" onClick={this.props.rotateCounterClockwise}>
+                    <button className="btn btn-primary" id="rotateCounterClockwise" onClick={this.props.rotateCounterClockwise} data-tip="Rotate Map Counter-Clockwise" data-place="left" >
                         <ArrowCounterclockwise className="icon" />
                     </button>
                 </div>
-    
+
                 <div id="hexOverlay" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.toggleOverlay}>
                     <button className={"btn btn-primary" + (this.props.overlayVisible ? " active": "")} id="showHexOverlay" data-tip="Tile Number Overlay" data-place="left" >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.78 169.62" className="icon" fill="currentColor">
@@ -66,7 +66,7 @@ class MapControls extends React.Component {
                         </svg>
                     </button>
                 </div>
-    
+
                 <div id="extraTilesButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.props.toggleExtraTiles}>
                     <button className={"btn btn-primary" + (this.props.extraTilesVisible ? " active": "")} id="showExtraTiles" data-tip="Unused Tiles" data-place="left" >
                         <svg id="showExtraTilesSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="icon" fill="currentColor">
