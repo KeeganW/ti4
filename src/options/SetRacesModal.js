@@ -23,9 +23,12 @@ class SetRacesModal extends React.Component {
         if (this.props.useProphecyOfKings) {
             visibleRaces = visibleRaces.concat(this.props.pokRaces)
         }
+        if (this.props.useDiscordantStars) {
+            visibleRaces = visibleRaces.concat(this.props.dsRaces)
+        }
 
         let breakStyle = {
-            "border-bottom": "1px solid #dee2e6"
+            "borderBottom": "1px solid #dee2e6"
         }
 
         return (
