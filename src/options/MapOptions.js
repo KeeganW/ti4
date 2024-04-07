@@ -1407,19 +1407,29 @@ class MapOptions extends React.Component {
                 </div>
                 <form id="generateForm" onSubmit={this.generateBoard}>
 
-                    <div className="custom-control custom-checkbox mb-3">
-                        <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.props.useProphecyOfKings} onChange={this.updatePok} />
-                        <label className="custom-control-label" htmlFor="pokExpansion">Use Prophecy of Kings Expansion</label>
+                    <div className="row mb-3">
+                        <div className="col">
+                            <div className="custom-control custom-checkbox">
+                                <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.props.useProphecyOfKings} onChange={this.updatePok} />
+                                <label className="custom-control-label" htmlFor="pokExpansion">Use POK Tiles</label>
+                            </div>
+                        </div>
+
+                        <div className="col">
+                            <div className="custom-control custom-checkbox">
+                                <input type="checkbox" className="custom-control-input" id="unchartedExpansion" name="useUnchartedSpace" checked={this.props.useUnchartedSpace} onChange={this.updateUncharted} />
+                                <label className="custom-control-label" htmlFor="unchartedExpansion">Use UnSp Fan Tiles</label>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="custom-control custom-checkbox mb-3">
-                        <input type="checkbox" className="custom-control-input" id="unchartedExpansion" name="useUnchartedSpace" checked={this.props.useUnchartedSpace} onChange={this.updateUncharted} />
-                        <label className="custom-control-label" htmlFor="unchartedExpansion">Use Uncharted Space Fan Expansion</label>
-                    </div>
-
-                    <div className="custom-control custom-checkbox mb-3">
-                        <input type="checkbox" className="custom-control-input" id="dsExpansion" name="useDiscordantStars" checked={this.props.useDiscordantStars} onChange={this.updateDS} />
-                        <label className="custom-control-label" htmlFor="dsExpansion">Use Discordant Stars Races</label>
+                    <div className="row mb-3">
+                        <div className="col">
+                            <div className="custom-control custom-checkbox">
+                                <input type="checkbox" className="custom-control-input" id="dsExpansion" name="useDiscordantStars" checked={this.props.useDiscordantStars} onChange={this.updateDS} />
+                                <label className="custom-control-label" htmlFor="dsExpansion">Use DS fan Races</label>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="form-group">
