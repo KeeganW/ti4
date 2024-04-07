@@ -1,6 +1,6 @@
 import React from "react";
 import adjacencyData from "../data/adjacencyData.json";
-import tileData from "../data/tileData.json";
+import tileData from "../data/tileData";
 
 import influence from './icons/influence.png';
 import planet from './icons/planet.png';

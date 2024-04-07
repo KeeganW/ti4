@@ -1,32 +1,101 @@
-{
-    "green": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 51],
-    "pokGreen": [52, 53, 54, 55, 56, 57, 58],
-    "blue": [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-    "pokBlue": [59, 60, 61, 62, 63, 64, 65, 66, 69, 70, 71, 72, 73, 74, 75, 76],
-    "red": [39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
-    "pokRed": [67, 68, 77, 78, 79, 80],
-    "anomaly": [41, 42, 43, 44, 45],
-    "pokAnomaly": [67, 68, 79, 80],
-    "blankRed": [39, 40, 46, 47, 48, 49, 50],
-    "pokBlankRed": [77, 78],
-    "alphaWormholes": [26, 39],
-    "pokAlphaWormholes": [79],
-    "betaWormholes": [25, 40],
-    "pokBetaWormholes": [64],
-    "asteroidFields": [44, 45],
-    "pokAsteroidFields": [79],
-    "gravityRifts": [41],
-    "pokGravityRifts": [67],
-    "nebulae": [42],
-    "pokNebulae": [68],
-    "supernovas": [43],
-    "pokSupernovas": [80],
+export const PLANET_TRAITS = {
+    "HAZARDOUS": "hazardous",
+    "INDUSTRIAL": "industrial",
+    "CULTURAL": "cultural",
+    "NONE": null
+};
+
+export const TECH_SPECIALTIES = {
+    "BIOTIC": "biotic",
+    "WARFARE": "warfare",
+    "PROPULSION": "propulsion",
+    "CYBERNETIC": "cybernetic",
+    "NONE": null
+};
+
+export const ANOMALIES = {
+    "NEBULA": "nebula",
+    "GRAVITY_RIFT": "gravity-rift",
+    "ASTEROID_FIELD": "asteroid-field",
+    "SUPERNOVA": "supernova",
+};
+
+export const WORMHOLES = {
+    "ALPHA": "alpha",
+    "BETA": "beta",
+    "GAMMA": "gamma",
+    "DELTA": "delta",
+    "EPSILON": "epsilon",
+    "ZETA": "zeta",
+    "ETA": "eta",
+    "THETA": "theta",
+    "IOTA": "iota",
+    "KAPPA": "kappa",
+};
+
+const tileData = {
+    
+    "base": [
+        0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+       11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+       22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+       33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
+       44, 45, 46, 47, 48, 49, 50, 51
+     ],
+    "pok": [
+       51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 
+       61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 
+       71, 72, 73, 74, 75, 76, 77, 78, 79, 80
+     ],
+    "uncharted": [
+        4253, 4254, 4255, 4256, 4257, 4258, 4259, 4260,
+        4261, 4262, 4263, 4264, 4265, 4266, 4267, 4268, 4269, 4270, 
+        4271, 4272, 4273, 4274, 4275, 4276
+     ],
+    
+    "green": [
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+        11, 12, 13, 14, 15, 16, 
+        51, 52, 53, 54, 55, 56, 57, 58
+    ],
+    "blue": [
+        19, 20, 
+        21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
+        31, 32, 33, 34, 35, 36, 37, 38, 59, 60, 61, 62, 63, 64, 65, 66, 69, 70, 71, 72, 73, 74, 75, 76,
+        4253, 4254, 4255, 4256, 4257, 4258, 4259, 4260,
+        4261, 4262, 4263, 4264, 4265, 4266, 4267, 4268
+    ],
+    "red": [
+        39, 40, 
+        41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 
+        67, 68, 77, 78, 79, 80,
+        4269, 4270, 
+        4271, 4272, 4273, 4274, 4275, 4276
+    ],
+    "anomaly": [
+        41, 42, 43, 44, 45, 
+        67, 68, 
+        79, 80,
+        4269, 4272, 4273, 4274, 4275, 4276
+    ],
+    "blankRed": [39, 40, 
+        46, 47, 48, 49, 
+        50, 
+        77, 78,
+        4270, 4271
+    ],
+    "alphaWormholes": [26, 39, 79, 4276],
+    "betaWormholes": [25, 40, 64, 4272],
+    "asteroidFields": [44, 45, 79, 4273, 4274],
+    "gravityRifts": [41, 67, 4274],
+    "nebulae": [42, 68, 4269, 4273],
+    "supernovas": [43, 80, 4276],
     "hyperlanes": ["83A", "83B", "84A", "84B", "85A", "85B", "86A", "86B", "87A", "87B", "88A", "88B", "89A", "89B", "90A", "90B", "91A", "91B"],
     "all": {
         "1": {
             "type": "green",
             "race": "The Federation of Sol",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Jord",
@@ -41,7 +110,7 @@
         "2": {
             "type": "green",
             "race": "The Mentak Coalition",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Moll Primus",
@@ -56,7 +125,7 @@
         "3": {
             "type": "green",
             "race": "The Yin Brotherhood",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Darien",
@@ -71,7 +140,7 @@
         "4": {
             "type": "green",
             "race": "The Embers of Muaat",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Muaat",
@@ -86,7 +155,7 @@
         "5": {
             "type": "green",
             "race": "The Arborec",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Nestphar",
@@ -101,7 +170,7 @@
         "6": {
             "type": "green",
             "race": "The Lizix Mindnet",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "[0.0.0]",
@@ -116,7 +185,7 @@
         "7": {
             "type": "green",
             "race": "The Winnu",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Winnu",
@@ -131,7 +200,7 @@
         "8": {
             "type": "green",
             "race": "The Nekro Virus",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Mordai II",
@@ -146,7 +215,7 @@
         "9": {
             "type": "green",
             "race": "The Naalu Collective",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Maaluuk",
@@ -169,7 +238,7 @@
         "10": {
             "type": "green",
             "race": "The Barony of Letnev",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Arc Prime",
@@ -192,7 +261,7 @@
         "11": {
             "type": "green",
             "race": "The Clan of Saar",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Lisis II",
@@ -215,7 +284,7 @@
         "12": {
             "type": "green",
             "race": "The Universities of Jol-Nar",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Nar",
@@ -238,7 +307,7 @@
         "13": {
             "type": "green",
             "race": "Sardakk N'orr",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Tren'lak",
@@ -261,7 +330,7 @@
         "14": {
             "type": "green",
             "race": "The Xxcha Kingdom",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Archon Ren",
@@ -284,7 +353,7 @@
         "15": {
             "type": "green",
             "race": "The Yssaril Tribes",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Retillion",
@@ -307,7 +376,7 @@
         "16": {
             "type": "green",
             "race": "The Emirates of Hacan",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Arretze",
@@ -344,7 +413,7 @@
         },
         "18": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Mecatol Rex",
@@ -358,7 +427,7 @@
         },
         "19": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Wellon",
@@ -372,7 +441,7 @@
         },
         "20": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Vefut II",
@@ -386,7 +455,7 @@
         },
         "21": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Thibah",
@@ -400,7 +469,7 @@
         },
         "22": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Tar'mann",
@@ -414,7 +483,7 @@
         },
         "23": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Saudor",
@@ -428,7 +497,7 @@
         },
         "24": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Mehar Xull",
@@ -442,7 +511,7 @@
         },
         "25": {
             "type": "blue",
-            "wormhole": "beta",
+            "wormhole": ["beta"],
             "planets": [
                 {
                     "name": "Quann",
@@ -456,7 +525,7 @@
         },
         "26": {
             "type": "blue",
-            "wormhole": "alpha",
+            "wormhole": ["alpha"],
             "planets": [
                 {
                     "name": "Lodor",
@@ -470,7 +539,7 @@
         },
         "27": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "New Albion",
@@ -492,7 +561,7 @@
         },
         "28": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Tequ'ran",
@@ -514,7 +583,7 @@
         },
         "29": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Qucen'n",
@@ -536,7 +605,7 @@
         },
         "30": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Mellon",
@@ -558,7 +627,7 @@
         },
         "31": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Lazar",
@@ -580,7 +649,7 @@
         },
         "32": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Dal Bootha",
@@ -602,7 +671,7 @@
         },
         "33": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Corneeq",
@@ -624,7 +693,7 @@
         },
         "34": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Centauri",
@@ -646,7 +715,7 @@
         },
         "35": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Bereg",
@@ -668,7 +737,7 @@
         },
         "36": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Arnor",
@@ -690,7 +759,7 @@
         },
         "37": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Arinam",
@@ -712,7 +781,7 @@
         },
         "38": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Abyz",
@@ -734,85 +803,85 @@
         },
         "39": {
             "type": "red",
-            "wormhole": "alpha",
-            "anomaly": null,
+            "wormhole": ["alpha"],
+            "anomaly": [],
             "planets": [
             ]
         },
         "40": {
             "type": "red",
-            "wormhole": "beta",
-            "anomaly": null,
+            "wormhole": ["beta"],
+            "anomaly": [],
             "planets": [
             ]
         },
         "41": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": "gravity-rift",
+            "wormhole": [],
+            "anomaly": ["gravity-rift"],
             "planets": [
             ]
         },
         "42": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": "nebula",
+            "wormhole": [],
+            "anomaly": ["nebula"],
             "planets": [
             ]
         },
         "43": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": "supernova",
+            "wormhole": [],
+            "anomaly": ["supernova"],
             "planets": [
             ]
         },
         "44": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": "asteroid-field",
+            "wormhole": [],
+            "anomaly": ["asteroid-field"],
             "planets": [
             ]
         },
         "45": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": "asteroid-field",
+            "wormhole": [],
+            "anomaly": ["asteroid-field"],
             "planets": [
             ]
         },
         "46": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": null,
+            "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
         "47": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": null,
+            "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
         "48": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": null,
+            "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
         "49": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": null,
+            "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
         "50": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": null,
+            "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -832,7 +901,7 @@
         "52": {
             "type": "green",
             "race": "The Mahact Gene-sorcerers",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Ixth",
@@ -847,7 +916,7 @@
         "53": {
             "type": "green",
             "race": "The Nomad",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Arcturus",
@@ -862,7 +931,7 @@
         "54": {
             "type": "green",
             "race": "The Vuil'raith Cabal",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Acheron",
@@ -877,7 +946,7 @@
         "55": {
             "type": "green",
             "race": "The Titans of Ul",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Elysium",
@@ -892,7 +961,7 @@
         "56": {
             "type": "green",
             "race": "The Empyrean",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "The Dark",
@@ -907,7 +976,7 @@
         "57": {
             "type": "green",
             "race": "The Naaz-Rokha Alliance",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Naazir",
@@ -930,7 +999,7 @@
         "58": {
             "type": "green",
             "race": "The Argent Flight",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Valk",
@@ -960,7 +1029,7 @@
         },
         "59": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Archon Vail",
@@ -974,7 +1043,7 @@
         },
         "60": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Perimeter",
@@ -988,7 +1057,7 @@
         },
         "61": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Ang",
@@ -1002,7 +1071,7 @@
         },
         "62": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Sem-Lore",
@@ -1016,7 +1085,7 @@
         },
         "63": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Vorhal",
@@ -1030,7 +1099,7 @@
         },
         "64": {
             "type": "blue",
-            "wormhole": "beta",
+            "wormhole": ["beta"],
             "planets": [
                 {
                     "name": "Atlas",
@@ -1044,7 +1113,7 @@
         },
         "65": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Primor",
@@ -1058,7 +1127,7 @@
         },
         "66": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Hope's End",
@@ -1072,8 +1141,8 @@
         },
         "67": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": "gravity-rift",
+            "wormhole": [],
+            "anomaly": ["gravity-rift"],
             "planets": [
                 {
                     "name": "Cormund",
@@ -1087,8 +1156,8 @@
         },
         "68": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": "nebula",
+            "wormhole": [],
+            "anomaly": ["nebula"],
             "planets": [
                 {
                     "name": "Everra",
@@ -1102,7 +1171,7 @@
         },
         "69": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Accoen",
@@ -1124,7 +1193,7 @@
         },
         "70": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Kraag",
@@ -1146,7 +1215,7 @@
         },
         "71": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Ba'Kal",
@@ -1168,7 +1237,7 @@
         },
         "72": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Lisis",
@@ -1190,7 +1259,7 @@
         },
         "73": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Lisis",
@@ -1212,7 +1281,7 @@
         },
         "74": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Vega Major",
@@ -1234,7 +1303,7 @@
         },
         "75": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Loki",
@@ -1264,7 +1333,7 @@
         },
         "76": {
             "type": "blue",
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
                 {
                     "name": "Rigel I",
@@ -1294,42 +1363,42 @@
         },
         "77": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": null,
+            "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
         "78": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": null,
+            "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
         "79": {
             "type": "red",
-            "wormhole": "alpha",
-            "anomaly": "asteroid-field",
+            "wormhole": ["alpha"],
+            "anomaly": ["asteroid-field"],
             "planets": [
             ]
         },
         "80": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": "supernova",
+            "wormhole": [],
+            "anomaly": ["supernova"],
             "planets": [
             ]
         },
         "81": {
             "type": "red",
-            "wormhole": null,
-            "anomaly": "muaat-supernova",
+            "wormhole": [],
+            "anomaly": ["muaat-supernova"],
             "planets": [
             ]
         },
         "82": {
             "type": "blue",
-            "wormhole": "all",
+            "wormhole": [WORMHOLES.ALPHA, WORMHOLES.BETA, WORMHOLES.GAMMA],
             "planets": [
                 {
                     "name": "Mallice",
@@ -1346,7 +1415,7 @@
             "hyperlanes": [
                 [1, 4]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1357,7 +1426,7 @@
                 [0, 2],
                 [3, 5]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1366,7 +1435,7 @@
             "hyperlanes": [
                 [2, 5]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1377,7 +1446,7 @@
                 [0, 4],
                 [1, 3]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1386,7 +1455,7 @@
             "hyperlanes": [
                 [1, 5]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1397,7 +1466,7 @@
                 [0, 2],
                 [3, 5]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1406,7 +1475,7 @@
             "hyperlanes": [
                 [1, 5]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1417,7 +1486,7 @@
                 [0, 4],
                 [1, 3]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1428,7 +1497,7 @@
                 [2, 4],
                 [2, 5]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1438,7 +1507,7 @@
                 [0, 2],
                 [0, 3]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1449,7 +1518,7 @@
                 [1, 4],
                 [2, 4]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1460,7 +1529,7 @@
                 [0, 2],
                 [3, 5]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1471,7 +1540,7 @@
                 [0, 4],
                 [2, 4]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1481,7 +1550,7 @@
                 [0, 3],
                 [0, 4]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1491,7 +1560,7 @@
                 [1, 5],
                 [2, 4]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1501,7 +1570,7 @@
                 [0, 3],
                 [0, 4]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1512,7 +1581,7 @@
                 [0, 4],
                 [1, 3]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
         },
@@ -1522,9 +1591,392 @@
                 [0, 2],
                 [0, 3]
             ],
-            "wormhole": null,
+            "wormhole": [],
             "planets": [
             ]
+        },
+
+        "4253": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Silence",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": true,
+                    "ability": "Imperial Salvage Yard - You may exhaust this card at the end of your turn to place 1 cruiser from your reinforcements in any system that contains 1 or more of your ships.",
+                    "resources": 2,
+                    "influence": 2,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4254": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Echo",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": true,
+                    "ability": "Bi-Phasic Generators - You may exhaust this card at the end of your turn to place 1 frontier token in a system that does not contain a planet.",
+                    "resources": 1,
+                    "influence": 2,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4255": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Tarock",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": true,
+                    "ability": "Council Black Site - You may exhaust this card when an agenda is revealed to predict aloud an outcome of that agenda. If your prediction is correct, draw 1 secret objective.",
+                    "resources": 3,
+                    "influence": 0,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4256": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Prism",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": true,
+                    "ability": "Mystic Library - ACTION: Exhaust this card to replace 1 of your non-faction non-unit upgrade technologies with another technology from your technology deck with the same number of prerequisites.",
+                    "resources": 0,
+                    "influence": 3,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4257": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Troac",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 4,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4258": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Etir V",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 4,
+                    "influence": 0,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4259": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Vioss",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 3,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4260": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Fakrenn",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 2,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": [WORMHOLES.ALPHA]
+        },
+        "4261": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "San-Vit",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 1,
+                }, 
+                {
+                    "name": "Lodran",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.CYBERNETIC,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 2,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4262": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Dorvok",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "tech_specialty": TECH_SPECIALTIES.WARFARE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                }, 
+                {
+                    "name": "Derbrae",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 3,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4263": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Moln",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "tech_specialty": TECH_SPECIALTIES.PROPULSION,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                }, 
+                {
+                    "name": "Rysaa",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.BIOTIC,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 0,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4264": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Salin",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                },
+                {
+                    "name": "Gwiyun",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 2,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4265": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Inan",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                },
+                {
+                    "name": "Swog",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 0,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4266": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Detic",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 2,
+                }, 
+                {
+                    "name": "Lliot",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 1,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4267": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Qaak",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 1,
+                }, 
+                {
+                    "name": "Larred",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 1,
+                }, 
+                {
+                    "name": "Nairb",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 1,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4268": {
+            "type": "blue",
+            "planets": [
+                {
+                    "name": "Sierpen",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 0,
+                }, 
+                {
+                    "name": "Mandle",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 1,
+                }, 
+                {
+                    "name": "Regnem",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 2,
+                }],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4269": {
+            "type": "red",
+            "planets": [
+                {
+                    "name": "Domna",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": true,
+                    "ability": "Fractal Gate - You may exhaust this card at the end of your turn to remove 1 of your ships from the game board and place that unit in an adjacent system that does not contain another player’s ships.",
+                    "resources": 2,
+                    "influence": 1,
+                }
+            ],
+            "anomaly": [ANOMALIES.NEBULA],
+            "wormhole": []
+        },
+        "4270": {
+            "type": "red",
+            "planets": [],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4271": {
+            "type": "red",
+            "planets": [],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "4272": {
+            "type": "red",
+            "planets": [],
+            "anomaly": [ANOMALIES.NEBULA],
+            "wormhole": [WORMHOLES.BETA]
+        },
+        "4273": {
+            "type": "red",
+            "planets": [],
+            "anomaly": [ANOMALIES.ASTEROID_FIELD, ANOMALIES.NEBULA],
+            "wormhole": []
+        },
+        "4274": {
+            "type": "red",
+            "planets": [],
+            "anomaly": [ANOMALIES.GRAVITY_RIFT, ANOMALIES.ASTEROID_FIELD],
+            "wormhole": []
+        },
+        "4275": {
+            "type": "red",
+            "planets": [],
+            "anomaly": [ANOMALIES.GRAVITY_RIFT],
+            "wormhole": [WORMHOLES.GAMMA]
+        },
+        "4276": {
+            "type": "red",
+            "planets": [],
+            "anomaly": [ANOMALIES.SUPERNOVA],
+            "wormhole": [WORMHOLES.ALPHA, WORMHOLES.BETA]
         }
     }
 }
+export default tileData

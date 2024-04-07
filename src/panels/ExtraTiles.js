@@ -1,5 +1,5 @@
 import React from "react";
-import tileData from "../data/tileData.json";
+import tileData from "../data/tileData";
 
 class ExtraTiles extends React.Component {
     constructor(props) {
@@ -28,10 +28,21 @@ class ExtraTiles extends React.Component {
     
     render() {
         let systemNumbers = [];
-        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
-        if (this.props.useProphecyOfKings || this.props.showAllExtraTiles || this.props.customMapBuilding) {
-            systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
-        }
+        // systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
+        // if (this.props.useProphecyOfKings || this.props.showAllExtraTiles || this.props.customMapBuilding) {
+        //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
+        // }
+
+        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false } = {}) => (
+            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace)
+        )
+
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
+            { useProphecyOfKings: this.props.useProphecyOfKings, useUnchartedSpace: true }
+        ));
+
+        // console.log(systemNumbers)
+
         if (this.props.customMapBuilding) {
             systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
         }

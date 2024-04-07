@@ -9,7 +9,7 @@ import MainMap from "./map/MainMap";
 import MapControls from "./map/MapControls";
 import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
-import tileData from "./data/tileData.json";
+import tileData from "./data/tileData";
 import boardData from "./data/boardData.json";
 import raceData from "./data/raceData.json";
 import {calculateOffsets} from "./helpers/Helpers";
@@ -42,6 +42,7 @@ class App extends React.Component {
             encodedOptions: "",
 
             useProphecyOfKings: false,
+            useUnchartedSpace: false,
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
             currentRaces: [...raceData.races],
 
@@ -73,6 +74,7 @@ class App extends React.Component {
 
         this.toggleOptionsMenu = this.toggleOptionsMenu.bind(this);
         this.toggleProphecyOfKings = this.toggleProphecyOfKings.bind(this);
+        this.toggleUnchartedSpace = this.toggleUnchartedSpace.bind(this);
         this.toggleOverlay = this.toggleOverlay.bind(this);
         this.updateTileNumberOverlays = this.updateTileNumberOverlays.bind(this);
         this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
@@ -230,10 +232,17 @@ class App extends React.Component {
 
         // Update the unused tiles list
         let systemNumbers = []
-        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
-        if (this.state.useProphecyOfKings) {
-            systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
-        }
+
+        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false } = {}) => (
+            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace)
+        )
+
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
+            { useProphecyOfKings: this.state.useProphecyOfKings, useUnchartedSpace: this.state.useUnchartedSpace }
+        ));
+        // if (this.state.useProphecyOfKings) {
+        //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
+        // }
         let unusedTiles = []
         for (let systemNumber of systemNumbers) {
             // If it is not on the map, show the system tile. Otherwise, hide it.
@@ -413,6 +422,15 @@ class App extends React.Component {
     }
 
     /**
+     * Toggle whether we need to use the uncharted space fan expansion or not
+     */
+    toggleUnchartedSpace() {
+        this.setState({
+            useUnchartedSpace: !this.state.useUnchartedSpace,
+        }, this.showExtraTiles);
+    }
+
+    /**
      * Toggle whether the more info side panel is visible. If the extra tiles panel had just been triggered, we just
      * need to hide the more info panel.
      * @param {*} event The event that triggered this function.
@@ -476,10 +494,17 @@ class App extends React.Component {
      */
     showExtraTiles() {
         let systemNumbers = []
-        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
-        if (this.state.useProphecyOfKings || this.state.showAllExtraTiles) {
-            systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
-        }
+
+        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false } = {}) => (
+            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace)
+        )
+
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
+            { useProphecyOfKings: this.state.useProphecyOfKings, useUnchartedSpace: this.state.useUnchartedSpace }
+        ));
+        // if (this.state.useProphecyOfKings || this.state.showAllExtraTiles) {
+        //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
+        // }
         if (this.state.customMapBuilding) {
             systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
         }
@@ -750,7 +775,8 @@ class App extends React.Component {
                     return result[1];
                 }
             } else {
-                let regex = /^(80|81|82|-1|[0-7]?[0-9])-?([0-5])?$/gm
+                // let regex = /^(80|81|82|-1|[0-7]?[0-9])-?([0-5])?$/gm
+                let regex = /^(\d{1,4})-?([0-5])?$/gm
                 result = regex.exec(tile);
                 if (result) {
                     return Number(result[1])
@@ -1065,7 +1091,9 @@ class App extends React.Component {
                     />
                     
                     <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
-                             tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}
+                             tiles={this.state.tiles} 
+                             useProphecyOfKings={this.state.useProphecyOfKings} 
+                             useUnchartedSpace={this.state.useUnchartedSpace}
 
                              ref={this.map}
 
@@ -1098,7 +1126,8 @@ class App extends React.Component {
                 />
                 
                 <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}
-                            useProphecyOfKings={this.state.useProphecyOfKings} showAllExtraTiles={this.state.showAllExtraTiles}
+                            useProphecyOfKings={this.state.useProphecyOfKings} 
+                            useUnchartedSpace={this.state.useUnchartedSpace} showAllExtraTiles={this.state.showAllExtraTiles}
                             customMapBuilding={this.state.customMapBuilding}
 
                             updateTiles={this.updateTiles} toggleShowAllExtraTiles={this.toggleShowAllExtraTiles}
@@ -1108,18 +1137,22 @@ class App extends React.Component {
                 />
                 
                 <MoreInfo visible={this.state.moreInfoVisible} currentPlayerNames={this.state.currentPlayerNames}
-                          useProphecyOfKings={this.state.useProphecyOfKings} tiles={this.state.tiles}
+                          useProphecyOfKings={this.state.useProphecyOfKings} 
+                          useUnchartedSpace={this.state.useUnchartedSpace} tiles={this.state.tiles}
                           getTileNumber={this.getTileNumber}
                 />
                 
-                <MapOptions visible={this.state.isOptionsMenuShowing} useProphecyOfKings={this.state.useProphecyOfKings}
+                <MapOptions visible={this.state.isOptionsMenuShowing} 
+                            useProphecyOfKings={this.state.useProphecyOfKings} 
+                            useUnchartedSpace={this.state.useUnchartedSpace}
                             currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
                             tiles={this.state.tiles} includedTiles={this.state.includedTiles}
                             excludedTiles={this.state.excludedTiles} lockedTiles={this.state.lockedTiles}
 
                             ref={this.mapOptions}
 
-                            toggleProphecyOfKings={this.toggleProphecyOfKings} updateTiles={this.updateTiles}
+                            toggleProphecyOfKings={this.toggleProphecyOfKings}
+                            toggleUnchartedSpace={this.toggleUnchartedSpace} updateTiles={this.updateTiles}
                             showExtraTiles={this.showExtraTiles} updateRaces={this.updateRaces}
                             updatePlayerNames={this.updatePlayerNames}
                 />
