@@ -38,8 +38,10 @@ class MapOptions extends React.Component {
             placementStyles: ["slice", "initial", "home", "random"],
             races: [...raceData["races"]],
             pokRaces: [...raceData["pokRaces"]],
+            dsRaces: [...raceData["dsRaces"]],
             homeworlds: raceData["homeSystems"],
-            pokHomeworlds: raceData["pokHomeSystems"]
+            pokHomeworlds: raceData["pokHomeSystems"],
+            dsHomeworlds: raceData["dsHomeworlds"]
         }
         const startingPlayers = 6;
 
@@ -86,6 +88,7 @@ class MapOptions extends React.Component {
         this.handleRacesChange = this.handleRacesChange.bind(this);
         this.updatePok = this.updatePok.bind(this);
         this.updateUncharted = this.updateUncharted.bind(this);
+        this.updateDS = this.updateDS.bind(this);
         this.updatePlayerCount = this.updatePlayerCount.bind(this);
         this.updateBoardStyle = this.updateBoardStyle.bind(this);
         this.updateSeed = this.updateSeed.bind(this);
@@ -157,6 +160,8 @@ class MapOptions extends React.Component {
     }
 
     updatePok(event) {
+        let races = [...this.state.optionsPossible.races]
+        if (this.props.useDiscordantStars) races = races.concat(this.state.optionsPossible.dsRaces)
         let boardOptions = this.state.optionsPossible.boardStyles;
         if (event.target.checked) {
             boardOptions = this.state.optionsPossible.boardStylesPok;
@@ -165,7 +170,7 @@ class MapOptions extends React.Component {
                 currentBoardStyle: boardOptions[this.state.currentNumberOfPlayers][0],
                 currentBoardStyleOptions: boardOptions[this.state.currentNumberOfPlayers],
             }, () => {
-                this.props.updateRaces([...this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)]);
+                this.props.updateRaces([...races.concat(this.state.optionsPossible.pokRaces)]);
                 this.props.toggleProphecyOfKings(event);
             });
         } else {
@@ -175,7 +180,7 @@ class MapOptions extends React.Component {
                 currentBoardStyle: this.state.currentNumberOfPlayers > 6 ? boardOptions["6"][0] : this.state.currentBoardStyle,
                 currentBoardStyleOptions: this.state.currentNumberOfPlayers > 6 ? boardOptions["6"] : boardOptions[this.state.currentNumberOfPlayers],
             }, () => {
-                this.props.updateRaces([...this.state.optionsPossible.races]);
+                this.props.updateRaces(races);
                 this.props.toggleProphecyOfKings(event);
             });
         }
@@ -183,6 +188,17 @@ class MapOptions extends React.Component {
 
     updateUncharted(event) {
         this.props.toggleUnchartedSpace(event);
+    }
+
+    updateDS(event) {
+        let races = [...this.state.optionsPossible.races]
+        if (this.props.useProphecyOfKings) races = races.concat(this.state.optionsPossible.pokRaces)
+        if (event.target.checked) {
+            this.props.updateRaces([...races.concat(this.state.optionsPossible.dsRaces)]);
+        } else {
+            this.props.updateRaces(races);
+        }
+        this.props.toggleDiscordantStars(event);
     }
 
     updatePlayerCount(event) {
@@ -261,6 +277,7 @@ class MapOptions extends React.Component {
 
         encodedSettings += this.props.useProphecyOfKings ? "T" : "F";
         encodedSettings += this.props.useUnchartedSpace ? "T" : "F";
+        encodedSettings += this.props.useDiscordantStars ? "T" : "F";
         encodedSettings += this.state.currentNumberOfPlayers.toString();
         encodedSettings += this.state.currentBoardStyleOptions.indexOf(this.state.currentBoardStyle).toString();
         encodedSettings += this.state.optionsPossible.placementStyles.indexOf(this.state.currentPlacementStyle).toString();
@@ -279,9 +296,13 @@ class MapOptions extends React.Component {
         encodedSettings += this.state.pickRaces ? "T" : "F";
         if (this.state.pickRaces) {
             encodedSettings += this.state.ensureRacialAnomalies ? "T" : "F";
-            let combinedRaces = this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
-            if ((this.props.useProphecyOfKings === false && this.props.currentRaces.length !== this.state.optionsPossible.races.length) ||
-                (this.props.useProphecyOfKings === true && this.props.currentRaces.length !== combinedRaces.length)) {
+            let combinedRaces = this.state.optionsPossible.races
+                .concat(this.state.optionsPossible.pokRaces)
+                .concat(this.state.optionsPossible.dsRaces)
+            let expectedRaces = 17;
+            if (this.props.useProphecyOfKings) expectedRaces += 7
+            if (this.props.useDiscordantStars) expectedRaces += 34
+            if (this.props.currentRaces.length !== expectedRaces) {
                 // Need to encode all races, because it is not the default
                 for (let race of this.props.currentRaces) {
                     if (combinedRaces.indexOf(race) >= 0) {
@@ -317,9 +338,12 @@ class MapOptions extends React.Component {
 
         // Uncharted Space
         // Compatability with old URL formatting
-        let useUnchartedSpace = true
+        let useUnchartedSpace = false
+        let useDiscordantStars = false
         if (newSettings[currentIndex] === "T" || newSettings[currentIndex] === "F") {
             useUnchartedSpace = newSettings[currentIndex] === "T";
+            currentIndex += 1;
+            useDiscordantStars = newSettings[currentIndex] === "T";
             currentIndex += 1;
         }
 
@@ -390,13 +414,17 @@ class MapOptions extends React.Component {
                 if (newSettings[currentIndex] !== undefined) {
                     // Custom races, but not all of them
                     currentRaces = [];
-                    let combinedRaces = this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
+                    let combinedRaces = this.state.optionsPossible.races
+                        .concat(this.state.optionsPossible.pokRaces)
+                        .concat(this.state.optionsPossible.dsRaces)
                     while (newSettings[currentIndex] !== "|" && currentIndex !== newSettings.length) {
                         currentRaces.push(combinedRaces[Number(newSettings.substring(currentIndex, currentIndex + 2))])
                         currentIndex += 2
                     }
                 } else {
-                    currentRaces = useProphecyOfKings ? this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces) : this.state.optionsPossible.races;
+                    currentRaces = this.state.optionsPossible.races;
+                    if (useProphecyOfKings) currentRaces = currentRaces.concat(this.state.optionsPossible.pokRaces)
+                    if (useDiscordantStars) currentRaces = currentRaces.concat(this.state.optionsPossible.dsRaces)
                 }
             } else {
                 // No custom races, but player names are specified, so parse them
@@ -432,12 +460,15 @@ class MapOptions extends React.Component {
             if ((useUnchartedSpace && !this.props.useUnchartedSpace) || (!useUnchartedSpace && this.props.useUnchartedSpace)) {
                 this.props.toggleUnchartedSpace();
             }
+            if ((useDiscordantStars && !this.props.useDiscordantStars) || (!useDiscordantStars && this.props.useDiscordantStars)) {
+                this.props.toggleDiscordantStars();
+            }
 
             if (newTiles.length > 0) {
                 // Tiles were changed after rendering, so we need to display them
                 this.props.updateTiles(newTiles, newSettings);
             } else {
-                this.props.updateTiles(this.getNewTileSet(currentRaces, {useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }), newSettings, false);
+                this.props.updateTiles(this.getNewTileSet(currentRaces, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }), newSettings, false);
             }
         })
 
@@ -733,8 +764,8 @@ class MapOptions extends React.Component {
                     // anomalies = useProphecyOfKings ? [...tileData.nebulae.concat(tileData.pokNebulae)] : [...tileData.nebulae];
                     anomalies = tileData.nebulae.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
                     match = true;
-                    // If The Vuil'Raith Cabal are in the game, ensure we have a gravity rift
-                } else if (race === "The Vuil'Raith Cabal") {
+                    // If The Vuil'Raith Cabal or Nivyn Star Kings are in the game, ensure we have a gravity rift
+                } else if (race === "The Vuil'Raith Cabal" || race === "The Nivyn Star Kings") {
                     // anomalies = useProphecyOfKings ? [...tileData.gravityRifts.concat(tileData.pokGravityRifts)] : [...tileData.gravityRifts];
                     anomalies = tileData.gravityRifts.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
                     match = true;
@@ -1386,6 +1417,11 @@ class MapOptions extends React.Component {
                         <label className="custom-control-label" htmlFor="unchartedExpansion">Use Uncharted Space Fan Expansion</label>
                     </div>
 
+                    <div className="custom-control custom-checkbox mb-3">
+                        <input type="checkbox" className="custom-control-input" id="dsExpansion" name="useDiscordantStars" checked={this.props.useDiscordantStars} onChange={this.updateDS} />
+                        <label className="custom-control-label" htmlFor="dsExpansion">Use Discordant Stars Races</label>
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="playerCount">Number of Players</label>
                         <select className="form-control" id="playerCount" name="currentNumberOfPlayers" value={this.state.currentNumberOfPlayers} onChange={this.updatePlayerCount}>
@@ -1484,6 +1520,7 @@ class MapOptions extends React.Component {
                     />
                     <SetRacesModal visible={this.state.setRacesHelp} races={this.state.optionsPossible.races}
                         pokRaces={this.state.optionsPossible.pokRaces} useProphecyOfKings={this.props.useProphecyOfKings}
+                        dsRaces={this.state.optionsPossible.dsRaces} useDiscordantStars={this.props.useDiscordantStars}
                         currentRaces={this.props.currentRaces}
                         hideModal={this.toggleSetRacesHelp} handleRacesChange={this.handleRacesChange}
                     />
@@ -1559,7 +1596,7 @@ class MapOptions extends React.Component {
                          Ensures that races get their beneficial anomalies
                          <br>
                          <br>
-                         This option makes it so that Muaat will always receive a supernova, Saar will always receive an asteroid field, Empyrean will always receive a nebulae and Vuil'Raith will always receive a gravity rift.
+                         This option makes it so that Muaat will always receive a supernova, Saar will always receive an asteroid field, Empyrean will always receive a nebulae and Vuil'Raith and Nivyn (DS) will always receive a gravity rift.
                          </p>"
                     />
 

@@ -43,6 +43,7 @@ class App extends React.Component {
 
             useProphecyOfKings: false,
             useUnchartedSpace: false,
+            useDiscordantStars: false,
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
             currentRaces: [...raceData.races],
 
@@ -75,6 +76,7 @@ class App extends React.Component {
         this.toggleOptionsMenu = this.toggleOptionsMenu.bind(this);
         this.toggleProphecyOfKings = this.toggleProphecyOfKings.bind(this);
         this.toggleUnchartedSpace = this.toggleUnchartedSpace.bind(this);
+        this.toggleDiscordantStars = this.toggleDiscordantStars.bind(this);
         this.toggleOverlay = this.toggleOverlay.bind(this);
         this.updateTileNumberOverlays = this.updateTileNumberOverlays.bind(this);
         this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
@@ -428,6 +430,15 @@ class App extends React.Component {
         this.setState({
             useUnchartedSpace: !this.state.useUnchartedSpace,
         }, this.showExtraTiles);
+    }
+
+    /**
+     * Toggle whether we need to use the discordant stars races or not
+     */
+    toggleDiscordantStars() {
+        this.setState({
+            useDiscordantStars: !this.state.useDiscordantStars,
+        });
     }
 
     /**
@@ -1094,6 +1105,7 @@ class App extends React.Component {
                              tiles={this.state.tiles} 
                              useProphecyOfKings={this.state.useProphecyOfKings} 
                              useUnchartedSpace={this.state.useUnchartedSpace}
+                             useDiscordantStars={this.state.useDiscordantStars}
 
                              ref={this.map}
 
@@ -1145,6 +1157,7 @@ class App extends React.Component {
                 <MapOptions visible={this.state.isOptionsMenuShowing} 
                             useProphecyOfKings={this.state.useProphecyOfKings} 
                             useUnchartedSpace={this.state.useUnchartedSpace}
+                            useDiscordantStars={this.state.useDiscordantStars}
                             currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
                             tiles={this.state.tiles} includedTiles={this.state.includedTiles}
                             excludedTiles={this.state.excludedTiles} lockedTiles={this.state.lockedTiles}
@@ -1152,7 +1165,9 @@ class App extends React.Component {
                             ref={this.mapOptions}
 
                             toggleProphecyOfKings={this.toggleProphecyOfKings}
-                            toggleUnchartedSpace={this.toggleUnchartedSpace} updateTiles={this.updateTiles}
+                            toggleUnchartedSpace={this.toggleUnchartedSpace} 
+                            toggleDiscordantStars={this.toggleDiscordantStars} 
+                            updateTiles={this.updateTiles}
                             showExtraTiles={this.showExtraTiles} updateRaces={this.updateRaces}
                             updatePlayerNames={this.updatePlayerNames}
                 />

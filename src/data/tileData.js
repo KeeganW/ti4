@@ -56,7 +56,14 @@ const tileData = {
     "green": [
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
         11, 12, 13, 14, 15, 16, 
-        51, 52, 53, 54, 55, 56, 57, 58
+        51, 52, 53, 54, 55, 56, 57, 58,
+        3201, 3202, 3203, 3204, 3205,
+        3206, 3207, 3208, 3209, 3210,
+        3211, 3212, 3213, 3214, 3215,
+        3216, 3217, 3218, 3219, 3220,
+        3221, 3222, 3223, 3224,
+        3226, 3227, 3228, 3229, 3230,
+        3231, 3232, 3233, 3234, 3235
     ],
     "blue": [
         19, 20, 
@@ -1594,6 +1601,685 @@ const tileData = {
             "wormhole": [],
             "planets": [
             ]
+        },
+
+        "3201": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Rhune",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 4,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3202": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Idyn",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 0,
+                },
+                {
+                    "name": "Kroll",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 1,
+                },
+                {
+                    "name": "Cyrra",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 1,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3203": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Kyr",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 0,
+                },
+                {
+                    "name": "Pax",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                },
+                {
+                    "name": "Vess",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 1,
+                }
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3204": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Ogdun",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 0,
+                },
+                {
+                    "name": "Brthkul",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 3,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3205": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Drah",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                },
+                {
+                    "name": "Trykk",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 1,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3206": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Vadarian",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 0,
+                },
+                {
+                    "name": "Norvus",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3207": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Biaheo",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 0,
+                },
+                {
+                    "name": "Empero",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 3,
+                },
+            ],
+            "anomaly": [ANOMALIES.NEBULA],
+            "wormhole": []
+        },
+        "3208": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Demis",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 2,
+                },
+                {
+                    "name": "Chrion",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 3,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3209": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Axis",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 5,
+                    "influence": 0,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3210": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Sanctuary",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 4,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3211": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Shi-Halaum",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 4,
+                    "influence": 0,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3212": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Discordia",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 4,
+                    "influence": 1,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3213": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Cymiae",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 1,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3214": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Prind",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 3,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3215": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Gen",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 0,
+                },
+                {
+                    "name": "Zelian",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 3,
+                },
+            ],
+            "anomaly": [ANOMALIES.ASTEROID_FIELD],
+            "wormhole": []
+        },
+        "3216": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Vaylar",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 2,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3217": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Delmor",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 1,
+                },
+                {
+                    "name": "Kyd",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3218": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Abyssus",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 4,
+                    "influence": 2,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3219": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Louk",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 1,
+                },
+                {
+                    "name": "Auldane",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 3,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3220": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Ellas",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 3,
+                },
+            ],
+            "anomaly": [ANOMALIES.GRAVITY_RIFT],
+            "wormhole": []
+        },
+        "3221": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Aldra",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 3,
+                },
+                {
+                    "name": "Beata",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 1,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3222": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Bohl-Dhur",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 4,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3223": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Susuros",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 4,
+                    "influence": 4,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3224": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Poh",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 0,
+                },
+                {
+                    "name": "Orad",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 1,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3226": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Kjalengard",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 2,
+                },
+                {
+                    "name": "Hulgade",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 0,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3227": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Benc",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 0,
+                },
+                {
+                    "name": "Hau",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3228": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Zarr",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 1,
+                },
+                {
+                    "name": "Nokk",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 1,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3229": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Last Stop",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 0,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3230": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Aysis' Rest",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 4,
+                    "influence": 3,
+                },
+                {
+                    "name": "Solitude",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 1,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3231": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Avicenna",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 4,
+                    "influence": 0,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3232": {
+            "type": "green",
+            "planets": [
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3233": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Alesna",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 0,
+                },
+                {
+                    "name": "Azle",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 0,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3234": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Arche",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 2,
+                },
+                {
+                    "name": "Gghurn Theta",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 1,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
+        },
+        "3235": {
+            "type": "green",
+            "planets": [
+                {
+                    "name": "Edyn",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 3,
+                    "influence": 3,
+                },
+                {
+                    "name": "Ekko",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 1,
+                },
+                {
+                    "name": "Okke",
+                    "trait": PLANET_TRAITS.NONE,
+                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 1,
+                },
+            ],
+            "anomaly": [],
+            "wormhole": []
         },
 
         "4253": {
