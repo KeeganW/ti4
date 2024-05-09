@@ -1481,65 +1481,94 @@ class MapOptions extends React.Component {
                 </div>
                 <Form id="generateForm" onSubmit={this.generateBoard}>
 
-                    <div className="custom-control custom-checkbox mb-3 d-flex">
-                        <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.props.useProphecyOfKings} onChange={this.updatePok} />
-                        <label className="custom-control-label" htmlFor="pokExpansion">Use POK Tiles</label>
-                    </div>
+                    <Form.Group className="mb-3 d-flex" controlId="pokExpansion">
+                        <Form.Check name="pokExpansion" type="checkbox" checked={this.props.useProphecyOfKings} onChange={this.updatePok} label="Use POK Tiles" />
+                    </Form.Group>
                     <Accordion>
                         <Accordion.Item eventKey="0">
-                            <Accordion.Header as="p">Fan-Made Content</Accordion.Header>
+                            <Accordion.Header className="p-0" as="p">Fan-Made Content</Accordion.Header>
                             <Accordion.Body>
                                 <>
-                                    <div className="custom-control custom-checkbox mb-3 d-flex">
-                                        <input type="checkbox" className="custom-control-input" id="unchartedExpansion" name="useUnchartedSpace" checked={this.props.useUnchartedSpace} onChange={this.updateUncharted} />
-                                        <label className="custom-control-label" htmlFor="unchartedExpansion">Use Uncharted Space Fan Tiles</label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox mb-3 d-flex">
-                                        <input type="checkbox" className="custom-control-input" id="dsExpansion" name="useDiscordantStars" checked={this.props.useDiscordantStars} onChange={this.updateDS} />
-                                        <label className="custom-control-label" htmlFor="dsExpansion">Use DS Fan Races</label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox d-flex">
-                                        <input type="checkbox" className="custom-control-input" id="sunExpansion" name="useAscendentSun" checked={this.props.useAscendentSun} onChange={this.updateSun} />
-                                        <label className="custom-control-label" htmlFor="sunExpansion">Use Eronous' Fan Tiles</label>
-                                    </div>
+                                    <Form.Group className="mb-3 d-flex" controlId="useUnchartedSpace">
+                                        <Form.Check name="useUnchartedSpace" type="checkbox" checked={this.props.useUnchartedSpace} onChange={this.updateUncharted} label="Use Uncharted Space Fan Tiles" />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3 d-flex" controlId="useDiscordantStars">
+                                        <Form.Check name="useDiscordantStars" type="checkbox" checked={this.props.useDiscordantStars} onChange={this.updateDS} label="Use DS Fan Races" />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3 d-flex" controlId="useAscendentSun">
+                                        <Form.Check name="useAscendentSun" type="checkbox" checked={this.props.useAscendentSun} onChange={this.updatePok} label="Use Eronous' Fan Tiles" />
+                                    </Form.Group>
                                 </>
                             </Accordion.Body>
                         </Accordion.Item>
                     </Accordion>
 
-                    <div className="form-group my-3">
+                    <Form.Group className="my-3">
+                        <Form.Label>Number of Players</Form.Label>
+                        <Form.Select className="form-control" id="playerCount" name="currentNumberOfPlayers" value={this.state.currentNumberOfPlayers} onChange={this.updatePlayerCount}>
+                            {this.state.currentNumberOfPlayersOptions.map((x) => <option key={x} value={x}>{x}</option>)}
+                        </Form.Select>
+                    </Form.Group>
+                    {/* <div className="form-group my-3">
                         <label htmlFor="playerCount">Number of Players</label>
                         <select className="form-control" id="playerCount" name="currentNumberOfPlayers" value={this.state.currentNumberOfPlayers} onChange={this.updatePlayerCount}>
                             {this.state.currentNumberOfPlayersOptions.map((x) => <option key={x} value={x}>{x}</option>)}
                         </select>
-                    </div>
+                    </div> */}
 
-                    <div className="form-group my-3">
+                    <Form.Group className="my-3">
+                        <Form.Label className="d-flex">
+                            Board Style
+                            <QuestionCircle className="icon" onClick={this.toggleBoardStyleHelp} />
+                        </Form.Label>
+                        <Form.Select className="form-control" id="boardStyle" name="currentBoardStyle" value={this.state.currentBoardStyle} onChange={this.updateBoardStyle}>
+                            {this.state.currentBoardStyleOptions.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
+                        </Form.Select>
+                    </Form.Group>
+                    {/* <div className="form-group my-3">
                         <label htmlFor="boardStyle" className="d-flex">Board Style
                             <QuestionCircle className="icon" onClick={this.toggleBoardStyleHelp} />
                         </label>
                         <select className="form-control" id="boardStyle" name="currentBoardStyle" value={this.state.currentBoardStyle} onChange={this.updateBoardStyle}>
                             {this.state.currentBoardStyleOptions.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
-                    </div>
+                    </div> */}
 
-                    <div className="form-group my-3">
+                    <Form.Group className="my-3">
+                        <Form.Label className="d-flex">
+                            Placement Style
+                            <QuestionCircle className="icon" onClick={this.togglePlacementStyleHelp} />
+                        </Form.Label>
+                        <Form.Select className="form-control" id="placementStyle" name="currentPlacementStyle" value={this.state.currentPlacementStyle} onChange={this.handleInputChange}>
+                            {this.state.optionsPossible.placementStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
+                        </Form.Select>
+                    </Form.Group>
+                    {/* <div className="form-group my-3">
                         <label htmlFor="placementStyle" className="d-flex">Placement Style
                             <QuestionCircle className="icon" onClick={this.togglePlacementStyleHelp} />
                         </label>
                         <select className="form-control" id="placementStyle" name="currentPlacementStyle" value={this.state.currentPlacementStyle} onChange={this.handleInputChange}>
                             {this.state.optionsPossible.placementStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
-                    </div>
+                    </div> */}
 
-                    <div className="form-group my-3">
+                    <Form.Group className="my-3">
+                        <Form.Label className="d-flex">
+                            System Weighting
+                            <QuestionCircle className="icon" onClick={this.togglePickStyleHelp} />
+                        </Form.Label>
+                        <Form.Select className="form-control" id="pickStyle" name="currentPickStyle" value={this.state.currentPickStyle} onChange={this.handleInputChange}>
+                            {this.state.optionsPossible.pickStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
+                        </Form.Select>
+                    </Form.Group>
+                    {/* <div className="form-group my-3">
                         <label htmlFor="pickStyle" className="d-flex">System Weighting
                             <QuestionCircle className="icon" onClick={this.togglePickStyleHelp} />
                         </label>
                         <select className="form-control" id="pickStyle" name="currentPickStyle" value={this.state.currentPickStyle} onChange={this.handleInputChange}>
                             {this.state.optionsPossible.pickStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
-                    </div>
+                    </div> */}
 
                     <div className={"ml-2 collapse " + (this.state.currentPickStyle === "custom" ? "show" : "")} id="customPickStyle">
                         <div className="card card-body">
@@ -1564,41 +1593,47 @@ class MapOptions extends React.Component {
                     </div>
 
 
-                    <div className="form-group my-3">
-                        <label htmlFor="seed">Specific Seed</label>
-                        <input className="form-control" id="seed" name="updateSeed" type="text" placeholder="Enter a number to seed generation..." value={this.state.currentSeed} onChange={this.updateSeed} />
-                    </div>
+                    <Form.Group className="mb-3" controlId="seed">
+                        <Form.Label>Specific Seed</Form.Label>
+                        <Form.Control name="updateSeed" type="text" placeholder="Enter a number to seed generation..." value={this.state.currentSeed} onChange={this.updateSeed} />
+                    </Form.Group>
 
-                    <div className="custom-control custom-checkbox mb-3 d-flex">
-                        <input type="checkbox" className="custom-control-input" id="pickRaces" name="pickRaces" checked={this.state.pickRaces} onChange={this.handleInputChange} />
-                        <label className="custom-control-label" htmlFor="pickRaces">Pick Races for Players</label>
+                    <Form.Group className="mb-3 d-flex" controlId="pickRaces">
+                        <Form.Check name="pickRaces" type="checkbox" checked={this.props.pickRaces} onChange={this.handleInputChange} label="Pick Races for Players" />
                         <QuestionCircle className="icon" onClick={this.togglePickRacesHelp} />
-                    </div>
+                    </Form.Group>
                     <div className={"ml-2 mb-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
                         <div className="card card-body">
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
 
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
 
-                            <div className="custom-control custom-checkbox d-flex">
-                                <input type="checkbox" className="custom-control-input" id="ensureRacialAnomalies" name="ensureRacialAnomalies" checked={this.state.ensureRacialAnomalies} onChange={this.handleInputChange} />
-                                <label className="custom-control-label" htmlFor="ensureRacialAnomalies">Ensure Racial Anomalies</label>
+                            <Form.Group className="mb-3 d-flex" controlId="ensureRacialAnomalies">
+                                <Form.Check name="ensureRacialAnomalies" type="checkbox" checked={this.props.ensureRacialAnomalies} onChange={this.handleInputChange} label="Ensure Racial Anomalies" />
                                 <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
-                            </div>
+                            </Form.Group>
                         </div>
                     </div>
 
-                    <div className="custom-control custom-checkbox mb-3 d-flex">
+                    <Form.Group className="mb-3 d-flex" controlId="shuffleBoards">
+                        <Form.Check name="shuffleBoards" type="checkbox" checked={this.props.shuffleBoards} onChange={this.handleInputChange} label="Randomize Priorities Before Placement" />
+                        <QuestionCircle className="icon" onClick={this.toggleShufflePriorityHelp} />
+                    </Form.Group>
+                    {/* <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="shuffleBoards" name="shuffleBoards" checked={this.state.shuffleBoards} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="shuffleBoards">Randomize Priorities Before Placement</label>
                         <QuestionCircle className="icon" onClick={this.toggleShufflePriorityHelp} />
-                    </div>
+                    </div> */}
 
-                    <div className="custom-control custom-checkbox mb-3 d-flex">
+                    <Form.Group className="mb-3 d-flex" controlId="reversePlacementOrder">
+                        <Form.Check name="reversePlacementOrder" type="checkbox" checked={this.props.reversePlacementOrder} onChange={this.handleInputChange} label="Reverse Placement Order" />
+                        <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
+                    </Form.Group>
+                    {/* <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="reversePlacementOrder" name="reversePlacementOrder" checked={this.state.reversePlacementOrder} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="reversePlacementOrder">Reverse Placement Order</label>
                         <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
-                    </div>
+                    </div> */}
 
                     <SetPlayerNameModal visible={this.state.setPlayerNamesHelp} currentPlayerNames={this.props.currentPlayerNames}
                         hideModal={this.toggleSetPlayerNamesHelp} handleNameChange={this.handleNameChange}

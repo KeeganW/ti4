@@ -45,15 +45,17 @@ h1, h2, h3, h4, h5 {
     background-color: var(--hover-color);
     border-color: var(--hover-color);
 }
-.custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+.form-check .form-check-input:not(:checked){
+    border: 1px solid #adb5bd;
+}
+.form-check .form-check-input:checked{
     /* Change the background on checkboxes to be the same as buttons*/
     background-color: var(--primary-color);
     border-color: var(--primary-color);
 }
-.custom-control-label {
+.form-check-label {
     /* Change the label for checkboxes to be a pointer */
     cursor: pointer;
-    margin-left: .5rem;
 }
 
 /* Icon specific configurations */
