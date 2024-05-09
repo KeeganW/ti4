@@ -1,8 +1,8 @@
 {
     "races": [
-        "Sardakk N'orr", "The Arborec", "The Barony of Letnev", "The Clan of Saar", "The Embers of Muaat",
+        "The Arborec", "The Barony of Letnev", "The Clan of Saar", "The Embers of Muaat",
         "The Emirates of Hacan", "The Federation of Sol", "The Ghosts of Creuss", "The Lizix Mindnet",
-        "The Mentak Coalition", "The Naalu Collective", "The Nekro Virus", "The Universities of Jol-Nar", "The Winnu",
+        "The Mentak Coalition", "The Naalu Collective", "The Nekro Virus", "Sardakk N'orr", "The Universities of Jol-Nar", "The Winnu",
         "The Xxcha Kingdom", "The Yin Brotherhood", "The Yssaril Tribes"
     ],
     "pokRaces": [
