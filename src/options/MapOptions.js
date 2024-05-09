@@ -56,6 +56,7 @@ class MapOptions extends React.Component {
             currentPlacementStyle: startingValues["placementStyles"][0],
             currentSeed: "",
             userSetSeed: false,
+            fanContent: false,
             pickRaces: false,
             pickMultipleRaces: false,
             shuffleBoards: false,
@@ -63,6 +64,10 @@ class MapOptions extends React.Component {
             ensureRacialAnomalies: true,
             generated: false,
 
+            fanContentHelp: false,
+            unchartedSpaceHelp: false,
+            discordantStarsHelp: false,
+            ascendentSunHelp: false,
             pickRacesHelp: false,
             boardStyleHelp: false,
             pickStyleHelp: false,
@@ -106,6 +111,10 @@ class MapOptions extends React.Component {
         this.generateBoard = this.generateBoard.bind(this);
         this.getNewTileSet = this.getNewTileSet.bind(this);
 
+        this.toggleFanContentHelp = this.toggleFanContentHelp.bind(this);
+        this.toggleUnchartedSpaceHelp = this.toggleUnchartedSpaceHelp.bind(this);
+        this.toggleDiscordantStarsHelp = this.toggleDiscordantStarsHelp.bind(this);
+        this.toggleAscendentSunHelp = this.toggleAscendentSunHelp.bind(this);
         this.togglePickRacesHelp = this.togglePickRacesHelp.bind(this);
         this.toggleBoardStyleHelp = this.toggleBoardStyleHelp.bind(this);
         this.togglePickStyleHelp = this.togglePickStyleHelp.bind(this);
@@ -1422,6 +1431,26 @@ class MapOptions extends React.Component {
 
         return total_weight
     }
+    toggleFanContentHelp(event) {
+        this.setState({
+            fanContentHelp: !this.state.fanContentHelp
+        })
+    }
+    toggleUnchartedSpaceHelp(event) {
+        this.setState({
+            unchartedSpaceHelp: !this.state.unchartedSpaceHelp
+        })
+    }
+    toggleDiscordantStarsHelp(event) {
+        this.setState({
+            discordantStarsHelp: !this.state.discordantStarsHelp
+        })
+    }
+    toggleAscendentSunHelp(event) {
+        this.setState({
+            ascendentSunHelp: !this.state.ascendentSunHelp
+        })
+    }
     togglePickRacesHelp(event) {
         this.setState({
             pickRacesHelp: !this.state.pickRacesHelp
@@ -1484,24 +1513,29 @@ class MapOptions extends React.Component {
                     <Form.Group className="mb-3 d-flex" controlId="pokExpansion">
                         <Form.Check name="pokExpansion" type="checkbox" checked={this.props.useProphecyOfKings} onChange={this.updatePok} label="Use POK Tiles" />
                     </Form.Group>
-                    <Accordion>
-                        <Accordion.Item eventKey="0">
-                            <Accordion.Header className="p-0" as="p">Fan-Made Content</Accordion.Header>
-                            <Accordion.Body>
-                                <>
-                                    <Form.Group className="mb-3 d-flex" controlId="useUnchartedSpace">
-                                        <Form.Check name="useUnchartedSpace" type="checkbox" checked={this.props.useUnchartedSpace} onChange={this.updateUncharted} label="Use Uncharted Space Fan Tiles" />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3 d-flex" controlId="useDiscordantStars">
-                                        <Form.Check name="useDiscordantStars" type="checkbox" checked={this.props.useDiscordantStars} onChange={this.updateDS} label="Use DS Fan Races" />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3 d-flex" controlId="useAscendentSun">
-                                        <Form.Check name="useAscendentSun" type="checkbox" checked={this.props.useAscendentSun} onChange={this.updatePok} label="Use Eronous' Fan Tiles" />
-                                    </Form.Group>
-                                </>
-                            </Accordion.Body>
-                        </Accordion.Item>
-                    </Accordion>
+
+                    <Form.Group className="mb-3 d-flex" controlId="fanContent">
+                        <Form.Check name="fanContent" type="checkbox" checked={this.props.fanContent} onChange={this.handleInputChange} label="Use Fan-Made Content" />
+                        <QuestionCircle className="icon" onClick={this.toggleFanContentHelp} />
+                    </Form.Group>
+                    <Collapse in={this.state.fanContent}>
+                        <div>
+                            <div className="card card-body">
+                                <Form.Group className="mb-3 d-flex" controlId="useUnchartedSpace">
+                                    <Form.Check name="useUnchartedSpace" type="checkbox" checked={this.props.useUnchartedSpace} onChange={this.updateUncharted} label="Use Uncharted Space Fan Tiles" />
+                                    <QuestionCircle className="icon" onClick={this.toggleUnchartedSpaceHelp} />
+                                </Form.Group>
+                                <Form.Group className="mb-3 d-flex" controlId="useDiscordantStars">
+                                    <Form.Check name="useDiscordantStars" type="checkbox" checked={this.props.useDiscordantStars} onChange={this.updateDS} label="Use DS Fan Races" />
+                                    <QuestionCircle className="icon" onClick={this.toggleDiscordantStarsHelp} />
+                                </Form.Group>
+                                <Form.Group className="d-flex" controlId="useAscendentSun">
+                                    <Form.Check name="useAscendentSun" type="checkbox" checked={this.props.useAscendentSun} onChange={this.updatePok} label="Use Eronous' Fan Tiles" />
+                                    <QuestionCircle className="icon" onClick={this.toggleAscendentSunHelp} />
+                                </Form.Group>
+                            </div>
+                        </div>
+                    </Collapse>
 
                     <Form.Group className="my-3">
                         <Form.Label>Number of Players</Form.Label>
@@ -1659,6 +1693,47 @@ class MapOptions extends React.Component {
                         hideModal={this.toggleSetRacesHelp} handleRacesChange={this.handleRacesChange}
                     />
 
+                    <HelpModal key={"help-fan-content"} visible={this.state.fanContentHelp} hideModal={this.toggleFanContentHelp} title={"About Fanmade Content for Twilight Imperium"}
+                        content={`<p>
+                         Automatically assigns races to the players on the boards.
+                         <br>
+                         <br>
+                         Fan content featured here was created to be compliant with the <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>. 
+                         </p>`}
+                    />
+                    <HelpModal key={"help-uncharted-space"} visible={this.state.unchartedSpaceHelp} hideModal={this.toggleUnchartedSpaceHelp} title={"About Fanmade Content for Twilight Imperium"}
+                        content={`<p>
+                        "A fan-made expansion for Twilight Imperium: Fourth Edition from the team responsible for Discordant Stars. The new content in this pack is intended to expand the variety of available system tiles, exploration effects, relics, and action cards, while preserving official game balance. This project has endeavored to fully comply with <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>."
+                        <br>
+                        <br>
+                        <a href="https://docs.google.com/document/d/10sYWiwVNvdOwDMpvHlbsx4athKwgeTc8usWFMV3Aaas">Reference document for this content</a>
+                        <br>
+                        <br>
+                        Obviously only the new system tiles are relevant for this tool. This will add an additional 24 system tiles, including 5 new legendary planets, some additional empty systems and anomalies to even out system distriputions, and one gamma wormhole inside a gravity rift.
+                         </p>`}
+                    />
+                    <HelpModal key={"help-discordant-stars"} visible={this.state.discordantStarsHelp} hideModal={this.toggleDiscordantStarsHelp} title={"About Fanmade Content for Twilight Imperium"}
+                        content={`<p>
+                         "A fan-made expansion for Twilight Imperium: Fourth Edition that adds 34 additional factions designed by & for the Twilight Imperium community. This project has endeavored to fully comply with <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>."
+                         <br>
+                         <br>
+                         <a href="https://docs.google.com/document/d/1214N4Py1NqvkQzFN5YULKiR7rmn1qpf4OdFqb8_vQUg">Reference document for this content</a>
+                         <br>
+                         <br>
+                         This option will only matter if you choose to pick races for players. This will add these factions to the pool of random faction, include their home system in the graphics, and influence racial anomalies.
+                         </p>`}
+                    />
+                    <HelpModal key={"help-ascendent-sun"} visible={this.state.ascendentSunHelp} hideModal={this.toggleAscendentSunHelp} title={"About Fanmade Content for Twilight Imperium"}
+                        content={`<p>
+                         "Eronous Tiles" is a set of 130+ tiles created by discord user and artist Eronous. These tiles were intially created for the TI4 async bot as a part of large community games that required very large maps.
+                         <br>
+                         <br>
+                         <a href="https://docs.google.com/spreadsheets/d/1C1a8uc_DT21aPUUF5oQWNb0y9QYZHCVsE5rarEjB8kA">Reference document for this content</a>
+                         <br>
+                         <br>
+                         This set of tiles includes 110 new planets, including 12 legendary planets, 6 new wormhole types, and 2 planets inside supernovas!
+                         </p>`}
+                    />
                     <HelpModal key={"help-board"} visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
                         content='<p>
                          Board style changes how the tiles are actually laid out on a newly generated map.
