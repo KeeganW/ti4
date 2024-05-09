@@ -34,18 +34,24 @@ class ExtraTiles extends React.Component {
         //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         // }
 
-        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) => (
-            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun)
+        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) => (
+            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun) && (!tileData.asyncLanes.includes(id) || useFanHyperlanes)
         )
 
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
-            { useProphecyOfKings: this.props.useProphecyOfKings, useUnchartedSpace: this.props.useUnchartedSpace, useAscendentSun: this.props.useAscendentSun }
+            { useProphecyOfKings: this.props.useProphecyOfKings, useUnchartedSpace: this.props.useUnchartedSpace, useAscendentSun: this.props.useAscendentSun, useFanHyperlanes: this.props.useFanHyperlanes }
         ));
+        console.log(systemNumbers)
+        console.log(tileData.asyncLanes)
 
         // console.log(systemNumbers)
 
         if (this.props.customMapBuilding) {
-            systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
+            systemNumbers = [-1].concat(
+                systemNumbers.concat(tileData.hyperlanes).filter(expansionCheck(
+                    { useFanHyperlanes: this.props.useFanHyperlanes }
+                ))
+            );
         }
 
         function parseSystemNumber(systemNumber) {

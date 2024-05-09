@@ -46,6 +46,7 @@ class App extends React.Component {
             useUnchartedSpace: false,
             useDiscordantStars: false,
             useAscendentSun: false,
+            useFanHyperlanes: false,
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
             currentRaces: [...raceData.races],
 
@@ -80,6 +81,7 @@ class App extends React.Component {
         this.toggleUnchartedSpace = this.toggleUnchartedSpace.bind(this);
         this.toggleDiscordantStars = this.toggleDiscordantStars.bind(this);
         this.toggleAscendentSun = this.toggleAscendentSun.bind(this)
+        this.toggleFanHyperlanes = this.toggleFanHyperlanes.bind(this)
         this.toggleOverlay = this.toggleOverlay.bind(this);
         this.toggleWormholeOverlay = this.toggleWormholeOverlay.bind(this);
         this.updateTileNumberOverlays = this.updateTileNumberOverlays.bind(this);
@@ -239,12 +241,12 @@ class App extends React.Component {
         // Update the unused tiles list
         let systemNumbers = []
 
-        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) => (
-            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun)
+        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) => (
+            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun) && (!tileData.asyncLanes.includes(id) || useFanHyperlanes)
         )
 
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
-            { useProphecyOfKings: this.state.useProphecyOfKings, useUnchartedSpace: this.state.useUnchartedSpace, useAscendentSun: this.state.useAscendentSun }
+            { useProphecyOfKings: this.state.useProphecyOfKings, useUnchartedSpace: this.state.useUnchartedSpace, useAscendentSun: this.state.useAscendentSun, useFanHyperlanes: this.state.useFanHyperlanes }
         ));
         // if (this.state.useProphecyOfKings) {
         //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
@@ -481,6 +483,15 @@ class App extends React.Component {
     }
 
     /**
+     * Toggle whether we need to use fanmade hyperlanes or not
+     */
+    toggleFanHyperlanes() {
+        this.setState({
+            useFanHyperlanes: !this.state.useFanHyperlanes,
+        }, this.showExtraTiles);
+    }
+
+    /**
      * Toggle whether we need to use the discordant stars races or not
      */
     toggleDiscordantStars() {
@@ -554,12 +565,12 @@ class App extends React.Component {
     showExtraTiles() {
         let systemNumbers = []
 
-        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) => (
-            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun)
+        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) => (
+            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun) && (!tileData.asyncLanes.includes(id) || useFanHyperlanes)
         )
 
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
-            { useProphecyOfKings: this.state.useProphecyOfKings, useUnchartedSpace: this.state.useUnchartedSpace, useAscendentSun: this.state.useAscendentSun }
+            { useProphecyOfKings: this.state.useProphecyOfKings, useUnchartedSpace: this.state.useUnchartedSpace, useAscendentSun: this.state.useAscendentSun, useFanHyperlanes: this.state.useFanHyperlanes }
         ));
         // if (this.state.useProphecyOfKings || this.state.showAllExtraTiles) {
         //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
@@ -825,6 +836,8 @@ class App extends React.Component {
         if (tile !== undefined) {
             let hyperlaneRegex = /^((8[3-9]|90|91)[AB])-?([0-5])?$/gm
             let result = hyperlaneRegex.exec(tile);
+            let altHyperlaneRegex = /^(hyp.+?)-?([0-5])?$/gm
+            let altHyperlaneResult = altHyperlaneRegex.exec(tile);
             if (result) {
                 if (numberOnly) {
                     return Number(result[2]);
@@ -833,7 +846,16 @@ class App extends React.Component {
                 } else {
                     return result[1];
                 }
-            } else {
+            } else if (altHyperlaneResult){
+                if (numberOnly) {
+                    return Number(altHyperlaneResult[2]);
+                } else if (withDash) {
+                    return altHyperlaneResult[0];
+                } else {
+                    return altHyperlaneResult[1];
+                }
+            }
+            else {
                 // let regex = /^(80|81|82|-1|[0-7]?[0-9])-?([0-5])?$/gm
                 let regex = /^((?:er)?\d{1,4})-?([0-5])?$/gm
                 result = regex.exec(tile);
@@ -1034,6 +1056,7 @@ class App extends React.Component {
         this.handleDrop(targetId, fromId)
     }
     handleDrop(targetId, fromId) {
+        console.log(targetId, fromId)
         // Create selectors
         let targetSelector = $("#" + targetId);
         let fromSelector = $("#" + fromId);
@@ -1044,8 +1067,10 @@ class App extends React.Component {
         let fromType = fromId.split("-")[0];
         let targetSecond = targetId.slice(targetId.indexOf("-") + 1);
         let fromSecond = fromId.slice(fromId.indexOf("-") + 1);
+        console.log(targetSecond, fromSecond)
 
         let tilesCopy = [...this.state.tiles];
+        console.log(this.getTileNumber(fromSecond))
         let swapSources = true;
 
         // Determine what swap is happening
@@ -1164,6 +1189,7 @@ class App extends React.Component {
                              useUnchartedSpace={this.state.useUnchartedSpace}
                              useDiscordantStars={this.state.useDiscordantStars}
                              useAscendentSun={this.state.useAscendentSun}
+                             useFanHyperlanes={this.state.useFanHyperlanes}
 
                              ref={this.map}
 
@@ -1200,6 +1226,7 @@ class App extends React.Component {
                             useProphecyOfKings={this.state.useProphecyOfKings} 
                             useUnchartedSpace={this.state.useUnchartedSpace} showAllExtraTiles={this.state.showAllExtraTiles}
                             useAscendentSun={this.state.useAscendentSun}
+                            useFanHyperlanes={this.state.useFanHyperlanes}
                             customMapBuilding={this.state.customMapBuilding}
 
                             updateTiles={this.updateTiles} toggleShowAllExtraTiles={this.toggleShowAllExtraTiles}
@@ -1212,6 +1239,7 @@ class App extends React.Component {
                           useProphecyOfKings={this.state.useProphecyOfKings} 
                           useUnchartedSpace={this.state.useUnchartedSpace} tiles={this.state.tiles}
                           useAscendentSun={this.state.useAscendentSun}
+                          useFanHyperlanes={this.state.useFanHyperlanes}
                           getTileNumber={this.getTileNumber}
                 />
                 
@@ -1220,6 +1248,7 @@ class App extends React.Component {
                             useUnchartedSpace={this.state.useUnchartedSpace}
                             useDiscordantStars={this.state.useDiscordantStars}
                             useAscendentSun={this.state.useAscendentSun}
+                            useFanHyperlanes={this.state.useFanHyperlanes}
                             currentPlayerNames={this.state.currentPlayerNames} 
                             currentRaces={this.state.currentRaces}
                             tiles={this.state.tiles} includedTiles={this.state.includedTiles}
@@ -1231,6 +1260,7 @@ class App extends React.Component {
                             toggleUnchartedSpace={this.toggleUnchartedSpace} 
                             toggleDiscordantStars={this.toggleDiscordantStars} 
                             toggleAscendentSun={this.toggleAscendentSun}
+                            toggleFanHyperlanes={this.toggleFanHyperlanes}
                             updateTiles={this.updateTiles}
                             showExtraTiles={this.showExtraTiles} updateRaces={this.updateRaces}
                             updatePlayerNames={this.updatePlayerNames}
