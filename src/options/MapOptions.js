@@ -1,6 +1,6 @@
 import React from "react";
 import { QuestionCircle } from "react-bootstrap-icons";
-import { Accordion, Button, Form } from "react-bootstrap";
+import { Accordion, Button, Form, Collapse } from "react-bootstrap";
 import boardData from "../data/boardData.json";
 import tileData, { WORMHOLES } from "../data/tileData";
 import raceData from "../data/raceData.json";
@@ -1602,7 +1602,21 @@ class MapOptions extends React.Component {
                         <Form.Check name="pickRaces" type="checkbox" checked={this.props.pickRaces} onChange={this.handleInputChange} label="Pick Races for Players" />
                         <QuestionCircle className="icon" onClick={this.togglePickRacesHelp} />
                     </Form.Group>
-                    <div className={"ml-2 mb-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
+                    <Collapse in={this.state.pickRaces}>
+                        <div>
+                            <div className="card card-body">
+                                <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
+
+                                <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
+
+                                <Form.Group className="d-flex" controlId="ensureRacialAnomalies">
+                                    <Form.Check name="ensureRacialAnomalies" type="checkbox" checked={this.props.ensureRacialAnomalies} onChange={this.handleInputChange} label="Ensure Racial Anomalies" />
+                                    <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
+                                </Form.Group>
+                            </div>
+                        </div>
+                    </Collapse>
+                    {/* <div className={"ml-2 mb-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
                         <div className="card card-body">
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
 
@@ -1613,7 +1627,7 @@ class MapOptions extends React.Component {
                                 <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
                             </Form.Group>
                         </div>
-                    </div>
+                    </div> */}
 
                     <Form.Group className="mb-3 d-flex" controlId="shuffleBoards">
                         <Form.Check name="shuffleBoards" type="checkbox" checked={this.props.shuffleBoards} onChange={this.handleInputChange} label="Randomize Priorities Before Placement" />
