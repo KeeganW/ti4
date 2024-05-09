@@ -1,4 +1,5 @@
 import React from "react";
+import { Button, Form, Collapse } from "react-bootstrap";
 import tileData from "../data/tileData";
 
 class ExtraTiles extends React.Component {
@@ -25,7 +26,7 @@ class ExtraTiles extends React.Component {
             display: "none",
         }
     }
-    
+
     render() {
         let systemNumbers = [];
         // systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
@@ -38,7 +39,7 @@ class ExtraTiles extends React.Component {
         )
 
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
-            { useProphecyOfKings: this.props.useProphecyOfKings, useUnchartedSpace: this.props.useUnchartedSpace, useAscendentSun: this.props.useAscendentSun}
+            { useProphecyOfKings: this.props.useProphecyOfKings, useUnchartedSpace: this.props.useUnchartedSpace, useAscendentSun: this.props.useAscendentSun }
         ));
 
         // console.log(systemNumbers)
@@ -85,39 +86,37 @@ class ExtraTiles extends React.Component {
                 <div key={"extra-tile-wrapper-" + systemNumber} className="tile-wrapper">
                     <span id={"extra-number-" + systemNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")} style={this.overlayStyle}>{systemNumber === -1 ? "Empty" : systemNumber}</span>
                     <img id={"extra-" + systemNumber}
-                         width="200px"
-                         height="175px"
-                         className="tile"
-                         src={window.location.origin + window.location.pathname + "/tiles/ST_" + systemNumber + ".png"}
-                         draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop}
-                         onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter}
-                         onDragLeave={this.props.dragLeave}
-                         alt=""
-                         style={this.tileStyle}
+                        width="200px"
+                        height="175px"
+                        className="tile"
+                        src={window.location.origin + window.location.pathname + "/tiles/ST_" + systemNumber + ".png"}
+                        draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop}
+                        onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter}
+                        onDragLeave={this.props.dragLeave}
+                        alt=""
+                        style={this.tileStyle}
                     />
                     <svg id={"extra-underlay-" + systemNumber} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 359.35 311.21" className="underlay" fill="currentColor"
-                         style={this.underlayStyle}>
+                        style={this.underlayStyle}>
                         <polygon points="269.51 0 89.84 0 0 155.6 89.84 311.2 269.51 311.2 359.35 155.6 269.51 0" />
                     </svg>
                 </div>
             )
         }
-    
+
         return (
             <div id="extraTilesContainer" className={this.props.visible ? "" : "d-none"}>
                 <div className="title">
                     <h4 id="extraTitle" className="text-center">Extra Tiles</h4>
                 </div>
 
-                <div className="custom-control custom-checkbox mt-3 ml-3 mr-3 text-center">
-                    <input type="checkbox" className="custom-control-input" id="showAllExtraTiles" name="showAllExtraTiles" checked={this.props.showAllExtraTiles} onChange={this.props.toggleShowAllExtraTiles} />
-                    <label className="custom-control-label" htmlFor="showAllExtraTiles">Show All Tiles</label>
-                </div>
+                <Form.Group className="mt-3 text-center" controlId="showAllExtraTiles">
+                    <Form.Check inline name="showAllExtraTiles" type="checkbox" checked={this.props.showAllExtraTiles} onChange={this.props.toggleShowAllExtraTiles} label="Show All Tiles" />
+                </Form.Group>
 
-                <div className="custom-control custom-checkbox mt-3 ml-3 mr-3 text-center">
-                    <input type="checkbox" className="custom-control-input" id="customMapBuilding" name="customMapBuilding" checked={this.props.customMapBuilding} onChange={this.props.toggleCustomMapBuilding} />
-                    <label className="custom-control-label" htmlFor="customMapBuilding">Custom Map Building</label>
-                </div>
+                <Form.Group className="mt-3 text-center" controlId="customMapBuilding">
+                    <Form.Check inline name="customMapBuilding" type="checkbox" checked={this.props.customMapBuilding} onChange={this.props.toggleCustomMapBuilding} label="Custom Map Building" />
+                </Form.Group>
                 <div className={"mt-3 ml-3 mr-3 text-center " + (this.props.customMapBuilding ? "" : "d-none")}>
                     <button className="btn btn-primary" id="unsetAllTilesButton" onClick={this.props.unsetAllTiles} >
                         Unset All Tiles
