@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
+import { Form } from "react-bootstrap";
 
 class SetRacesModal extends React.Component {
     constructor(props) {
@@ -48,10 +49,13 @@ class SetRacesModal extends React.Component {
                         {visibleRaces.map((raceName, raceIndex) => {
                             let raceVisible = raceName.toLowerCase().includes(this.state.searchString);
                             return (
-                                <div className={"custom-control custom-checkbox mb-2 races" + (raceVisible ? "" : " d-none")} key={"set-races-" + raceIndex}>
-                                    <input className={"custom-control-input"} name={raceName} type={"checkbox"} id={"include" + raceName.replace(" ", "")} checked={this.props.currentRaces.indexOf(raceName) > -1} onChange={this.props.handleRacesChange} />
-                                    <label className={"custom-control-label"} htmlFor={"include" + raceName.replace(" ", "")}>{raceName}</label>
-                                </div>
+                                <Form.Group className={"custom-control custom-checkbox mb-2 races" + (raceVisible ? "" : " d-none")} controlId={"include" + raceName.replace(" ", "")}>
+                                    <Form.Check inline name={raceName} type="checkbox" checked={this.props.currentRaces.indexOf(raceName) > -1} onChange={this.props.handleRacesChange} label={raceName} />
+                                </Form.Group>
+                                // <div className={"custom-control custom-checkbox mb-2 races" + (raceVisible ? "" : " d-none")} key={"set-races-" + raceIndex}>
+                                //     <input className={"custom-control-input"} name={raceName} type={"checkbox"} id={"include" + raceName.replace(" ", "")} checked={this.props.currentRaces.indexOf(raceName) > -1} onChange={this.props.handleRacesChange} />
+                                //     <label className={"custom-control-label"} htmlFor={"include" + raceName.replace(" ", "")}>{raceName}</label>
+                                // </div>
                             )
                         })}
                     </form>
