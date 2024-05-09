@@ -52,8 +52,16 @@ class ExtraTiles extends React.Component {
             if (typeof systemNumber == "number") {
                 return [systemNumber, ""];
             } else {
-                const [, numberPart, stringPart] = systemNumber.match(/((?:er)?\d+)(.*)/);
-                return [numberPart, stringPart];
+                const match = systemNumber.match(/((?:er)?\d+)(.*)/);
+                if (match === null){
+                    return [99999, match]
+                } else {
+                    const [, numberPart, stringPart] = match;
+                    if (systemNumber.includes("hyp")){
+                        return [99999, match]
+                    }
+                    return [numberPart, stringPart];
+                }
             }
         }
 

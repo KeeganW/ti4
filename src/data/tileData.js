@@ -47,7 +47,29 @@ export const WORMHOLE_SYMBOLS = Object.fromEntries([
 ])
 
 const tileData = {
-    "hyperlanes": ["83A", "83B", "84A", "84B", "85A", "85B", "86A", "86B", "87A", "87B", "88A", "88B", "89A", "89B", "90A", "90B", "91A", "91B"],
+    "hyperlanes": ["83A", "83B", "84A", "84B", "85A", "85B", "86A", "86B", "87A", "87B", "88A", "88B", "89A", "89B", "90A", "90B", "91A", "91B",
+        
+    'hypspaghet',
+    'hyp4squeeze',
+    'hypbball',
+    'hypcrossed',
+    'hypflair',
+    'hypfrost',
+    'hypfrostcross',
+    'hyphorizon',
+    'hypmergeleft',
+    'hypmergeright',
+    'hypno',
+    'hypoops',
+    'hypriftabout1',
+    'hypriftabout2',
+    'hypriftabout3',
+    'hypriftabout6',
+    'hyproundabout1',
+    'hyproundabout2',
+    'hyproundabout3',
+    'hyproundabout6'
+    ],
     "all": {
         "1": {
             "type": "green",
@@ -4340,8 +4362,275 @@ const tileData = {
             ],
             anomaly: [],
             wormhole: []
-        }
-
+        },
+        "83A": {
+            "type": "hyperlane",
+            "hyperlanes": [
+                [1, 4]
+            ],
+            "wormhole": [],
+            "anomaly": [],
+            "planets": [
+            ]
+        },
+        "hypspaghet": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 1],
+                [0, 2],
+                [0, 3],
+                [0, 4],
+                [0, 5],
+                [1, 2],
+                [1, 3],
+                [1, 4],
+                [1, 5],
+                [2, 3],
+                [2, 4],
+                [2, 5],
+                [3, 4],
+                [3, 5],
+                [4, 5]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hyp4squeeze": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [1, 4],
+                [1, 5],
+                [2, 4],
+                [2, 5]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypbball": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 2],
+                [1, 4],
+                [3, 5],
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypcrossed": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [3, 5],
+                [0, 4]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypflair": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 2],
+                [0, 4],
+                [2, 4],
+                [1, 3],
+                [1, 5],
+                [3, 5]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypfrost": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [1, 3],
+                [3, 5]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypfrostcross": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [1, 3],
+                [3, 5],
+                [0, 2],
+                [0, 4]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hyphorizon": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 3],
+                [0, 4],
+                [3, 5]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypmergeleft": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 2],
+                [0, 3],
+                [3, 5],
+                [1, 4]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypmergeright": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 2],
+                [2, 5],
+                [3, 5],
+                [1, 4]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypno": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [1, 4], 
+                [2, 5]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypoops": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 2],
+                [0, 3],
+                [0, 4],
+                [1, 3],
+                [1, 4],
+                [1, 5],
+                [2, 4],
+                [2, 5],
+                [3, 5]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hypriftabout1": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [3, 3]
+            ],
+			"wormhole": [],
+			"anomaly":[ANOMALIES.GRAVITY_RIFT],
+			"planets": []
+		},
+        "hypriftabout2": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 3]
+            ],
+			"wormhole": [],
+			"anomaly":[ANOMALIES.GRAVITY_RIFT],
+			"planets": []
+		},
+        "hypriftabout3": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 2],
+                [0, 4],
+                [2, 4],
+            ],
+			"wormhole": [],
+			"anomaly":[ANOMALIES.GRAVITY_RIFT],
+			"planets": []
+		},
+        "hypriftabout6": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 1],
+                [0, 2],
+                [0, 3],
+                [0, 4],
+                [0, 5],
+                [1, 2],
+                [1, 3],
+                [1, 4],
+                [1, 5],
+                [2, 3],
+                [2, 4],
+                [2, 5],
+                [3, 4],
+                [3, 5],
+                [4, 5]
+            ],
+			"wormhole": [],
+			"anomaly":[ANOMALIES.GRAVITY_RIFT],
+			"planets": []
+		},
+        "hyproundabout1": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [3, 3]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hyproundabout2": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 3]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hyproundabout3": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 2],
+                [0, 4],
+                [2, 4],
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		},
+        "hyproundabout6": {
+			"type": "hyperlane",
+			"hyperlanes": [
+                [0, 1],
+                [0, 2],
+                [0, 3],
+                [0, 4],
+                [0, 5],
+                [1, 2],
+                [1, 3],
+                [1, 4],
+                [1, 5],
+                [2, 3],
+                [2, 4],
+                [2, 5],
+                [3, 4],
+                [3, 5],
+                [4, 5]
+            ],
+			"wormhole": [],
+			"anomaly":[],
+			"planets": []
+		}
     },
 
     "base": [
@@ -4376,6 +4665,28 @@ const tileData = {
         'er101', 'er102', 'er103', 'er104', 'er105', 'er106', 'er107', 'er108', 'er109', 'er110',
         'er111', 'er112', 'er113', 'er114', 'er115', 'er116', 'er117', 'er118', 'er119', 'er120',
         'er121', 'er122', 'er123', 'er124', 'er125', 'er126', 'er127', 'er128', 'er129',
+    ],
+    "asyncLanes": [
+        'hypspaghet',
+        'hyp4squeeze',
+        'hypbball',
+        'hypcrossed',
+        'hypflair',
+        'hypfrost',
+        'hypfrostcross',
+        'hyphorizon',
+        'hypmergeleft',
+        'hypmergeright',
+        'hypno',
+        'hypoops',
+        'hypriftabout1',
+        'hypriftabout2',
+        'hypriftabout3',
+        'hypriftabout6',
+        'hyproundabout1',
+        'hyproundabout2',
+        'hyproundabout3',
+        'hyproundabout6'
     ],
 
     // "green": [
