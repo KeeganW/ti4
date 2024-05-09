@@ -33,76 +33,27 @@ export const WORMHOLES = {
     "KAPPA": "kappa",
 };
 
+export const WORMHOLE_SYMBOLS = Object.fromEntries([
+    [WORMHOLES.ALPHA, "α"],
+    [WORMHOLES.BETA, "β"],
+    [WORMHOLES.GAMMA, "γ"],
+    [WORMHOLES.DELTA, "δ"],
+    [WORMHOLES.EPSILON, "ε"],
+    [WORMHOLES.ZETA, "ζ"],
+    [WORMHOLES.ETA, "η"],
+    [WORMHOLES.THETA, "θ"],
+    [WORMHOLES.IOTA, "ι"],
+    [WORMHOLES.KAPPA, "κ"],
+])
+
 const tileData = {
-    
-    "base": [
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
-       11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-       22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
-       33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
-       44, 45, 46, 47, 48, 49, 50, 51
-     ],
-    "pok": [
-       51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 
-       61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 
-       71, 72, 73, 74, 75, 76, 77, 78, 79, 80
-     ],
-    "uncharted": [
-        4253, 4254, 4255, 4256, 4257, 4258, 4259, 4260,
-        4261, 4262, 4263, 4264, 4265, 4266, 4267, 4268, 4269, 4270, 
-        4271, 4272, 4273, 4274, 4275, 4276
-     ],
-    
-    "green": [
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
-        11, 12, 13, 14, 15, 16, 
-        51, 52, 53, 54, 55, 56, 57, 58,
-        3201, 3202, 3203, 3204, 3205,
-        3206, 3207, 3208, 3209, 3210,
-        3211, 3212, 3213, 3214, 3215,
-        3216, 3217, 3218, 3219, 3220,
-        3221, 3222, 3223, 3224,
-        3226, 3227, 3228, 3229, 3230,
-        3231, 3232, 3233, 3234, 3235
-    ],
-    "blue": [
-        19, 20, 
-        21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
-        31, 32, 33, 34, 35, 36, 37, 38, 59, 60, 61, 62, 63, 64, 65, 66, 69, 70, 71, 72, 73, 74, 75, 76,
-        4253, 4254, 4255, 4256, 4257, 4258, 4259, 4260,
-        4261, 4262, 4263, 4264, 4265, 4266, 4267, 4268
-    ],
-    "red": [
-        39, 40, 
-        41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 
-        67, 68, 77, 78, 79, 80,
-        4269, 4270, 
-        4271, 4272, 4273, 4274, 4275, 4276
-    ],
-    "anomaly": [
-        41, 42, 43, 44, 45, 
-        67, 68, 
-        79, 80,
-        4269, 4272, 4273, 4274, 4275, 4276
-    ],
-    "blankRed": [39, 40, 
-        46, 47, 48, 49, 
-        50, 
-        77, 78,
-        4270, 4271
-    ],
-    "alphaWormholes": [26, 39, 79, 4276],
-    "betaWormholes": [25, 40, 64, 4272],
-    "asteroidFields": [44, 45, 79, 4273, 4274],
-    "gravityRifts": [41, 67, 4274],
-    "nebulae": [42, 68, 4269, 4273],
-    "supernovas": [43, 80, 4276],
     "hyperlanes": ["83A", "83B", "84A", "84B", "85A", "85B", "86A", "86B", "87A", "87B", "88A", "88B", "89A", "89B", "90A", "90B", "91A", "91B"],
     "all": {
         "1": {
             "type": "green",
             "race": "The Federation of Sol",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Jord",
@@ -118,6 +69,7 @@ const tileData = {
             "type": "green",
             "race": "The Mentak Coalition",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Moll Primus",
@@ -133,6 +85,7 @@ const tileData = {
             "type": "green",
             "race": "The Yin Brotherhood",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Darien",
@@ -148,6 +101,7 @@ const tileData = {
             "type": "green",
             "race": "The Embers of Muaat",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Muaat",
@@ -163,6 +117,7 @@ const tileData = {
             "type": "green",
             "race": "The Arborec",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Nestphar",
@@ -178,6 +133,7 @@ const tileData = {
             "type": "green",
             "race": "The Lizix Mindnet",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "[0.0.0]",
@@ -193,6 +149,7 @@ const tileData = {
             "type": "green",
             "race": "The Winnu",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Winnu",
@@ -208,6 +165,7 @@ const tileData = {
             "type": "green",
             "race": "The Nekro Virus",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Mordai II",
@@ -223,6 +181,7 @@ const tileData = {
             "type": "green",
             "race": "The Naalu Collective",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Maaluuk",
@@ -246,6 +205,7 @@ const tileData = {
             "type": "green",
             "race": "The Barony of Letnev",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Arc Prime",
@@ -269,6 +229,7 @@ const tileData = {
             "type": "green",
             "race": "The Clan of Saar",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Lisis II",
@@ -292,6 +253,7 @@ const tileData = {
             "type": "green",
             "race": "The Universities of Jol-Nar",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Nar",
@@ -315,6 +277,7 @@ const tileData = {
             "type": "green",
             "race": "Sardakk N'orr",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Tren'lak",
@@ -338,6 +301,7 @@ const tileData = {
             "type": "green",
             "race": "The Xxcha Kingdom",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Archon Ren",
@@ -361,6 +325,7 @@ const tileData = {
             "type": "green",
             "race": "The Yssaril Tribes",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Retillion",
@@ -384,6 +349,7 @@ const tileData = {
             "type": "green",
             "race": "The Emirates of Hacan",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Arretze",
@@ -421,6 +387,8 @@ const tileData = {
         "18": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
+            "special": true,
             "planets": [
                 {
                     "name": "Mecatol Rex",
@@ -435,6 +403,7 @@ const tileData = {
         "19": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Wellon",
@@ -449,6 +418,7 @@ const tileData = {
         "20": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Vefut II",
@@ -463,6 +433,7 @@ const tileData = {
         "21": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Thibah",
@@ -477,6 +448,7 @@ const tileData = {
         "22": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Tar'mann",
@@ -491,6 +463,7 @@ const tileData = {
         "23": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Saudor",
@@ -505,6 +478,7 @@ const tileData = {
         "24": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Mehar Xull",
@@ -547,6 +521,7 @@ const tileData = {
         "27": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "New Albion",
@@ -569,6 +544,7 @@ const tileData = {
         "28": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Tequ'ran",
@@ -591,6 +567,7 @@ const tileData = {
         "29": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Qucen'n",
@@ -613,6 +590,7 @@ const tileData = {
         "30": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Mellon",
@@ -635,6 +613,7 @@ const tileData = {
         "31": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Lazar",
@@ -657,6 +636,7 @@ const tileData = {
         "32": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Dal Bootha",
@@ -679,6 +659,7 @@ const tileData = {
         "33": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Corneeq",
@@ -701,6 +682,7 @@ const tileData = {
         "34": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Centauri",
@@ -723,6 +705,7 @@ const tileData = {
         "35": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Bereg",
@@ -745,6 +728,7 @@ const tileData = {
         "36": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Arnor",
@@ -767,6 +751,7 @@ const tileData = {
         "37": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Arinam",
@@ -789,6 +774,7 @@ const tileData = {
         "38": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Abyz",
@@ -909,6 +895,7 @@ const tileData = {
             "type": "green",
             "race": "The Mahact Gene-sorcerers",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Ixth",
@@ -924,6 +911,7 @@ const tileData = {
             "type": "green",
             "race": "The Nomad",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Arcturus",
@@ -939,6 +927,7 @@ const tileData = {
             "type": "green",
             "race": "The Vuil'raith Cabal",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Acheron",
@@ -954,6 +943,7 @@ const tileData = {
             "type": "green",
             "race": "The Titans of Ul",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Elysium",
@@ -969,6 +959,7 @@ const tileData = {
             "type": "green",
             "race": "The Empyrean",
             "wormhole": [],
+            "anomaly": [ANOMALIES.NEBULA],
             "planets": [
                 {
                     "name": "The Dark",
@@ -984,6 +975,7 @@ const tileData = {
             "type": "green",
             "race": "The Naaz-Rokha Alliance",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Naazir",
@@ -1007,6 +999,7 @@ const tileData = {
             "type": "green",
             "race": "The Argent Flight",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Valk",
@@ -1037,6 +1030,7 @@ const tileData = {
         "59": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Archon Vail",
@@ -1051,6 +1045,7 @@ const tileData = {
         "60": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Perimeter",
@@ -1065,6 +1060,7 @@ const tileData = {
         "61": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Ang",
@@ -1079,6 +1075,7 @@ const tileData = {
         "62": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Sem-Lore",
@@ -1093,6 +1090,7 @@ const tileData = {
         "63": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Vorhal",
@@ -1121,6 +1119,7 @@ const tileData = {
         "65": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Primor",
@@ -1135,6 +1134,7 @@ const tileData = {
         "66": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Hope's End",
@@ -1179,6 +1179,7 @@ const tileData = {
         "69": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Accoen",
@@ -1201,6 +1202,7 @@ const tileData = {
         "70": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Kraag",
@@ -1223,6 +1225,7 @@ const tileData = {
         "71": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Ba'Kal",
@@ -1245,6 +1248,7 @@ const tileData = {
         "72": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Lisis",
@@ -1267,6 +1271,7 @@ const tileData = {
         "73": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Lisis",
@@ -1289,6 +1294,7 @@ const tileData = {
         "74": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Vega Major",
@@ -1311,6 +1317,7 @@ const tileData = {
         "75": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Loki",
@@ -1341,6 +1348,7 @@ const tileData = {
         "76": {
             "type": "blue",
             "wormhole": [],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Rigel I",
@@ -1398,6 +1406,7 @@ const tileData = {
         },
         "81": {
             "type": "red",
+            "special": true,
             "wormhole": [],
             "anomaly": ["muaat-supernova"],
             "planets": [
@@ -1405,6 +1414,7 @@ const tileData = {
         },
         "82": {
             "type": "blue",
+            "special": true,
             "wormhole": [WORMHOLES.ALPHA, WORMHOLES.BETA, WORMHOLES.GAMMA],
             "planets": [
                 {
@@ -1423,6 +1433,7 @@ const tileData = {
                 [1, 4]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1434,6 +1445,7 @@ const tileData = {
                 [3, 5]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1443,6 +1455,7 @@ const tileData = {
                 [2, 5]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1454,6 +1467,7 @@ const tileData = {
                 [1, 3]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1463,6 +1477,7 @@ const tileData = {
                 [1, 5]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1474,6 +1489,7 @@ const tileData = {
                 [3, 5]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1483,6 +1499,7 @@ const tileData = {
                 [1, 5]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1494,6 +1511,7 @@ const tileData = {
                 [1, 3]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1505,6 +1523,7 @@ const tileData = {
                 [2, 5]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1515,6 +1534,7 @@ const tileData = {
                 [0, 3]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1526,6 +1546,7 @@ const tileData = {
                 [2, 4]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1537,6 +1558,7 @@ const tileData = {
                 [3, 5]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1548,6 +1570,7 @@ const tileData = {
                 [2, 4]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1558,6 +1581,7 @@ const tileData = {
                 [0, 4]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1568,6 +1592,7 @@ const tileData = {
                 [2, 4]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1578,6 +1603,7 @@ const tileData = {
                 [0, 4]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1589,6 +1615,7 @@ const tileData = {
                 [1, 3]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1599,6 +1626,7 @@ const tileData = {
                 [0, 3]
             ],
             "wormhole": [],
+            "anomaly": [],
             "planets": [
             ]
         },
@@ -1609,7 +1637,7 @@ const tileData = {
                 {
                     "name": "Rhune",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 4,
@@ -1624,7 +1652,7 @@ const tileData = {
                 {
                     "name": "Idyn",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 0,
@@ -1632,7 +1660,7 @@ const tileData = {
                 {
                     "name": "Kroll",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 1,
@@ -1640,7 +1668,7 @@ const tileData = {
                 {
                     "name": "Cyrra",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 0,
                     "influence": 1,
@@ -1655,7 +1683,7 @@ const tileData = {
                 {
                     "name": "Kyr",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 0,
@@ -1663,7 +1691,7 @@ const tileData = {
                 {
                     "name": "Pax",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 2,
@@ -1671,7 +1699,7 @@ const tileData = {
                 {
                     "name": "Vess",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 0,
                     "influence": 1,
@@ -1686,7 +1714,7 @@ const tileData = {
                 {
                     "name": "Ogdun",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 0,
@@ -1694,7 +1722,7 @@ const tileData = {
                 {
                     "name": "Brthkul",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 3,
@@ -1709,7 +1737,7 @@ const tileData = {
                 {
                     "name": "Drah",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 2,
@@ -1717,7 +1745,7 @@ const tileData = {
                 {
                     "name": "Trykk",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 1,
@@ -1732,7 +1760,7 @@ const tileData = {
                 {
                     "name": "Vadarian",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 0,
@@ -1740,7 +1768,7 @@ const tileData = {
                 {
                     "name": "Norvus",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 2,
@@ -1755,7 +1783,7 @@ const tileData = {
                 {
                     "name": "Biaheo",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 0,
@@ -1763,7 +1791,7 @@ const tileData = {
                 {
                     "name": "Empero",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 0,
                     "influence": 3,
@@ -1778,7 +1806,7 @@ const tileData = {
                 {
                     "name": "Demis",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 2,
@@ -1786,7 +1814,7 @@ const tileData = {
                 {
                     "name": "Chrion",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 3,
@@ -1801,7 +1829,7 @@ const tileData = {
                 {
                     "name": "Axis",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 5,
                     "influence": 0,
@@ -1816,7 +1844,7 @@ const tileData = {
                 {
                     "name": "Sanctuary",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 4,
@@ -1831,7 +1859,7 @@ const tileData = {
                 {
                     "name": "Shi-Halaum",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 4,
                     "influence": 0,
@@ -1846,7 +1874,7 @@ const tileData = {
                 {
                     "name": "Discordia",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 4,
                     "influence": 1,
@@ -1861,7 +1889,7 @@ const tileData = {
                 {
                     "name": "Cymiae",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 1,
@@ -1876,7 +1904,7 @@ const tileData = {
                 {
                     "name": "Prind",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 3,
@@ -1891,7 +1919,7 @@ const tileData = {
                 {
                     "name": "Gen",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 0,
@@ -1899,7 +1927,7 @@ const tileData = {
                 {
                     "name": "Zelian",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 3,
@@ -1914,7 +1942,7 @@ const tileData = {
                 {
                     "name": "Vaylar",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 2,
@@ -1929,7 +1957,7 @@ const tileData = {
                 {
                     "name": "Delmor",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 1,
@@ -1937,7 +1965,7 @@ const tileData = {
                 {
                     "name": "Kyd",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 2,
@@ -1952,7 +1980,7 @@ const tileData = {
                 {
                     "name": "Abyssus",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 4,
                     "influence": 2,
@@ -1967,7 +1995,7 @@ const tileData = {
                 {
                     "name": "Louk",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 1,
@@ -1975,7 +2003,7 @@ const tileData = {
                 {
                     "name": "Auldane",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 3,
@@ -1990,7 +2018,7 @@ const tileData = {
                 {
                     "name": "Ellas",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 3,
@@ -2005,7 +2033,7 @@ const tileData = {
                 {
                     "name": "Aldra",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 3,
@@ -2013,7 +2041,7 @@ const tileData = {
                 {
                     "name": "Beata",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 1,
@@ -2028,7 +2056,7 @@ const tileData = {
                 {
                     "name": "Bohl-Dhur",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 4,
@@ -2043,7 +2071,7 @@ const tileData = {
                 {
                     "name": "Susuros",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 4,
                     "influence": 4,
@@ -2058,7 +2086,7 @@ const tileData = {
                 {
                     "name": "Poh",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 0,
@@ -2066,7 +2094,7 @@ const tileData = {
                 {
                     "name": "Orad",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 1,
@@ -2081,7 +2109,7 @@ const tileData = {
                 {
                     "name": "Kjalengard",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 2,
@@ -2089,7 +2117,7 @@ const tileData = {
                 {
                     "name": "Hulgade",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 0,
@@ -2104,7 +2132,7 @@ const tileData = {
                 {
                     "name": "Benc",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 0,
@@ -2112,7 +2140,7 @@ const tileData = {
                 {
                     "name": "Hau",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 2,
@@ -2127,7 +2155,7 @@ const tileData = {
                 {
                     "name": "Zarr",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 1,
@@ -2135,7 +2163,7 @@ const tileData = {
                 {
                     "name": "Nokk",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 1,
@@ -2150,7 +2178,7 @@ const tileData = {
                 {
                     "name": "Last Stop",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 0,
@@ -2165,7 +2193,7 @@ const tileData = {
                 {
                     "name": "Aysis' Rest",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 4,
                     "influence": 3,
@@ -2173,7 +2201,7 @@ const tileData = {
                 {
                     "name": "Solitude",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 0,
                     "influence": 1,
@@ -2188,7 +2216,7 @@ const tileData = {
                 {
                     "name": "Avicenna",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 4,
                     "influence": 0,
@@ -2210,7 +2238,7 @@ const tileData = {
                 {
                     "name": "Alesna",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 0,
@@ -2218,7 +2246,7 @@ const tileData = {
                 {
                     "name": "Azle",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 0,
@@ -2233,7 +2261,7 @@ const tileData = {
                 {
                     "name": "Arche",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 2,
@@ -2241,7 +2269,7 @@ const tileData = {
                 {
                     "name": "Gghurn Theta",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 1,
@@ -2256,7 +2284,7 @@ const tileData = {
                 {
                     "name": "Edyn",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 3,
@@ -2264,7 +2292,7 @@ const tileData = {
                 {
                     "name": "Ekko",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 0,
                     "influence": 1,
@@ -2272,7 +2300,7 @@ const tileData = {
                 {
                     "name": "Okke",
                     "trait": PLANET_TRAITS.NONE,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 0,
                     "influence": 1,
@@ -2288,7 +2316,7 @@ const tileData = {
                 {
                     "name": "Silence",
                     "trait": PLANET_TRAITS.INDUSTRIAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": true,
                     "ability": "Imperial Salvage Yard - You may exhaust this card at the end of your turn to place 1 cruiser from your reinforcements in any system that contains 1 or more of your ships.",
                     "resources": 2,
@@ -2304,7 +2332,7 @@ const tileData = {
                 {
                     "name": "Echo",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": true,
                     "ability": "Bi-Phasic Generators - You may exhaust this card at the end of your turn to place 1 frontier token in a system that does not contain a planet.",
                     "resources": 1,
@@ -2320,7 +2348,7 @@ const tileData = {
                 {
                     "name": "Tarock",
                     "trait": PLANET_TRAITS.INDUSTRIAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": true,
                     "ability": "Council Black Site - You may exhaust this card when an agenda is revealed to predict aloud an outcome of that agenda. If your prediction is correct, draw 1 secret objective.",
                     "resources": 3,
@@ -2336,7 +2364,7 @@ const tileData = {
                 {
                     "name": "Prism",
                     "trait": PLANET_TRAITS.INDUSTRIAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": true,
                     "ability": "Mystic Library - ACTION: Exhaust this card to replace 1 of your non-faction non-unit upgrade technologies with another technology from your technology deck with the same number of prerequisites.",
                     "resources": 0,
@@ -2352,7 +2380,7 @@ const tileData = {
                 {
                     "name": "Troac",
                     "trait": PLANET_TRAITS.CULTURAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 0,
                     "influence": 4,
@@ -2367,7 +2395,7 @@ const tileData = {
                 {
                     "name": "Etir V",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 4,
                     "influence": 0,
@@ -2382,7 +2410,7 @@ const tileData = {
                 {
                     "name": "Vioss",
                     "trait": PLANET_TRAITS.CULTURAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 3,
@@ -2397,7 +2425,7 @@ const tileData = {
                 {
                     "name": "Fakrenn",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 2,
@@ -2412,15 +2440,15 @@ const tileData = {
                 {
                     "name": "San-Vit",
                     "trait": PLANET_TRAITS.CULTURAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 1,
-                }, 
+                },
                 {
                     "name": "Lodran",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.CYBERNETIC,
+                    "specialty": TECH_SPECIALTIES.CYBERNETIC,
                     "legendary": false,
                     "resources": 0,
                     "influence": 2,
@@ -2435,15 +2463,15 @@ const tileData = {
                 {
                     "name": "Dorvok",
                     "trait": PLANET_TRAITS.INDUSTRIAL,
-                    "tech_specialty": TECH_SPECIALTIES.WARFARE,
+                    "specialty": TECH_SPECIALTIES.WARFARE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 2,
-                }, 
+                },
                 {
                     "name": "Derbrae",
                     "trait": PLANET_TRAITS.CULTURAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 3,
@@ -2458,15 +2486,15 @@ const tileData = {
                 {
                     "name": "Moln",
                     "trait": PLANET_TRAITS.INDUSTRIAL,
-                    "tech_specialty": TECH_SPECIALTIES.PROPULSION,
+                    "specialty": TECH_SPECIALTIES.PROPULSION,
                     "legendary": false,
                     "resources": 1,
                     "influence": 2,
-                }, 
+                },
                 {
                     "name": "Rysaa",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.BIOTIC,
+                    "specialty": TECH_SPECIALTIES.BIOTIC,
                     "legendary": false,
                     "resources": 2,
                     "influence": 0,
@@ -2481,7 +2509,7 @@ const tileData = {
                 {
                     "name": "Salin",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 2,
@@ -2489,7 +2517,7 @@ const tileData = {
                 {
                     "name": "Gwiyun",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 2,
@@ -2504,7 +2532,7 @@ const tileData = {
                 {
                     "name": "Inan",
                     "trait": PLANET_TRAITS.INDUSTRIAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 2,
@@ -2512,7 +2540,7 @@ const tileData = {
                 {
                     "name": "Swog",
                     "trait": PLANET_TRAITS.INDUSTRIAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 0,
@@ -2527,15 +2555,15 @@ const tileData = {
                 {
                     "name": "Detic",
                     "trait": PLANET_TRAITS.CULTURAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 3,
                     "influence": 2,
-                }, 
+                },
                 {
                     "name": "Lliot",
                     "trait": PLANET_TRAITS.CULTURAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 0,
                     "influence": 1,
@@ -2550,23 +2578,23 @@ const tileData = {
                 {
                     "name": "Qaak",
                     "trait": PLANET_TRAITS.CULTURAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 1,
-                }, 
+                },
                 {
                     "name": "Larred",
                     "trait": PLANET_TRAITS.INDUSTRIAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 1,
-                }, 
+                },
                 {
                     "name": "Nairb",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 1,
@@ -2581,23 +2609,23 @@ const tileData = {
                 {
                     "name": "Sierpen",
                     "trait": PLANET_TRAITS.CULTURAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 2,
                     "influence": 0,
-                }, 
+                },
                 {
                     "name": "Mandle",
                     "trait": PLANET_TRAITS.INDUSTRIAL,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 1,
                     "influence": 1,
-                }, 
+                },
                 {
                     "name": "Regnem",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": false,
                     "resources": 0,
                     "influence": 2,
@@ -2611,7 +2639,7 @@ const tileData = {
                 {
                     "name": "Domna",
                     "trait": PLANET_TRAITS.HAZARDOUS,
-                    "tech_specialty": TECH_SPECIALTIES.NONE,
+                    "specialty": TECH_SPECIALTIES.NONE,
                     "legendary": true,
                     "ability": "Fractal Gate - You may exhaust this card at the end of your turn to remove 1 of your ships from the game board and place that unit in an adjacent system that does not contain another player’s ships.",
                     "resources": 2,
@@ -2662,7 +2690,1775 @@ const tileData = {
             "planets": [],
             "anomaly": [ANOMALIES.SUPERNOVA],
             "wormhole": [WORMHOLES.ALPHA, WORMHOLES.BETA]
+        },
+
+        // Eronous Tiles
+        "er01": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Rial Archon',
+                    trait: 'hazardous',
+                    specialty: 'propulsion',
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er02": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Eshonia',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                }
+            ],
+            anomaly: ['nebula'],
+            wormhole: []
+        },
+        "er03": {
+            type: 'red',
+            planets: [
+                {
+                    name: "Hell's Maw",
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 0
+                },
+                {
+                    name: "Death's Gate",
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 1
+                }
+            ],
+            anomaly: ['gravity-rift'],
+            wormhole: ['epsilon']
+        },
+        "er04": {
+            type: 'blue',
+            planets: [
+                {
+                    name: "Su'Prima",
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er05": { 
+            type: 'blue', 
+            planets: [
+                {
+                    "name": "Kkita Ul'in",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 2,
+                }
+            ], 
+            anomaly: [], 
+            wormhole: [] 
+        },
+        "er06": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Solin Tu',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                },
+                {
+                    name: 'Solin Uo',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er07": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Khjan',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                },
+                {
+                    name: 'Shul',
+                    trait: 'cultural',
+                    specialty: 'propulsion',
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er08": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Rayon V',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: ['epsilon']
+        },
+        "er09": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Ulon Gamma',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 1
+                },
+                {
+                    name: 'Ulon Rho',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                }
+            ],
+            anomaly: ['asteroid-field'],
+            wormhole: []
+        },
+        "er10": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Elok Phi',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 1
+                },
+                {
+                    name: 'Elok Nu',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                }
+            ],
+            anomaly: ['nebula'],
+            wormhole: []
+        },
+        "er11": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field'],
+            wormhole: ['beta']
+        },
+        "er12": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field'],
+            wormhole: ['iota']
+        },
+        "er13": { type: 'red', planets: [], anomaly: [], wormhole: ['iota'] },
+        "er14": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift'],
+            wormhole: ['iota']
+        },
+        "er15": {
+            type: 'red',
+            planets: [],
+            anomaly: ['nebula'],
+            wormhole: ['iota']
+        },
+        "er16": { type: 'red', planets: [], anomaly: ['supernova'], wormhole: [] },
+        "er17": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift', 'asteroid-field'],
+            wormhole: []
+        },
+        "er18": {
+            type: 'red',
+            planets: [],
+            anomaly: ['nebula', 'asteroid-field'],
+            wormhole: []
+        },
+        "er19": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift'],
+            wormhole: ['alpha', 'beta']
+        },
+        "er20": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Erodius',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: ['epsilon']
+        },
+        "er21": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field', 'nebula', 'supernova', 'gravity-rift'],
+            wormhole: []
+        },
+        "er22": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Il Voshu',
+                    trait: 'cultural',
+                    specialty: 'biotic',
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er23": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Xyon',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                }
+            ],
+            anomaly: ['gravity-rift'],
+            wormhole: []
+        },
+        "er24": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Ynnis',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 3
+                }
+            ],
+            anomaly: ['gravity-rift'],
+            wormhole: []
+        },
+        "er25": { type: 'red', planets: [], anomaly: [], wormhole: ['epsilon'] },
+        "er26": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift'],
+            wormhole: ['epsilon']
+        },
+        "er27": {
+            type: 'red',
+            planets: [],
+            anomaly: ['nebula'],
+            wormhole: ['epsilon']
+        },
+        "er28": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field'],
+            wormhole: ['epsilon']
+        },
+        "er29": { type: 'red', planets: [], anomaly: [], wormhole: ['zeta'] },
+        "er30": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift'],
+            wormhole: ['zeta']
+        },
+        "er31": {
+            type: 'red',
+            planets: [],
+            anomaly: ['nebula'],
+            wormhole: ['zeta']
+        },
+        "er32": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field'],
+            wormhole: ['zeta']
+        },
+        "er33": {
+            type: 'red',
+            planets: [],
+            anomaly: [],
+            wormhole: ['epsilon', 'zeta']
+        },
+        "er34": { type: 'red', planets: [], anomaly: [], wormhole: ['eta'] },
+        "er35": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift'],
+            wormhole: ['eta']
+        },
+        "er36": {
+            type: 'red',
+            planets: [],
+            anomaly: ['nebula'],
+            wormhole: ['eta']
+        },
+        "er37": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field'],
+            wormhole: ['eta']
+        },
+        "er38": { type: 'red', planets: [], anomaly: [], wormhole: ['theta'] },
+        "er39": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift'],
+            wormhole: ['theta']
+        },
+        "er40": {
+            type: 'red',
+            planets: [],
+            anomaly: ['nebula'],
+            wormhole: ['theta']
+        },
+        "er41": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field'],
+            wormhole: ['theta']
+        },
+        "er42": {
+            type: 'red',
+            planets: [],
+            anomaly: [],
+            wormhole: ['eta', 'theta']
+        },
+        "er43": { type: 'red', planets: [], anomaly: [], wormhole: ['kappa'] },
+        "er44": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift'],
+            wormhole: ['kappa']
+        },
+        "er45": {
+            type: 'red',
+            planets: [],
+            anomaly: ['nebula'],
+            wormhole: ['kappa']
+        },
+        "er46": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field'],
+            wormhole: ['kappa']
+        },
+        "er47": {
+            type: 'red',
+            planets: [],
+            anomaly: [],
+            wormhole: ['iota', 'kappa']
+        },
+        "er48": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Zhgen',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 2
+                },
+                {
+                    name: 'Sehnn',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er49": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Myrwater',
+                    trait: 'hazardous',
+                    specialty: 'biotic',
+                    legendary: false,
+                    resources: 1,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er50": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Adrian',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 0
+                },
+                {
+                    name: 'Telahas',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er51": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Grywon',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: ['theta']
+        },
+        "er52": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Ikrus III',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 2
+                },
+                {
+                    name: 'Tir',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 2
+                },
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er53": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Meko II',
+                    trait: 'cultural',
+                    specialty: 'propulsion',
+                    legendary: false,
+                    resources: 0,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er54": {
+            type: 'blue',
+            planets: [
+                {
+                    name: "Tethn'Sekus",
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                },
+                {
+                    "name": "Tethn'Tirs",
+                    "trait": PLANET_TRAITS.HAZARDOUS,
+                    "specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 2,
+                    "influence": 2,
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er55": { 
+            type: 'blue', 
+            planets: [
+                {
+                    "name": "Dwuuit",
+                    "trait": PLANET_TRAITS.CULTURAL,
+                    "specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 1,
+                },
+                {
+                    "name": "Uhott",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 0,
+                    "influence": 3,
+                }
+            ],
+            anomaly: [], 
+            wormhole: [] 
+        },
+        "er56": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Breakpoint',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: ['theta']
+        },
+        "er57": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Akhassi',
+                    trait: 'hazardous',
+                    specialty: 'warfare',
+                    legendary: false,
+                    resources: 0,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er58": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Rhyah',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 0
+                },
+                {
+                    name: "Taal'Dorn",
+                    trait: 'industrial',
+                    specialty: 'cybernetic',
+                    legendary: false,
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er59": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Volra',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 1
+                },
+                {
+                    "name": "Venhalo",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 1,
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er60": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Orchard',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er61": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Erissiha',
+                    trait: undefined,
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                },
+                {
+                    name: 'Renhult',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er62": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Heska',
+                    trait: 'industrial',
+                    specialty: 'cybernetic',
+                    legendary: false,
+                    resources: 2,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: ['iota']
+        },
+        "er63": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Mayris',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 1
+                },
+                {
+                    name: 'Quwon',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er64": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Grywon',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: ['eta']
+        },
+        "er65": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Kris',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 1
+                },
+                {
+                    name: 'Shigonas',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er66": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift'],
+            wormhole: []
+        },
+        "er67": { type: 'red', planets: [], anomaly: ['nebula'], wormhole: [] },
+        "er68": { type: 'red', planets: [], anomaly: ['supernova'], wormhole: [] },
+        "er69": {
+            type: 'red',
+            planets: [],
+            anomaly: ['gravity-rift'],
+            wormhole: []
+        },
+        "er70": { type: 'red', planets: [], anomaly: ['nebula'], wormhole: [] },
+        "er71": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field'],
+            wormhole: []
+        },
+        "er72": {
+            type: 'red',
+            planets: [],
+            anomaly: ['asteroid-field'],
+            wormhole: []
+        },
+        "er75": { type: 'red', planets: [], anomaly: [], wormhole: [] },
+        "er76": { type: 'red', planets: [], anomaly: [], wormhole: [] },
+        "er77": { type: 'red', planets: [], anomaly: [], wormhole: [] },
+        "er78": { type: 'red', planets: [], anomaly: [], wormhole: [] },
+        "er79": { type: 'red', planets: [], anomaly: [], wormhole: [] },
+        "er80": { type: 'red', planets: [], anomaly: [], wormhole: [] },
+        "er81": { type: 'red', planets: [], anomaly: [], wormhole: [] },
+        "er82": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Ako.4.0.m',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: true,
+                    ability: "Gravitational Gambit - At the end of your turn, you may exhaust this card to roll a die. On a result of 1-3 purge each attachment to this planet, and remove all units on this planet from the game board. Otherwise, attach an Improvement card to this planet. (Improvement - ATTACH: This planet's resource and influence values are each increased by 1.)",
+                    resources: 1,
+                    influence: 1
+                }
+            ],
+            anomaly: ['gravity-rift'],
+            wormhole: []
+        },
+        "er83": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Kelgate',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Experimental Gate - At the start of your turn, you may exhaust this card to treat this system as if it had an alpha and beta wormhole until the end of this tactical action.',
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er84": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Casibann',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Sacrifice - When you exhaust Casibann to spend its resources or influence, you may exhaust this card to remove any number of infantry on that planet to spend them as resources or influence as well.',
+                    resources: 0,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er85": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Station 309',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er86": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Meranna',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 1
+                },
+                {
+                    name: 'Hurigati',
+                    trait: 'hazardous',
+                    specialty: 'cybernetic',
+                    legendary: false,
+                    resources: 0,
+                    influence: 1
+                },
+                {
+                    name: 'Ferrust',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er87": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Argenum',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 3
+                },
+                {
+                    name: 'Vernium',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er88": {
+            "type": 'blue',
+            "planets": [
+                {
+                    name: "Elan's Rest",
+                    "trait": 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    "resources": 1,
+                    "influence": 2
+                },
+                {
+                    name: 'Verdis',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er89": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Brilenci',
+                    trait: 'cultural',
+                    specialty: 'cybernetic',
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: ['epsilon']
+        },
+        "er90": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Char',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er91": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Dognui',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er92": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Fyrain',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 0
+                },
+                {
+                    name: 'Leonelli',
+                    trait: 'hazardous',
+                    specialty: 'cybernetic',
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er93": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Sigilus',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 4
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er94": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Iynntani',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: ['beta']
+        },
+        "er95": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Kytos',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                },
+                {
+                    "name": "Prymis",
+                    "trait": PLANET_TRAITS.INDUSTRIAL,
+                    "specialty": TECH_SPECIALTIES.NONE,
+                    "legendary": false,
+                    "resources": 1,
+                    "influence": 2,
+                },
+            ],
+            anomaly: [],
+            wormhole: ['alpha', 'beta']
+        },
+        "er96": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Mecantor',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                }
+            ],
+            anomaly: ['gravity-rift'],
+            wormhole: []
+        },
+        "er97": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Merjae',
+                    trait: 'industrial',
+                    specialty: 'propulsion',
+                    legendary: false,
+                    resources: 2,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er98": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Mor Rock',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                },
+                {
+                    name: 'Migyro',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er99": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Mornn',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 3
+                }
+            ],
+            anomaly: ['nebula'],
+            wormhole: ['epsilon']
+        },
+        "er100": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Nix',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 1
+                },
+                {
+                    name: 'Nokturn',
+                    trait: 'hazardous',
+                    specialty: 'warfare',
+                    legendary: false,
+                    resources: 0,
+                    influence: 2
+                },
+                {
+                    name: 'Viliguard',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er101": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Ryl Fang',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 0
+                },
+                {
+                    name: 'Syvian',
+                    trait: 'cultural',
+                    specialty: 'biotic',
+                    legendary: false,
+                    resources: 0,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er102": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Norrk',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er103": {
+            type: 'red',
+            planets: [
+                {
+                    name: 'Perpetual',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er104": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Thenphase',
+                    trait: 'hazardous',
+                    specialty: 'biotic',
+                    legendary: false,
+                    resources: 2,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er105": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Vent',
+                    trait: 'industrial',
+                    specialty: undefined,
+                    legendary: false,
+                    resources: 2,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er106": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Vygar II',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 0
+                },
+                {
+                    name: 'Yncranti',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er107": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Limbo',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Equilibrium - When a player would win a combat, you may exhaust this card to treat that combat as a draw instead',
+                    resources: 0,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er108": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Lust',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Vigorous Winds - After you activate a system, you may exhaust this card to apply +1 to the movement value of up to 2 of your ships during this tactical action.',
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er109": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Cerberus',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Desperation - At the start of a ground combat on a planet you control, you may exhaust this card to choose 1 ground force in the active system; that ground force rolls 1 additional die during each round of that ground combat.',
+                    resources: 3,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er110": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Plutus',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Curse of Wealth - At the start of the Strategy phase, you may exhaust this card and any number of planets you control to place a number of trade goods on this card equal to either the combined resource or influence value of those planets. When you ready this card, gain all trade goods on this card.',
+                    resources: 1,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er111": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Stygain',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Undying Legions - After 1 of your infantry units is destroyed during combat, you may place that unit on this card. When you pass, you may exhaust this card to place each unit on this card on Stygain.',
+                    resources: 3,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er112": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Hersey',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: true,
+                    ability: "Betrayers' Dagger - Before a player casts votes, you may exhaust this card to choose a player; that player must give you 1 promissory note from their hand, or cast at least 1 vote for the outcome of your choice on that agenda.",
+                    resources: 0,
+                    influence: 5
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er113": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Violence',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Violent Demise - At the end of a ground combat on a planet you control, you may exhaust this card to roll 3 dice. For each result of 6 or greater, destroy 1 ground force on that planet.',
+                    resources: 3,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er114": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Malbolge',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Hand of Force - At the start of your turn, you may exhaust this card to choose 1 of your neighbors; that player must give you 1 promissory note or 1 action card from their hand, if able.',
+                    resources: 1,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er115": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Malbolge',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: true,
+                    ability: 'Hand of Force - At the start of your turn, you may exhaust this card to choose 1 of your neighbors; that player must give you 1 promissory note or 1 action card from their hand, if able.',
+                    resources: 1,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er116": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Phylo',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: ['iota']
+        },
+        "er117": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Cahgaris',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: ['kappa']
+        },
+        "er118": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Ultimur',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 0
+                }
+            ],
+            anomaly: [],
+            wormhole: ['kappa']
+        },
+        "er119": {
+            type: 'red',
+            planets: [],
+            anomaly: ['nebula'],
+            wormhole: ['alpha', 'beta']
+        },
+        "er120": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Sentuim',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                },
+                {
+                    name: 'Volgan',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er121": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Aranndan',
+                    trait: 'hazardous',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: ['zeta']
+        },
+        "er122": {
+            type: 'blue',
+            planets: [
+                {
+                    name: "Hr'an Cus",
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                },
+                {
+                    name: "Kan'His",
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 0,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er123": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Vylanua',
+                    trait: 'hazardous',
+                    specialty: 'warfare',
+                    legendary: false,
+                    resources: 0,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er124": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Ghanis',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 0
+                },
+                {
+                    name: 'Behjan',
+                    trait: 'cultural',
+                    specialty: 'cybernetic',
+                    legendary: false,
+                    resources: 1,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er125": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Veyhrune',
+                    trait: 'industrial',
+                    specialty: 'propulsion',
+                    legendary: false,
+                    resources: 2,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er126": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Sokaris',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 3
+                },
+                {
+                    name: 'Lunerus',
+                    trait: 'hazardous',
+                    specialty: 'cybernetic',
+                    legendary: false,
+                    resources: 2,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
+        },
+        "er127": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Maon-Lor',
+                    trait: 'industrial',
+                    specialty: 'biotic',
+                    legendary: false,
+                    resources: 3,
+                    influence: 2
+                }
+            ],
+            anomaly: [],
+            wormhole: ['zeta']
+        },
+        "er128": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Adoriah',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 1,
+                    influence: 1
+                }
+            ],
+            anomaly: [],
+            wormhole: ['eta']
+        },
+        "er129": {
+            type: 'blue',
+            planets: [
+                {
+                    name: 'Grishinu',
+                    trait: 'cultural',
+                    specialty: null,
+                    legendary: false,
+                    resources: 3,
+                    influence: 2
+                },
+                {
+                    name: 'Gryenorn',
+                    trait: 'industrial',
+                    specialty: null,
+                    legendary: false,
+                    resources: 2,
+                    influence: 3
+                }
+            ],
+            anomaly: [],
+            wormhole: []
         }
-    }
+
+    },
+
+    "base": [
+        "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21",
+        "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32",
+        "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43",
+        "44", "45", "46", "47", "48", "49", "50", "51"
+    ],
+    "pok": [
+        "52", "53", "54", "55", "56", "57", "58", "59", "60",
+        "61", "62", "63", "64", "65", "66", "67", "68", "69", "70",
+        "71", "72", "73", "74", "75", "76", "77", "78", "79", "80",
+        "81", "82"
+    ],
+    "uncharted": [
+        "4253", "4254", "4255", "4256", "4257", "4258", "4259", "4260",
+        "4261", "4262", "4263", "4264", "4265", "4266", "4267", "4268", "4269", "4270",
+        "4271", "4272", "4273", "4274", "4275", "4276"
+    ],
+    "sun": [
+        'er01', 'er02', 'er03', 'er04', 'er05', 'er06', 'er07', 'er08', 'er09', 'er10',
+        'er11', 'er12', 'er13', 'er14', 'er15', 'er16', 'er17', 'er18', 'er19', 'er20',
+        'er21', 'er22', 'er23', 'er24', 'er25', 'er26', 'er27', 'er28', 'er29', 'er30',
+        'er31', 'er32', 'er33', 'er34', 'er35', 'er36', 'er37', 'er38', 'er39', 'er40',
+        'er41', 'er42', 'er43', 'er44', 'er45', 'er46', 'er47', 'er48', 'er49', 'er50',
+        'er51', 'er52', 'er53', 'er54', 'er55', 'er56', 'er57', 'er58', 'er59', 'er60',
+        'er61', 'er62', 'er63', 'er64', 'er65', 'er66', 'er67', 'er68', 'er69', 'er70',
+        'er71', 'er72', 'er75', 'er76', 'er77', 'er78', 'er79', 'er80',
+        'er81', 'er82', 'er83', 'er84', 'er85', 'er86', 'er87', 'er88', 'er89', 'er90',
+        'er91', 'er92', 'er93', 'er94', 'er95', 'er96', 'er97', 'er98', 'er99', 'er100',
+        'er101', 'er102', 'er103', 'er104', 'er105', 'er106', 'er107', 'er108', 'er109', 'er110',
+        'er111', 'er112', 'er113', 'er114', 'er115', 'er116', 'er117', 'er118', 'er119', 'er120',
+        'er121', 'er122', 'er123', 'er124', 'er125', 'er126', 'er127', 'er128', 'er129',
+    ],
+
+    // "green": [
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    //     11, 12, 13, 14, 15, 16,
+    //     51, 52, 53, 54, 55, 56, 57, 58,
+    //     3201, 3202, 3203, 3204, 3205,
+    //     3206, 3207, 3208, 3209, 3210,
+    //     3211, 3212, 3213, 3214, 3215,
+    //     3216, 3217, 3218, 3219, 3220,
+    //     3221, 3222, 3223, 3224,
+    //     3226, 3227, 3228, 3229, 3230,
+    //     3231, 3232, 3233, 3234, 3235
+    // ],
+    // "blue": [
+    //     19, 20,
+    //     21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+    //     31, 32, 33, 34, 35, 36, 37, 38, 59, 60, 61, 62, 63, 64, 65, 66, 69, 70, 71, 72, 73, 74, 75, 76,
+    //     4253, 4254, 4255, 4256, 4257, 4258, 4259, 4260,
+    //     4261, 4262, 4263, 4264, 4265, 4266, 4267, 4268,
+    //     'er01', 'er04', 'er05', 'er06', 'er07', 'er08', 'er20',
+    //     'er22', 'er48', 'er49', 'er50',
+    //     'er51', 'er52', 'er53', 'er54', 'er55', 'er56', 'er57', 'er58', 'er59', 'er60',
+    //     'er61', 'er62', 'er63', 'er64', 'er65', 
+    //     'er83', 'er84', 'er85', 'er86', 'er87', 'er88', 'er89', 
+    //     'er92', 'er93', 'er94', 'er95', 'er97', 'er98', 'er100',
+    //     'er101', 'er102', 'er104', 'er105', 'er106', 'er107', 'er108', 'er109', 'er110',
+    //     'er111', 'er112', 'er113', 'er114', 'er115', 'er116', 'er117', 'er118', 'er120',
+    //     'er121', 'er122', 'er123', 'er124', 'er125', 'er126', 'er127', 'er128', 'er129',
+    // ],
+    // "red": [
+    //     39, 40,
+    //     41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+    //     67, 68, 77, 78, 79, 80,
+    //     4269, 4270,
+    //     4271, 4272, 4273, 4274, 4275, 4276,
+    //     'er02', 'er03', 'er09', 'er10',
+    //     'er11', 'er12', 'er13', 'er14', 'er15', 'er16', 'er17', 'er18', 'er19', 
+    //     'er21', 'er23', 'er24', 'er25', 'er26', 'er27', 'er28', 'er29', 'er30',
+    //     'er31', 'er32', 'er33', 'er34', 'er35', 'er36', 'er37', 'er38', 'er39', 'er40',
+    //     'er41', 'er42', 'er43', 'er44', 'er45', 'er46', 'er47', 
+    //     'er66', 'er67', 'er68', 'er69', 'er70',
+    //     'er71', 'er72', 'er75', 'er76', 'er77', 'er78', 'er79', 'er80',
+    //     'er81', 'er82', 'er90', 'er91', 'er96', 'er99', 
+    //     'er103', 
+    //     'er119', 
+    // ],
+    // "anomaly": [
+    //     41, 42, 43, 44, 45,
+    //     67, 68,
+    //     79, 80,
+    //     4269, 4272, 4273, 4274, 4275, 4276,
+    //     'er02', 'er03', 'er09', 'er10',
+    //     'er11', 'er12', 'er14', 'er15', 'er16', 'er17', 'er18', 'er19',
+    //     'er21', 'er23', 'er24', 'er26', 'er27', 'er28', 
+    // ],
+    // "blankRed": [39, 40,
+    //     46, 47, 48, 49,
+    //     50,
+    //     77, 78,
+    //     4270, 4271
+    // ],
+    // "alphaWormholes": [26, 39, 79, 4276],
+    // "betaWormholes": [25, 40, 64, 4272],
+    // "asteroidFields": [44, 45, 79, 4273, 4274],
+    // "gravityRifts": [41, 67, 4274],
+    // "nebulae": [42, 68, 4269, 4273],
+    // "supernovas": [43, 80, 4276],
 }
+
+tileData.green = Object.keys(tileData.all).filter(id => tileData.all[id].type === "green").filter(id => !tileData.all[id].special)
+tileData.blue = Object.keys(tileData.all).filter(id => tileData.all[id].type === "blue").filter(id => !tileData.all[id].special)
+tileData.red = Object.keys(tileData.all).filter(id => tileData.all[id].type === "red").filter(id => !tileData.all[id].special)
+tileData.anomaly = tileData.red.filter(id => tileData.all[id].anomaly.length > 0)
+tileData.blankRed = tileData.red.filter(id => tileData.all[id].anomaly.length === 0)
+tileData.wormholes = Object.keys(tileData.all).filter(id => tileData.all[id].wormhole.length > 0).filter(id => !tileData.all[id].special)
+tileData.asteroidFields = tileData.anomaly.filter(id => tileData.all[id].anomaly.includes(ANOMALIES.ASTEROID_FIELD))
+tileData.gravityRifts = tileData.anomaly.filter(id => tileData.all[id].anomaly.includes(ANOMALIES.ASTEROID_FIELD))
+tileData.nebulae = tileData.anomaly.filter(id => tileData.all[id].anomaly.includes(ANOMALIES.NEBULA))
+tileData.supernovas = tileData.anomaly.filter(id => tileData.all[id].anomaly.includes(ANOMALIES.SUPERNOVA))
+
+for (const wormhole in WORMHOLES){
+    tileData[`${WORMHOLES[wormhole]}Wormholes`] = Object.keys(tileData.all).filter(id => tileData.all[id].wormhole.includes(WORMHOLES[wormhole])).filter(id => !tileData.all[id].special)
+}
+
 export default tileData

@@ -1,15 +1,15 @@
 import React from "react";
 import { QuestionCircle } from "react-bootstrap-icons";
 import boardData from "../data/boardData.json";
-import tileData from "../data/tileData";
+import tileData, {WORMHOLES} from "../data/tileData";
 import raceData from "../data/raceData.json";
 import adjacencyData from "../data/adjacencyData.json";
 import HelpModal from "./HelpModal";
 import SetPlayerNameModal from "./SetPlayerNameModal";
 import SetRacesModal from "./SetRacesModal";
 
-const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false } = {}) => (
-    (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace)
+const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) => (
+    (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun)
 )
 
 class MapOptions extends React.Component {
@@ -89,6 +89,7 @@ class MapOptions extends React.Component {
         this.updatePok = this.updatePok.bind(this);
         this.updateUncharted = this.updateUncharted.bind(this);
         this.updateDS = this.updateDS.bind(this);
+        this.updateSun = this.updateSun.bind(this);
         this.updatePlayerCount = this.updatePlayerCount.bind(this);
         this.updateBoardStyle = this.updateBoardStyle.bind(this);
         this.updateSeed = this.updateSeed.bind(this);
@@ -190,6 +191,10 @@ class MapOptions extends React.Component {
         this.props.toggleUnchartedSpace(event);
     }
 
+    updateSun(event) {
+        this.props.toggleAscendentSun(event);
+    }
+
     updateDS(event) {
         let races = [...this.state.optionsPossible.races]
         if (this.props.useProphecyOfKings) races = races.concat(this.state.optionsPossible.pokRaces)
@@ -278,6 +283,7 @@ class MapOptions extends React.Component {
         encodedSettings += this.props.useProphecyOfKings ? "T" : "F";
         encodedSettings += this.props.useUnchartedSpace ? "T" : "F";
         encodedSettings += this.props.useDiscordantStars ? "T" : "F";
+        encodedSettings += this.props.useAscendentSun ? "T" : "F";
         encodedSettings += this.state.currentNumberOfPlayers.toString();
         encodedSettings += this.state.currentBoardStyleOptions.indexOf(this.state.currentBoardStyle).toString();
         encodedSettings += this.state.optionsPossible.placementStyles.indexOf(this.state.currentPlacementStyle).toString();
@@ -340,10 +346,13 @@ class MapOptions extends React.Component {
         // Compatability with old URL formatting
         let useUnchartedSpace = false
         let useDiscordantStars = false
+        let useAscendentSun = false
         if (newSettings[currentIndex] === "T" || newSettings[currentIndex] === "F") {
             useUnchartedSpace = newSettings[currentIndex] === "T";
             currentIndex += 1;
             useDiscordantStars = newSettings[currentIndex] === "T";
+            currentIndex += 1;
+            useAscendentSun = newSettings[currentIndex] === "T";
             currentIndex += 1;
         }
 
@@ -460,6 +469,9 @@ class MapOptions extends React.Component {
             if ((useUnchartedSpace && !this.props.useUnchartedSpace) || (!useUnchartedSpace && this.props.useUnchartedSpace)) {
                 this.props.toggleUnchartedSpace();
             }
+            if ((useAscendentSun && !this.props.useAscendentSun) || (!useAscendentSun && this.props.useAscendentSun)) {
+                this.props.toggleAscendentSun();
+            }
             if ((useDiscordantStars && !this.props.useDiscordantStars) || (!useDiscordantStars && this.props.useDiscordantStars)) {
                 this.props.toggleDiscordantStars();
             }
@@ -468,7 +480,7 @@ class MapOptions extends React.Component {
                 // Tiles were changed after rendering, so we need to display them
                 this.props.updateTiles(newTiles, newSettings);
             } else {
-                this.props.updateTiles(this.getNewTileSet(currentRaces, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }), newSettings, false);
+                this.props.updateTiles(this.getNewTileSet(currentRaces, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }), newSettings, false);
             }
         })
 
@@ -503,7 +515,7 @@ class MapOptions extends React.Component {
     /**
      * Create a set of new tiles for the board based on the user's input.
      */
-    getNewTileSet(currentRaces, { useProphecyOfKings = undefined, useUnchartedSpace = undefined } = {}) {
+    getNewTileSet(currentRaces, { useProphecyOfKings = undefined, useUnchartedSpace = undefined, useAscendentSun = undefined } = {}) {
         if (useProphecyOfKings === undefined) {
             useProphecyOfKings = this.props.useProphecyOfKings
         }
@@ -511,6 +523,11 @@ class MapOptions extends React.Component {
         // console.log(this.props.useUnchartedSpace)
         if (useUnchartedSpace === undefined) {
             useUnchartedSpace = this.props.useUnchartedSpace
+        }
+
+        // console.log(this.props.useUnchartedSpace)
+        if (useAscendentSun === undefined) {
+            useAscendentSun = this.props.useAscendentSun
         }
 
         // Get an ordered list of board spaces that need to have non-home systems assigned to them
@@ -526,7 +543,7 @@ class MapOptions extends React.Component {
         currentRaces = currentRaces.slice(0, this.state.currentNumberOfPlayers)
 
         // Get a set of systems to make the board with, ordered based on user supplied weights
-        let newSystems = this.getNewSystemsToPlace(systemIndexes.length, currentRaces, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace })
+        let newSystems = this.getNewSystemsToPlace(systemIndexes.length, currentRaces, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun })
 
         // Copy a blank map to add to
         let newTiles = [...boardData.blankMap]
@@ -549,7 +566,7 @@ class MapOptions extends React.Component {
         this.placeLockedSystems(newTiles)
 
         // Check that anomalies and wormholes are not adjacent
-        this.checkAdjacencies(newTiles, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace })
+        this.checkAdjacencies(newTiles, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun })
 
         // Update the generated flag then update the tiles
         return newTiles;
@@ -644,12 +661,12 @@ class MapOptions extends React.Component {
      * @param {boolean} useProphecyOfKings TODO
      * @returns {[]}
      */
-    getNewSystemsToPlace(numberOfSystems, currentRaces, { useProphecyOfKings = false, useUnchartedSpace = false } = {}) {
+    getNewSystemsToPlace(numberOfSystems, currentRaces, { useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) {
         // Pick our a random set of systems, following the needed number of anomalies
         // let allBlues = useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
-        let allBlues = tileData.blue.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+        let allBlues = tileData.blue.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
         // let allReds = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
-        let allReds = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+        let allReds = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
 
         // Remove excluded tiles
         for (let system of this.props.excludedTiles) {
@@ -752,22 +769,22 @@ class MapOptions extends React.Component {
                 // If The Clan of Saar are in the game, ensure we have an asteroid field
                 if (race === 'The Clan of Saar') {
                     // anomalies = useProphecyOfKings ? [...tileData.asteroidFields.concat(tileData.pokAsteroidFields)] : [...tileData.asteroidFields];
-                    anomalies = tileData.asteroidFields.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+                    anomalies = tileData.asteroidFields.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
                     match = true;
                     // If The Embers of Muaat are in the game, ensure we have a supernova
                 } else if (race === 'The Embers of Muaat') {
                     // anomalies = useProphecyOfKings ? [...tileData.supernovas.concat(tileData.pokSupernovas)] : [...tileData.supernovas];
-                    anomalies = tileData.supernovas.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+                    anomalies = tileData.supernovas.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
                     match = true;
                     // If The Empyrean are in the game, ensure we have a nebulae
                 } else if (race === 'The Empyrean') {
                     // anomalies = useProphecyOfKings ? [...tileData.nebulae.concat(tileData.pokNebulae)] : [...tileData.nebulae];
-                    anomalies = tileData.nebulae.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+                    anomalies = tileData.nebulae.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
                     match = true;
                     // If The Vuil'Raith Cabal or Nivyn Star Kings are in the game, ensure we have a gravity rift
                 } else if (race === "The Vuil'Raith Cabal" || race === "The Nivyn Star Kings") {
                     // anomalies = useProphecyOfKings ? [...tileData.gravityRifts.concat(tileData.pokGravityRifts)] : [...tileData.gravityRifts];
-                    anomalies = tileData.gravityRifts.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+                    anomalies = tileData.gravityRifts.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
                     match = true;
                 }
                 if (match && redsToPlace > 0) {
@@ -796,16 +813,18 @@ class MapOptions extends React.Component {
             newSystems = newSystems.concat(allBlues.slice(0, bluesToPlace).concat(allReds.slice(0, redsToPlace)))
         }
 
-        // Ensure that if a wormhole is included, two are
-        // const allAlphaWormholes = useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
-        const allAlphaWormholes = tileData.alphaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
-        // const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
-        const allBetaWormholes = tileData.betaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+        // const allAlphaWormholes = tileData.alphaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
+        // const allBetaWormholes = tileData.betaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
 
-        newSystems = this.ensureWormholesForType(newSystems, [26], allAlphaWormholes, allBetaWormholes, ensuredAnomalies, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace });
+        // Ensure that if a wormhole is included, two are (except gamma)
+        for (const wormhole in WORMHOLES){
+            if (WORMHOLES[wormhole] === WORMHOLES.GAMMA) continue
+            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
+            newSystems = this.ensureWormholesForType(newSystems, allWormholesOfType, ensuredAnomalies, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun });
+        }
 
-        // Ensure that if we have an alpha wormhole, then we have at least two of them
-        newSystems = this.ensureWormholesForType(newSystems, [25, 64], allBetaWormholes, allAlphaWormholes, ensuredAnomalies, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace });
+        // newSystems = this.ensureWormholesForType(newSystems, allAlphaWormholes, ensuredAnomalies, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace });
+        // newSystems = this.ensureWormholesForType(newSystems, allBetaWormholes, ensuredAnomalies, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace });
 
         // Based on the system style, order the systems according to their weights
         let weights = {};
@@ -914,10 +933,10 @@ class MapOptions extends React.Component {
             }
         }
     }
-    checkAdjacencies(newTiles, { useProphecyOfKings = false, useUnchartedSpace = false } = {}) {// Planets have been placed, time to do post processing checks to make sure things are good to go.
+    checkAdjacencies(newTiles, { useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) {// Planets have been placed, time to do post processing checks to make sure things are good to go.
         // Get all anomalies that are adjacent to one another
         // let allTrueAnomalies = useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
-        let allTrueAnomalies = tileData.anomaly.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+        let allTrueAnomalies = tileData.anomaly.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
 
         for (let anomaly of allTrueAnomalies) {
             // Ignore any anomalies in the locked or include list
@@ -941,7 +960,7 @@ class MapOptions extends React.Component {
                     // If tile is in conflict more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
                     let swapped = false;
                     // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                    let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+                    let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
                     if (adjacentAnomalies.length > 1) {
                         let possibleBlanks = [];
                         for (let blankRed of blankReds) {
@@ -981,7 +1000,7 @@ class MapOptions extends React.Component {
                         }
                         if (!swapped) {
                             // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                            let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+                            let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
                             let possibleBlanks = [];
                             for (let blankRed of blankReds) {
                                 if (newTiles.indexOf(blankRed) < 0) {
@@ -1040,116 +1059,167 @@ class MapOptions extends React.Component {
             }
         }
 
-        // const allAlphaWormholes = useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
-        const allAlphaWormholes = tileData.alphaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
-        // const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
-        const allBetaWormholes = tileData.betaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+        // // const allAlphaWormholes = useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
+        // const allAlphaWormholes = tileData.alphaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
+        // // const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
+        // const allBetaWormholes = tileData.betaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
 
-
-        // Alpha, at least one wormhole is a "empty tile" so swap it with a blank tile
-        for (let alphaWormhole of allAlphaWormholes) {
-            let alphaWormholeTileNumber = newTiles.indexOf(alphaWormhole);
-            if (alphaWormholeTileNumber >= 0 && tileData.all[alphaWormhole].planets.length === 0) {
-                // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
-                let adjacentTileNumbers = adjacencyData[alphaWormholeTileNumber];
-                let adjacentWormhole = false;
-                for (let adjacentTileNumber of adjacentTileNumbers) {
-                    if (allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
-                        adjacentWormhole = true;
-                        break;
+        for (const wormhole in WORMHOLES){
+            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
+            for (let womrhole of allWormholesOfType){
+                let wormholeTileNumber = newTiles.indexOf(womrhole);
+                if (wormholeTileNumber >= 0 && tileData.all[womrhole].planets.length === 0) {
+                    // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
+                    let adjacentTileNumbers = adjacencyData[wormholeTileNumber];
+                    let adjacentWormhole = false;
+                    for (let adjacentTileNumber of adjacentTileNumbers) {
+                        if (allWormholesOfType.indexOf(newTiles[adjacentTileNumber]) >= 0) {
+                            adjacentWormhole = true;
+                            break;
+                        }
                     }
-                }
-                if (adjacentWormhole) {
-                    // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                    let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
-                    // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
-                    blankReds = blankReds.filter(function (el) {
-                        return allAlphaWormholes.indexOf(el) < 0;
-                    });
-                    blankReds = this.shuffle(blankReds);
-                    for (let blankRed of blankReds) {
-                        let blankRedTileNumber = newTiles.indexOf(blankRed)
-                        if (blankRedTileNumber >= 0) {
-                            let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
-                            let swappable = true;
-                            for (let adjacentTileNumber of adjacentTilesNumbers) {
-                                if ((allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== alphaWormholeTileNumber) || (allTrueAnomalies.indexOf(alphaWormhole) >= 0 && allTrueAnomalies.indexOf(newTiles[adjacentTileNumber]) >= 0)) {
-                                    // This blank has an adjacent anomaly, so throw it out
-                                    swappable = false;
+                    if (adjacentWormhole) {
+                        // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
+                        let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
+                        // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
+                        blankReds = blankReds.filter(function (el) {
+                            return allWormholesOfType.indexOf(el) < 0;
+                        });
+                        blankReds = this.shuffle(blankReds);
+                        for (let blankRed of blankReds) {
+                            let blankRedTileNumber = newTiles.indexOf(blankRed)
+                            if (blankRedTileNumber >= 0) {
+                                let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
+                                let swappable = true;
+                                for (let adjacentTileNumber of adjacentTilesNumbers) {
+                                    if ((allWormholesOfType.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== wormholeTileNumber) || (allTrueAnomalies.indexOf(womrhole) >= 0 && allTrueAnomalies.indexOf(newTiles[adjacentTileNumber]) >= 0)) {
+                                        // This blank has an adjacent anomaly, so throw it out
+                                        swappable = false;
+                                        break;
+                                    }
+                                }
+                                if (swappable) {
+                                    // This blank red has no other adjacent anomalies, so swap
+                                    newTiles[wormholeTileNumber] = blankRed;
+                                    newTiles[blankRedTileNumber] = womrhole;
                                     break;
                                 }
-                            }
-                            if (swappable) {
-                                // This blank red has no other adjacent anomalies, so swap
-                                newTiles[alphaWormholeTileNumber] = blankRed;
-                                newTiles[blankRedTileNumber] = alphaWormhole;
-                                break;
                             }
                         }
                     }
                 }
             }
         }
-        // Beta at least one planet wormhole, so swap it with another planet of equal resource value
-        for (let betaWormhole of allBetaWormholes) {
-            let betaWormholeTileNumber = newTiles.indexOf(betaWormhole);
-            if (betaWormholeTileNumber >= 0 && tileData.all[betaWormhole].planets.length === 0) {
-                // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
-                let adjacentTileNumbers = adjacencyData[betaWormholeTileNumber];
-                let adjacentWormhole = false;
-                for (let adjacentTileNumber of adjacentTileNumbers) {
-                    if (allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
-                        adjacentWormhole = true;
-                        break;
-                    }
-                }
-                if (adjacentWormhole) {
-                    // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                    let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
-                    // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
-                    blankReds = blankReds.filter(function (el) {
-                        return allBetaWormholes.indexOf(el) < 0;
-                    });
-                    blankReds = this.shuffle(blankReds);
-                    for (let blankRed of blankReds) {
-                        let blankRedTileNumber = newTiles.indexOf(blankRed)
-                        if (blankRedTileNumber >= 0) {
-                            let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
-                            let swappable = true;
-                            for (let adjacentTileNumber of adjacentTilesNumbers) {
-                                // Check for adjacency to another wormhole (excluding itself) and other anomalies
-                                if ((allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== betaWormholeTileNumber)) {
-                                    //
-                                    swappable = false;
-                                    break;
-                                }
-                            }
-                            if (swappable) {
-                                // This blank red has no other adjacent anomalies, so swap
-                                newTiles[betaWormholeTileNumber] = blankRed;
-                                newTiles[blankRedTileNumber] = betaWormhole;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+
+        // // Alpha, at least one wormhole is a "empty tile" so swap it with a blank tile
+        // for (let alphaWormhole of allAlphaWormholes) {
+        //     let alphaWormholeTileNumber = newTiles.indexOf(alphaWormhole);
+        //     if (alphaWormholeTileNumber >= 0 && tileData.all[alphaWormhole].planets.length === 0) {
+        //         // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
+        //         let adjacentTileNumbers = adjacencyData[alphaWormholeTileNumber];
+        //         let adjacentWormhole = false;
+        //         for (let adjacentTileNumber of adjacentTileNumbers) {
+        //             if (allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
+        //                 adjacentWormhole = true;
+        //                 break;
+        //             }
+        //         }
+        //         if (adjacentWormhole) {
+        //             // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
+        //             // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
+        //             let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
+        //             // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
+        //             blankReds = blankReds.filter(function (el) {
+        //                 return allAlphaWormholes.indexOf(el) < 0;
+        //             });
+        //             blankReds = this.shuffle(blankReds);
+        //             for (let blankRed of blankReds) {
+        //                 let blankRedTileNumber = newTiles.indexOf(blankRed)
+        //                 if (blankRedTileNumber >= 0) {
+        //                     let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
+        //                     let swappable = true;
+        //                     for (let adjacentTileNumber of adjacentTilesNumbers) {
+        //                         if ((allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== alphaWormholeTileNumber) || (allTrueAnomalies.indexOf(alphaWormhole) >= 0 && allTrueAnomalies.indexOf(newTiles[adjacentTileNumber]) >= 0)) {
+        //                             // This blank has an adjacent anomaly, so throw it out
+        //                             swappable = false;
+        //                             break;
+        //                         }
+        //                     }
+        //                     if (swappable) {
+        //                         // This blank red has no other adjacent anomalies, so swap
+        //                         newTiles[alphaWormholeTileNumber] = blankRed;
+        //                         newTiles[blankRedTileNumber] = alphaWormhole;
+        //                         break;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // // Beta at least one planet wormhole, so swap it with another planet of equal resource value
+        // for (let betaWormhole of allBetaWormholes) {
+        //     let betaWormholeTileNumber = newTiles.indexOf(betaWormhole);
+        //     if (betaWormholeTileNumber >= 0 && tileData.all[betaWormhole].planets.length === 0) {
+        //         // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
+        //         let adjacentTileNumbers = adjacencyData[betaWormholeTileNumber];
+        //         let adjacentWormhole = false;
+        //         for (let adjacentTileNumber of adjacentTileNumbers) {
+        //             if (allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
+        //                 adjacentWormhole = true;
+        //                 break;
+        //             }
+        //         }
+        //         if (adjacentWormhole) {
+        //             // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
+        //             // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
+        //             let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
+        //             // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
+        //             blankReds = blankReds.filter(function (el) {
+        //                 return allBetaWormholes.indexOf(el) < 0;
+        //             });
+        //             blankReds = this.shuffle(blankReds);
+        //             for (let blankRed of blankReds) {
+        //                 let blankRedTileNumber = newTiles.indexOf(blankRed)
+        //                 if (blankRedTileNumber >= 0) {
+        //                     let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
+        //                     let swappable = true;
+        //                     for (let adjacentTileNumber of adjacentTilesNumbers) {
+        //                         // Check for adjacency to another wormhole (excluding itself) and other anomalies
+        //                         if ((allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== betaWormholeTileNumber)) {
+        //                             //
+        //                             swappable = false;
+        //                             break;
+        //                         }
+        //                     }
+        //                     if (swappable) {
+        //                         // This blank red has no other adjacent anomalies, so swap
+        //                         newTiles[betaWormholeTileNumber] = blankRed;
+        //                         newTiles[blankRedTileNumber] = betaWormhole;
+        //                         break;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 
-    ensureWormholesForType(possibleTiles, planetWormholes, allWormholes, oppositeWormholes, ensuredAnomalies, { useProphecyOfKings = false, useUnchartedSpace = false } = {}) {
+    ensureWormholesForType(possibleTiles, desiredWormholes, ensuredAnomalies, { useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) {
         // let allAnomalyList = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
-        let allAnomalyList = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+        
+        let planetWormholes = desiredWormholes.filter(system => !tileData.blankRed.includes(system))
+        
+        let allAnomalyList = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
         let unusedWormholes = [];
         let usedWormholes = [];
 
-        // Get an array of all unused wormholes
-        for (let wormholeIndex in allWormholes) {
-            possibleTiles.indexOf(allWormholes[wormholeIndex]) < 0 ?
-                unusedWormholes.push(allWormholes[wormholeIndex]) : usedWormholes.push(allWormholes[wormholeIndex]);
+        // Get an array of all used and unused wormholes
+        for (let wormholeIndex in desiredWormholes) {
+            possibleTiles.indexOf(desiredWormholes[wormholeIndex]) < 0 ?
+                unusedWormholes.push(desiredWormholes[wormholeIndex]) : usedWormholes.push(desiredWormholes[wormholeIndex]);
         }
+
+        console.log(desiredWormholes, unusedWormholes, usedWormholes)
 
         // If there is only one wormhole, then we need to add a new one in
         if (usedWormholes.length === 1) {
@@ -1159,7 +1229,7 @@ class MapOptions extends React.Component {
             then we can try to find a planet to replace with any remaining wormhole tiles.
              */
             unusedWormholes = this.shuffle(unusedWormholes);
-            let excludedTiles = [...allWormholes.concat(oppositeWormholes)].concat(ensuredAnomalies);
+            let excludedTiles = [...tileData.wormholes].concat(ensuredAnomalies);
 
             // Check that the single used wormhole is not a planet.
             if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
@@ -1182,7 +1252,7 @@ class MapOptions extends React.Component {
         return possibleTiles;
     }
 
-    ensureAnomalies(possibleTiles, numPlanetsToPlace, { useProphecyOfKings = false, useUnchartedSpace = false } = {}) {
+    ensureAnomalies(possibleTiles, numPlanetsToPlace, { useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) {
         // Only care about the tiles we will actually place
         possibleTiles = possibleTiles.slice(0, numPlanetsToPlace);
 
@@ -1215,7 +1285,7 @@ class MapOptions extends React.Component {
 
         // Still have to add a certain number of anomalies in. Get a list of possible anomalies we can add to the tile list
         // let allAnomalyList = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
-        let allAnomalyList = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace }));
+        let allAnomalyList = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
 
         // Remove all current anomalies in use from this list
         let possibleAnomalies = []
@@ -1252,11 +1322,14 @@ class MapOptions extends React.Component {
         }
         let currentTileIndex = possibleTiles.length - 1;
 
+        console.log(numTilesToReplace, replacementTiles, currentTileIndex)
+
         // While there are anomalies to place and a place to put them...
         while (numTilesToReplace > 0 && replacementTiles.length > 0 && currentTileIndex > 0) {
             // Check the index to see that it is not an anomaly or a 0 or -1 or 18 or hyperlane
             let tileOfInterest = possibleTiles[currentTileIndex]
-            if (excludedTiles.indexOf(tileOfInterest) < 0 && tileOfInterest !== -1 && tileOfInterest !== 18 && tileOfInterest !== 0 && typeof tileOfInterest !== "string") {
+            console.log(tileOfInterest)
+            if (excludedTiles.indexOf(tileOfInterest) < 0 && tileOfInterest !== -1 && tileOfInterest !== 18 && tileOfInterest !== 0) {
                 // It is a replaceable tile, so fill it from the new anomalies list
                 possibleTiles[currentTileIndex] = replacementTiles.shift()
                 numTilesToReplace -= 1;
@@ -1428,6 +1501,13 @@ class MapOptions extends React.Component {
                             <div className="custom-control custom-checkbox">
                                 <input type="checkbox" className="custom-control-input" id="dsExpansion" name="useDiscordantStars" checked={this.props.useDiscordantStars} onChange={this.updateDS} />
                                 <label className="custom-control-label" htmlFor="dsExpansion">Use DS fan Races</label>
+                            </div>
+                        </div>
+
+                        <div className="col">
+                            <div className="custom-control custom-checkbox">
+                                <input type="checkbox" className="custom-control-input" id="sunExpansion" name="useAscendentSun" checked={this.props.useAscendentSun} onChange={this.updateSun} />
+                                <label className="custom-control-label" htmlFor="sunExpansion">Use AscSun Fan Tiles</label>
                             </div>
                         </div>
                     </div>

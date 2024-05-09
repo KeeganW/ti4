@@ -157,6 +157,7 @@ class MainMap extends React.Component {
                             <Arrow90degRight id={"rotate-right-svg-" + tileNumber} className={"icon"}/>
                         </button>
                         <span id={"number-" + tileNumber} className={"overlay"} style={hidden}>{tileNumber}</span>
+                        <span id={"wormhole-" + tileNumber} className={"overlay"} style={hidden}></span>
                         <img id={"tile-" + tileNumber}
                              className="tile"
                              src={window.location.origin + window.location.pathname + "/tiles/ST_" + systemNumber + ".png"}

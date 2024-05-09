@@ -236,27 +236,33 @@ h1, h2, h3, h4, h5 {
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#extraTilesButton {
+#wormholeOverlay {
     position: fixed;
     top: calc(var(--title-height) + 155px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#moreInfoButton {
+#extraTilesButton {
     position: fixed;
     top: calc(var(--title-height) + 190px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#shareMapButton {
+#moreInfoButton {
     position: fixed;
     top: calc(var(--title-height) + 225px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#loadMapButton {
+#shareMapButton {
     position: fixed;
     top: calc(var(--title-height) + 260px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1002;
+}
+#loadMapButton {
+    position: fixed;
+    top: calc(var(--title-height) + 295px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }

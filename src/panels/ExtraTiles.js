@@ -33,12 +33,12 @@ class ExtraTiles extends React.Component {
         //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         // }
 
-        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false } = {}) => (
-            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace)
+        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) => (
+            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun)
         )
 
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
-            { useProphecyOfKings: this.props.useProphecyOfKings, useUnchartedSpace: true }
+            { useProphecyOfKings: this.props.useProphecyOfKings, useUnchartedSpace: this.props.useUnchartedSpace, useAscendentSun: this.props.useAscendentSun}
         ));
 
         // console.log(systemNumbers)
@@ -51,7 +51,7 @@ class ExtraTiles extends React.Component {
             if (typeof systemNumber == "number") {
                 return [systemNumber, ""];
             } else {
-                const [, numberPart, stringPart] = systemNumber.match(/(\d+)(.*)/);
+                const [, numberPart, stringPart] = systemNumber.match(/((?:er)?\d+)(.*)/);
                 return [numberPart, stringPart];
             }
         }
