@@ -1220,7 +1220,8 @@ class App extends React.Component {
                             useUnchartedSpace={this.state.useUnchartedSpace}
                             useDiscordantStars={this.state.useDiscordantStars}
                             useAscendentSun={this.state.useAscendentSun}
-                            currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
+                            currentPlayerNames={this.state.currentPlayerNames} 
+                            currentRaces={this.state.currentRaces}
                             tiles={this.state.tiles} includedTiles={this.state.includedTiles}
                             excludedTiles={this.state.excludedTiles} lockedTiles={this.state.lockedTiles}
 
