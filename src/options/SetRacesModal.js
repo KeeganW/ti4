@@ -49,7 +49,7 @@ class SetRacesModal extends React.Component {
                         {visibleRaces.map((raceName, raceIndex) => {
                             let raceVisible = raceName.toLowerCase().includes(this.state.searchString);
                             return (
-                                <Form.Group className={"custom-control custom-checkbox mb-2 races" + (raceVisible ? "" : " d-none")} controlId={"include" + raceName.replace(" ", "")}>
+                                <Form.Group className={"custom-control custom-checkbox mb-2 races" + (raceVisible ? "" : " d-none")} controlId={"include" + raceName.replace(" ", "")} key={"set-races-" + raceIndex}>
                                     <Form.Check inline name={raceName} type="checkbox" checked={this.props.currentRaces.indexOf(raceName) > -1} onChange={this.props.handleRacesChange} label={raceName} />
                                 </Form.Group>
                                 // <div className={"custom-control custom-checkbox mb-2 races" + (raceVisible ? "" : " d-none")} key={"set-races-" + raceIndex}>
