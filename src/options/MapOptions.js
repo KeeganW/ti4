@@ -1,6 +1,6 @@
 import React from "react";
 import { QuestionCircle } from "react-bootstrap-icons";
-import { Accordion, Button, Form, Collapse } from "react-bootstrap";
+import { Button, Form, Collapse } from "react-bootstrap";
 import boardData from "../data/boardData.json";
 import tileData, { WORMHOLES } from "../data/tileData";
 import raceData from "../data/raceData.json";
