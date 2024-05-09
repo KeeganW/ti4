@@ -70,7 +70,7 @@ class MoreInfo extends React.Component {
             if (adjacentTile in tileData.all) {
                 for (let planetIndex in tileData.all[adjacentTile].planets) {
                     let planet = tileData.all[adjacentTile].planets[planetIndex];
-                    console.log(planet)
+                    // console.log(planet)
                     planets += 1;
                     resources += planet.resources;
                     influence += planet.influence;
