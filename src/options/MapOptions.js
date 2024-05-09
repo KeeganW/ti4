@@ -1,7 +1,8 @@
 import React from "react";
 import { QuestionCircle } from "react-bootstrap-icons";
+import { Accordion, Button, Form } from "react-bootstrap";
 import boardData from "../data/boardData.json";
-import tileData, {WORMHOLES} from "../data/tileData";
+import tileData, { WORMHOLES } from "../data/tileData";
 import raceData from "../data/raceData.json";
 import adjacencyData from "../data/adjacencyData.json";
 import HelpModal from "./HelpModal";
@@ -817,7 +818,7 @@ class MapOptions extends React.Component {
         // const allBetaWormholes = tileData.betaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
 
         // Ensure that if a wormhole is included, two are (except gamma)
-        for (const wormhole in WORMHOLES){
+        for (const wormhole in WORMHOLES) {
             if (WORMHOLES[wormhole] === WORMHOLES.GAMMA) continue
             const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
             newSystems = this.ensureWormholesForType(newSystems, allWormholesOfType, ensuredAnomalies, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun });
@@ -1064,9 +1065,9 @@ class MapOptions extends React.Component {
         // // const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
         // const allBetaWormholes = tileData.betaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
 
-        for (const wormhole in WORMHOLES){
+        for (const wormhole in WORMHOLES) {
             const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
-            for (let womrhole of allWormholesOfType){
+            for (let womrhole of allWormholesOfType) {
                 let wormholeTileNumber = newTiles.indexOf(womrhole);
                 if (wormholeTileNumber >= 0 && tileData.all[womrhole].planets.length === 0) {
                     // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
@@ -1206,9 +1207,9 @@ class MapOptions extends React.Component {
 
     ensureWormholesForType(possibleTiles, desiredWormholes, ensuredAnomalies, { useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false } = {}) {
         // let allAnomalyList = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
-        
+
         let planetWormholes = desiredWormholes.filter(system => !tileData.blankRed.includes(system))
-        
+
         let allAnomalyList = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
         let unusedWormholes = [];
         let usedWormholes = [];
@@ -1478,48 +1479,42 @@ class MapOptions extends React.Component {
                 <div className="title">
                     <h4 className="text-center">Generation Options</h4>
                 </div>
-                <form id="generateForm" onSubmit={this.generateBoard}>
+                <Form id="generateForm" onSubmit={this.generateBoard}>
 
-                    <div className="row mb-3">
-                        <div className="col">
-                            <div className="custom-control custom-checkbox">
-                                <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.props.useProphecyOfKings} onChange={this.updatePok} />
-                                <label className="custom-control-label" htmlFor="pokExpansion">Use POK Tiles</label>
-                            </div>
-                        </div>
-
-                        <div className="col">
-                            <div className="custom-control custom-checkbox">
-                                <input type="checkbox" className="custom-control-input" id="unchartedExpansion" name="useUnchartedSpace" checked={this.props.useUnchartedSpace} onChange={this.updateUncharted} />
-                                <label className="custom-control-label" htmlFor="unchartedExpansion">Use UnSp Fan Tiles</label>
-                            </div>
-                        </div>
+                    <div className="custom-control custom-checkbox mb-3 d-flex">
+                        <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.props.useProphecyOfKings} onChange={this.updatePok} />
+                        <label className="custom-control-label" htmlFor="pokExpansion">Use POK Tiles</label>
                     </div>
+                    <Accordion>
+                        <Accordion.Item eventKey="0">
+                            <Accordion.Header as="p">Fan-Made Content</Accordion.Header>
+                            <Accordion.Body>
+                                <>
+                                    <div className="custom-control custom-checkbox mb-3 d-flex">
+                                        <input type="checkbox" className="custom-control-input" id="unchartedExpansion" name="useUnchartedSpace" checked={this.props.useUnchartedSpace} onChange={this.updateUncharted} />
+                                        <label className="custom-control-label" htmlFor="unchartedExpansion">Use Uncharted Space Fan Tiles</label>
+                                    </div>
+                                    <div className="custom-control custom-checkbox mb-3 d-flex">
+                                        <input type="checkbox" className="custom-control-input" id="dsExpansion" name="useDiscordantStars" checked={this.props.useDiscordantStars} onChange={this.updateDS} />
+                                        <label className="custom-control-label" htmlFor="dsExpansion">Use DS Fan Races</label>
+                                    </div>
+                                    <div className="custom-control custom-checkbox d-flex">
+                                        <input type="checkbox" className="custom-control-input" id="sunExpansion" name="useAscendentSun" checked={this.props.useAscendentSun} onChange={this.updateSun} />
+                                        <label className="custom-control-label" htmlFor="sunExpansion">Use Eronous' Fan Tiles</label>
+                                    </div>
+                                </>
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
 
-                    <div className="row mb-3">
-                        <div className="col">
-                            <div className="custom-control custom-checkbox">
-                                <input type="checkbox" className="custom-control-input" id="dsExpansion" name="useDiscordantStars" checked={this.props.useDiscordantStars} onChange={this.updateDS} />
-                                <label className="custom-control-label" htmlFor="dsExpansion">Use DS fan Races</label>
-                            </div>
-                        </div>
-
-                        <div className="col">
-                            <div className="custom-control custom-checkbox">
-                                <input type="checkbox" className="custom-control-input" id="sunExpansion" name="useAscendentSun" checked={this.props.useAscendentSun} onChange={this.updateSun} />
-                                <label className="custom-control-label" htmlFor="sunExpansion">Use AscSun Fan Tiles</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-group">
+                    <div className="form-group my-3">
                         <label htmlFor="playerCount">Number of Players</label>
                         <select className="form-control" id="playerCount" name="currentNumberOfPlayers" value={this.state.currentNumberOfPlayers} onChange={this.updatePlayerCount}>
                             {this.state.currentNumberOfPlayersOptions.map((x) => <option key={x} value={x}>{x}</option>)}
                         </select>
                     </div>
 
-                    <div className="form-group">
+                    <div className="form-group my-3">
                         <label htmlFor="boardStyle" className="d-flex">Board Style
                             <QuestionCircle className="icon" onClick={this.toggleBoardStyleHelp} />
                         </label>
@@ -1528,7 +1523,7 @@ class MapOptions extends React.Component {
                         </select>
                     </div>
 
-                    <div className="form-group">
+                    <div className="form-group my-3">
                         <label htmlFor="placementStyle" className="d-flex">Placement Style
                             <QuestionCircle className="icon" onClick={this.togglePlacementStyleHelp} />
                         </label>
@@ -1537,7 +1532,7 @@ class MapOptions extends React.Component {
                         </select>
                     </div>
 
-                    <div className="form-group">
+                    <div className="form-group my-3">
                         <label htmlFor="pickStyle" className="d-flex">System Weighting
                             <QuestionCircle className="icon" onClick={this.togglePickStyleHelp} />
                         </label>
@@ -1569,7 +1564,7 @@ class MapOptions extends React.Component {
                     </div>
 
 
-                    <div className="form-group">
+                    <div className="form-group my-3">
                         <label htmlFor="seed">Specific Seed</label>
                         <input className="form-control" id="seed" name="updateSeed" type="text" placeholder="Enter a number to seed generation..." value={this.state.currentSeed} onChange={this.updateSeed} />
                     </div>
@@ -1690,8 +1685,8 @@ class MapOptions extends React.Component {
                          </p>"
                     />
 
-                    <button type="submit" className="btn btn-primary">Generate</button>
-                </form>
+                    <Button type="submit" className="btn btn-primary">Generate</Button>
+                </Form>
             </div>
         );
     }

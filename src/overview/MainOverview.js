@@ -9,7 +9,7 @@ class MainOverview extends React.Component {
                     <h1>TI4 Map Generator</h1>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     <h4 className={"m-3"}>Customize Your Next Twilight Imperium 4 Map!</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
@@ -22,7 +22,7 @@ class MainOverview extends React.Component {
                     </div>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     <h4 className={"m-3"}>Individual Tile Controls</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
@@ -40,7 +40,7 @@ class MainOverview extends React.Component {
                     </div>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     <h4 className={"m-3"}>Drag and Drop for Further Customization</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
@@ -54,7 +54,7 @@ class MainOverview extends React.Component {
                     </div>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     <h4 className={"m-3"}>New Prophecy of Kings Expansion Content</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
@@ -65,7 +65,7 @@ class MainOverview extends React.Component {
                     </div>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     <h4 className={"m-3"}>Share With Your Friends</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
@@ -79,7 +79,7 @@ class MainOverview extends React.Component {
                     </div>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     <h4 className={"m-3"}>Use Any Tile You Want</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
@@ -93,7 +93,7 @@ class MainOverview extends React.Component {
                     </div>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     <h4 className={"m-3"}>Easy Setup On Game Day</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
@@ -109,7 +109,7 @@ class MainOverview extends React.Component {
                     </div>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     <h4 className={"m-3"}>Have Any Ideas On Improvements?</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-3"}>
@@ -122,7 +122,7 @@ class MainOverview extends React.Component {
                     </div>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     <h4 className={"m-3"}>Contributors</h4>
                     <div className={"d-flex"}>
                         <p className={"text-left p-2"}>
@@ -141,7 +141,7 @@ class MainOverview extends React.Component {
                     </div>
                 </div>
 
-                <div className={"overview-panel mb-4 mt-4 ml-auto mr-auto"}>
+                <div className={"overview-panel my-4 mx-auto"}>
                     &#169; Keegan Williams 2023
                 </div>
             </div>

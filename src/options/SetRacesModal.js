@@ -42,15 +42,15 @@ class SetRacesModal extends React.Component {
                 </div>
                 <Modal.Body>
                     <form id={"includedRacesForm"}>
-                        <div className={"form-group"}>
+                        <div className={"form-group mb-3"}>
                             <input className={"form-control"} id={"filterRaces"} type={"text"} placeholder={"Filter Races..."} value={this.state.searchString} onChange={this.updateSearchString} />
                         </div>
                         {visibleRaces.map((raceName, raceIndex) => {
                             let raceVisible = raceName.toLowerCase().includes(this.state.searchString);
                             return (
-                                <div className={"custom-control custom-checkbox mb-3 races" + (raceVisible ? "" : " d-none")} key={"set-races-" + raceIndex}>
+                                <div className={"custom-control custom-checkbox mb-2 races" + (raceVisible ? "" : " d-none")} key={"set-races-" + raceIndex}>
                                     <input className={"custom-control-input"} name={raceName} type={"checkbox"} id={"include" + raceName.replace(" ", "")} checked={this.props.currentRaces.indexOf(raceName) > -1} onChange={this.props.handleRacesChange} />
-                                    <label className={"custom-control-label d-flex"} htmlFor={"include" + raceName.replace(" ", "")}>{raceName}</label>
+                                    <label className={"custom-control-label"} htmlFor={"include" + raceName.replace(" ", "")}>{raceName}</label>
                                 </div>
                             )
                         })}
