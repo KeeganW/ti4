@@ -2,15 +2,15 @@ import React from "react";
 import { QuestionCircle } from "react-bootstrap-icons";
 import { Button, Form, Collapse } from "react-bootstrap";
 import boardData from "../data/boardData.json";
-import tileData, { WORMHOLES } from "../data/tileData";
+import tileData, { WORMHOLES, EXPANSIONS } from "../data/tileData";
 import raceData from "../data/raceData.json";
 import adjacencyData from "../data/adjacencyData.json";
 import HelpModal from "./HelpModal";
 import SetPlayerNameModal from "./SetPlayerNameModal";
 import SetRacesModal from "./SetRacesModal";
 
-const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) => (
-    (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun) && (!tileData.asyncLanes.includes(id) || useFanHyperlanes)
+const expansionCheck = (includedExpansions) => (
+    (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async])
 )
 
 class MapOptions extends React.Component {
@@ -155,7 +155,7 @@ class MapOptions extends React.Component {
         if (race === "none") {  // The deselect all option
             newCurrentRaces = []
         } else if (race === "all") {  // The deselect all option
-            if (this.props.useProphecyOfKings) {
+            if (this.props.includedExpansions[EXPANSIONS.POK]) {
                 newCurrentRaces = [...this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)]
             } else {
                 newCurrentRaces = [...this.state.optionsPossible.races]
@@ -174,7 +174,7 @@ class MapOptions extends React.Component {
 
     updatePok(event) {
         let races = [...this.state.optionsPossible.races]
-        if (this.props.useDiscordantStars) races = races.concat(this.state.optionsPossible.dsRaces)
+        if (this.props.includedExpansions[EXPANSIONS.DS]) races = races.concat(this.state.optionsPossible.dsRaces)
         let boardOptions = this.state.optionsPossible.boardStyles;
         if (event.target.checked) {
             boardOptions = this.state.optionsPossible.boardStylesPok;
@@ -213,7 +213,7 @@ class MapOptions extends React.Component {
 
     updateDS(event) {
         let races = [...this.state.optionsPossible.races]
-        if (this.props.useProphecyOfKings) races = races.concat(this.state.optionsPossible.pokRaces)
+        if (this.props.includedExpansions[EXPANSIONS.POK]) races = races.concat(this.state.optionsPossible.pokRaces)
         if (event.target.checked) {
             this.props.updateRaces([...races.concat(this.state.optionsPossible.dsRaces)]);
         } else {
@@ -242,7 +242,7 @@ class MapOptions extends React.Component {
 
     updateBoardStyleOptions(event) {
         let boardOptions = this.state.optionsPossible.boardStyles;
-        if (this.props.useProphecyOfKings) {
+        if (this.props.includedExpansions[EXPANSIONS.POK]) {
             boardOptions = this.state.optionsPossible.boardStylesPok;
         }
         this.setState({
@@ -296,11 +296,15 @@ class MapOptions extends React.Component {
     encodeSettings() {
         let encodedSettings = "";
 
-        encodedSettings += this.props.useProphecyOfKings ? "T" : "F";
-        encodedSettings += this.props.useUnchartedSpace ? "T" : "F";
-        encodedSettings += this.props.useDiscordantStars ? "T" : "F";
-        encodedSettings += this.props.useAscendentSun ? "T" : "F";
-        encodedSettings += this.props.useFanHyperlanes ? "T" : "F";
+        encodedSettings += this.props.includedExpansions[EXPANSIONS.POK] ? "T" : "F";
+        if (this.state.fanContent){
+            encodedSettings += this.props.includedExpansions[EXPANSIONS.UnS] ? "T" : "F";
+            encodedSettings += this.props.includedExpansions[EXPANSIONS.DS] ? "T" : "F";
+            encodedSettings += this.props.includedExpansions[EXPANSIONS.AS] ? "T" : "F";
+            encodedSettings += this.props.includedExpansions[EXPANSIONS.Async] ? "T" : "F";
+        } else {
+            encodedSettings += "FFFF"
+        }
         encodedSettings += this.state.currentNumberOfPlayers.toString();
         encodedSettings += this.state.currentBoardStyleOptions.indexOf(this.state.currentBoardStyle).toString();
         encodedSettings += this.state.optionsPossible.placementStyles.indexOf(this.state.currentPlacementStyle).toString();
@@ -323,8 +327,8 @@ class MapOptions extends React.Component {
                 .concat(this.state.optionsPossible.pokRaces)
                 .concat(this.state.optionsPossible.dsRaces)
             let expectedRaces = 17;
-            if (this.props.useProphecyOfKings) expectedRaces += 7
-            if (this.props.useDiscordantStars) expectedRaces += 34
+            if (this.props.includedExpansions[EXPANSIONS.POK]) expectedRaces += 7
+            if (this.props.includedExpansions[EXPANSIONS.DS]) expectedRaces += 34
             if (this.props.currentRaces.length !== expectedRaces) {
                 // Need to encode all races, because it is not the default
                 for (let race of this.props.currentRaces) {
@@ -355,34 +359,44 @@ class MapOptions extends React.Component {
 
         console.log(newSettings)
 
+        let useExpansions = Object.fromEntries([
+            [EXPANSIONS.POK, false],
+            [EXPANSIONS.UnS, false],
+            [EXPANSIONS.DS, false],
+            [EXPANSIONS.AS, false],
+            [EXPANSIONS.Async, false],
+        ]
+        )
+        let useFanContent = false
+
         // Prophecy of Kings
-        let useProphecyOfKings = newSettings[currentIndex] === "T";
+        useExpansions[EXPANSIONS.POK] = newSettings[currentIndex] === "T";
         currentIndex += 1;
 
-        // Uncharted Space
+        // Fan Content
         // Compatability with old URL formatting
-        let useUnchartedSpace = false
-        let useDiscordantStars = false
-        let useAscendentSun = false
-        let useFanHyperlanes = false
         if (newSettings[currentIndex] === "T" || newSettings[currentIndex] === "F") {
-            useUnchartedSpace = newSettings[currentIndex] === "T";
+            useExpansions[EXPANSIONS.UnS] = newSettings[currentIndex] === "T";
+            useFanContent = useFanContent || useExpansions[EXPANSIONS.UnS]
             currentIndex += 1;
-            useDiscordantStars = newSettings[currentIndex] === "T";
+            useExpansions[EXPANSIONS.DS] = newSettings[currentIndex] === "T";
+            useFanContent = useFanContent || useExpansions[EXPANSIONS.DS]
             currentIndex += 1;
-            useAscendentSun = newSettings[currentIndex] === "T";
+            useExpansions[EXPANSIONS.AS] = newSettings[currentIndex] === "T";
+            useFanContent = useFanContent || useExpansions[EXPANSIONS.AS]
             currentIndex += 1;
-            useFanHyperlanes = newSettings[currentIndex] === "T";
+            useExpansions[EXPANSIONS.Async] = newSettings[currentIndex] === "T";
+            useFanContent = useFanContent || useExpansions[EXPANSIONS.Async]
             currentIndex += 1;
         }
 
         // Number of Players
         let currentNumberOfPlayers = Number(newSettings[currentIndex]);
         currentIndex += 1;
-        let currentNumberOfPlayersOptions = useProphecyOfKings ? this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers) : this.state.optionsPossible.numberOfPlayers;
+        let currentNumberOfPlayersOptions = useExpansions[EXPANSIONS.POK] ? this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers) : this.state.optionsPossible.numberOfPlayers;
 
         // Board Style
-        let currentBoardStyleOptions = useProphecyOfKings ? this.state.optionsPossible.boardStylesPok[currentNumberOfPlayers] : this.state.optionsPossible.boardStyles[currentNumberOfPlayers];
+        let currentBoardStyleOptions = useExpansions[EXPANSIONS.POK] ? this.state.optionsPossible.boardStylesPok[currentNumberOfPlayers] : this.state.optionsPossible.boardStyles[currentNumberOfPlayers];
         let currentBoardStyle = currentBoardStyleOptions[Number(newSettings[currentIndex])]
         currentIndex += 1;
 
@@ -452,8 +466,8 @@ class MapOptions extends React.Component {
                     }
                 } else {
                     currentRaces = this.state.optionsPossible.races;
-                    if (useProphecyOfKings) currentRaces = currentRaces.concat(this.state.optionsPossible.pokRaces)
-                    if (useDiscordantStars) currentRaces = currentRaces.concat(this.state.optionsPossible.dsRaces)
+                    if (useExpansions[EXPANSIONS.POK]) currentRaces = currentRaces.concat(this.state.optionsPossible.pokRaces)
+                    if (useExpansions[EXPANSIONS.DS]) currentRaces = currentRaces.concat(this.state.optionsPossible.dsRaces)
                 }
             } else {
                 // No custom races, but player names are specified, so parse them
@@ -462,6 +476,7 @@ class MapOptions extends React.Component {
         }
 
         this.setState({
+            fanContent: useFanContent,
             currentNumberOfPlayers: currentNumberOfPlayers,
             currentNumberOfPlayersOptions: currentNumberOfPlayersOptions,
             currentBoardStyle: currentBoardStyle,
@@ -483,19 +498,19 @@ class MapOptions extends React.Component {
             this.props.updateRaces(currentRaces);
             this.props.updatePlayerNames(currentPlayerNames);
 
-            if ((useProphecyOfKings && !this.props.useProphecyOfKings) || (!useProphecyOfKings && this.props.useProphecyOfKings)) {
+            if ((useExpansions[EXPANSIONS.POK] && !this.props.includedExpansions[EXPANSIONS.POK]) || (!useExpansions[EXPANSIONS.POK] && this.props.includedExpansions[EXPANSIONS.POK])) {
                 this.props.toggleProphecyOfKings();
             }
-            if ((useUnchartedSpace && !this.props.useUnchartedSpace) || (!useUnchartedSpace && this.props.useUnchartedSpace)) {
+            if ((useExpansions[EXPANSIONS.UnS] && !this.props.includedExpansions[EXPANSIONS.UnS]) || (!useExpansions[EXPANSIONS.UnS] && this.props.includedExpansions[EXPANSIONS.UnS])) {
                 this.props.toggleUnchartedSpace();
             }
-            if ((useAscendentSun && !this.props.useAscendentSun) || (!useAscendentSun && this.props.useAscendentSun)) {
+            if ((useExpansions[EXPANSIONS.AS] && !this.props.includedExpansions[EXPANSIONS.AS]) || (!useExpansions[EXPANSIONS.AS] && this.props.includedExpansions[EXPANSIONS.AS])) {
                 this.props.toggleAscendentSun();
             }
-            if ((useFanHyperlanes && !this.props.useFanHyperlanes) || (!useFanHyperlanes && this.props.useFanHyperlanes)) {
+            if ((useExpansions[EXPANSIONS.Async] && !this.props.includedExpansions[EXPANSIONS.Async]) || (!useExpansions[EXPANSIONS.Async] && this.props.includedExpansions[EXPANSIONS.Async])) {
                 this.props.toggleAscendentSun();
             }
-            if ((useDiscordantStars && !this.props.useDiscordantStars) || (!useDiscordantStars && this.props.useDiscordantStars)) {
+            if ((useExpansions[EXPANSIONS.DS] && !this.props.includedExpansions[EXPANSIONS.DS]) || (!useExpansions[EXPANSIONS.DS] && this.props.includedExpansions[EXPANSIONS.DS])) {
                 this.props.toggleDiscordantStars();
             }
 
@@ -503,7 +518,7 @@ class MapOptions extends React.Component {
                 // Tiles were changed after rendering, so we need to display them
                 this.props.updateTiles(newTiles, newSettings);
             } else {
-                this.props.updateTiles(this.getNewTileSet(currentRaces, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }), newSettings, false);
+                this.props.updateTiles(this.getNewTileSet(currentRaces, useExpansions), newSettings, false);
             }
         })
 
@@ -538,24 +553,33 @@ class MapOptions extends React.Component {
     /**
      * Create a set of new tiles for the board based on the user's input.
      */
-    getNewTileSet(currentRaces, { useProphecyOfKings = undefined, useUnchartedSpace = undefined, useAscendentSun = undefined, useFanHyperlanes = undefined } = {}) {
-        if (useProphecyOfKings === undefined) {
-            useProphecyOfKings = this.props.useProphecyOfKings
-        }
+    getNewTileSet(currentRaces, includedExpansions) {
+        if (includedExpansions === undefined) {
+            includedExpansions = Object.fromEntries([
+                [EXPANSIONS.POK, this.props.includedExpansions[EXPANSIONS.POK]],
+                [EXPANSIONS.UnS, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.UnS]],
+                [EXPANSIONS.AS, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.AS]],
+                [EXPANSIONS.Async, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.Async]],
+            ]
+            )
+        } 
+        // else {
+        //     if (includedExpansions[EXPANSIONS.POK] === undefined) {
+        //         includedExpansions[EXPANSIONS.POK] = this.props.includedExpansions[EXPANSIONS.POK]
+        //     }
 
-        // console.log(this.props.useUnchartedSpace)
-        if (useUnchartedSpace === undefined) {
-            useUnchartedSpace = this.props.useUnchartedSpace
-        }
+        //     if (includedExpansions[EXPANSIONS.UnS] === undefined) {
+        //         includedExpansions[EXPANSIONS.UnS] = this.props.includedExpansions[EXPANSIONS.UnS]
+        //     }
 
-        // console.log(this.props.useUnchartedSpace)
-        if (useAscendentSun === undefined) {
-            useAscendentSun = this.props.useAscendentSun
-        }
+        //     if (includedExpansions[EXPANSIONS.AS] === undefined) {
+        //         includedExpansions[EXPANSIONS.AS] = this.props.includedExpansions[EXPANSIONS.AS]
+        //     }
 
-        if (useFanHyperlanes === undefined) {
-            useFanHyperlanes = this.props.useFanHyperlanes
-        }
+        //     if (includedExpansions[EXPANSIONS.Async] === undefined) {
+        //         includedExpansions[EXPANSIONS.Async] = this.props.includedExpansions[EXPANSIONS.Async]
+        //     }
+        // }
 
         // Get an ordered list of board spaces that need to have non-home systems assigned to them
         let systemIndexes = this.getNewTilesToPlace()
@@ -570,7 +594,7 @@ class MapOptions extends React.Component {
         currentRaces = currentRaces.slice(0, this.state.currentNumberOfPlayers)
 
         // Get a set of systems to make the board with, ordered based on user supplied weights
-        let newSystems = this.getNewSystemsToPlace(systemIndexes.length, currentRaces, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes })
+        let newSystems = this.getNewSystemsToPlace(systemIndexes.length, currentRaces, includedExpansions)
 
         // Copy a blank map to add to
         let newTiles = [...boardData.blankMap]
@@ -593,7 +617,7 @@ class MapOptions extends React.Component {
         this.placeLockedSystems(newTiles)
 
         // Check that anomalies and wormholes are not adjacent
-        this.checkAdjacencies(newTiles, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes })
+        this.checkAdjacencies(newTiles, includedExpansions)
 
         // Update the generated flag then update the tiles
         return newTiles;
@@ -685,15 +709,13 @@ class MapOptions extends React.Component {
      *
      * Get an array of system tile numbers to place on the board.
      * @param {number} numberOfSystems The number of systems to get.
-     * @param {boolean} useProphecyOfKings TODO
+     * @param {boolean} includedExpansions Dictionary of expansions to include based on the enum EXPANSIONS
      * @returns {[]}
      */
-    getNewSystemsToPlace(numberOfSystems, currentRaces, { useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) {
+    getNewSystemsToPlace(numberOfSystems, currentRaces, includedExpansions) {
         // Pick our a random set of systems, following the needed number of anomalies
-        // let allBlues = useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
-        let allBlues = tileData.blue.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
-        // let allReds = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
-        let allReds = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+        let allBlues = tileData.blue.filter(expansionCheck(includedExpansions));
+        let allReds = tileData.red.filter(expansionCheck(includedExpansions));
 
         // Remove excluded tiles
         for (let system of this.props.excludedTiles) {
@@ -795,23 +817,19 @@ class MapOptions extends React.Component {
                 let match = false;
                 // If The Clan of Saar are in the game, ensure we have an asteroid field
                 if (race === 'The Clan of Saar') {
-                    // anomalies = useProphecyOfKings ? [...tileData.asteroidFields.concat(tileData.pokAsteroidFields)] : [...tileData.asteroidFields];
-                    anomalies = tileData.asteroidFields.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+                    anomalies = tileData.asteroidFields.filter(expansionCheck(includedExpansions));
                     match = true;
                     // If The Embers of Muaat are in the game, ensure we have a supernova
                 } else if (race === 'The Embers of Muaat') {
-                    // anomalies = useProphecyOfKings ? [...tileData.supernovas.concat(tileData.pokSupernovas)] : [...tileData.supernovas];
-                    anomalies = tileData.supernovas.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+                    anomalies = tileData.supernovas.filter(expansionCheck(includedExpansions));
                     match = true;
                     // If The Empyrean are in the game, ensure we have a nebulae
                 } else if (race === 'The Empyrean') {
-                    // anomalies = useProphecyOfKings ? [...tileData.nebulae.concat(tileData.pokNebulae)] : [...tileData.nebulae];
-                    anomalies = tileData.nebulae.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+                    anomalies = tileData.nebulae.filter(expansionCheck(includedExpansions));
                     match = true;
                     // If The Vuil'Raith Cabal or Nivyn Star Kings are in the game, ensure we have a gravity rift
                 } else if (race === "The Vuil'Raith Cabal" || race === "The Nivyn Star Kings") {
-                    // anomalies = useProphecyOfKings ? [...tileData.gravityRifts.concat(tileData.pokGravityRifts)] : [...tileData.gravityRifts];
-                    anomalies = tileData.gravityRifts.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+                    anomalies = tileData.gravityRifts.filter(expansionCheck(includedExpansions));
                     match = true;
                 }
                 if (match && redsToPlace > 0) {
@@ -840,18 +858,12 @@ class MapOptions extends React.Component {
             newSystems = newSystems.concat(allBlues.slice(0, bluesToPlace).concat(allReds.slice(0, redsToPlace)))
         }
 
-        // const allAlphaWormholes = tileData.alphaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
-        // const allBetaWormholes = tileData.betaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
-
         // Ensure that if a wormhole is included, two are (except gamma)
         for (const wormhole in WORMHOLES) {
             if (WORMHOLES[wormhole] === WORMHOLES.GAMMA) continue
-            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
-            newSystems = this.ensureWormholesForType(newSystems, allWormholesOfType, ensuredAnomalies, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes });
+            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck(includedExpansions));
+            newSystems = this.ensureWormholesForType(newSystems, allWormholesOfType, ensuredAnomalies, includedExpansions);
         }
-
-        // newSystems = this.ensureWormholesForType(newSystems, allAlphaWormholes, ensuredAnomalies, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace });
-        // newSystems = this.ensureWormholesForType(newSystems, allBetaWormholes, ensuredAnomalies, { useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace });
 
         // Based on the system style, order the systems according to their weights
         let weights = {};
@@ -894,7 +906,7 @@ class MapOptions extends React.Component {
                 break;
             case "balanced":
             default:
-                if (useProphecyOfKings) {
+                if (includedExpansions[EXPANSIONS.POK]) {
                     weights = {
                         "resource": 80,
                         "influence": 30,
@@ -960,10 +972,9 @@ class MapOptions extends React.Component {
             }
         }
     }
-    checkAdjacencies(newTiles, { useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) {// Planets have been placed, time to do post processing checks to make sure things are good to go.
+    checkAdjacencies(newTiles, includedExpansions) {// Planets have been placed, time to do post processing checks to make sure things are good to go.
         // Get all anomalies that are adjacent to one another
-        // let allTrueAnomalies = useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
-        let allTrueAnomalies = tileData.anomaly.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+        let allTrueAnomalies = tileData.anomaly.filter(expansionCheck(includedExpansions));
 
         for (let anomaly of allTrueAnomalies) {
             // Ignore any anomalies in the locked or include list
@@ -986,8 +997,7 @@ class MapOptions extends React.Component {
 
                     // If tile is in conflict more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
                     let swapped = false;
-                    // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                    let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+                    let blankReds = tileData.blankRed.filter(expansionCheck(includedExpansions));
                     if (adjacentAnomalies.length > 1) {
                         let possibleBlanks = [];
                         for (let blankRed of blankReds) {
@@ -1026,8 +1036,7 @@ class MapOptions extends React.Component {
                             }
                         }
                         if (!swapped) {
-                            // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                            let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+                            let blankReds = tileData.blankRed.filter(expansionCheck(includedExpansions));
                             let possibleBlanks = [];
                             for (let blankRed of blankReds) {
                                 if (newTiles.indexOf(blankRed) < 0) {
@@ -1086,13 +1095,8 @@ class MapOptions extends React.Component {
             }
         }
 
-        // // const allAlphaWormholes = useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
-        // const allAlphaWormholes = tileData.alphaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
-        // // const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
-        // const allBetaWormholes = tileData.betaWormholes.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
-
         for (const wormhole in WORMHOLES) {
-            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck(includedExpansions));
             for (let womrhole of allWormholesOfType) {
                 let wormholeTileNumber = newTiles.indexOf(womrhole);
                 if (wormholeTileNumber >= 0 && tileData.all[womrhole].planets.length === 0) {
@@ -1107,7 +1111,7 @@ class MapOptions extends React.Component {
                     }
                     if (adjacentWormhole) {
                         // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                        let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+                        let blankReds = tileData.blankRed.filter(expansionCheck(includedExpansions));
                         // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
                         blankReds = blankReds.filter(function (el) {
                             return allWormholesOfType.indexOf(el) < 0;
@@ -1137,106 +1141,13 @@ class MapOptions extends React.Component {
                 }
             }
         }
-
-        // // Alpha, at least one wormhole is a "empty tile" so swap it with a blank tile
-        // for (let alphaWormhole of allAlphaWormholes) {
-        //     let alphaWormholeTileNumber = newTiles.indexOf(alphaWormhole);
-        //     if (alphaWormholeTileNumber >= 0 && tileData.all[alphaWormhole].planets.length === 0) {
-        //         // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
-        //         let adjacentTileNumbers = adjacencyData[alphaWormholeTileNumber];
-        //         let adjacentWormhole = false;
-        //         for (let adjacentTileNumber of adjacentTileNumbers) {
-        //             if (allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
-        //                 adjacentWormhole = true;
-        //                 break;
-        //             }
-        //         }
-        //         if (adjacentWormhole) {
-        //             // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-        //             // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-        //             let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
-        //             // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
-        //             blankReds = blankReds.filter(function (el) {
-        //                 return allAlphaWormholes.indexOf(el) < 0;
-        //             });
-        //             blankReds = this.shuffle(blankReds);
-        //             for (let blankRed of blankReds) {
-        //                 let blankRedTileNumber = newTiles.indexOf(blankRed)
-        //                 if (blankRedTileNumber >= 0) {
-        //                     let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
-        //                     let swappable = true;
-        //                     for (let adjacentTileNumber of adjacentTilesNumbers) {
-        //                         if ((allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== alphaWormholeTileNumber) || (allTrueAnomalies.indexOf(alphaWormhole) >= 0 && allTrueAnomalies.indexOf(newTiles[adjacentTileNumber]) >= 0)) {
-        //                             // This blank has an adjacent anomaly, so throw it out
-        //                             swappable = false;
-        //                             break;
-        //                         }
-        //                     }
-        //                     if (swappable) {
-        //                         // This blank red has no other adjacent anomalies, so swap
-        //                         newTiles[alphaWormholeTileNumber] = blankRed;
-        //                         newTiles[blankRedTileNumber] = alphaWormhole;
-        //                         break;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-        // // Beta at least one planet wormhole, so swap it with another planet of equal resource value
-        // for (let betaWormhole of allBetaWormholes) {
-        //     let betaWormholeTileNumber = newTiles.indexOf(betaWormhole);
-        //     if (betaWormholeTileNumber >= 0 && tileData.all[betaWormhole].planets.length === 0) {
-        //         // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
-        //         let adjacentTileNumbers = adjacencyData[betaWormholeTileNumber];
-        //         let adjacentWormhole = false;
-        //         for (let adjacentTileNumber of adjacentTileNumbers) {
-        //             if (allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
-        //                 adjacentWormhole = true;
-        //                 break;
-        //             }
-        //         }
-        //         if (adjacentWormhole) {
-        //             // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-        //             // let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-        //             let blankReds = tileData.blankRed.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun }));
-        //             // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
-        //             blankReds = blankReds.filter(function (el) {
-        //                 return allBetaWormholes.indexOf(el) < 0;
-        //             });
-        //             blankReds = this.shuffle(blankReds);
-        //             for (let blankRed of blankReds) {
-        //                 let blankRedTileNumber = newTiles.indexOf(blankRed)
-        //                 if (blankRedTileNumber >= 0) {
-        //                     let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
-        //                     let swappable = true;
-        //                     for (let adjacentTileNumber of adjacentTilesNumbers) {
-        //                         // Check for adjacency to another wormhole (excluding itself) and other anomalies
-        //                         if ((allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== betaWormholeTileNumber)) {
-        //                             //
-        //                             swappable = false;
-        //                             break;
-        //                         }
-        //                     }
-        //                     if (swappable) {
-        //                         // This blank red has no other adjacent anomalies, so swap
-        //                         newTiles[betaWormholeTileNumber] = blankRed;
-        //                         newTiles[blankRedTileNumber] = betaWormhole;
-        //                         break;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
     }
 
-    ensureWormholesForType(possibleTiles, desiredWormholes, ensuredAnomalies, { useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) {
-        // let allAnomalyList = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
+    ensureWormholesForType(possibleTiles, desiredWormholes, ensuredAnomalies, includedExpansions) {
 
         let planetWormholes = desiredWormholes.filter(system => !tileData.blankRed.includes(system))
 
-        let allAnomalyList = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+        let allAnomalyList = tileData.red.filter(expansionCheck(includedExpansions));
         let unusedWormholes = [];
         let usedWormholes = [];
 
@@ -1245,8 +1156,6 @@ class MapOptions extends React.Component {
             possibleTiles.indexOf(desiredWormholes[wormholeIndex]) < 0 ?
                 unusedWormholes.push(desiredWormholes[wormholeIndex]) : usedWormholes.push(desiredWormholes[wormholeIndex]);
         }
-
-        console.log(desiredWormholes, unusedWormholes, usedWormholes)
 
         // If there is only one wormhole, then we need to add a new one in
         if (usedWormholes.length === 1) {
@@ -1279,7 +1188,7 @@ class MapOptions extends React.Component {
         return possibleTiles;
     }
 
-    ensureAnomalies(possibleTiles, numPlanetsToPlace, { useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) {
+    ensureAnomalies(possibleTiles, numPlanetsToPlace, includedExpansions) {
         // Only care about the tiles we will actually place
         possibleTiles = possibleTiles.slice(0, numPlanetsToPlace);
 
@@ -1311,8 +1220,7 @@ class MapOptions extends React.Component {
         }
 
         // Still have to add a certain number of anomalies in. Get a list of possible anomalies we can add to the tile list
-        // let allAnomalyList = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
-        let allAnomalyList = tileData.red.filter(expansionCheck({ useProphecyOfKings: useProphecyOfKings, useUnchartedSpace: useUnchartedSpace, useAscendentSun: useAscendentSun, useFanHyperlanes: useFanHyperlanes }));
+        let allAnomalyList = tileData.red.filter(expansionCheck(includedExpansions));
 
         // Remove all current anomalies in use from this list
         let possibleAnomalies = []
@@ -1349,13 +1257,10 @@ class MapOptions extends React.Component {
         }
         let currentTileIndex = possibleTiles.length - 1;
 
-        console.log(numTilesToReplace, replacementTiles, currentTileIndex)
-
         // While there are anomalies to place and a place to put them...
         while (numTilesToReplace > 0 && replacementTiles.length > 0 && currentTileIndex > 0) {
             // Check the index to see that it is not an anomaly or a 0 or -1 or 18 or hyperlane
             let tileOfInterest = possibleTiles[currentTileIndex]
-            console.log(tileOfInterest)
             if (excludedTiles.indexOf(tileOfInterest) < 0 && tileOfInterest !== -1 && tileOfInterest !== 18 && tileOfInterest !== 0) {
                 // It is a replaceable tile, so fill it from the new anomalies list
                 possibleTiles[currentTileIndex] = replacementTiles.shift()
@@ -1525,6 +1430,7 @@ class MapOptions extends React.Component {
     }
 
     render() {
+
         return (
             <div id="options" className={this.props.visible ? "" : "d-none"}>
                 <div className="title">
@@ -1533,30 +1439,30 @@ class MapOptions extends React.Component {
                 <Form id="generateForm" onSubmit={this.generateBoard}>
 
                     <Form.Group className="mb-3 d-flex" controlId="pokExpansion">
-                        <Form.Check name="pokExpansion" type="checkbox" checked={this.props.useProphecyOfKings} onChange={this.updatePok} label="Use POK Tiles" />
+                        <Form.Check name="pokExpansion" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.POK]} onChange={this.updatePok} label="Use POK Tiles" />
                     </Form.Group>
 
                     <Form.Group className="mb-3 d-flex" controlId="fanContent">
-                        <Form.Check name="fanContent" type="checkbox" checked={this.props.fanContent} onChange={this.handleInputChange} label="Use Fan-Made Content" />
+                        <Form.Check name="fanContent" type="checkbox" checked={this.state.fanContent} onChange={this.handleInputChange} label="Use Fan-Made Content" />
                         <QuestionCircle className="icon" onClick={this.toggleFanContentHelp} />
                     </Form.Group>
                     <Collapse in={this.state.fanContent}>
                         <div>
                             <div className="card card-body">
                                 <Form.Group className="mb-3 d-flex" controlId="useUnchartedSpace">
-                                    <Form.Check name="useUnchartedSpace" type="checkbox" checked={this.props.useUnchartedSpace} onChange={this.updateUncharted} label="Use Uncharted Space Fan Tiles" />
+                                    <Form.Check name="useUnchartedSpace" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.UnS]} onChange={this.updateUncharted} label="Use Uncharted Space Fan Tiles" />
                                     <QuestionCircle className="icon" onClick={this.toggleUnchartedSpaceHelp} />
                                 </Form.Group>
                                 <Form.Group className="mb-3 d-flex" controlId="useDiscordantStars">
-                                    <Form.Check name="useDiscordantStars" type="checkbox" checked={this.props.useDiscordantStars} onChange={this.updateDS} label="Use DS Fan Races" />
+                                    <Form.Check name="useDiscordantStars" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.DS]} onChange={this.updateDS} label="Use DS Fan Races" />
                                     <QuestionCircle className="icon" onClick={this.toggleDiscordantStarsHelp} />
                                 </Form.Group>
                                 <Form.Group className="mb-3 d-flex" controlId="useAscendentSun">
-                                    <Form.Check name="useAscendentSun" type="checkbox" checked={this.props.useAscendentSun} onChange={this.updateSun} label="Use Eronous' Fan Tiles" />
+                                    <Form.Check name="useAscendentSun" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.AS]} onChange={this.updateSun} label="Use Eronous' Fan Tiles" />
                                     <QuestionCircle className="icon" onClick={this.toggleAscendentSunHelp} />
                                 </Form.Group>
                                 <Form.Group className="d-flex" controlId="useFanHyperlanes">
-                                    <Form.Check name="useFanHyperlanes" type="checkbox" checked={this.props.useFanHyperlanes} onChange={this.updateFanHyp} label="Use Async Hyperlane Tiles" />
+                                    <Form.Check name="useFanHyperlanes" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.Async]} onChange={this.updateFanHyp} label="Use Async Hyperlane Tiles" />
                                     <QuestionCircle className="icon" onClick={this.toggleFanHyperlanesHelp} />
                                 </Form.Group>
                             </div>
@@ -1713,8 +1619,9 @@ class MapOptions extends React.Component {
                         hideModal={this.toggleSetPlayerNamesHelp} handleNameChange={this.handleNameChange}
                     />
                     <SetRacesModal visible={this.state.setRacesHelp} races={this.state.optionsPossible.races}
-                        pokRaces={this.state.optionsPossible.pokRaces} useProphecyOfKings={this.props.useProphecyOfKings}
-                        dsRaces={this.state.optionsPossible.dsRaces} useDiscordantStars={this.props.useDiscordantStars}
+                        includedExpansions={this.props.includedExpansions}
+                        pokRaces={this.state.optionsPossible.pokRaces}
+                        dsRaces={this.state.optionsPossible.dsRaces}
                         currentRaces={this.props.currentRaces}
                         hideModal={this.toggleSetRacesHelp} handleRacesChange={this.handleRacesChange}
                     />

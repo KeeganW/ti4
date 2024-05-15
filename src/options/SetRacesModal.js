@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
+import { EXPANSIONS } from "../data/tileData";
 
 class SetRacesModal extends React.Component {
     constructor(props) {
@@ -21,10 +22,10 @@ class SetRacesModal extends React.Component {
 
     render() {
         let visibleRaces = this.props.races
-        if (this.props.useProphecyOfKings) {
+        if (this.props.includedExpansions[EXPANSIONS.POK]) {
             visibleRaces = visibleRaces.concat(this.props.pokRaces)
         }
-        if (this.props.useDiscordantStars) {
+        if (this.props.includedExpansions[EXPANSIONS.DS]) {
             visibleRaces = visibleRaces.concat(this.props.dsRaces)
         }
 

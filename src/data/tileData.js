@@ -33,6 +33,14 @@ export const WORMHOLES = {
     "KAPPA": "kappa",
 };
 
+export const EXPANSIONS = {
+    "POK": "Prophecy of Kings",
+    "DS": "Discordant Stars",
+    "UnS": "Uncharted Space",
+    "AS": "Ascendant Sun",
+    "Async": "Async Hyperlanes"
+}
+
 export const WORMHOLE_SYMBOLS = Object.fromEntries([
     [WORMHOLES.ALPHA, "α"],
     [WORMHOLES.BETA, "β"],

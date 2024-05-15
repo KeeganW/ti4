@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form, Collapse } from "react-bootstrap";
-import tileData from "../data/tileData";
+import tileData, {EXPANSIONS} from "../data/tileData";
 
 class ExtraTiles extends React.Component {
     constructor(props) {
@@ -34,23 +34,15 @@ class ExtraTiles extends React.Component {
         //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
         // }
 
-        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) => (
-            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun) && (!tileData.asyncLanes.includes(id) || useFanHyperlanes)
-        )
+        const expansionCheck = (id) => (!tileData.pok.includes(id) || this.props.includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || this.props.includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || this.props.includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || this.props.includedExpansions[EXPANSIONS.Async])
 
-        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
-            { useProphecyOfKings: this.props.useProphecyOfKings, useUnchartedSpace: this.props.useUnchartedSpace, useAscendentSun: this.props.useAscendentSun, useFanHyperlanes: this.props.useFanHyperlanes }
-        ));
-        console.log(systemNumbers)
-        console.log(tileData.asyncLanes)
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck);
 
         // console.log(systemNumbers)
 
         if (this.props.customMapBuilding) {
             systemNumbers = [-1].concat(
-                systemNumbers.concat(tileData.hyperlanes).filter(expansionCheck(
-                    { useFanHyperlanes: this.props.useFanHyperlanes }
-                ))
+                systemNumbers.concat(tileData.hyperlanes).filter(expansionCheck())
             );
         }
 

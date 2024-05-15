@@ -9,7 +9,7 @@ import MainMap from "./map/MainMap";
 import MapControls from "./map/MapControls";
 import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
-import tileData, {WORMHOLE_SYMBOLS} from "./data/tileData";
+import tileData, {WORMHOLE_SYMBOLS, EXPANSIONS} from "./data/tileData";
 import boardData from "./data/boardData.json";
 import raceData from "./data/raceData.json";
 import {calculateOffsets} from "./helpers/Helpers";
@@ -42,11 +42,13 @@ class App extends React.Component {
             isMobileView: false,
             encodedOptions: "",
 
-            useProphecyOfKings: false,
-            useUnchartedSpace: false,
-            useDiscordantStars: false,
-            useAscendentSun: false,
-            useFanHyperlanes: false,
+            includedExpansions: Object.fromEntries([
+                [EXPANSIONS.POK, false],
+                [EXPANSIONS.UnS, false],
+                [EXPANSIONS.DS, false],
+                [EXPANSIONS.AS, false],
+                [EXPANSIONS.Async, false],
+            ]),
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
             currentRaces: [...raceData.races],
 
@@ -241,16 +243,12 @@ class App extends React.Component {
         // Update the unused tiles list
         let systemNumbers = []
 
-        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) => (
-            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun) && (!tileData.asyncLanes.includes(id) || useFanHyperlanes)
+        const expansionCheck = (includedExpansions) => (
+            (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async])
         )
 
-        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
-            { useProphecyOfKings: this.state.useProphecyOfKings, useUnchartedSpace: this.state.useUnchartedSpace, useAscendentSun: this.state.useAscendentSun, useFanHyperlanes: this.state.useFanHyperlanes }
-        ));
-        // if (this.state.useProphecyOfKings) {
-        //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
-        // }
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(this.state.includedExpansions));
+
         let unusedTiles = []
         for (let systemNumber of systemNumbers) {
             // If it is not on the map, show the system tile. Otherwise, hide it.
@@ -459,8 +457,10 @@ class App extends React.Component {
      * Toggle whether we need to use the prophecy of kings expansion or not
      */
     toggleProphecyOfKings() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.POK] = !newIncludedExpansions[EXPANSIONS.POK]
         this.setState({
-            useProphecyOfKings: !this.state.useProphecyOfKings,
+            includedExpansions: newIncludedExpansions,
         }, this.showExtraTiles);
     }
 
@@ -468,8 +468,10 @@ class App extends React.Component {
      * Toggle whether we need to use the uncharted space fan expansion or not
      */
     toggleUnchartedSpace() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.UnS] = !newIncludedExpansions[EXPANSIONS.UnS]
         this.setState({
-            useUnchartedSpace: !this.state.useUnchartedSpace,
+            includedExpansions: newIncludedExpansions,
         }, this.showExtraTiles);
     }
 
@@ -477,8 +479,10 @@ class App extends React.Component {
      * Toggle whether we need to use the ascendent sun fan expansion or not
      */
     toggleAscendentSun() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.AS] = !newIncludedExpansions[EXPANSIONS.AS]
         this.setState({
-            useAscendentSun: !this.state.useAscendentSun,
+            includedExpansions: newIncludedExpansions,
         }, this.showExtraTiles);
     }
 
@@ -486,8 +490,10 @@ class App extends React.Component {
      * Toggle whether we need to use fanmade hyperlanes or not
      */
     toggleFanHyperlanes() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.Async] = !newIncludedExpansions[EXPANSIONS.Async]
         this.setState({
-            useFanHyperlanes: !this.state.useFanHyperlanes,
+            includedExpansions: newIncludedExpansions,
         }, this.showExtraTiles);
     }
 
@@ -495,9 +501,11 @@ class App extends React.Component {
      * Toggle whether we need to use the discordant stars races or not
      */
     toggleDiscordantStars() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.DS] = !newIncludedExpansions[EXPANSIONS.DS]
         this.setState({
-            useDiscordantStars: !this.state.useDiscordantStars,
-        });
+            includedExpansions: newIncludedExpansions,
+        }, this.showExtraTiles);
     }
 
     /**
@@ -565,16 +573,12 @@ class App extends React.Component {
     showExtraTiles() {
         let systemNumbers = []
 
-        const expansionCheck = ({ useProphecyOfKings = false, useUnchartedSpace = false, useAscendentSun = false, useFanHyperlanes = false } = {}) => (
-            (id) => (!tileData.pok.includes(id) || useProphecyOfKings) && (!tileData.uncharted.includes(id) || useUnchartedSpace) && (!tileData.sun.includes(id) || useAscendentSun) && (!tileData.asyncLanes.includes(id) || useFanHyperlanes)
+        const expansionCheck = (includedExpansions) => (
+            (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async])
         )
 
-        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(
-            { useProphecyOfKings: this.state.useProphecyOfKings, useUnchartedSpace: this.state.useUnchartedSpace, useAscendentSun: this.state.useAscendentSun, useFanHyperlanes: this.state.useFanHyperlanes }
-        ));
-        // if (this.state.useProphecyOfKings || this.state.showAllExtraTiles) {
-        //     systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
-        // }
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(this.state.includedExpansions));
+
         if (this.state.customMapBuilding) {
             systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
         }
@@ -1184,12 +1188,7 @@ class App extends React.Component {
                     />
                     
                     <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
-                             tiles={this.state.tiles} 
-                             useProphecyOfKings={this.state.useProphecyOfKings} 
-                             useUnchartedSpace={this.state.useUnchartedSpace}
-                             useDiscordantStars={this.state.useDiscordantStars}
-                             useAscendentSun={this.state.useAscendentSun}
-                             useFanHyperlanes={this.state.useFanHyperlanes}
+                             tiles={this.state.tiles}
 
                              ref={this.map}
 
@@ -1223,10 +1222,8 @@ class App extends React.Component {
                 />
                 
                 <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}
-                            useProphecyOfKings={this.state.useProphecyOfKings} 
-                            useUnchartedSpace={this.state.useUnchartedSpace} showAllExtraTiles={this.state.showAllExtraTiles}
-                            useAscendentSun={this.state.useAscendentSun}
-                            useFanHyperlanes={this.state.useFanHyperlanes}
+                            includedExpansions={this.state.includedExpansions}
+                            showAllExtraTiles={this.state.showAllExtraTiles}
                             customMapBuilding={this.state.customMapBuilding}
 
                             updateTiles={this.updateTiles} toggleShowAllExtraTiles={this.toggleShowAllExtraTiles}
@@ -1236,19 +1233,12 @@ class App extends React.Component {
                 />
                 
                 <MoreInfo visible={this.state.moreInfoVisible} currentPlayerNames={this.state.currentPlayerNames}
-                          useProphecyOfKings={this.state.useProphecyOfKings} 
-                          useUnchartedSpace={this.state.useUnchartedSpace} tiles={this.state.tiles}
-                          useAscendentSun={this.state.useAscendentSun}
-                          useFanHyperlanes={this.state.useFanHyperlanes}
+                          tiles={this.state.tiles}
                           getTileNumber={this.getTileNumber}
                 />
                 
                 <MapOptions visible={this.state.isOptionsMenuShowing} 
-                            useProphecyOfKings={this.state.useProphecyOfKings} 
-                            useUnchartedSpace={this.state.useUnchartedSpace}
-                            useDiscordantStars={this.state.useDiscordantStars}
-                            useAscendentSun={this.state.useAscendentSun}
-                            useFanHyperlanes={this.state.useFanHyperlanes}
+                            includedExpansions={this.state.includedExpansions}
                             currentPlayerNames={this.state.currentPlayerNames} 
                             currentRaces={this.state.currentRaces}
                             tiles={this.state.tiles} includedTiles={this.state.includedTiles}
