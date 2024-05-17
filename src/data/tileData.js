@@ -1160,6 +1160,7 @@ const tileData = {
                     "influence": 1,
                     "trait": "cultural",
                     "specialty": null,
+                    "ability": "The Atrament - You may exhaust this card at the end of your turn to place up to 2 infantry from your reinforcements on any planet you control.",
                     "legendary": true
                 }
             ]
@@ -1175,6 +1176,7 @@ const tileData = {
                     "influence": 0,
                     "trait": "hazardous",
                     "specialty": null,
+                    "ability": "Imperial Arms Vault - You may exhaust this card at the end of your turn to place 1 mech from your reinforcements on any planet you control, or draw 1 action card.",
                     "legendary": true
                 }
             ]
