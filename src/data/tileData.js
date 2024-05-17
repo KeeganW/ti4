@@ -410,7 +410,7 @@ const tileData = {
         "17": {
             "type": "green",
             "race": "The Ghosts of Creuss",
-            "wormhole": "delta",
+            "wormhole": ["delta"],
             "planets": [
             ]
         },
