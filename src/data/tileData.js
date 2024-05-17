@@ -523,6 +523,7 @@ const tileData = {
         "25": {
             "type": "blue",
             "wormhole": ["beta"],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Quann",
@@ -537,6 +538,7 @@ const tileData = {
         "26": {
             "type": "blue",
             "wormhole": ["alpha"],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Lodor",
@@ -1135,6 +1137,7 @@ const tileData = {
         "64": {
             "type": "blue",
             "wormhole": ["beta"],
+            "anomaly": [],
             "planets": [
                 {
                     "name": "Atlas",
@@ -3005,7 +3008,7 @@ const tileData = {
                     influence: 1
                 }
             ],
-            anomaly: ['gravity-rift'],
+            anomaly: [ANOMALIES.GRAVITY_RIFT],
             wormhole: []
         },
         "er24": {
@@ -3020,7 +3023,7 @@ const tileData = {
                     influence: 3
                 }
             ],
-            anomaly: ['gravity-rift'],
+            anomaly: [ANOMALIES.GRAVITY_RIFT],
             wormhole: []
         },
         "er25": { type: 'red', planets: [], anomaly: [], wormhole: ['epsilon'] },
@@ -3687,7 +3690,7 @@ const tileData = {
                     influence: 0
                 }
             ],
-            anomaly: [],
+            anomaly: [ANOMALIES.SUPERNOVA],
             wormhole: []
         },
         "er91": {
@@ -3702,7 +3705,7 @@ const tileData = {
                     influence: 0
                 }
             ],
-            anomaly: [],
+            anomaly: [ANOMALIES.GRAVITY_RIFT],
             wormhole: []
         },
         "er92": {
@@ -3930,7 +3933,7 @@ const tileData = {
                     influence: 2
                 }
             ],
-            anomaly: [],
+            anomaly: [ANOMALIES.SUPERNOVA],
             wormhole: []
         },
         "er104": {
@@ -4158,7 +4161,7 @@ const tileData = {
                 }
             ],
             anomaly: [],
-            wormhole: ['kappa']
+            wormhole: [WORMHOLES.KAPPA]
         },
         "er118": {
             type: 'blue',
@@ -4173,7 +4176,7 @@ const tileData = {
                 }
             ],
             anomaly: [],
-            wormhole: ['kappa']
+            wormhole: [WORMHOLES.KAPPA]
         },
         "er119": {
             type: 'red',
@@ -4370,16 +4373,6 @@ const tileData = {
             ],
             anomaly: [],
             wormhole: []
-        },
-        "83A": {
-            "type": "hyperlane",
-            "hyperlanes": [
-                [1, 4]
-            ],
-            "wormhole": [],
-            "anomaly": [],
-            "planets": [
-            ]
         },
         "hypspaghet": {
 			"type": "hyperlane",
