@@ -742,9 +742,7 @@ class MapOptions extends React.Component {
             }
         }
         this.shuffle(excludedWormholes)
-        const includedWormholes = excludedWormholes.splice(0, 3)
-        // console.log(includedWormholes)
-        // console.log(excludedWormholes)
+        excludedWormholes.splice(0, 3)
         for (const wormhole of excludedWormholes) {
             console.log(WORMHOLES[wormhole])
             allReds = allReds.filter(systemID => !tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]))
@@ -1024,7 +1022,7 @@ class MapOptions extends React.Component {
         for (let tile of newTiles) {
             if (tile === 0 || tile === -1) continue
             if (tileData.all[tile].wormhole.length > 0) {
-                includedWormholes = includedWormholes.concat(tileData.all[tile].wormhole.filter(wormhole => !includedWormholes.includes(wormhole)))
+                includedWormholes = includedWormholes.concat(tileData.all[tile].wormhole).filter((v, i, self) => i === self.indexOf(v))
             }
         }
 
