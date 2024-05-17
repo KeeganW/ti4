@@ -2,7 +2,7 @@ import React from "react";
 import { QuestionCircle } from "react-bootstrap-icons";
 import { Button, Form, Collapse } from "react-bootstrap";
 import boardData from "../data/boardData.json";
-import tileData, { WORMHOLES, EXPANSIONS } from "../data/tileData";
+import tileData, { WORMHOLES, EXPANSIONS, ANOMALIES } from "../data/tileData";
 import raceData from "../data/raceData.json";
 import adjacencyData from "../data/adjacencyData.json";
 import HelpModal from "./HelpModal";
@@ -297,7 +297,7 @@ class MapOptions extends React.Component {
         let encodedSettings = "";
 
         encodedSettings += this.props.includedExpansions[EXPANSIONS.POK] ? "T" : "F";
-        if (this.state.fanContent){
+        if (this.state.fanContent) {
             encodedSettings += this.props.includedExpansions[EXPANSIONS.UnS] ? "T" : "F";
             encodedSettings += this.props.includedExpansions[EXPANSIONS.DS] ? "T" : "F";
             encodedSettings += this.props.includedExpansions[EXPANSIONS.AS] ? "T" : "F";
@@ -562,7 +562,7 @@ class MapOptions extends React.Component {
                 [EXPANSIONS.Async, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.Async]],
             ]
             )
-        } 
+        }
         // else {
         //     if (includedExpansions[EXPANSIONS.POK] === undefined) {
         //         includedExpansions[EXPANSIONS.POK] = this.props.includedExpansions[EXPANSIONS.POK]
@@ -616,7 +616,7 @@ class MapOptions extends React.Component {
         // Place any systems that were locked from the previous generation
         this.placeLockedSystems(newTiles)
 
-        // Check that anomalies and wormholes are not adjacent
+        // Planets have been placed, time to do post processing checks to make sure things are good to go.
         this.checkAdjacencies(newTiles, includedExpansions)
 
         // Update the generated flag then update the tiles
@@ -724,6 +724,31 @@ class MapOptions extends React.Component {
             } else if (allBlues.indexOf(system) >= 0) {
                 allBlues.splice(allBlues.indexOf(system), 1);
             }
+        }
+
+        // Count each wormhole type (minus delta), randomly select 3 to include in map gen out of those with 2+ options
+        const excludedWormholes = []
+        for (const wormhole in WORMHOLES) {
+            if (WORMHOLES[wormhole] === WORMHOLES.DELTA) continue
+
+            let wormholeCount = allReds.filter(systemID => tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole])).length
+            wormholeCount += allBlues.filter(systemID => tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole])).length
+
+            if (wormholeCount <= 1) {
+                allReds = allReds.filter(systemID => !tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]))
+                allBlues = allBlues.filter(systemID => !tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]))
+            } else {
+                excludedWormholes.push(wormhole)
+            }
+        }
+        this.shuffle(excludedWormholes)
+        const includedWormholes = excludedWormholes.splice(0, 3)
+        // console.log(includedWormholes)
+        // console.log(excludedWormholes)
+        for (const wormhole of excludedWormholes) {
+            console.log(WORMHOLES[wormhole])
+            allReds = allReds.filter(systemID => !tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]))
+            allBlues = allBlues.filter(systemID => !tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]))
         }
 
         // Shuffle our tiles for randomness
@@ -861,8 +886,16 @@ class MapOptions extends React.Component {
         // Ensure that if a wormhole is included, two are (except gamma)
         for (const wormhole in WORMHOLES) {
             if (WORMHOLES[wormhole] === WORMHOLES.GAMMA) continue
+            if (WORMHOLES[wormhole] === WORMHOLES.DELTA) continue
             const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck(includedExpansions));
             newSystems = this.ensureWormholesForType(newSystems, allWormholesOfType, ensuredAnomalies, includedExpansions);
+        }
+        // Second pass for any multi-wormhole systems. This time, remove singletons
+        for (const wormhole in WORMHOLES) {
+            if (WORMHOLES[wormhole] === WORMHOLES.GAMMA) continue
+            if (WORMHOLES[wormhole] === WORMHOLES.DELTA) continue
+            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck(includedExpansions));
+            newSystems = this.ensureWormholesForType(newSystems, allWormholesOfType, ensuredAnomalies, includedExpansions, { method: "remove" });
         }
 
         // Based on the system style, order the systems according to their weights
@@ -932,7 +965,6 @@ class MapOptions extends React.Component {
 
         // Re-order the planets based on their weights
         newSystems = this.getWeightedPlanetList(newSystems, weights, ensuredAnomalies)
-
         return newSystems
 
     }
@@ -972,124 +1004,171 @@ class MapOptions extends React.Component {
             }
         }
     }
-    checkAdjacencies(newTiles, includedExpansions) {// Planets have been placed, time to do post processing checks to make sure things are good to go.
-        // Get all anomalies that are adjacent to one another
+    /**
+     * Check that anomalies and wormholes are not adjacent, and if so swap them with other tiles
+     * @param {*} newTiles Array of tiles that are on the map currently
+     * @param {*} includedExpansions Array of expansions to include
+     */
+    checkAdjacencies(newTiles, includedExpansions) {
+        // 
+
+        // Get all anomalies
         let allTrueAnomalies = tileData.anomaly.filter(expansionCheck(includedExpansions));
 
-        for (let anomaly of allTrueAnomalies) {
+        let newTileAnomalies = newTiles.filter(v => v !== 0 && v !== -1).filter(systemID => tileData.all[systemID].anomaly.length > 0)
+        let newTileAnomaliesWithAdjacentAnomalies = []
+
+        // Get all wormholes currently on map
+
+        let includedWormholes = []
+        for (let tile of newTiles) {
+            if (tile === 0 || tile === -1) continue
+            if (tileData.all[tile].wormhole.length > 0) {
+                includedWormholes = includedWormholes.concat(tileData.all[tile].wormhole.filter(wormhole => !includedWormholes.includes(wormhole)))
+            }
+        }
+
+
+        for (let anomaly of newTileAnomalies) {
+            let anomalyTileNumber = newTiles.indexOf(anomaly);
+
+            let adjacentTiles = adjacencyData[anomalyTileNumber];
+            let adjacentAnomalies = [];
+
+            // Get a list of all adjacent anomalies to this one
+            for (let adjacentTileNumber of adjacentTiles) {
+                let adjacentTile = newTiles[adjacentTileNumber];
+                if (allTrueAnomalies.indexOf(adjacentTile) >= 0) {
+                    // This tile is an anomaly
+                    adjacentAnomalies.push(adjacentTile)
+                }
+            }
+
+            if (adjacentAnomalies.length > 0) {
+                newTileAnomaliesWithAdjacentAnomalies.push([anomaly, adjacentAnomalies])
+            }
+        }
+
+        newTileAnomaliesWithAdjacentAnomalies.sort((a, b) => b[1].length - a[1].length)
+
+        // Look through tiles from most invalid adjacencies to least
+        for (let entry of newTileAnomaliesWithAdjacentAnomalies) {
+
+            const anomaly = entry[0]
+
             // Ignore any anomalies in the locked or include list
-            if (this.props.includedTiles.indexOf(anomaly) < 0 && this.props.lockedTiles.indexOf(anomaly) < 0) {
+            if (this.props.includedTiles.includes(anomaly)) continue
+            if (this.props.lockedTiles.includes(anomaly)) continue
 
-                let anomalyTileNumber = newTiles.indexOf(anomaly);
-                if (anomalyTileNumber >= 0) {
-                    // anomaly exists in the map, so check it
-                    let adjacentTiles = adjacencyData[anomalyTileNumber];
-                    let adjacentAnomalies = [];
+            let anomalyTileNumber = newTiles.indexOf(anomaly);
 
-                    // Get a list of all adjacent anomalies to this one
-                    for (let adjacentTileNumber of adjacentTiles) {
-                        let adjacentTile = newTiles[adjacentTileNumber];
-                        if (allTrueAnomalies.indexOf(adjacentTile) >= 0) {
-                            // This tile is an anomaly
-                            adjacentAnomalies.push(adjacentTile)
-                        }
+            // Double check adjacencies
+            let adjacentTiles = adjacencyData[anomalyTileNumber];
+            let adjacentAnomalies = [];
+            // Get a list of all adjacent anomalies to this one
+            for (let adjacentTileNumber of adjacentTiles) {
+                let adjacentTile = newTiles[adjacentTileNumber];
+                if (allTrueAnomalies.indexOf(adjacentTile) >= 0) {
+                    // This tile is an anomaly
+                    adjacentAnomalies.push(adjacentTile)
+                }
+            }
+            if (adjacentAnomalies.length <= 0) continue
+
+            // If tile is in conflict with more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
+            // If tile is a planet anomaly (other than a supernova), see if it can be replaced with an equally weight planet system.
+            let swapped = false;
+            if (tileData.all[anomaly].planets.length > 0 && !tileData.all[anomaly].anomaly.includes(ANOMALIES.SUPERNOVA)) {
+                let blueTiles = tileData.blue.filter(expansionCheck(includedExpansions));
+                let possibleTiles = [];
+                for (let tile of blueTiles.filter(tile => newTiles.indexOf(tile) < 0)) {
+                    // Includes tile if not on board and has equal number of planets as tile being replaced
+                    if (tileData.all[tile].planets.length === tileData.all[anomaly].planets.length &&
+                        tileData.all[tile].wormhole.every(wormhole => tileData.all[anomaly].wormhole.includes(wormhole)) &&
+                        tileData.all[anomaly].wormhole.every(wormhole => tileData.all[tile].wormhole.includes(wormhole))) {
+                        possibleTiles.push(tile)
                     }
+                }
+                this.shuffle(possibleTiles);
+                if (possibleTiles.length > 0) {
+                    swapped = true;
+                    newTiles[anomalyTileNumber] = possibleTiles[0];
+                }
 
-                    // If tile is in conflict more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
-                    let swapped = false;
-                    let blankReds = tileData.blankRed.filter(expansionCheck(includedExpansions));
-                    if (adjacentAnomalies.length > 1) {
-                        let possibleBlanks = [];
-                        for (let blankRed of blankReds) {
-                            if (newTiles.indexOf(blankRed) < 0) {
-                                possibleBlanks.push(blankRed)
-                            }
-                        }
-                        possibleBlanks = this.shuffle(possibleBlanks);
-                        if (possibleBlanks.length > 0) {
-                            swapped = true;
-                            newTiles[anomalyTileNumber] = possibleBlanks[0];
-                        }
-                    }
-
-                    if (!swapped && adjacentAnomalies.length > 0) {
-                        // Look at all red back tiles on the board that are not anomalies, and see if they have adjacent anomalies
-                        for (let blankRed of blankReds) {
-                            let blankRedTileNumber = newTiles.indexOf(blankRed)
-                            if (blankRedTileNumber >= 0) {
-                                let adjacentTiles = adjacencyData[blankRedTileNumber];
-                                let swappable = true;
-                                for (let adjacentTile of adjacentTiles) {
-                                    if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0 && adjacentTile !== anomalyTileNumber) {
-                                        // This blank has an adjacent anomaly, so throw it out
-                                        swappable = false;
-                                        break;
-                                    }
-                                }
-                                if (swappable) {
-                                    // This blank red has no other adjacent anomalies, so swap
-                                    newTiles[anomalyTileNumber] = blankRed;
-                                    newTiles[blankRedTileNumber] = anomaly;
-                                    swapped = true;
+                // If not equivalent unused system to swap it with
+                if (!swapped && adjacentAnomalies.length > 0) {
+                    // Look at all blue backed tiles on the board that are not anomalies, and see if they have adjacent anomalies
+                    for (let tile of blueTiles) {
+                        let tileNumber = newTiles.indexOf(tile)
+                        if (tileNumber >= 0) {
+                            let adjacentTiles = adjacencyData[tileNumber];
+                            let swappable = true;
+                            for (let adjacentTile of adjacentTiles) {
+                                if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0 && adjacentTile !== anomalyTileNumber) {
+                                    // This system has an adjacent anomaly, so throw it out
+                                    swappable = false;
                                     break;
                                 }
                             }
-                        }
-                        if (!swapped) {
-                            let blankReds = tileData.blankRed.filter(expansionCheck(includedExpansions));
-                            let possibleBlanks = [];
-                            for (let blankRed of blankReds) {
-                                if (newTiles.indexOf(blankRed) < 0) {
-                                    possibleBlanks.push(blankRed)
-                                }
-                            }
-                            possibleBlanks = this.shuffle(possibleBlanks);
-                            if (possibleBlanks.length > 0) {
+                            if (swappable) {
+                                // This blank red has no other adjacent anomalies, so swap
+                                newTiles[anomalyTileNumber] = tile;
+                                newTiles[tileNumber] = anomaly;
                                 swapped = true;
-                                newTiles[anomalyTileNumber] = possibleBlanks[0];
+                                break;
                             }
-                            if (!swapped) {
-                                console.log("Error! Unable to swap anomaly to a free position.")
-                            }
-                            /*
-                            There is a potential use for this strategy, but for now it seems pretty safe to just let it fail
-                            to swap on a blank. It is rare that it is impossible, and even when it is, its a pretty simple
-                            rule. Plus the rules let you place reds next to each other if moving them is impossible.
-                            btw, not sure this code below works properly. I believe there is a bug in it.
-                             */
+                        }
+                    }
+                    if (!swapped) {
+                        console.log("Error! Unable to swap anomaly to a free position.")
+                    }
+                }
+            } else {
+                let blankReds = tileData.blankRed.filter(expansionCheck(includedExpansions));
 
-                            /*
-                            // Going in reverse, find the first tile with no anomalies adjacent, and swap
-                            newTiles.reverse()
-                            for (let tile of newTiles) {
-                                if (tile !== 0 && tile !== -1 && allTrueAnomalies.indexOf(tile) < 0 && blankReds.indexOf(tile) < 0) {
-                                    console.log("Tile: " + tile)
-                                    // This is a real tile, check for adjacency to other anomalies
-                                    let blankRedTileNumber = newTiles.indexOf(tile)
-                                    let adjacentTiles = adjacencyData[blankRedTileNumber];
-                                    let swappable = true;
-                                    for (let adjacentTile of adjacentTiles) {
-                                        if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0) {
-                                            // This blank has an adjacent anomaly, so throw it out
-                                            swappable = false;
-                                            break;
-                                        }
-                                    }
-                                    if (swappable) {
-                                        // No adjacency breaks found, go ahead and swap it
-                                        console.log(anomalyTileNumber)
-                                        console.log(blankRedTileNumber)
-                                        newTiles[anomalyTileNumber] = tile;
-                                        newTiles[blankRedTileNumber] = anomaly;
-                                        swapped = true;
-                                        break;
-                                    }
+                let possibleBlanks = [];
+                for (let blankRed of blankReds.filter(tile => newTiles.indexOf(tile) < 0)) {
+                    // Includes tile if not on board and has matching wormholes
+                    if (
+                        tileData.all[blankRed].wormhole.every(wormhole => tileData.all[anomaly].wormhole.includes(wormhole)) &&
+                        tileData.all[anomaly].wormhole.every(wormhole => tileData.all[blankRed].wormhole.includes(wormhole))
+                    ) {
+                        possibleBlanks.push(blankRed)
+                    }
+                }
+                this.shuffle(possibleBlanks);
+                if (possibleBlanks.length > 0) {
+                    swapped = true;
+                    newTiles[anomalyTileNumber] = possibleBlanks[0];
+                }
+
+
+                // If not equivalent unused system to swap it with
+                if (!swapped && adjacentAnomalies.length > 0) {
+                    // Look at all red back tiles on the board that are not anomalies, and see if they have adjacent anomalies
+                    for (let blankRed of blankReds) {
+                        let blankRedTileNumber = newTiles.indexOf(blankRed)
+                        if (blankRedTileNumber >= 0) {
+                            let adjacentTiles = adjacencyData[blankRedTileNumber];
+                            let swappable = true;
+                            for (let adjacentTile of adjacentTiles) {
+                                if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0 && adjacentTile !== anomalyTileNumber) {
+                                    // This blank has an adjacent anomaly, so throw it out
+                                    swappable = false;
+                                    break;
                                 }
                             }
-                            // If no swap possible, no problem. Continue on
-                            newTiles.reverse()
-                            */
+                            if (swappable) {
+                                // This blank red has no other adjacent anomalies, so swap
+                                newTiles[anomalyTileNumber] = blankRed;
+                                newTiles[blankRedTileNumber] = anomaly;
+                                swapped = true;
+                                break;
+                            }
                         }
+                    }
+                    if (!swapped) {
+                        console.log("Error! Unable to swap anomaly to a free position.")
                     }
                 }
             }
@@ -1143,12 +1222,24 @@ class MapOptions extends React.Component {
         }
     }
 
-    ensureWormholesForType(possibleTiles, desiredWormholes, ensuredAnomalies, includedExpansions) {
+    /**
+     * Ensures that for all wormholes of given types that either 0 or 2+ of that wormhole are included.
+     * @param {*} possibleTiles A set of tiles chosen for a map gen
+     * @param {Int8Array} desiredWormholes The types of wormholes desired to check
+     * @param {*} ensuredAnomalies Tiles that must be included if possible
+     * @param {*} includedExpansions List of expansions to include
+     * @param {Object} [param4={}] 
+     * @param {string} [param4.method="add"] Can be "add" or "remove". Optional parameter to dictate if singluar wormholes should have a pair added or be replaced with a non-wormhole.
+     * @returns {Int8Array} An ordered list of tiles, with singular wormholes no longer existing
+     */
+    ensureWormholesForType(possibleTiles, desiredWormholes, ensuredAnomalies, includedExpansions, { method = "add" } = {}) {
 
         let planetWormholes = desiredWormholes.filter(system => !tileData.blankRed.includes(system))
 
         let allAnomalyList = tileData.red.filter(expansionCheck(includedExpansions));
         let unusedWormholes = [];
+        let unusedRedTiles = allAnomalyList.filter(tile => !possibleTiles.includes(tile));
+        let unusedSinglePlanets = tileData.blue.filter(expansionCheck(includedExpansions)).filter(systemID => tileData.all[systemID].planets.length === 1);
         let usedWormholes = [];
 
         // Get an array of all used and unused wormholes
@@ -1157,32 +1248,43 @@ class MapOptions extends React.Component {
                 unusedWormholes.push(desiredWormholes[wormholeIndex]) : usedWormholes.push(desiredWormholes[wormholeIndex]);
         }
 
-        // If there is only one wormhole, then we need to add a new one in
+        // If there is only one wormhole, then we need to add/remove a new one in
         if (usedWormholes.length === 1) {
             /*
             Lets do some tricky logic here. If we are using a planet wormhole tile, then we want to replace
-            another anomaly with one of the other one (pok: two) anomaly wormholes. If we are not using the planet tile,
-            then we can try to find a planet to replace with any remaining wormhole tiles.
+            another anomaly with one of the other one (pok: two) anomaly wormholes (or with a single planet if removing it). 
+            If we are not using the planet tile, then we can try to find a planet to replace with any remaining wormhole tiles.
              */
-            unusedWormholes = this.shuffle(unusedWormholes);
-            let excludedTiles = [...tileData.wormholes].concat(ensuredAnomalies);
+            if (method === "add") {
+                unusedWormholes = this.shuffle(unusedWormholes);
+                let excludedTiles = [...tileData.wormholes].concat(ensuredAnomalies);
 
-            // Check that the single used wormhole is not a planet.
-            if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
-                // Try to replace some other planet with a planet wormhole
-                unusedWormholes = planetWormholes;
-                excludedTiles = excludedTiles.concat(allAnomalyList);
-            } else {
-                // Using a planet, so try to replace an anomaly with a wormhole
-                let wormholesToUse = []
-                for (let unusedWormhole of unusedWormholes) {
-                    if (planetWormholes.indexOf(unusedWormhole) < 0) {
-                        wormholesToUse.push(unusedWormhole)
+                // Check that the single used wormhole is not a planet.
+                if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
+                    // Try to replace some other planet with a planet wormhole
+                    unusedWormholes = planetWormholes;
+                    excludedTiles = excludedTiles.concat(allAnomalyList);
+                } else {
+                    // Using a planet, so try to replace an anomaly with a wormhole
+                    let wormholesToUse = []
+                    for (let unusedWormhole of unusedWormholes) {
+                        if (planetWormholes.indexOf(unusedWormhole) < 0) {
+                            wormholesToUse.push(unusedWormhole)
+                        }
                     }
+                    unusedWormholes = wormholesToUse
                 }
-                unusedWormholes = wormholesToUse
+                possibleTiles = this.reverseReplace(possibleTiles, 1, unusedWormholes, excludedTiles, false);
+            } else if (method === "remove") {
+                const excludedTiles = possibleTiles.filter(systemID => systemID !== usedWormholes[0])
+                if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
+                    // Replace wormhole with another red-backed tile
+                    possibleTiles = this.reverseReplace(possibleTiles, 1, unusedRedTiles, excludedTiles, false);
+                } else {
+                    // Replace wormhole with another single-planet tile
+                    possibleTiles = this.reverseReplace(possibleTiles, 1, unusedSinglePlanets, excludedTiles, false);
+                }
             }
-            possibleTiles = this.reverseReplace(possibleTiles, 1, unusedWormholes, excludedTiles, false);
         }
 
         return possibleTiles;
@@ -1246,7 +1348,7 @@ class MapOptions extends React.Component {
      * @param possibleTiles {Int8Array} The ordered list of tiles, cut to the needed size
      * @param numTilesToReplace {Number} The number of tiles we need to try to replace from replacement into possible
      * @param replacementTiles {Int8Array} An array of all the tiles we can pick from to put into possibleTiles
-     * @param excludedTiles {Int8Array} An array of tiles we do not want to replace in possible
+     * @param excludedTiles {Int8Array} An array of tiles we do not want to replace if possible
      * @param reverseBeforeAndAfter {Boolean} Whether we want to reverse the list before and after replacement
      * @returns {Int8Array} An ordered list of tiles, with some tiles being replaced
      */
