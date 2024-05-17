@@ -131,7 +131,7 @@ h1, h2, h3, h4, h5 {
     top: 17px;
     user-select: none;
     /* Normally, the button should be on the left side of the options menu */
-    right: calc(var(--options-width) - 35px - var(--scroll-bar-distance));
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
 }
 #toggleOptions.full-screen {
     right: calc(100% - 35px - var(--scroll-bar-distance));
