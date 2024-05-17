@@ -42,7 +42,7 @@ class ExtraTiles extends React.Component {
 
         if (this.props.customMapBuilding) {
             systemNumbers = [-1].concat(
-                systemNumbers.concat(tileData.hyperlanes).filter(expansionCheck())
+                systemNumbers.concat(tileData.hyperlanes).filter(expansionCheck)
             );
         }
 
