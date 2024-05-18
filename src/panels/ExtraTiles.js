@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Form, Collapse } from "react-bootstrap";
 import tileData, {EXPANSIONS} from "../data/tileData";
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 class ExtraTiles extends React.Component {
     constructor(props) {
@@ -80,6 +81,8 @@ class ExtraTiles extends React.Component {
 
         systemNumbers.sort(compareSystemNumbers);
 
+        const wrap = (s) => s.replace(/(?![^\n]{1,24}$)([^\n]{1,24})\s/g, '$1\n');
+
         const tileObjects = []
         for (let systemNumber of systemNumbers) {
 
@@ -88,6 +91,18 @@ class ExtraTiles extends React.Component {
                 systemNumber = systemNumber.split("-")[0]
             }
 
+            if (tileData.all[systemNumber] !== undefined && 
+                tileData.all[systemNumber].planets.length > 0 &&
+                tileData.all[systemNumber].planets[0].legendary
+            ) {
+                tileObjects.push(
+                    <ReactTooltip style={{zIndex: 1, overflow: "visible"}} anchorSelect={`#${"extra-" + systemNumber}`} place="right">
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            {wrap(tileData.all[systemNumber].planets[0].ability ?? "").split("\n").map(line => <span>{line}</span>)}
+                        </div>
+                    </ReactTooltip>
+                )
+            }
             tileObjects.push(
                 <div key={"extra-tile-wrapper-" + systemNumber} className="tile-wrapper">
                     <span id={"extra-number-" + systemNumber} className={"overlay" + (this.props.overlayVisible ? "" : " d-none")} style={this.overlayStyle}>{systemNumber === -1 ? "Empty" : systemNumber}</span>
