@@ -16,7 +16,7 @@
     "react-component-export-image": "^1.0.5",
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
-    "react-tooltip": "^4.2.11",
+    "react-tooltip": "^5.26.4",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

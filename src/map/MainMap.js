@@ -2,7 +2,7 @@ import React from "react";
 import './MainMap.css';
 import boardData from "../data/boardData.json";
 import { Arrow90degLeft, Arrow90degRight, ArrowRepeat, Check, Lock, X } from "react-bootstrap-icons";
-import ReactTooltip from "react-tooltip";
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 import $ from "jquery";
 import tileData from "../data/tileData";
 
@@ -14,9 +14,9 @@ class MainMap extends React.Component {
         this.getRotationDegrees = this.getRotationDegrees.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        ReactTooltip.rebuild();
-    }
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     ReactTooltip.rebuild();
+    // }
 
     toggleControls(event) {
         const splitArray = event.target.id.split("-")
@@ -140,14 +140,27 @@ class MainMap extends React.Component {
         const style = { position: "absolute" }
         const hidden = { display: "none" }
 
+        // Static Width (Plain Regex)
+        // https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
+        const wrap = (s) => s.replace(/(?![^\n]{1,32}$)([^\n]{1,32})\s/g, '$1\n');
+
         // Loop over 0 to pok board size, and add in the tile objects to be displayed
         for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
             let systemNumber = this.props.getTileNumber(this.props.tiles[tileNumber])
 
             // Add the tile to the array of tiles to be displayed, if they are valid tiles
             if (systemNumber !== undefined) {
-                if (systemNumber === "er84"){
-                    console.log(tileData.all[tileNumber])
+                if (tileData.all[systemNumber] !== undefined && 
+                    tileData.all[systemNumber].planets.length > 0 &&
+                    tileData.all[systemNumber].planets[0].legendary
+                ) {
+                    mapTiles.push(
+                        <ReactTooltip style={{zIndex: 1}} anchorSelect={`#${"tile-wrapper-" + tileNumber}`} place="top">
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                {wrap(tileData.all[systemNumber].planets[0].ability ?? "").split("\n").map(line => <span>{line}</span>)}
+                            </div>
+                        </ReactTooltip>
+                    )
                 }
                 mapTiles.push(
                     <div key={"tile-wrapper-" + tileNumber}
@@ -155,7 +168,8 @@ class MainMap extends React.Component {
                         className="tile-wrapper"
                         style={style}
                         onClick={this.toggleControls}
-                        >
+                    // data-place="left"
+                    >
                         <button id={"rotate-left-" + tileNumber} className={"btn btn-primary tile-control rotate-left" + (this.props.tileClicked === tileNumber ? "" : " d-none")} data-tip="Rotate tile left" data-place="top" >
                             <Arrow90degLeft id={"rotate-left-svg-" + tileNumber} className={"icon"} />
                         </button>
@@ -169,7 +183,6 @@ class MainMap extends React.Component {
                         <span id={"wormhole-" + tileNumber} className={"overlay"} style={hidden}></span>
                         <img id={"tile-" + tileNumber}
                             className="tile"
-                            title={tileData.all[tileNumber] !== undefined && tileData.all[tileNumber].planets.length > 0 ? tileData.all[tileNumber].planets[0].ability : ""}
                             src={window.location.origin + window.location.pathname + "/tiles/ST_" + systemNumber + ".webp"}
                             draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop} onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter} onDragLeave={this.props.dragLeave} onTouchMove={this.props.touchMove} onTouchEnd={this.props.touchEnd}
                             alt={"Twilight Imperium 4 Tile Number " + tileNumber + " and System Number " + systemNumber + "."}

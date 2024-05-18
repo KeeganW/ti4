@@ -13,7 +13,7 @@ import tileData, {WORMHOLE_SYMBOLS, EXPANSIONS} from "./data/tileData";
 import boardData from "./data/boardData.json";
 import raceData from "./data/raceData.json";
 import {calculateOffsets} from "./helpers/Helpers";
-import ReactTooltip from "react-tooltip";
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 
 /**
@@ -1256,7 +1256,7 @@ class App extends React.Component {
                             updatePlayerNames={this.updatePlayerNames}
                 />
 
-                <ReactTooltip effect={"solid"}/>
+                <ReactTooltip id="tooltip" />
                 <BootstrapScripts />
             </div>
         );
