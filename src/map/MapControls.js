@@ -62,7 +62,7 @@ class MapControls extends React.Component {
                     <button className={"btn btn-primary" + (this.props.overlayVisible ? " active": "")} id="showHexOverlay" data-tip="Tile Number Overlay" data-place="left" >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.78 169.62" className="icon" fill="currentColor">
                             <polygon className="overlay-cls-1" points="148.03 4 51.81 4 4.61 86.92 52.02 169.84 148.03 169.84 195.03 86.92 148.03 4"/>
-                            <text className="overlay-cls-2" transform="translate(27.09 132.03)">18</text>
+                            <text className="overlay-cls-2" transform="translate(24.09 132.03)">18</text>
                         </svg>
                     </button>
                 </div>
@@ -71,7 +71,7 @@ class MapControls extends React.Component {
                     <button className={"btn btn-primary" + (this.props.wormholeOverlayVisible ? " active": "")} id="showWormholeOverlay" data-tip="Wormhole Overlay" data-place="left" >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.78 169.62" className="icon" fill="currentColor">
                             <polygon className="overlay-cls-1" points="148.03 4 51.81 4 4.61 86.92 52.02 169.84 148.03 169.84 195.03 86.92 148.03 4"/>
-                            <text className="overlay-cls-2" transform="translate(27.09 132.03)">18</text>
+                            <text className="overlay-cls-2" transform="translate(62.09 132.03)">β</text>
                         </svg>
                     </button>
                 </div>
@@ -96,7 +96,7 @@ class MapControls extends React.Component {
                     </button>
                 </div>
 
-                <div id="loadMapButton" className={"btn-group-justified btn-group-sm" + (this.props.visible ? "" : " d-none")} onClick={this.toggleLoadMapHelp}>
+                <div id="loadMapButton" className={"btn-group-justified btn-group-sm"} onClick={this.toggleLoadMapHelp}>
                     <button className={"btn btn-primary"} id="loadMapInfo" data-tip="Load a Map" data-place="left" >
                         <Upload id="loadMapSvg" className="icon" />
                     </button>
