@@ -1013,13 +1013,13 @@ class MapOptions extends React.Component {
         // Get all anomalies
         let allTrueAnomalies = tileData.anomaly.filter(expansionCheck(includedExpansions));
 
-        let newTileAnomalies = newTiles.filter(v => v !== 0 && v !== -1).filter(systemID => tileData.all[systemID].anomaly.length > 0)
+        let newTileAnomalies = newTiles.filter(systemID => tileData.all[systemID] !== undefined).filter(systemID => tileData.all[systemID].anomaly.length > 0)
         let newTileAnomaliesWithAdjacentAnomalies = []
 
         // Get all wormholes currently on map
 
         let includedWormholes = []
-        for (let tile of newTiles) {
+        for (let tile of newTiles.filter(systemID => tileData.all[systemID] !== undefined)) {
             if (tile === 0 || tile === -1) continue
             if (tileData.all[tile].wormhole.length > 0) {
                 includedWormholes = includedWormholes.concat(tileData.all[tile].wormhole).filter((v, i, self) => i === self.indexOf(v))
