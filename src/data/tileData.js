@@ -4123,13 +4123,13 @@ const tileData = {
             type: 'blue',
             planets: [
                 {
-                    name: 'Malbolge',
+                    name: 'Cantris',
                     trait: 'hazardous',
                     specialty: null,
                     legendary: true,
-                    ability: 'Hand of Force - At the start of your turn, you may exhaust this card to choose 1 of your neighbors; that player must give you 1 promissory note or 1 action card from their hand, if able.',
-                    resources: 1,
-                    influence: 3
+                    ability: 'Starlight Throne - When you gain this card, gain 1 victory point; when you lose this card, lose 1 victory point. You score last during the status phase.',
+                    resources: 4,
+                    influence: 4
                 }
             ],
             anomaly: [],
