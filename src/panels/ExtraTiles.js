@@ -95,7 +95,7 @@ class ExtraTiles extends React.Component {
                         width="200px"
                         height="175px"
                         className="tile"
-                        src={window.location.origin + window.location.pathname + "/tiles/ST_" + systemNumber + ".png"}
+                        src={window.location.origin + window.location.pathname + "/tiles/ST_" + systemNumber + ".webp"}
                         draggable="true" onDragStart={this.props.drag} onDrop={this.props.drop}
                         onDragOver={this.props.allowDrop} onDragEnter={this.props.dragEnter}
                         onDragLeave={this.props.dragLeave}
