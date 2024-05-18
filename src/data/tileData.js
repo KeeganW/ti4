@@ -3935,7 +3935,7 @@ const tileData = {
                     influence: 2
                 }
             ],
-            anomaly: [ANOMALIES.SUPERNOVA],
+            anomaly: [ANOMALIES.SUPERNOVA, ANOMALIES.NEBULA],
             wormhole: []
         },
         "er104": {
