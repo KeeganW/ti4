@@ -1728,11 +1728,14 @@ class MapOptions extends React.Component {
 
                     <HelpModal key={"help-fan-content"} visible={this.state.fanContentHelp} hideModal={this.toggleFanContentHelp} title={"About Fanmade Content for Twilight Imperium"}
                         content={`<p>
-                         Automatically assigns races to the players on the boards.
-                         <br>
-                         <br>
-                         Fan content featured here was created to be compliant with the <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>. 
-                         </p>`}
+                        WARNING: Highly Experimental content ahead. Fan made content is subject to change and does not guarentee the same balance and quality as TI4 and the POK expansion.
+                        <br>
+                        <br>
+                        Over the past however many years, some fans have created additional content for the game that has become relatively popular. This option allows you to add some of the more well-known fan system tiles during map generation.
+                        <br>
+                        <br>
+                        Fan content featured here is created to be compliant with the <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>. 
+                        </p>`}
                     />
                     <HelpModal key={"help-uncharted-space"} visible={this.state.unchartedSpaceHelp} hideModal={this.toggleUnchartedSpaceHelp} title={"About Fanmade Content for Twilight Imperium"}
                         content={`<p>
