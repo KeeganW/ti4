@@ -1,35 +1,25 @@
 {
   "files": {
-    "main.css": "/ti4/static/css/main.41238694.chunk.css",
-    "main.js": "/ti4/static/js/main.57ccfd1b.chunk.js",
-    "main.js.map": "/ti4/static/js/main.57ccfd1b.chunk.js.map",
-    "runtime-main.js": "/ti4/static/js/runtime-main.dd11df2c.js",
-    "runtime-main.js.map": "/ti4/static/js/runtime-main.dd11df2c.js.map",
-    "static/css/2.c4e73993.chunk.css": "/ti4/static/css/2.c4e73993.chunk.css",
-    "static/js/2.cd6b7128.chunk.js": "/ti4/static/js/2.cd6b7128.chunk.js",
-    "static/js/2.cd6b7128.chunk.js.map": "/ti4/static/js/2.cd6b7128.chunk.js.map",
-    "static/js/3.d72f2f45.chunk.js": "/ti4/static/js/3.d72f2f45.chunk.js",
-    "static/js/3.d72f2f45.chunk.js.map": "/ti4/static/js/3.d72f2f45.chunk.js.map",
+    "main.css": "/ti4/static/css/main.619a5cc9.css",
+    "main.js": "/ti4/static/js/main.cf11fdcf.js",
+    "static/js/422.c0a4556a.chunk.js": "/ti4/static/js/422.c0a4556a.chunk.js",
+    "static/media/planet.png": "/ti4/static/media/planet.7203e647ebece014b0b7.png",
+    "static/media/trait-hazardous.png": "/ti4/static/media/trait-hazardous.6495672183040821b58e.png",
+    "static/media/trait-industrial.png": "/ti4/static/media/trait-industrial.37a31434ec37a8efd0db.png",
+    "static/media/specialty-biotic.png": "/ti4/static/media/specialty-biotic.683b8aa586590392015c.png",
+    "static/media/specialty-warfare.png": "/ti4/static/media/specialty-warfare.222674a3f03a4679d5e7.png",
+    "static/media/specialty-cybernetic.png": "/ti4/static/media/specialty-cybernetic.16601911f01cb00be4ac.png",
+    "static/media/specialty-propulsion.png": "/ti4/static/media/specialty-propulsion.767d15a072722915bd40.png",
+    "static/media/trait-cultural.png": "/ti4/static/media/trait-cultural.800b2f56fc7b90d98133.png",
+    "static/media/resource.png": "/ti4/static/media/resource.4e66e6d47a747142cd01.png",
+    "static/media/influence.png": "/ti4/static/media/influence.d1f8e76f5d831abee28c.png",
     "index.html": "/ti4/index.html",
-    "static/css/2.c4e73993.chunk.css.map": "/ti4/static/css/2.c4e73993.chunk.css.map",
-    "static/css/main.41238694.chunk.css.map": "/ti4/static/css/main.41238694.chunk.css.map",
-    "static/js/2.cd6b7128.chunk.js.LICENSE.txt": "/ti4/static/js/2.cd6b7128.chunk.js.LICENSE.txt",
-    "static/media/influence.d1f8e76f.png": "/ti4/static/media/influence.d1f8e76f.png",
-    "static/media/planet.7203e647.png": "/ti4/static/media/planet.7203e647.png",
-    "static/media/resource.4e66e6d4.png": "/ti4/static/media/resource.4e66e6d4.png",
-    "static/media/specialty-biotic.683b8aa5.png": "/ti4/static/media/specialty-biotic.683b8aa5.png",
-    "static/media/specialty-cybernetic.16601911.png": "/ti4/static/media/specialty-cybernetic.16601911.png",
-    "static/media/specialty-propulsion.767d15a0.png": "/ti4/static/media/specialty-propulsion.767d15a0.png",
-    "static/media/specialty-warfare.222674a3.png": "/ti4/static/media/specialty-warfare.222674a3.png",
-    "static/media/trait-cultural.800b2f56.png": "/ti4/static/media/trait-cultural.800b2f56.png",
-    "static/media/trait-hazardous.64956721.png": "/ti4/static/media/trait-hazardous.64956721.png",
-    "static/media/trait-industrial.37a31434.png": "/ti4/static/media/trait-industrial.37a31434.png"
+    "main.619a5cc9.css.map": "/ti4/static/css/main.619a5cc9.css.map",
+    "main.cf11fdcf.js.map": "/ti4/static/js/main.cf11fdcf.js.map",
+    "422.c0a4556a.chunk.js.map": "/ti4/static/js/422.c0a4556a.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.dd11df2c.js",
-    "static/css/2.c4e73993.chunk.css",
-    "static/js/2.cd6b7128.chunk.js",
-    "static/css/main.41238694.chunk.css",
-    "static/js/main.57ccfd1b.chunk.js"
+    "static/css/main.619a5cc9.css",
+    "static/js/main.cf11fdcf.js"
   ]
 }
