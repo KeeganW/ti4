@@ -236,7 +236,7 @@
             "warp": {
                 "description": "The alternate map to use with 8 players which uses hyperlanes.",
                 "source": "Game Rules",
-                "home_worlds": [37, 40, 43, 46, 49, 52, 55, 58, 37],
+                "home_worlds": [37, 40, 43, 46, 49, 52, 55, 58],
                 "primary_tiles": [19, 21, 10, 26, 28, 30, 16, 35],
                 "secondary_tiles": [18, 6, 14, 13, 12, 3, 8, 7, 60, 39, 23, 25, 48, 51, 32, 34, 59, 56, 31, 50, 47, 44, 22, 38],
                 "tertiary_tiles": [20, 9, 11, 27, 29, 15, 17, 36],

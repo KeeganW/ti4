@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
-import $ from 'jquery';
-import {exportComponentAsPNG} from "react-component-export-image";
+// import $ from 'jquery';
+// import {exportComponentAsPNG} from "react-component-export-image";
 
 class LoadMapModal extends React.Component {
 

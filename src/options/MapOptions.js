@@ -1,13 +1,17 @@
 import React from "react";
-import {QuestionCircle} from "react-bootstrap-icons";
+import { QuestionCircle } from "react-bootstrap-icons";
+import { Button, Form, Collapse } from "react-bootstrap";
 import boardData from "../data/boardData.json";
-import tileData from "../data/tileData.json";
+import tileData, { WORMHOLES, EXPANSIONS, ANOMALIES } from "../data/tileData";
 import raceData from "../data/raceData.json";
 import adjacencyData from "../data/adjacencyData.json";
 import HelpModal from "./HelpModal";
 import SetPlayerNameModal from "./SetPlayerNameModal";
 import SetRacesModal from "./SetRacesModal";
 
+const expansionCheck = (includedExpansions) => (
+    (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async])
+)
 
 class MapOptions extends React.Component {
     constructor(props) {
@@ -35,8 +39,10 @@ class MapOptions extends React.Component {
             placementStyles: ["slice", "initial", "home", "random"],
             races: [...raceData["races"]],
             pokRaces: [...raceData["pokRaces"]],
+            dsRaces: [...raceData["dsRaces"]],
             homeworlds: raceData["homeSystems"],
-            pokHomeworlds: raceData["pokHomeSystems"]
+            pokHomeworlds: raceData["pokHomeSystems"],
+            dsHomeworlds: raceData["dsHomeworlds"]
         }
         const startingPlayers = 6;
 
@@ -50,6 +56,7 @@ class MapOptions extends React.Component {
             currentPlacementStyle: startingValues["placementStyles"][0],
             currentSeed: "",
             userSetSeed: false,
+            fanContent: false,
             pickRaces: false,
             pickMultipleRaces: false,
             shuffleBoards: false,
@@ -57,6 +64,10 @@ class MapOptions extends React.Component {
             ensureRacialAnomalies: true,
             generated: false,
 
+            fanContentHelp: false,
+            unchartedSpaceHelp: false,
+            discordantStarsHelp: false,
+            ascendentSunHelp: false,
             pickRacesHelp: false,
             boardStyleHelp: false,
             pickStyleHelp: false,
@@ -82,6 +93,10 @@ class MapOptions extends React.Component {
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleRacesChange = this.handleRacesChange.bind(this);
         this.updatePok = this.updatePok.bind(this);
+        this.updateUncharted = this.updateUncharted.bind(this);
+        this.updateDS = this.updateDS.bind(this);
+        this.updateSun = this.updateSun.bind(this);
+        this.updateFanHyp = this.updateFanHyp.bind(this);
         this.updatePlayerCount = this.updatePlayerCount.bind(this);
         this.updateBoardStyle = this.updateBoardStyle.bind(this);
         this.updateSeed = this.updateSeed.bind(this);
@@ -97,6 +112,11 @@ class MapOptions extends React.Component {
         this.generateBoard = this.generateBoard.bind(this);
         this.getNewTileSet = this.getNewTileSet.bind(this);
 
+        this.toggleFanContentHelp = this.toggleFanContentHelp.bind(this);
+        this.toggleUnchartedSpaceHelp = this.toggleUnchartedSpaceHelp.bind(this);
+        this.toggleDiscordantStarsHelp = this.toggleDiscordantStarsHelp.bind(this);
+        this.toggleAscendentSunHelp = this.toggleAscendentSunHelp.bind(this);
+        this.toggleFanHyperlanesHelp = this.toggleFanHyperlanesHelp.bind(this);
         this.togglePickRacesHelp = this.togglePickRacesHelp.bind(this);
         this.toggleBoardStyleHelp = this.toggleBoardStyleHelp.bind(this);
         this.togglePickStyleHelp = this.togglePickStyleHelp.bind(this);
@@ -135,7 +155,7 @@ class MapOptions extends React.Component {
         if (race === "none") {  // The deselect all option
             newCurrentRaces = []
         } else if (race === "all") {  // The deselect all option
-            if (this.props.useProphecyOfKings) {
+            if (this.props.includedExpansions[EXPANSIONS.POK]) {
                 newCurrentRaces = [...this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)]
             } else {
                 newCurrentRaces = [...this.state.optionsPossible.races]
@@ -153,6 +173,8 @@ class MapOptions extends React.Component {
     }
 
     updatePok(event) {
+        let races = [...this.state.optionsPossible.races]
+        if (this.props.includedExpansions[EXPANSIONS.DS]) races = races.concat(this.state.optionsPossible.dsRaces)
         let boardOptions = this.state.optionsPossible.boardStyles;
         if (event.target.checked) {
             boardOptions = this.state.optionsPossible.boardStylesPok;
@@ -161,7 +183,7 @@ class MapOptions extends React.Component {
                 currentBoardStyle: boardOptions[this.state.currentNumberOfPlayers][0],
                 currentBoardStyleOptions: boardOptions[this.state.currentNumberOfPlayers],
             }, () => {
-                this.props.updateRaces([...this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)]);
+                this.props.updateRaces([...races.concat(this.state.optionsPossible.pokRaces)]);
                 this.props.toggleProphecyOfKings(event);
             });
         } else {
@@ -171,10 +193,33 @@ class MapOptions extends React.Component {
                 currentBoardStyle: this.state.currentNumberOfPlayers > 6 ? boardOptions["6"][0] : this.state.currentBoardStyle,
                 currentBoardStyleOptions: this.state.currentNumberOfPlayers > 6 ? boardOptions["6"] : boardOptions[this.state.currentNumberOfPlayers],
             }, () => {
-                this.props.updateRaces([...this.state.optionsPossible.races]);
+                this.props.updateRaces(races);
                 this.props.toggleProphecyOfKings(event);
             });
         }
+    }
+
+    updateUncharted(event) {
+        this.props.toggleUnchartedSpace(event);
+    }
+
+    updateSun(event) {
+        this.props.toggleAscendentSun(event);
+    }
+
+    updateFanHyp(event) {
+        this.props.toggleFanHyperlanes(event);
+    }
+
+    updateDS(event) {
+        let races = [...this.state.optionsPossible.races]
+        if (this.props.includedExpansions[EXPANSIONS.POK]) races = races.concat(this.state.optionsPossible.pokRaces)
+        if (event.target.checked) {
+            this.props.updateRaces([...races.concat(this.state.optionsPossible.dsRaces)]);
+        } else {
+            this.props.updateRaces(races);
+        }
+        this.props.toggleDiscordantStars(event);
     }
 
     updatePlayerCount(event) {
@@ -197,7 +242,7 @@ class MapOptions extends React.Component {
 
     updateBoardStyleOptions(event) {
         let boardOptions = this.state.optionsPossible.boardStyles;
-        if (this.props.useProphecyOfKings) {
+        if (this.props.includedExpansions[EXPANSIONS.POK]) {
             boardOptions = this.state.optionsPossible.boardStylesPok;
         }
         this.setState({
@@ -251,7 +296,15 @@ class MapOptions extends React.Component {
     encodeSettings() {
         let encodedSettings = "";
 
-        encodedSettings += this.props.useProphecyOfKings ? "T" : "F";
+        encodedSettings += this.props.includedExpansions[EXPANSIONS.POK] ? "T" : "F";
+        if (this.state.fanContent) {
+            encodedSettings += this.props.includedExpansions[EXPANSIONS.UnS] ? "T" : "F";
+            encodedSettings += this.props.includedExpansions[EXPANSIONS.DS] ? "T" : "F";
+            encodedSettings += this.props.includedExpansions[EXPANSIONS.AS] ? "T" : "F";
+            encodedSettings += this.props.includedExpansions[EXPANSIONS.Async] ? "T" : "F";
+        } else {
+            encodedSettings += "FFFF"
+        }
         encodedSettings += this.state.currentNumberOfPlayers.toString();
         encodedSettings += this.state.currentBoardStyleOptions.indexOf(this.state.currentBoardStyle).toString();
         encodedSettings += this.state.optionsPossible.placementStyles.indexOf(this.state.currentPlacementStyle).toString();
@@ -270,9 +323,13 @@ class MapOptions extends React.Component {
         encodedSettings += this.state.pickRaces ? "T" : "F";
         if (this.state.pickRaces) {
             encodedSettings += this.state.ensureRacialAnomalies ? "T" : "F";
-            let combinedRaces = this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
-            if ((this.props.useProphecyOfKings === false && this.props.currentRaces.length !== this.state.optionsPossible.races.length) ||
-                (this.props.useProphecyOfKings === true && this.props.currentRaces.length !== combinedRaces.length)) {
+            let combinedRaces = this.state.optionsPossible.races
+                .concat(this.state.optionsPossible.pokRaces)
+                .concat(this.state.optionsPossible.dsRaces)
+            let expectedRaces = 17;
+            if (this.props.includedExpansions[EXPANSIONS.POK]) expectedRaces += 7
+            if (this.props.includedExpansions[EXPANSIONS.DS]) expectedRaces += 34
+            if (this.props.currentRaces.length !== expectedRaces) {
                 // Need to encode all races, because it is not the default
                 for (let race of this.props.currentRaces) {
                     if (combinedRaces.indexOf(race) >= 0) {
@@ -300,17 +357,46 @@ class MapOptions extends React.Component {
     decodeSettings(newSettings, newTiles) {
         let currentIndex = 0;
 
+        console.log(newSettings)
+
+        let useExpansions = Object.fromEntries([
+            [EXPANSIONS.POK, false],
+            [EXPANSIONS.UnS, false],
+            [EXPANSIONS.DS, false],
+            [EXPANSIONS.AS, false],
+            [EXPANSIONS.Async, false],
+        ]
+        )
+        let useFanContent = false
+
         // Prophecy of Kings
-        let useProphecyOfKings = newSettings[currentIndex] === "T";
+        useExpansions[EXPANSIONS.POK] = newSettings[currentIndex] === "T";
         currentIndex += 1;
+
+        // Fan Content
+        // Compatability with old URL formatting
+        if (newSettings[currentIndex] === "T" || newSettings[currentIndex] === "F") {
+            useExpansions[EXPANSIONS.UnS] = newSettings[currentIndex] === "T";
+            useFanContent = useFanContent || useExpansions[EXPANSIONS.UnS]
+            currentIndex += 1;
+            useExpansions[EXPANSIONS.DS] = newSettings[currentIndex] === "T";
+            useFanContent = useFanContent || useExpansions[EXPANSIONS.DS]
+            currentIndex += 1;
+            useExpansions[EXPANSIONS.AS] = newSettings[currentIndex] === "T";
+            useFanContent = useFanContent || useExpansions[EXPANSIONS.AS]
+            currentIndex += 1;
+            useExpansions[EXPANSIONS.Async] = newSettings[currentIndex] === "T";
+            useFanContent = useFanContent || useExpansions[EXPANSIONS.Async]
+            currentIndex += 1;
+        }
 
         // Number of Players
         let currentNumberOfPlayers = Number(newSettings[currentIndex]);
         currentIndex += 1;
-        let currentNumberOfPlayersOptions = useProphecyOfKings ? this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers) : this.state.optionsPossible.numberOfPlayers;
+        let currentNumberOfPlayersOptions = useExpansions[EXPANSIONS.POK] ? this.state.optionsPossible.numberOfPlayers.concat(this.state.optionsPossible.pokNumberOfPlayers) : this.state.optionsPossible.numberOfPlayers;
 
         // Board Style
-        let currentBoardStyleOptions = useProphecyOfKings ? this.state.optionsPossible.boardStylesPok[currentNumberOfPlayers] : this.state.optionsPossible.boardStyles[currentNumberOfPlayers];
+        let currentBoardStyleOptions = useExpansions[EXPANSIONS.POK] ? this.state.optionsPossible.boardStylesPok[currentNumberOfPlayers] : this.state.optionsPossible.boardStyles[currentNumberOfPlayers];
         let currentBoardStyle = currentBoardStyleOptions[Number(newSettings[currentIndex])]
         currentIndex += 1;
 
@@ -366,18 +452,22 @@ class MapOptions extends React.Component {
             // Ensure Racial Anomalies
             ensureRacialAnomalies = newSettings[currentIndex] === "T";
             currentIndex += 1;
-            
+
             if (newSettings[currentIndex] !== "|") {
                 if (newSettings[currentIndex] !== undefined) {
                     // Custom races, but not all of them
                     currentRaces = [];
-                    let combinedRaces = this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces)
+                    let combinedRaces = this.state.optionsPossible.races
+                        .concat(this.state.optionsPossible.pokRaces)
+                        .concat(this.state.optionsPossible.dsRaces)
                     while (newSettings[currentIndex] !== "|" && currentIndex !== newSettings.length) {
                         currentRaces.push(combinedRaces[Number(newSettings.substring(currentIndex, currentIndex + 2))])
                         currentIndex += 2
                     }
                 } else {
-                    currentRaces = useProphecyOfKings ? this.state.optionsPossible.races.concat(this.state.optionsPossible.pokRaces) : this.state.optionsPossible.races;
+                    currentRaces = this.state.optionsPossible.races;
+                    if (useExpansions[EXPANSIONS.POK]) currentRaces = currentRaces.concat(this.state.optionsPossible.pokRaces)
+                    if (useExpansions[EXPANSIONS.DS]) currentRaces = currentRaces.concat(this.state.optionsPossible.dsRaces)
                 }
             } else {
                 // No custom races, but player names are specified, so parse them
@@ -386,6 +476,7 @@ class MapOptions extends React.Component {
         }
 
         this.setState({
+            fanContent: useFanContent,
             currentNumberOfPlayers: currentNumberOfPlayers,
             currentNumberOfPlayersOptions: currentNumberOfPlayersOptions,
             currentBoardStyle: currentBoardStyle,
@@ -407,15 +498,27 @@ class MapOptions extends React.Component {
             this.props.updateRaces(currentRaces);
             this.props.updatePlayerNames(currentPlayerNames);
 
-            if ((useProphecyOfKings && !this.props.useProphecyOfKings) || (!useProphecyOfKings && this.props.useProphecyOfKings)) {
+            if ((useExpansions[EXPANSIONS.POK] && !this.props.includedExpansions[EXPANSIONS.POK]) || (!useExpansions[EXPANSIONS.POK] && this.props.includedExpansions[EXPANSIONS.POK])) {
                 this.props.toggleProphecyOfKings();
+            }
+            if ((useExpansions[EXPANSIONS.UnS] && !this.props.includedExpansions[EXPANSIONS.UnS]) || (!useExpansions[EXPANSIONS.UnS] && this.props.includedExpansions[EXPANSIONS.UnS])) {
+                this.props.toggleUnchartedSpace();
+            }
+            if ((useExpansions[EXPANSIONS.AS] && !this.props.includedExpansions[EXPANSIONS.AS]) || (!useExpansions[EXPANSIONS.AS] && this.props.includedExpansions[EXPANSIONS.AS])) {
+                this.props.toggleAscendentSun();
+            }
+            if ((useExpansions[EXPANSIONS.Async] && !this.props.includedExpansions[EXPANSIONS.Async]) || (!useExpansions[EXPANSIONS.Async] && this.props.includedExpansions[EXPANSIONS.Async])) {
+                this.props.toggleAscendentSun();
+            }
+            if ((useExpansions[EXPANSIONS.DS] && !this.props.includedExpansions[EXPANSIONS.DS]) || (!useExpansions[EXPANSIONS.DS] && this.props.includedExpansions[EXPANSIONS.DS])) {
+                this.props.toggleDiscordantStars();
             }
 
             if (newTiles.length > 0) {
                 // Tiles were changed after rendering, so we need to display them
                 this.props.updateTiles(newTiles, newSettings);
             } else {
-                this.props.updateTiles(this.getNewTileSet(useProphecyOfKings, currentRaces), newSettings, false);
+                this.props.updateTiles(this.getNewTileSet(currentRaces, useExpansions), newSettings, false);
             }
         })
 
@@ -450,10 +553,33 @@ class MapOptions extends React.Component {
     /**
      * Create a set of new tiles for the board based on the user's input.
      */
-    getNewTileSet(useProphecyOfKings, currentRaces) {
-        if (useProphecyOfKings === undefined) {
-            useProphecyOfKings = this.props.useProphecyOfKings
+    getNewTileSet(currentRaces, includedExpansions) {
+        if (includedExpansions === undefined) {
+            includedExpansions = Object.fromEntries([
+                [EXPANSIONS.POK, this.props.includedExpansions[EXPANSIONS.POK]],
+                [EXPANSIONS.UnS, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.UnS]],
+                [EXPANSIONS.AS, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.AS]],
+                [EXPANSIONS.Async, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.Async]],
+            ]
+            )
         }
+        // else {
+        //     if (includedExpansions[EXPANSIONS.POK] === undefined) {
+        //         includedExpansions[EXPANSIONS.POK] = this.props.includedExpansions[EXPANSIONS.POK]
+        //     }
+
+        //     if (includedExpansions[EXPANSIONS.UnS] === undefined) {
+        //         includedExpansions[EXPANSIONS.UnS] = this.props.includedExpansions[EXPANSIONS.UnS]
+        //     }
+
+        //     if (includedExpansions[EXPANSIONS.AS] === undefined) {
+        //         includedExpansions[EXPANSIONS.AS] = this.props.includedExpansions[EXPANSIONS.AS]
+        //     }
+
+        //     if (includedExpansions[EXPANSIONS.Async] === undefined) {
+        //         includedExpansions[EXPANSIONS.Async] = this.props.includedExpansions[EXPANSIONS.Async]
+        //     }
+        // }
 
         // Get an ordered list of board spaces that need to have non-home systems assigned to them
         let systemIndexes = this.getNewTilesToPlace()
@@ -468,7 +594,7 @@ class MapOptions extends React.Component {
         currentRaces = currentRaces.slice(0, this.state.currentNumberOfPlayers)
 
         // Get a set of systems to make the board with, ordered based on user supplied weights
-        let newSystems = this.getNewSystemsToPlace(systemIndexes.length, useProphecyOfKings, currentRaces)
+        let newSystems = this.getNewSystemsToPlace(systemIndexes.length, currentRaces, includedExpansions)
 
         // Copy a blank map to add to
         let newTiles = [...boardData.blankMap]
@@ -490,8 +616,8 @@ class MapOptions extends React.Component {
         // Place any systems that were locked from the previous generation
         this.placeLockedSystems(newTiles)
 
-        // Check that anomalies and wormholes are not adjacent
-        this.checkAdjacencies(newTiles, useProphecyOfKings)
+        // Planets have been placed, time to do post processing checks to make sure things are good to go.
+        this.checkAdjacencies(newTiles, includedExpansions)
 
         // Update the generated flag then update the tiles
         return newTiles;
@@ -520,8 +646,8 @@ class MapOptions extends React.Component {
 
         // Based on the placement style, generate the list of indexes to place
         let systemIndexes = [];
-        switch(this.state.currentPlacementStyle) {
-            case("random"):
+        switch (this.state.currentPlacementStyle) {
+            case ("random"):
                 // Add them all together and shuffle them
                 if (this.state.reversePlacementOrder) {
                     systemIndexes = tertiary.concat(secondary).concat(primary);
@@ -530,7 +656,7 @@ class MapOptions extends React.Component {
                 }
                 this.shuffle(systemIndexes);
                 break;
-            case("initial"):
+            case ("initial"):
                 // Primary tiles are separate from the secondary shuffled tiles
                 if (this.state.reversePlacementOrder) {
                     systemIndexes = this.shuffle(secondary.concat(tertiary)).concat(primary);
@@ -538,7 +664,7 @@ class MapOptions extends React.Component {
                     systemIndexes = primary.concat(this.shuffle(secondary.concat(tertiary)));
                 }
                 break;
-            case("home"):
+            case ("home"):
                 // Primary tiles are tiles adjacent to home systems
                 systemIndexes = primary.concat(secondary).concat(tertiary);
 
@@ -565,7 +691,7 @@ class MapOptions extends React.Component {
                     systemIndexes = newPrimary.concat(systemIndexes);
                 }
                 break;
-            case("slice"):
+            case ("slice"):
             default:
                 // Combine them in their listed order
                 if (this.state.reversePlacementOrder) {
@@ -583,13 +709,13 @@ class MapOptions extends React.Component {
      *
      * Get an array of system tile numbers to place on the board.
      * @param {number} numberOfSystems The number of systems to get.
-     * @param {boolean} useProphecyOfKings TODO
+     * @param {boolean} includedExpansions Dictionary of expansions to include based on the enum EXPANSIONS
      * @returns {[]}
      */
-    getNewSystemsToPlace(numberOfSystems, useProphecyOfKings, currentRaces) {
+    getNewSystemsToPlace(numberOfSystems, currentRaces, includedExpansions) {
         // Pick our a random set of systems, following the needed number of anomalies
-        let allBlues = useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
-        let allReds = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
+        let allBlues = tileData.blue.filter(expansionCheck(includedExpansions));
+        let allReds = tileData.red.filter(expansionCheck(includedExpansions));
 
         // Remove excluded tiles
         for (let system of this.props.excludedTiles) {
@@ -598,6 +724,29 @@ class MapOptions extends React.Component {
             } else if (allBlues.indexOf(system) >= 0) {
                 allBlues.splice(allBlues.indexOf(system), 1);
             }
+        }
+
+        // Count each wormhole type (minus delta), randomly select 3 to include in map gen out of those with 2+ options
+        const excludedWormholes = []
+        for (const wormhole in WORMHOLES) {
+            if (WORMHOLES[wormhole] === WORMHOLES.DELTA) continue
+
+            let wormholeCount = allReds.filter(systemID => tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole])).length
+            wormholeCount += allBlues.filter(systemID => tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole])).length
+
+            if (wormholeCount <= 1) {
+                allReds = allReds.filter(systemID => !tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]))
+                allBlues = allBlues.filter(systemID => !tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]))
+            } else {
+                excludedWormholes.push(wormhole)
+            }
+        }
+        this.shuffle(excludedWormholes)
+        excludedWormholes.splice(0, 3)
+        for (const wormhole of excludedWormholes) {
+            console.log(WORMHOLES[wormhole])
+            allReds = allReds.filter(systemID => !tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]))
+            allBlues = allBlues.filter(systemID => !tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]))
         }
 
         // Shuffle our tiles for randomness
@@ -610,21 +759,21 @@ class MapOptions extends React.Component {
 
         //If the board style overrides blue and red ratios we use those values, otherwise we go to the switch statement
         const currentBoardStyle = boardData.styles[this.state.currentNumberOfPlayers][this.state.currentBoardStyle];
-        if(currentBoardStyle['overrideRatios'] !== undefined) {
+        if (currentBoardStyle['overrideRatios'] !== undefined) {
             blueTileRatio = currentBoardStyle['overrideRatios']['blueTileRatio'];
             redTileRatio = currentBoardStyle['overrideRatios']['redTileRatio'];
         } else {
             // For 3, 4, and 6 player games, there is a different ratio
             switch (this.state.currentNumberOfPlayers) {
-                case(3):
+                case (3):
                     blueTileRatio = 3
                     redTileRatio = 1
                     break;
-                case(4):
+                case (4):
                     blueTileRatio = 5
                     redTileRatio = 3
                     break;
-                case(6):
+                case (6):
                     blueTileRatio = 3
                     redTileRatio = 2
                     break;
@@ -685,32 +834,32 @@ class MapOptions extends React.Component {
         // These tiles are ensured for races and may not be replaced
         const ensuredAnomalies = [];
 
-        if(this.state.ensureRacialAnomalies && this.state.pickRaces) {
+        if (this.state.ensureRacialAnomalies && this.state.pickRaces) {
             currentRaces.forEach(race => {
                 let anomalies = []
                 let match = false;
                 // If The Clan of Saar are in the game, ensure we have an asteroid field
-                if(race === 'The Clan of Saar') {
-                    anomalies = useProphecyOfKings ? [...tileData.asteroidFields.concat(tileData.pokAsteroidFields)] : [...tileData.asteroidFields];
+                if (race === 'The Clan of Saar') {
+                    anomalies = tileData.asteroidFields.filter(expansionCheck(includedExpansions));
                     match = true;
-                // If The Embers of Muaat are in the game, ensure we have a supernova
-                } else if(race === 'The Embers of Muaat') {
-                    anomalies = useProphecyOfKings ? [...tileData.supernovas.concat(tileData.pokSupernovas)] : [...tileData.supernovas];
+                    // If The Embers of Muaat are in the game, ensure we have a supernova
+                } else if (race === 'The Embers of Muaat') {
+                    anomalies = tileData.supernovas.filter(expansionCheck(includedExpansions));
                     match = true;
-                // If The Empyrean are in the game, ensure we have a nebulae
-                } else if(race === 'The Empyrean') {
-                    anomalies = useProphecyOfKings ? [...tileData.nebulae.concat(tileData.pokNebulae)] : [...tileData.nebulae];
+                    // If The Empyrean are in the game, ensure we have a nebulae
+                } else if (race === 'The Empyrean') {
+                    anomalies = tileData.nebulae.filter(expansionCheck(includedExpansions));
                     match = true;
-                // If The Vuil'Raith Cabal are in the game, ensure we have a gravity rift
-                } else if(race === "The Vuil'Raith Cabal") {
-                    anomalies = useProphecyOfKings ? [...tileData.gravityRifts.concat(tileData.pokGravityRifts)] : [...tileData.gravityRifts];
+                    // If The Vuil'Raith Cabal or Nivyn Star Kings are in the game, ensure we have a gravity rift
+                } else if (race === "The Vuil'Raith Cabal" || race === "The Nivyn Star Kings") {
+                    anomalies = tileData.gravityRifts.filter(expansionCheck(includedExpansions));
                     match = true;
                 }
-                if(match && redsToPlace > 0) {
+                if (match && redsToPlace > 0) {
                     // Check if the tile is already included
-                    const found = anomalies.some(tile=> newSystems.includes(tile));
+                    const found = anomalies.some(tile => newSystems.includes(tile));
                     // If not we add it
-                    if(!found) {
+                    if (!found) {
                         this.shuffle(anomalies);
                         newSystems.push(anomalies[0]);
                         ensuredAnomalies.push(anomalies[0]);
@@ -732,14 +881,20 @@ class MapOptions extends React.Component {
             newSystems = newSystems.concat(allBlues.slice(0, bluesToPlace).concat(allReds.slice(0, redsToPlace)))
         }
 
-        // Ensure that if a wormhole is included, two are
-        const allAlphaWormholes = useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
-        const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
-
-        newSystems = this.ensureWormholesForType(newSystems, [26], allAlphaWormholes, allBetaWormholes, useProphecyOfKings, ensuredAnomalies);
-
-        // Ensure that if we have an alpha wormhole, then we have at least two of them
-        newSystems = this.ensureWormholesForType(newSystems, [25, 64], allBetaWormholes, allAlphaWormholes, useProphecyOfKings, ensuredAnomalies);
+        // Ensure that if a wormhole is included, two are (except gamma)
+        for (const wormhole in WORMHOLES) {
+            if (WORMHOLES[wormhole] === WORMHOLES.GAMMA) continue
+            if (WORMHOLES[wormhole] === WORMHOLES.DELTA) continue
+            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck(includedExpansions));
+            newSystems = this.ensureWormholesForType(newSystems, allWormholesOfType, ensuredAnomalies, includedExpansions);
+        }
+        // Second pass for any multi-wormhole systems. This time, remove singletons
+        for (const wormhole in WORMHOLES) {
+            if (WORMHOLES[wormhole] === WORMHOLES.GAMMA) continue
+            if (WORMHOLES[wormhole] === WORMHOLES.DELTA) continue
+            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck(includedExpansions));
+            newSystems = this.ensureWormholesForType(newSystems, allWormholesOfType, ensuredAnomalies, includedExpansions, { method: "remove" });
+        }
 
         // Based on the system style, order the systems according to their weights
         let weights = {};
@@ -782,7 +937,7 @@ class MapOptions extends React.Component {
                 break;
             case "balanced":
             default:
-                if (useProphecyOfKings) {
+                if (includedExpansions[EXPANSIONS.POK]) {
                     weights = {
                         "resource": 80,
                         "influence": 30,
@@ -808,7 +963,6 @@ class MapOptions extends React.Component {
 
         // Re-order the planets based on their weights
         newSystems = this.getWeightedPlanetList(newSystems, weights, ensuredAnomalies)
-
         return newSystems
 
     }
@@ -848,161 +1002,155 @@ class MapOptions extends React.Component {
             }
         }
     }
-    checkAdjacencies(newTiles, useProphecyOfKings) {// Planets have been placed, time to do post processing checks to make sure things are good to go.
-        // Get all anomalies that are adjacent to one another
-        let allTrueAnomalies = useProphecyOfKings ? [...tileData.anomaly.concat(tileData.pokAnomaly)] : [...tileData.anomaly];
+    /**
+     * Check that anomalies and wormholes are not adjacent, and if so swap them with other tiles
+     * @param {*} newTiles Array of tiles that are on the map currently
+     * @param {*} includedExpansions Array of expansions to include
+     */
+    checkAdjacencies(newTiles, includedExpansions) {
+        // 
 
-        for (let anomaly of allTrueAnomalies) {
-            // Ignore any anomalies in the locked or include list
-            if (this.props.includedTiles.indexOf(anomaly) < 0 && this.props.lockedTiles.indexOf(anomaly) < 0) {
+        // Get all anomalies
+        let allTrueAnomalies = tileData.anomaly.filter(expansionCheck(includedExpansions));
 
-                let anomalyTileNumber = newTiles.indexOf(anomaly);
-                if (anomalyTileNumber >= 0) {
-                    // anomaly exists in the map, so check it
-                    let adjacentTiles = adjacencyData[anomalyTileNumber];
-                    let adjacentAnomalies = [];
+        let newTileAnomalies = newTiles.filter(systemID => tileData.all[systemID] !== undefined).filter(systemID => tileData.all[systemID].anomaly.length > 0)
+        let newTileAnomaliesWithAdjacentAnomalies = []
 
-                    // Get a list of all adjacent anomalies to this one
-                    for (let adjacentTileNumber of adjacentTiles) {
-                        let adjacentTile = newTiles[adjacentTileNumber];
-                        if (allTrueAnomalies.indexOf(adjacentTile) >= 0) {
-                            // This tile is an anomaly
-                            adjacentAnomalies.push(adjacentTile)
-                        }
-                    }
+        // Get all wormholes currently on map
 
-                    // If tile is in conflict more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
-                    let swapped = false;
-                    let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                    if (adjacentAnomalies.length > 1) {
-                        let possibleBlanks = [];
-                        for (let blankRed of blankReds) {
-                            if (newTiles.indexOf(blankRed) < 0) {
-                                possibleBlanks.push(blankRed)
-                            }
-                        }
-                        possibleBlanks = this.shuffle(possibleBlanks);
-                        if (possibleBlanks.length > 0) {
-                            swapped = true;
-                            newTiles[anomalyTileNumber] = possibleBlanks[0];
-                        }
-                    }
-
-                    if (!swapped && adjacentAnomalies.length > 0) {
-                        // Look at all red back tiles on the board that are not anomalies, and see if they have adjacent anomalies
-                        for (let blankRed of blankReds) {
-                            let blankRedTileNumber = newTiles.indexOf(blankRed)
-                            if (blankRedTileNumber >= 0) {
-                                let adjacentTiles = adjacencyData[blankRedTileNumber];
-                                let swappable = true;
-                                for (let adjacentTile of adjacentTiles) {
-                                    if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0 && adjacentTile !== anomalyTileNumber) {
-                                        // This blank has an adjacent anomaly, so throw it out
-                                        swappable = false;
-                                        break;
-                                    }
-                                }
-                                if (swappable) {
-                                    // This blank red has no other adjacent anomalies, so swap
-                                    newTiles[anomalyTileNumber] = blankRed;
-                                    newTiles[blankRedTileNumber] = anomaly;
-                                    swapped = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!swapped) {
-                            let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                            let possibleBlanks = [];
-                            for (let blankRed of blankReds) {
-                                if (newTiles.indexOf(blankRed) < 0) {
-                                    possibleBlanks.push(blankRed)
-                                }
-                            }
-                            possibleBlanks = this.shuffle(possibleBlanks);
-                            if (possibleBlanks.length > 0) {
-                                swapped = true;
-                                newTiles[anomalyTileNumber] = possibleBlanks[0];
-                            }
-                            if (!swapped) {
-                                console.log("Error! Unable to swap anomaly to a free position.")
-                            }
-                            /*
-                            There is a potential use for this strategy, but for now it seems pretty safe to just let it fail
-                            to swap on a blank. It is rare that it is impossible, and even when it is, its a pretty simple
-                            rule. Plus the rules let you place reds next to each other if moving them is impossible.
-                            btw, not sure this code below works properly. I believe there is a bug in it.
-                             */
-
-                            /*
-                            // Going in reverse, find the first tile with no anomalies adjacent, and swap
-                            newTiles.reverse()
-                            for (let tile of newTiles) {
-                                if (tile !== 0 && tile !== -1 && allTrueAnomalies.indexOf(tile) < 0 && blankReds.indexOf(tile) < 0) {
-                                    console.log("Tile: " + tile)
-                                    // This is a real tile, check for adjacency to other anomalies
-                                    let blankRedTileNumber = newTiles.indexOf(tile)
-                                    let adjacentTiles = adjacencyData[blankRedTileNumber];
-                                    let swappable = true;
-                                    for (let adjacentTile of adjacentTiles) {
-                                        if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0) {
-                                            // This blank has an adjacent anomaly, so throw it out
-                                            swappable = false;
-                                            break;
-                                        }
-                                    }
-                                    if (swappable) {
-                                        // No adjacency breaks found, go ahead and swap it
-                                        console.log(anomalyTileNumber)
-                                        console.log(blankRedTileNumber)
-                                        newTiles[anomalyTileNumber] = tile;
-                                        newTiles[blankRedTileNumber] = anomaly;
-                                        swapped = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            // If no swap possible, no problem. Continue on
-                            newTiles.reverse()
-                            */
-                        }
-                    }
-                }
+        let includedWormholes = []
+        for (let tile of newTiles.filter(systemID => tileData.all[systemID] !== undefined)) {
+            if (tile === 0 || tile === -1) continue
+            if (tileData.all[tile].wormhole.length > 0) {
+                includedWormholes = includedWormholes.concat(tileData.all[tile].wormhole).filter((v, i, self) => i === self.indexOf(v))
             }
         }
 
-        const allAlphaWormholes = useProphecyOfKings ? [...tileData.alphaWormholes.concat(tileData.pokAlphaWormholes)] : [...tileData.alphaWormholes];
-        const allBetaWormholes = useProphecyOfKings ? [...tileData.betaWormholes.concat(tileData.pokBetaWormholes)] : [...tileData.betaWormholes];
 
+        for (let anomaly of newTileAnomalies) {
+            let anomalyTileNumber = newTiles.indexOf(anomaly);
 
-        // Alpha, at least one wormhole is a "empty tile" so swap it with a blank tile
-        for (let alphaWormhole of allAlphaWormholes) {
-            let alphaWormholeTileNumber = newTiles.indexOf(alphaWormhole);
-            if (alphaWormholeTileNumber >= 0 && tileData.all[alphaWormhole].planets.length === 0) {
-                // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
-                let adjacentTileNumbers = adjacencyData[alphaWormholeTileNumber];
-                let adjacentWormhole = false;
-                for (let adjacentTileNumber of adjacentTileNumbers) {
-                    if (allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
-                        adjacentWormhole = true;
-                        break;
+            let adjacentTiles = adjacencyData[anomalyTileNumber];
+            let adjacentAnomalies = [];
+
+            // Get a list of all adjacent anomalies to this one
+            for (let adjacentTileNumber of adjacentTiles) {
+                let adjacentTile = newTiles[adjacentTileNumber];
+                if (allTrueAnomalies.indexOf(adjacentTile) >= 0) {
+                    // This tile is an anomaly
+                    adjacentAnomalies.push(adjacentTile)
+                }
+            }
+
+            if (adjacentAnomalies.length > 0) {
+                newTileAnomaliesWithAdjacentAnomalies.push([anomaly, adjacentAnomalies])
+            }
+        }
+
+        newTileAnomaliesWithAdjacentAnomalies.sort((a, b) => b[1].length - a[1].length)
+
+        // Look through tiles from most invalid adjacencies to least
+        for (let entry of newTileAnomaliesWithAdjacentAnomalies) {
+
+            const anomaly = entry[0]
+
+            // Ignore any anomalies in the locked or include list
+            if (this.props.includedTiles.includes(anomaly)) continue
+            if (this.props.lockedTiles.includes(anomaly)) continue
+
+            let anomalyTileNumber = newTiles.indexOf(anomaly);
+
+            // Double check adjacencies
+            let adjacentTiles = adjacencyData[anomalyTileNumber];
+            let adjacentAnomalies = [];
+            // Get a list of all adjacent anomalies to this one
+            for (let adjacentTileNumber of adjacentTiles) {
+                let adjacentTile = newTiles[adjacentTileNumber];
+                if (allTrueAnomalies.indexOf(adjacentTile) >= 0) {
+                    // This tile is an anomaly
+                    adjacentAnomalies.push(adjacentTile)
+                }
+            }
+            if (adjacentAnomalies.length <= 0) continue
+
+            // If tile is in conflict with more than 1 anomaly, see if there is a "blank" anomaly off the board to swap with. if not, then continue
+            // If tile is a planet anomaly (other than a supernova), see if it can be replaced with an equally weight planet system.
+            let swapped = false;
+            if (tileData.all[anomaly].planets.length > 0 && !tileData.all[anomaly].anomaly.includes(ANOMALIES.SUPERNOVA)) {
+                let blueTiles = tileData.blue.filter(expansionCheck(includedExpansions));
+                let possibleTiles = [];
+                for (let tile of blueTiles.filter(tile => newTiles.indexOf(tile) < 0)) {
+                    // Includes tile if not on board and has equal number of planets as tile being replaced
+                    if (tileData.all[tile].planets.length === tileData.all[anomaly].planets.length &&
+                        tileData.all[tile].wormhole.every(wormhole => tileData.all[anomaly].wormhole.includes(wormhole)) &&
+                        tileData.all[anomaly].wormhole.every(wormhole => tileData.all[tile].wormhole.includes(wormhole))) {
+                        possibleTiles.push(tile)
                     }
                 }
-                if (adjacentWormhole) {
-                    // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    let blankReds = useProphecyOfKings ? [...tileData.blankRed.concat(tileData.pokBlankRed)] : [...tileData.blankRed];
-                    // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
-                    blankReds = blankReds.filter( function( el ) {
-                        return allAlphaWormholes.indexOf( el ) < 0;
-                    } );
-                    blankReds = this.shuffle(blankReds);
+                this.shuffle(possibleTiles);
+                if (possibleTiles.length > 0) {
+                    swapped = true;
+                    newTiles[anomalyTileNumber] = possibleTiles[0];
+                }
+
+                // If not equivalent unused system to swap it with
+                if (!swapped && adjacentAnomalies.length > 0) {
+                    // Look at all blue backed tiles on the board that are not anomalies, and see if they have adjacent anomalies
+                    for (let tile of blueTiles) {
+                        let tileNumber = newTiles.indexOf(tile)
+                        if (tileNumber >= 0) {
+                            let adjacentTiles = adjacencyData[tileNumber];
+                            let swappable = true;
+                            for (let adjacentTile of adjacentTiles) {
+                                if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0 && adjacentTile !== anomalyTileNumber) {
+                                    // This system has an adjacent anomaly, so throw it out
+                                    swappable = false;
+                                    break;
+                                }
+                            }
+                            if (swappable) {
+                                // This blank red has no other adjacent anomalies, so swap
+                                newTiles[anomalyTileNumber] = tile;
+                                newTiles[tileNumber] = anomaly;
+                                swapped = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!swapped) {
+                        console.log("Error! Unable to swap anomaly to a free position.")
+                    }
+                }
+            } else {
+                let blankReds = tileData.blankRed.filter(expansionCheck(includedExpansions));
+
+                let possibleBlanks = [];
+                for (let blankRed of blankReds.filter(tile => newTiles.indexOf(tile) < 0)) {
+                    // Includes tile if not on board and has matching wormholes
+                    if (
+                        tileData.all[blankRed].wormhole.every(wormhole => tileData.all[anomaly].wormhole.includes(wormhole)) &&
+                        tileData.all[anomaly].wormhole.every(wormhole => tileData.all[blankRed].wormhole.includes(wormhole))
+                    ) {
+                        possibleBlanks.push(blankRed)
+                    }
+                }
+                this.shuffle(possibleBlanks);
+                if (possibleBlanks.length > 0) {
+                    swapped = true;
+                    newTiles[anomalyTileNumber] = possibleBlanks[0];
+                }
+
+
+                // If not equivalent unused system to swap it with
+                if (!swapped && adjacentAnomalies.length > 0) {
+                    // Look at all red back tiles on the board that are not anomalies, and see if they have adjacent anomalies
                     for (let blankRed of blankReds) {
                         let blankRedTileNumber = newTiles.indexOf(blankRed)
                         if (blankRedTileNumber >= 0) {
-                            let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
+                            let adjacentTiles = adjacencyData[blankRedTileNumber];
                             let swappable = true;
-                            for (let adjacentTileNumber of adjacentTilesNumbers) {
-                                if ((allAlphaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== alphaWormholeTileNumber) || (allTrueAnomalies.indexOf(alphaWormhole) >= 0 && allTrueAnomalies.indexOf(newTiles[adjacentTileNumber]) >= 0)) {
+                            for (let adjacentTile of adjacentTiles) {
+                                if (allTrueAnomalies.indexOf(newTiles[adjacentTile]) >= 0 && adjacentTile !== anomalyTileNumber) {
                                     // This blank has an adjacent anomaly, so throw it out
                                     swappable = false;
                                     break;
@@ -1010,54 +1158,60 @@ class MapOptions extends React.Component {
                             }
                             if (swappable) {
                                 // This blank red has no other adjacent anomalies, so swap
-                                newTiles[alphaWormholeTileNumber] = blankRed;
-                                newTiles[blankRedTileNumber] = alphaWormhole;
+                                newTiles[anomalyTileNumber] = blankRed;
+                                newTiles[blankRedTileNumber] = anomaly;
+                                swapped = true;
                                 break;
                             }
                         }
                     }
+                    if (!swapped) {
+                        console.log("Error! Unable to swap anomaly to a free position.")
+                    }
                 }
             }
         }
-        // Beta at least one planet wormhole, so swap it with another planet of equal resource value
-        for (let betaWormhole of allBetaWormholes) {
-            let betaWormholeTileNumber = newTiles.indexOf(betaWormhole);
-            if (betaWormholeTileNumber >= 0 && tileData.all[betaWormhole].planets.length === 0) {
-                // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
-                let adjacentTileNumbers = adjacencyData[betaWormholeTileNumber];
-                let adjacentWormhole = false;
-                for (let adjacentTileNumber of adjacentTileNumbers) {
-                    if (allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0) {
-                        adjacentWormhole = true;
-                        break;
+
+        for (const wormhole in WORMHOLES) {
+            const allWormholesOfType = tileData[`${WORMHOLES[wormhole]}Wormholes`].filter(expansionCheck(includedExpansions));
+            for (let womrhole of allWormholesOfType) {
+                let wormholeTileNumber = newTiles.indexOf(womrhole);
+                if (wormholeTileNumber >= 0 && tileData.all[womrhole].planets.length === 0) {
+                    // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
+                    let adjacentTileNumbers = adjacencyData[wormholeTileNumber];
+                    let adjacentWormhole = false;
+                    for (let adjacentTileNumber of adjacentTileNumbers) {
+                        if (allWormholesOfType.indexOf(newTiles[adjacentTileNumber]) >= 0) {
+                            adjacentWormhole = true;
+                            break;
+                        }
                     }
-                }
-                if (adjacentWormhole) {
-                    // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
-                    let blankReds = useProphecyOfKings ? [...tileData.blue.concat(tileData.pokBlue)] : [...tileData.blue];
-                    // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
-                    blankReds = blankReds.filter( function( el ) {
-                        return allBetaWormholes.indexOf( el ) < 0;
-                    } );
-                    blankReds = this.shuffle(blankReds);
-                    for (let blankRed of blankReds) {
-                        let blankRedTileNumber = newTiles.indexOf(blankRed)
-                        if (blankRedTileNumber >= 0) {
-                            let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
-                            let swappable = true;
-                            for (let adjacentTileNumber of adjacentTilesNumbers) {
-                                // Check for adjacency to another wormhole (excluding itself) and other anomalies
-                                if ((allBetaWormholes.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== betaWormholeTileNumber)) {
-                                    //
-                                    swappable = false;
+                    if (adjacentWormhole) {
+                        // This blank has an adjacent wormhole, so we need to move it. Loop over all blanks to swap with
+                        let blankReds = tileData.blankRed.filter(expansionCheck(includedExpansions));
+                        // Remove wormholes from blank reds, because swapping alphas doesn't make sense.
+                        blankReds = blankReds.filter(function (el) {
+                            return allWormholesOfType.indexOf(el) < 0;
+                        });
+                        blankReds = this.shuffle(blankReds);
+                        for (let blankRed of blankReds) {
+                            let blankRedTileNumber = newTiles.indexOf(blankRed)
+                            if (blankRedTileNumber >= 0) {
+                                let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
+                                let swappable = true;
+                                for (let adjacentTileNumber of adjacentTilesNumbers) {
+                                    if ((allWormholesOfType.indexOf(newTiles[adjacentTileNumber]) >= 0 && adjacentTileNumber !== wormholeTileNumber) || (allTrueAnomalies.indexOf(womrhole) >= 0 && allTrueAnomalies.indexOf(newTiles[adjacentTileNumber]) >= 0)) {
+                                        // This blank has an adjacent anomaly, so throw it out
+                                        swappable = false;
+                                        break;
+                                    }
+                                }
+                                if (swappable) {
+                                    // This blank red has no other adjacent anomalies, so swap
+                                    newTiles[wormholeTileNumber] = blankRed;
+                                    newTiles[blankRedTileNumber] = womrhole;
                                     break;
                                 }
-                            }
-                            if (swappable) {
-                                // This blank red has no other adjacent anomalies, so swap
-                                newTiles[betaWormholeTileNumber] = blankRed;
-                                newTiles[blankRedTileNumber] = betaWormhole;
-                                break;
                             }
                         }
                     }
@@ -1066,49 +1220,75 @@ class MapOptions extends React.Component {
         }
     }
 
-    ensureWormholesForType(possibleTiles, planetWormholes, allWormholes, oppositeWormholes, useProphecyOfKings, ensuredAnomalies) {
-        let allAnomalyList = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
+    /**
+     * Ensures that for all wormholes of given types that either 0 or 2+ of that wormhole are included.
+     * @param {*} possibleTiles A set of tiles chosen for a map gen
+     * @param {Int8Array} desiredWormholes The types of wormholes desired to check
+     * @param {*} ensuredAnomalies Tiles that must be included if possible
+     * @param {*} includedExpansions List of expansions to include
+     * @param {Object} [param4={}] 
+     * @param {string} [param4.method="add"] Can be "add" or "remove". Optional parameter to dictate if singluar wormholes should have a pair added or be replaced with a non-wormhole.
+     * @returns {Int8Array} An ordered list of tiles, with singular wormholes no longer existing
+     */
+    ensureWormholesForType(possibleTiles, desiredWormholes, ensuredAnomalies, includedExpansions, { method = "add" } = {}) {
+
+        let planetWormholes = desiredWormholes.filter(system => !tileData.blankRed.includes(system))
+
+        let allAnomalyList = tileData.red.filter(expansionCheck(includedExpansions));
         let unusedWormholes = [];
+        let unusedRedTiles = allAnomalyList.filter(tile => !possibleTiles.includes(tile));
+        let unusedSinglePlanets = tileData.blue.filter(expansionCheck(includedExpansions)).filter(systemID => tileData.all[systemID].planets.length === 1);
         let usedWormholes = [];
 
-        // Get an array of all unused wormholes
-        for (let wormholeIndex in allWormholes) {
-            possibleTiles.indexOf(allWormholes[wormholeIndex]) < 0 ?
-                unusedWormholes.push(allWormholes[wormholeIndex]) : usedWormholes.push(allWormholes[wormholeIndex]);
+        // Get an array of all used and unused wormholes
+        for (let wormholeIndex in desiredWormholes) {
+            possibleTiles.indexOf(desiredWormholes[wormholeIndex]) < 0 ?
+                unusedWormholes.push(desiredWormholes[wormholeIndex]) : usedWormholes.push(desiredWormholes[wormholeIndex]);
         }
 
-        // If there is only one wormhole, then we need to add a new one in
+        // If there is only one wormhole, then we need to add/remove a new one in
         if (usedWormholes.length === 1) {
             /*
             Lets do some tricky logic here. If we are using a planet wormhole tile, then we want to replace
-            another anomaly with one of the other one (pok: two) anomaly wormholes. If we are not using the planet tile,
-            then we can try to find a planet to replace with any remaining wormhole tiles.
+            another anomaly with one of the other one (pok: two) anomaly wormholes (or with a single planet if removing it). 
+            If we are not using the planet tile, then we can try to find a planet to replace with any remaining wormhole tiles.
              */
-            unusedWormholes = this.shuffle(unusedWormholes);
-            let excludedTiles = [...allWormholes.concat(oppositeWormholes)].concat(ensuredAnomalies);
+            if (method === "add") {
+                unusedWormholes = this.shuffle(unusedWormholes);
+                let excludedTiles = [...tileData.wormholes].concat(ensuredAnomalies);
 
-            // Check that the single used wormhole is not a planet.
-            if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
-                // Try to replace some other planet with a planet wormhole
-                unusedWormholes = planetWormholes;
-                excludedTiles = excludedTiles.concat(allAnomalyList);
-            } else {
-                // Using a planet, so try to replace an anomaly with a wormhole
-                let wormholesToUse = []
-                for (let unusedWormhole of unusedWormholes) {
-                    if (planetWormholes.indexOf(unusedWormhole) < 0) {
-                        wormholesToUse.push(unusedWormhole)
+                // Check that the single used wormhole is not a planet.
+                if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
+                    // Try to replace some other planet with a planet wormhole
+                    unusedWormholes = planetWormholes;
+                    excludedTiles = excludedTiles.concat(allAnomalyList);
+                } else {
+                    // Using a planet, so try to replace an anomaly with a wormhole
+                    let wormholesToUse = []
+                    for (let unusedWormhole of unusedWormholes) {
+                        if (planetWormholes.indexOf(unusedWormhole) < 0) {
+                            wormholesToUse.push(unusedWormhole)
+                        }
                     }
+                    unusedWormholes = wormholesToUse
                 }
-                unusedWormholes = wormholesToUse
+                possibleTiles = this.reverseReplace(possibleTiles, 1, unusedWormholes, excludedTiles, false);
+            } else if (method === "remove") {
+                const excludedTiles = possibleTiles.filter(systemID => systemID !== usedWormholes[0])
+                if (planetWormholes.indexOf(usedWormholes[0]) < 0) {
+                    // Replace wormhole with another red-backed tile
+                    possibleTiles = this.reverseReplace(possibleTiles, 1, unusedRedTiles, excludedTiles, false);
+                } else {
+                    // Replace wormhole with another single-planet tile
+                    possibleTiles = this.reverseReplace(possibleTiles, 1, unusedSinglePlanets, excludedTiles, false);
+                }
             }
-            possibleTiles = this.reverseReplace(possibleTiles, 1, unusedWormholes, excludedTiles, false);
         }
 
         return possibleTiles;
     }
 
-    ensureAnomalies(possibleTiles, numPlanetsToPlace, useProphecyOfKings) {
+    ensureAnomalies(possibleTiles, numPlanetsToPlace, includedExpansions) {
         // Only care about the tiles we will actually place
         possibleTiles = possibleTiles.slice(0, numPlanetsToPlace);
 
@@ -1117,15 +1297,15 @@ class MapOptions extends React.Component {
         let redTileRatio = 1;
         // For 3, 4, and 6 player games, there is a different ratio
         switch (this.state.currentNumberOfPlayers) {
-            case(3):
+            case (3):
                 blueTileRatio = 3
                 redTileRatio = 1
                 break;
-            case(4):
+            case (4):
                 blueTileRatio = 5
                 redTileRatio = 3
                 break;
-            case(6):
+            case (6):
                 blueTileRatio = 3
                 redTileRatio = 2
                 break;
@@ -1140,7 +1320,7 @@ class MapOptions extends React.Component {
         }
 
         // Still have to add a certain number of anomalies in. Get a list of possible anomalies we can add to the tile list
-        let allAnomalyList = useProphecyOfKings ? [...tileData.red.concat(tileData.pokRed)] : [...tileData.red];
+        let allAnomalyList = tileData.red.filter(expansionCheck(includedExpansions));
 
         // Remove all current anomalies in use from this list
         let possibleAnomalies = []
@@ -1166,11 +1346,11 @@ class MapOptions extends React.Component {
      * @param possibleTiles {Int8Array} The ordered list of tiles, cut to the needed size
      * @param numTilesToReplace {Number} The number of tiles we need to try to replace from replacement into possible
      * @param replacementTiles {Int8Array} An array of all the tiles we can pick from to put into possibleTiles
-     * @param excludedTiles {Int8Array} An array of tiles we do not want to replace in possible
+     * @param excludedTiles {Int8Array} An array of tiles we do not want to replace if possible
      * @param reverseBeforeAndAfter {Boolean} Whether we want to reverse the list before and after replacement
      * @returns {Int8Array} An ordered list of tiles, with some tiles being replaced
      */
-    reverseReplace (possibleTiles, numTilesToReplace, replacementTiles, excludedTiles, reverseBeforeAndAfter) {
+    reverseReplace(possibleTiles, numTilesToReplace, replacementTiles, excludedTiles, reverseBeforeAndAfter) {
         // If we aren't placing in reverse order, we want to start changing the worst tiles (which are usually last)
         if (reverseBeforeAndAfter) {
             possibleTiles = possibleTiles.reverse()
@@ -1181,7 +1361,7 @@ class MapOptions extends React.Component {
         while (numTilesToReplace > 0 && replacementTiles.length > 0 && currentTileIndex > 0) {
             // Check the index to see that it is not an anomaly or a 0 or -1 or 18 or hyperlane
             let tileOfInterest = possibleTiles[currentTileIndex]
-            if (excludedTiles.indexOf(tileOfInterest) < 0 && tileOfInterest !== -1  && tileOfInterest !== 18 && tileOfInterest !== 0 && typeof tileOfInterest !== "string") {
+            if (excludedTiles.indexOf(tileOfInterest) < 0 && tileOfInterest !== -1 && tileOfInterest !== 18 && tileOfInterest !== 0) {
                 // It is a replaceable tile, so fill it from the new anomalies list
                 possibleTiles[currentTileIndex] = replacementTiles.shift()
                 numTilesToReplace -= 1;
@@ -1206,7 +1386,7 @@ class MapOptions extends React.Component {
         }
 
         // Sort the returned list by weight, with higher weighted planets being first
-        planetWeights.sort(function(a, b) {
+        planetWeights.sort(function (a, b) {
             return b[1] - a[1];
         })
 
@@ -1261,17 +1441,42 @@ class MapOptions extends React.Component {
         if (tile['type'] === 'red') {
             total_weight += weights['anomaly'] + 40;
             // Providing bonuses to these sections mean the other ones are never used
-            // if (tile['anomaly'] === null
-            //     || tile['anomaly'] === 'asteroid-field'
-            //     || tile['anomaly'] === 'gravity-rift') {
+            // if (tile['anomaly'].length === 0
+            //     || (tile['anomaly'].length === 0 && (tile['anomaly'].includes('asteroid-field')
+            //         || tile['anomaly'].includes('gravity-rift')))) {
             //     // Give an extra boost to these anomalies, as they are easier to cross than others
             //     total_weight += 20;  // Change total back to 30 if using this
             // }
         }
-        total_weight += tile['wormhole'] ? weights['wormhole'] : 0
+        total_weight += tile['wormhole'].length > 0 ? weights['wormhole'] : 0
         total_weight += ensuredAnomalies.indexOf(planetTileNumber) > -1 ? weights['racial'] : 0
 
         return total_weight
+    }
+    toggleFanContentHelp(event) {
+        this.setState({
+            fanContentHelp: !this.state.fanContentHelp
+        })
+    }
+    toggleUnchartedSpaceHelp(event) {
+        this.setState({
+            unchartedSpaceHelp: !this.state.unchartedSpaceHelp
+        })
+    }
+    toggleDiscordantStarsHelp(event) {
+        this.setState({
+            discordantStarsHelp: !this.state.discordantStarsHelp
+        })
+    }
+    toggleAscendentSunHelp(event) {
+        this.setState({
+            ascendentSunHelp: !this.state.ascendentSunHelp
+        })
+    }
+    toggleFanHyperlanesHelp(event) {
+        this.setState({
+            fanHyperlanesHelp: !this.state.fanHyperlanesHelp
+        })
     }
     togglePickRacesHelp(event) {
         this.setState({
@@ -1325,51 +1530,111 @@ class MapOptions extends React.Component {
     }
 
     render() {
+
         return (
             <div id="options" className={this.props.visible ? "" : "d-none"}>
                 <div className="title">
                     <h4 className="text-center">Generation Options</h4>
                 </div>
-                <form id="generateForm" onSubmit={this.generateBoard}>
+                <Form id="generateForm" onSubmit={this.generateBoard}>
 
-                    <div className="custom-control custom-checkbox mb-3">
-                        <input type="checkbox" className="custom-control-input" id="pokExpansion" name="useProphecyOfKings" checked={this.props.useProphecyOfKings} onChange={this.updatePok} />
-                        <label className="custom-control-label" htmlFor="pokExpansion">Use Prophecy of Kings Expansion</label>
-                    </div>
+                    <Form.Group className="mb-3 d-flex" controlId="pokExpansion">
+                        <Form.Check name="pokExpansion" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.POK]} onChange={this.updatePok} label="Use POK Tiles" />
+                    </Form.Group>
 
-                    <div className="form-group">
+                    <Form.Group className="mb-3 d-flex" controlId="fanContent">
+                        <Form.Check name="fanContent" type="checkbox" checked={this.state.fanContent} onChange={this.handleInputChange} label="Use Fan-Made Content" />
+                        <QuestionCircle className="icon" onClick={this.toggleFanContentHelp} />
+                    </Form.Group>
+                    <Collapse in={this.state.fanContent}>
+                        <div>
+                            <div className="card card-body">
+                                <Form.Group className="mb-3 d-flex" controlId="useUnchartedSpace">
+                                    <Form.Check name="useUnchartedSpace" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.UnS]} onChange={this.updateUncharted} label="Use Uncharted Space Fan Tiles" />
+                                    <QuestionCircle className="icon" onClick={this.toggleUnchartedSpaceHelp} />
+                                </Form.Group>
+                                <Form.Group className="mb-3 d-flex" controlId="useDiscordantStars">
+                                    <Form.Check name="useDiscordantStars" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.DS]} onChange={this.updateDS} label="Use DS Fan Races" />
+                                    <QuestionCircle className="icon" onClick={this.toggleDiscordantStarsHelp} />
+                                </Form.Group>
+                                <Form.Group className="mb-3 d-flex" controlId="useAscendentSun">
+                                    <Form.Check name="useAscendentSun" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.AS]} onChange={this.updateSun} label="Use Eronous' Fan Tiles" />
+                                    <QuestionCircle className="icon" onClick={this.toggleAscendentSunHelp} />
+                                </Form.Group>
+                                <Form.Group className="d-flex" controlId="useFanHyperlanes">
+                                    <Form.Check name="useFanHyperlanes" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.Async]} onChange={this.updateFanHyp} label="Use Async Hyperlane Tiles" />
+                                    <QuestionCircle className="icon" onClick={this.toggleFanHyperlanesHelp} />
+                                </Form.Group>
+                            </div>
+                        </div>
+                    </Collapse>
+
+                    <Form.Group className="my-3">
+                        <Form.Label>Number of Players</Form.Label>
+                        <Form.Select className="form-control" id="playerCount" name="currentNumberOfPlayers" value={this.state.currentNumberOfPlayers} onChange={this.updatePlayerCount}>
+                            {this.state.currentNumberOfPlayersOptions.map((x) => <option key={x} value={x}>{x}</option>)}
+                        </Form.Select>
+                    </Form.Group>
+                    {/* <div className="form-group my-3">
                         <label htmlFor="playerCount">Number of Players</label>
                         <select className="form-control" id="playerCount" name="currentNumberOfPlayers" value={this.state.currentNumberOfPlayers} onChange={this.updatePlayerCount}>
                             {this.state.currentNumberOfPlayersOptions.map((x) => <option key={x} value={x}>{x}</option>)}
                         </select>
-                    </div>
+                    </div> */}
 
-                    <div className="form-group">
+                    <Form.Group className="my-3">
+                        <Form.Label className="d-flex">
+                            Board Style
+                            <QuestionCircle className="icon" onClick={this.toggleBoardStyleHelp} />
+                        </Form.Label>
+                        <Form.Select className="form-control" id="boardStyle" name="currentBoardStyle" value={this.state.currentBoardStyle} onChange={this.updateBoardStyle}>
+                            {this.state.currentBoardStyleOptions.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
+                        </Form.Select>
+                    </Form.Group>
+                    {/* <div className="form-group my-3">
                         <label htmlFor="boardStyle" className="d-flex">Board Style
                             <QuestionCircle className="icon" onClick={this.toggleBoardStyleHelp} />
                         </label>
                         <select className="form-control" id="boardStyle" name="currentBoardStyle" value={this.state.currentBoardStyle} onChange={this.updateBoardStyle}>
                             {this.state.currentBoardStyleOptions.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
-                    </div>
+                    </div> */}
 
-                    <div className="form-group">
+                    <Form.Group className="my-3">
+                        <Form.Label className="d-flex">
+                            Placement Style
+                            <QuestionCircle className="icon" onClick={this.togglePlacementStyleHelp} />
+                        </Form.Label>
+                        <Form.Select className="form-control" id="placementStyle" name="currentPlacementStyle" value={this.state.currentPlacementStyle} onChange={this.handleInputChange}>
+                            {this.state.optionsPossible.placementStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
+                        </Form.Select>
+                    </Form.Group>
+                    {/* <div className="form-group my-3">
                         <label htmlFor="placementStyle" className="d-flex">Placement Style
                             <QuestionCircle className="icon" onClick={this.togglePlacementStyleHelp} />
                         </label>
                         <select className="form-control" id="placementStyle" name="currentPlacementStyle" value={this.state.currentPlacementStyle} onChange={this.handleInputChange}>
                             {this.state.optionsPossible.placementStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
-                    </div>
+                    </div> */}
 
-                    <div className="form-group">
+                    <Form.Group className="my-3">
+                        <Form.Label className="d-flex">
+                            System Weighting
+                            <QuestionCircle className="icon" onClick={this.togglePickStyleHelp} />
+                        </Form.Label>
+                        <Form.Select className="form-control" id="pickStyle" name="currentPickStyle" value={this.state.currentPickStyle} onChange={this.handleInputChange}>
+                            {this.state.optionsPossible.pickStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
+                        </Form.Select>
+                    </Form.Group>
+                    {/* <div className="form-group my-3">
                         <label htmlFor="pickStyle" className="d-flex">System Weighting
                             <QuestionCircle className="icon" onClick={this.togglePickStyleHelp} />
                         </label>
                         <select className="form-control" id="pickStyle" name="currentPickStyle" value={this.state.currentPickStyle} onChange={this.handleInputChange}>
                             {this.state.optionsPossible.pickStyles.map((x) => <option key={x} value={x}>{this.capitalize(x)}</option>)}
                         </select>
-                    </div>
+                    </div> */}
 
                     <div className={"ml-2 collapse " + (this.state.currentPickStyle === "custom" ? "show" : "")} id="customPickStyle">
                         <div className="card card-body">
@@ -1394,53 +1659,124 @@ class MapOptions extends React.Component {
                     </div>
 
 
-                    <div className="form-group">
-                        <label htmlFor="seed">Specific Seed</label>
-                        <input className="form-control" id="seed" name="updateSeed" type="text" placeholder="Enter a number to seed generation..." value={this.state.currentSeed} onChange={this.updateSeed} />
-                    </div>
+                    <Form.Group className="mb-3" controlId="seed">
+                        <Form.Label>Specific Seed</Form.Label>
+                        <Form.Control name="updateSeed" type="text" placeholder="Enter a number to seed generation..." value={this.state.currentSeed} onChange={this.updateSeed} />
+                    </Form.Group>
 
-                    <div className="custom-control custom-checkbox mb-3 d-flex">
-                        <input type="checkbox" className="custom-control-input" id="pickRaces" name="pickRaces" checked={this.state.pickRaces} onChange={this.handleInputChange} />
-                        <label className="custom-control-label" htmlFor="pickRaces">Pick Races for Players</label>
+                    <Form.Group className="mb-3 d-flex" controlId="pickRaces">
+                        <Form.Check name="pickRaces" type="checkbox" checked={this.props.pickRaces} onChange={this.handleInputChange} label="Pick Races for Players" />
                         <QuestionCircle className="icon" onClick={this.togglePickRacesHelp} />
-                    </div>
-                    <div className={"ml-2 mb-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
+                    </Form.Group>
+                    <Collapse in={this.state.pickRaces}>
+                        <div>
+                            <div className="card card-body">
+                                <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
+
+                                <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
+
+                                <Form.Group className="d-flex" controlId="ensureRacialAnomalies">
+                                    <Form.Check name="ensureRacialAnomalies" type="checkbox" checked={this.props.ensureRacialAnomalies} onChange={this.handleInputChange} label="Ensure Racial Anomalies" />
+                                    <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
+                                </Form.Group>
+                            </div>
+                        </div>
+                    </Collapse>
+                    {/* <div className={"ml-2 mb-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
                         <div className="card card-body">
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
 
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
-                            
-                            <div className="custom-control custom-checkbox d-flex">
-                                <input type="checkbox" className="custom-control-input" id="ensureRacialAnomalies" name="ensureRacialAnomalies" checked={this.state.ensureRacialAnomalies} onChange={this.handleInputChange} />
-                                <label className="custom-control-label" htmlFor="ensureRacialAnomalies">Ensure Racial Anomalies</label>
-                                <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
-                            </div>
-                        </div>
-                    </div>
 
-                    <div className="custom-control custom-checkbox mb-3 d-flex">
+                            <Form.Group className="mb-3 d-flex" controlId="ensureRacialAnomalies">
+                                <Form.Check name="ensureRacialAnomalies" type="checkbox" checked={this.props.ensureRacialAnomalies} onChange={this.handleInputChange} label="Ensure Racial Anomalies" />
+                                <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
+                            </Form.Group>
+                        </div>
+                    </div> */}
+
+                    <Form.Group className="mb-3 d-flex" controlId="shuffleBoards">
+                        <Form.Check name="shuffleBoards" type="checkbox" checked={this.props.shuffleBoards} onChange={this.handleInputChange} label="Randomize Priorities Before Placement" />
+                        <QuestionCircle className="icon" onClick={this.toggleShufflePriorityHelp} />
+                    </Form.Group>
+                    {/* <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="shuffleBoards" name="shuffleBoards" checked={this.state.shuffleBoards} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="shuffleBoards">Randomize Priorities Before Placement</label>
                         <QuestionCircle className="icon" onClick={this.toggleShufflePriorityHelp} />
-                    </div>
+                    </div> */}
 
-                    <div className="custom-control custom-checkbox mb-3 d-flex">
+                    <Form.Group className="mb-3 d-flex" controlId="reversePlacementOrder">
+                        <Form.Check name="reversePlacementOrder" type="checkbox" checked={this.props.reversePlacementOrder} onChange={this.handleInputChange} label="Reverse Placement Order" />
+                        <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
+                    </Form.Group>
+                    {/* <div className="custom-control custom-checkbox mb-3 d-flex">
                         <input type="checkbox" className="custom-control-input" id="reversePlacementOrder" name="reversePlacementOrder" checked={this.state.reversePlacementOrder} onChange={this.handleInputChange} />
                         <label className="custom-control-label" htmlFor="reversePlacementOrder">Reverse Placement Order</label>
                         <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
-                    </div>
+                    </div> */}
 
                     <SetPlayerNameModal visible={this.state.setPlayerNamesHelp} currentPlayerNames={this.props.currentPlayerNames}
-                                        hideModal={this.toggleSetPlayerNamesHelp} handleNameChange={this.handleNameChange}
+                        hideModal={this.toggleSetPlayerNamesHelp} handleNameChange={this.handleNameChange}
                     />
                     <SetRacesModal visible={this.state.setRacesHelp} races={this.state.optionsPossible.races}
-                                   pokRaces={this.state.optionsPossible.pokRaces} useProphecyOfKings={this.props.useProphecyOfKings}
-                                   currentRaces={this.props.currentRaces}
-                                   hideModal={this.toggleSetRacesHelp} handleRacesChange={this.handleRacesChange}
+                        includedExpansions={this.props.includedExpansions}
+                        pokRaces={this.state.optionsPossible.pokRaces}
+                        dsRaces={this.state.optionsPossible.dsRaces}
+                        currentRaces={this.props.currentRaces}
+                        hideModal={this.toggleSetRacesHelp} handleRacesChange={this.handleRacesChange}
                     />
 
+                    <HelpModal key={"help-fan-content"} visible={this.state.fanContentHelp} hideModal={this.toggleFanContentHelp} title={"About Fanmade Content for Twilight Imperium"}
+                        content={`<p>
+                        WARNING: Highly Experimental content ahead. Fan made content is subject to change and does not guarentee the same balance and quality as TI4 and the POK expansion.
+                        <br>
+                        <br>
+                        Over the past however many years, some fans have created additional content for the game that has become relatively popular. This option allows you to add some of the more well-known fan system tiles during map generation.
+                        <br>
+                        <br>
+                        Fan content featured here is created to be compliant with the <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>. 
+                        </p>`}
+                    />
+                    <HelpModal key={"help-uncharted-space"} visible={this.state.unchartedSpaceHelp} hideModal={this.toggleUnchartedSpaceHelp} title={"About Fanmade Content for Twilight Imperium"}
+                        content={`<p>
+                        "A fan-made expansion for Twilight Imperium: Fourth Edition from the team responsible for Discordant Stars. The new content in this pack is intended to expand the variety of available system tiles, exploration effects, relics, and action cards, while preserving official game balance. This project has endeavored to fully comply with <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>."
+                        <br>
+                        <br>
+                        <a href="https://docs.google.com/document/d/10sYWiwVNvdOwDMpvHlbsx4athKwgeTc8usWFMV3Aaas">Reference document for this content</a>
+                        <br>
+                        <br>
+                        Obviously only the new system tiles are relevant for this tool. This will add an additional 24 system tiles, including 5 new legendary planets, some additional empty systems and anomalies to even out system distriputions, and one gamma wormhole inside a gravity rift.
+                         </p>`}
+                    />
+                    <HelpModal key={"help-discordant-stars"} visible={this.state.discordantStarsHelp} hideModal={this.toggleDiscordantStarsHelp} title={"About Fanmade Content for Twilight Imperium"}
+                        content={`<p>
+                         "A fan-made expansion for Twilight Imperium: Fourth Edition that adds 34 additional factions designed by & for the Twilight Imperium community. This project has endeavored to fully comply with <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>."
+                         <br>
+                         <br>
+                         <a href="https://docs.google.com/document/d/1214N4Py1NqvkQzFN5YULKiR7rmn1qpf4OdFqb8_vQUg">Reference document for this content</a>
+                         <br>
+                         <br>
+                         This option will only matter if you choose to pick races for players. This will add these factions to the pool of random faction, include their home system in the graphics, and influence racial anomalies.
+                         </p>`}
+                    />
+                    <HelpModal key={"help-ascendent-sun"} visible={this.state.ascendentSunHelp} hideModal={this.toggleAscendentSunHelp} title={"About Fanmade Content for Twilight Imperium"}
+                        content={`<p>
+                         "Eronous Tiles" is a set of 130+ tiles created by discord user and artist Eronous. These tiles were intially created for the TI4 async bot as a part of large community games that required very large maps.
+                         <br>
+                         <br>
+                         <a href="https://docs.google.com/spreadsheets/d/1C1a8uc_DT21aPUUF5oQWNb0y9QYZHCVsE5rarEjB8kA">Reference document for this content</a>
+                         <br>
+                         <br>
+                         This set of tiles includes 110 new planets, including 12 legendary planets, 6 new wormhole types, and 2 planets inside supernovas!
+                         </p>`}
+                    />
+                    <HelpModal key={"help-fan-hyperlanes"} visible={this.state.fanHyperlanesHelp} hideModal={this.toggleFanHyperlanesHelp} title={"About Fanmade Content for Twilight Imperium"}
+                        content={`<p>
+                         These are a set of hyperlane tiles that are a part of the TI4 async bot but aren't necessarialy part of any particular fan expansion. Feel free to use them however you imagine!
+                         </p>`}
+                    />
                     <HelpModal key={"help-board"} visible={this.state.boardStyleHelp} hideModal={this.toggleBoardStyleHelp} title={"About Board Style"}
-                         content='<p>
+                        content='<p>
                          Board style changes how the tiles are actually laid out on a newly generated map.
                          <br>
                          <br>
@@ -1448,7 +1784,7 @@ class MapOptions extends React.Component {
                          </p>'
                     />
                     <HelpModal key={"help-placement"} visible={this.state.placementStyleHelp} hideModal={this.togglePlacementStyleHelp} title={"About Placement Style"}
-                         content='<p>
+                        content='<p>
                          Placement style dictates where important tiles are placed. Most revolve around having at least one tile near the home system with good resources.
                          <br>
                          <br>
@@ -1459,7 +1795,7 @@ class MapOptions extends React.Component {
                          </p>'
                     />
                     <HelpModal key={"help-pick"} visible={this.state.pickStyleHelp} hideModal={this.togglePickStyleHelp} title={"About Pick Style"}
-                               content='<p>
+                        content='<p>
                          Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the placement style) it is put closer to home worlds to facilitate available assets.
                          <br>
                          <br><b>Balanced:</b> A custom weight which favors resources and planet count more than anomalies. This more accurately factors in tech specialties and influence as trade-offs to the "Resource" pick.
@@ -1471,7 +1807,7 @@ class MapOptions extends React.Component {
 
                     />
                     <HelpModal key={"help-races"} visible={this.state.pickRacesHelp} hideModal={this.togglePickRacesHelp} title={"About Picking Races"}
-                         content="<p>
+                        content="<p>
                          Automatically assigns races to the players on the boards.
                          <br>
                          <br>
@@ -1479,7 +1815,7 @@ class MapOptions extends React.Component {
                          </p>"
                     />
                     <HelpModal key={"help-multiple"} visible={this.state.pickMultipleRacesHelp} hideModal={this.togglePickMultipleRacesHelp} title={"About Picking Multiple Races"}
-                         content="<p>
+                        content="<p>
                          Divides all the races evenly up amongst the players in the game (with no overflow), so that they can choose from a selection instead of being specifically assigned one race.
                          <br>
                          <br>
@@ -1487,7 +1823,7 @@ class MapOptions extends React.Component {
                          </p>"
                     />
                     <HelpModal key={"help-priority"} visible={this.state.shufflePriorityHelp} hideModal={this.toggleShufflePriorityHelp} title={"About Shuffling Priority"}
-                         content='<p>
+                        content='<p>
                          Randomizes the priority picks for each picking round.
                          <br>
                          <br>
@@ -1498,7 +1834,7 @@ class MapOptions extends React.Component {
                          </p>'
                     />
                     <HelpModal key={"help-reverse"} visible={this.state.reversePlacementOrderHelp} hideModal={this.toggleReversePlacementOrderHelp} title={"About Reverse Placement Order"}
-                         content='<p>
+                        content='<p>
                          Reverses which tiles are placed first in placement order.
                          <br>
                          <br>
@@ -1506,16 +1842,16 @@ class MapOptions extends React.Component {
                          </p>'
                     />
                     <HelpModal key={"help-racial-anomalies"} visible={this.state.ensureRacialAnomaliesHelp} hideModal={this.toggleEnsureRacialAnomaliesHelp} title={"About Ensure Racial Anomalies"}
-                         content="<p>
+                        content="<p>
                          Ensures that races get their beneficial anomalies
                          <br>
                          <br>
-                         This option makes it so that Muaat will always receive a supernova, Saar will always receive an asteroid field, Empyrean will always receive a nebulae and Vuil'Raith will always receive a gravity rift.
+                         This option makes it so that Muaat will always receive a supernova, Saar will always receive an asteroid field, Empyrean will always receive a nebulae and Vuil'Raith and Nivyn (DS) will always receive a gravity rift.
                          </p>"
                     />
-            
-                    <button type="submit" className="btn btn-primary">Generate</button>
-                </form>
+
+                    <Button type="submit" className="btn btn-primary">Generate</Button>
+                </Form>
             </div>
         );
     }

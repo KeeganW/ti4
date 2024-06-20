@@ -9,11 +9,11 @@ import MainMap from "./map/MainMap";
 import MapControls from "./map/MapControls";
 import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
-import tileData from "./data/tileData.json";
+import tileData, {WORMHOLE_SYMBOLS, EXPANSIONS} from "./data/tileData";
 import boardData from "./data/boardData.json";
 import raceData from "./data/raceData.json";
 import {calculateOffsets} from "./helpers/Helpers";
-import ReactTooltip from "react-tooltip";
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 
 /**
@@ -35,13 +35,20 @@ class App extends React.Component {
             tiles: [],
             unusedTiles: [],
             overlayVisible: false,
+            wormholeOverlayVisible: false,
             zoom: 1.0,
             lastCall: 0,
             mobileBreakpoint: 700,
             isMobileView: false,
             encodedOptions: "",
 
-            useProphecyOfKings: false,
+            includedExpansions: Object.fromEntries([
+                [EXPANSIONS.POK, false],
+                [EXPANSIONS.UnS, false],
+                [EXPANSIONS.DS, false],
+                [EXPANSIONS.AS, false],
+                [EXPANSIONS.Async, false],
+            ]),
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
             currentRaces: [...raceData.races],
 
@@ -73,7 +80,12 @@ class App extends React.Component {
 
         this.toggleOptionsMenu = this.toggleOptionsMenu.bind(this);
         this.toggleProphecyOfKings = this.toggleProphecyOfKings.bind(this);
+        this.toggleUnchartedSpace = this.toggleUnchartedSpace.bind(this);
+        this.toggleDiscordantStars = this.toggleDiscordantStars.bind(this);
+        this.toggleAscendentSun = this.toggleAscendentSun.bind(this)
+        this.toggleFanHyperlanes = this.toggleFanHyperlanes.bind(this)
         this.toggleOverlay = this.toggleOverlay.bind(this);
+        this.toggleWormholeOverlay = this.toggleWormholeOverlay.bind(this);
         this.updateTileNumberOverlays = this.updateTileNumberOverlays.bind(this);
         this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
         this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
@@ -230,10 +242,13 @@ class App extends React.Component {
 
         // Update the unused tiles list
         let systemNumbers = []
-        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
-        if (this.state.useProphecyOfKings) {
-            systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
-        }
+
+        const expansionCheck = (includedExpansions) => (
+            (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async])
+        )
+
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(this.state.includedExpansions));
+
         let unusedTiles = []
         for (let systemNumber of systemNumbers) {
             // If it is not on the map, show the system tile. Otherwise, hide it.
@@ -353,6 +368,17 @@ class App extends React.Component {
             overlayVisible: !this.state.overlayVisible,
         });
     }
+
+    /**
+     * Toggle the wormhole overlay.
+     */
+    toggleWormholeOverlay() {
+        this.updateWormholeOverlays(!this.state.wormholeOverlayVisible);
+        
+        this.setState({
+            wormholeOverlayVisible: !this.state.wormholeOverlayVisible,
+        });
+    }
     
     updateTileNumberOverlays(showTiles) {
         // Toggle the tile overlays
@@ -371,6 +397,30 @@ class App extends React.Component {
                 if (this.state.tiles[tileNumber] !== 0 || !this.state.moreInfoVisible) {
                     numOverlay.hide()
                 }
+            }
+        }
+    }
+    
+    updateWormholeOverlays(showTiles) {
+        // Toggle the tile overlays
+        console.log(this.state.tiles)
+        for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+            let wormholeOverlay = $("#wormhole-" + tileNumber);
+            if (showTiles) {
+                // Want to show all the tiles
+                console.log(this.state.tiles[tileNumber])
+                if (
+                    tileData.all[this.state.tiles[tileNumber]]
+                    &&
+                    tileData.all[this.state.tiles[tileNumber]].wormhole.length > 0
+                    &&
+                    (this.getTileNumber(this.state.tiles[tileNumber]) !== -1 || this.state.customMapBuilding)) {
+                    wormholeOverlay.html(tileData.all[this.state.tiles[tileNumber]].wormhole.map(wormhole => WORMHOLE_SYMBOLS[wormhole]).join(' '));
+                    wormholeOverlay.show();
+                }
+            } else {
+                // Currently showing all tiles, so with toggle we will be hiding them
+                wormholeOverlay.hide()
             }
         }
     }
@@ -407,8 +457,54 @@ class App extends React.Component {
      * Toggle whether we need to use the prophecy of kings expansion or not
      */
     toggleProphecyOfKings() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.POK] = !newIncludedExpansions[EXPANSIONS.POK]
         this.setState({
-            useProphecyOfKings: !this.state.useProphecyOfKings,
+            includedExpansions: newIncludedExpansions,
+        }, this.showExtraTiles);
+    }
+
+    /**
+     * Toggle whether we need to use the uncharted space fan expansion or not
+     */
+    toggleUnchartedSpace() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.UnS] = !newIncludedExpansions[EXPANSIONS.UnS]
+        this.setState({
+            includedExpansions: newIncludedExpansions,
+        }, this.showExtraTiles);
+    }
+
+    /**
+     * Toggle whether we need to use the ascendent sun fan expansion or not
+     */
+    toggleAscendentSun() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.AS] = !newIncludedExpansions[EXPANSIONS.AS]
+        this.setState({
+            includedExpansions: newIncludedExpansions,
+        }, this.showExtraTiles);
+    }
+
+    /**
+     * Toggle whether we need to use fanmade hyperlanes or not
+     */
+    toggleFanHyperlanes() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.Async] = !newIncludedExpansions[EXPANSIONS.Async]
+        this.setState({
+            includedExpansions: newIncludedExpansions,
+        }, this.showExtraTiles);
+    }
+
+    /**
+     * Toggle whether we need to use the discordant stars races or not
+     */
+    toggleDiscordantStars() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.DS] = !newIncludedExpansions[EXPANSIONS.DS]
+        this.setState({
+            includedExpansions: newIncludedExpansions,
         }, this.showExtraTiles);
     }
 
@@ -476,10 +572,13 @@ class App extends React.Component {
      */
     showExtraTiles() {
         let systemNumbers = []
-        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red);
-        if (this.state.useProphecyOfKings || this.state.showAllExtraTiles) {
-            systemNumbers = systemNumbers.concat(tileData.pokBlue).concat(tileData.pokRed);
-        }
+
+        const expansionCheck = (includedExpansions) => (
+            (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async])
+        )
+
+        systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(this.state.includedExpansions));
+
         if (this.state.customMapBuilding) {
             systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
         }
@@ -741,6 +840,8 @@ class App extends React.Component {
         if (tile !== undefined) {
             let hyperlaneRegex = /^((8[3-9]|90|91)[AB])-?([0-5])?$/gm
             let result = hyperlaneRegex.exec(tile);
+            let altHyperlaneRegex = /^(hyp.+?)-?([0-5])?$/gm
+            let altHyperlaneResult = altHyperlaneRegex.exec(tile);
             if (result) {
                 if (numberOnly) {
                     return Number(result[2]);
@@ -749,11 +850,21 @@ class App extends React.Component {
                 } else {
                     return result[1];
                 }
-            } else {
-                let regex = /^(80|81|82|-1|[0-7]?[0-9])-?([0-5])?$/gm
+            } else if (altHyperlaneResult){
+                if (numberOnly) {
+                    return Number(altHyperlaneResult[2]);
+                } else if (withDash) {
+                    return altHyperlaneResult[0];
+                } else {
+                    return altHyperlaneResult[1];
+                }
+            }
+            else {
+                // let regex = /^(80|81|82|-1|[0-7]?[0-9])-?([0-5])?$/gm
+                let regex = /^((?:er)?\d{1,4})-?([0-5])?$/gm
                 result = regex.exec(tile);
                 if (result) {
-                    return Number(result[1])
+                    return result[1]
                 } else {
                     return -1
                 }
@@ -786,24 +897,26 @@ class App extends React.Component {
 
         // Set the map height based on which tiles are being used
         let mapNumberTilesHeight = 9;
-        let mapNumberTilesWidth = 7;
-        if (this.getTileNumber(this.state.tiles[37], true) >= 0 || this.getTileNumber(this.state.tiles[38], true) >= 0 || this.getTileNumber(this.state.tiles[60], true) >= 0
-            || this.getTileNumber(this.state.tiles[48], true) >= 0 || this.getTileNumber(this.state.tiles[49], true) >= 0 || this.getTileNumber(this.state.tiles[50], true) >= 0) {
-            mapNumberTilesHeight = 9;
-            mapNumberTilesWidth = 7;
-        } else if (this.getTileNumber(this.state.tiles[19], true) >= 0 || this.getTileNumber(this.state.tiles[20], true) >= 0 || this.getTileNumber(this.state.tiles[36], true) >= 0
-            || this.getTileNumber(this.state.tiles[27], true) >= 0 || this.getTileNumber(this.state.tiles[28], true) >= 0 || this.getTileNumber(this.state.tiles[29], true) >= 0) {
-            mapNumberTilesHeight = 7;
-            mapNumberTilesWidth = 5.5;
-        } else if (this.getTileNumber(this.state.tiles[7], true) >= 0 || this.getTileNumber(this.state.tiles[8], true) >= 0 || this.getTileNumber(this.state.tiles[18], true) >= 0
-            || this.getTileNumber(this.state.tiles[12], true) >= 0 || this.getTileNumber(this.state.tiles[13], true) >= 0 || this.getTileNumber(this.state.tiles[14], true) >= 0) {
-            mapNumberTilesHeight = 5;
-            mapNumberTilesWidth = 4;
-        } else if (this.getTileNumber(this.state.tiles[1], true) >= 0 || this.getTileNumber(this.state.tiles[2], true) >= 0 || this.getTileNumber(this.state.tiles[6], true) >= 0
-            || this.getTileNumber(this.state.tiles[3], true) >= 0 || this.getTileNumber(this.state.tiles[4], true) >= 0 || this.getTileNumber(this.state.tiles[5], true) >= 0) {
-            mapNumberTilesHeight = 3;
-            mapNumberTilesWidth = 2.5;
-        }
+        let mapNumberTilesWidth = 9;
+        const visibleTiles = [...Object.keys(tileData.all)]
+        visibleTiles.push(0)
+        // if (this.getTileNumber(this.state.tiles[37], true) in visibleTiles || this.getTileNumber(this.state.tiles[38], true) in visibleTiles || this.getTileNumber(this.state.tiles[60], true) in visibleTiles
+        //     || this.getTileNumber(this.state.tiles[48], true) in visibleTiles || this.getTileNumber(this.state.tiles[49], true) in visibleTiles || this.getTileNumber(this.state.tiles[50], true) in visibleTiles) {
+        //     mapNumberTilesHeight = 9;
+        //     mapNumberTilesWidth = 7;
+        // } else if (this.getTileNumber(this.state.tiles[19], true) in visibleTiles || this.getTileNumber(this.state.tiles[20], true) in visibleTiles || this.getTileNumber(this.state.tiles[36], true) in visibleTiles
+        //     || this.getTileNumber(this.state.tiles[27], true) in visibleTiles || this.getTileNumber(this.state.tiles[28], true) in visibleTiles || this.getTileNumber(this.state.tiles[29], true) in visibleTiles) {
+        //     mapNumberTilesHeight = 7;
+        //     mapNumberTilesWidth = 5.5;
+        // } else if (this.getTileNumber(this.state.tiles[7], true) in visibleTiles || this.getTileNumber(this.state.tiles[8], true) in visibleTiles || this.getTileNumber(this.state.tiles[18], true) in visibleTiles
+        //     || this.getTileNumber(this.state.tiles[12], true) in visibleTiles || this.getTileNumber(this.state.tiles[13], true) in visibleTiles || this.getTileNumber(this.state.tiles[14], true) in visibleTiles) {
+        //     mapNumberTilesHeight = 5;
+        //     mapNumberTilesWidth = 4;
+        // } else if (this.getTileNumber(this.state.tiles[1], true) in visibleTiles || this.getTileNumber(this.state.tiles[2], true) in visibleTiles || this.getTileNumber(this.state.tiles[6], true) in visibleTiles
+        //     || this.getTileNumber(this.state.tiles[3], true) in visibleTiles || this.getTileNumber(this.state.tiles[4], true) in visibleTiles || this.getTileNumber(this.state.tiles[5], true) in visibleTiles) {
+        //     mapNumberTilesHeight = 3;
+        //     mapNumberTilesWidth = 2.5;
+        // }
 
         // Configuration options for magic numbers
         let mapPadding = 0; // The amount of pad spacing to apply to the map edges
@@ -834,6 +947,7 @@ class App extends React.Component {
             let tile = $("#tile-" + tileNumber);
             let tileWrapper = $("#tile-wrapper-" + tileNumber);
             let numOverlay = $("#number-" + tileNumber);
+            let wormholeOverlay = $("#wormhole-" + tileNumber);
             let underlay = $("#underlay-" + tileNumber);
             
             // Decide if we should be displaying this tile
@@ -869,6 +983,12 @@ class App extends React.Component {
                 .css("margin-left", "-10px")
                 .css("top", constraintHeight/2 - 10)
                 .html(this.getTileNumber(this.state.tiles[tileNumber]))
+
+            wormholeOverlay
+                .css("margin-left", "-10px")
+                .css("top", constraintHeight/2 - 23)
+                .css("font-size", "2rem")
+                .html("")
 
             underlay.css("width", constraintWidth + 6)
                 .css("height", constraintHeight + 6)
@@ -940,6 +1060,7 @@ class App extends React.Component {
         this.handleDrop(targetId, fromId)
     }
     handleDrop(targetId, fromId) {
+        console.log(targetId, fromId)
         // Create selectors
         let targetSelector = $("#" + targetId);
         let fromSelector = $("#" + fromId);
@@ -950,8 +1071,10 @@ class App extends React.Component {
         let fromType = fromId.split("-")[0];
         let targetSecond = targetId.slice(targetId.indexOf("-") + 1);
         let fromSecond = fromId.slice(fromId.indexOf("-") + 1);
+        console.log(targetSecond, fromSecond)
 
         let tilesCopy = [...this.state.tiles];
+        console.log(this.getTileNumber(fromSecond))
         let swapSources = true;
 
         // Determine what swap is happening
@@ -1065,7 +1188,7 @@ class App extends React.Component {
                     />
                     
                     <MainMap visible={this.state.mapVisible} overlayVisible={this.state.overlayVisible}
-                             tiles={this.state.tiles} useProphecyOfKings={this.state.useProphecyOfKings}
+                             tiles={this.state.tiles}
 
                              ref={this.map}
 
@@ -1090,6 +1213,7 @@ class App extends React.Component {
                              tiles={this.state.tiles} map={this.map}
 
                              toggleOverlay={this.toggleOverlay}
+                             toggleWormholeOverlay={this.toggleWormholeOverlay}
                              toggleMoreInfo={this.toggleMoreInfo} toggleExtraTiles={this.toggleExtraTiles}
                              zoomPlus={this.zoomPlusClick} zoomMinus={this.zoomMinusClick}
                              rotateClockwise={this.rotateClockwise} rotateCounterClockwise={this.rotateCounterClockwise}
@@ -1098,7 +1222,8 @@ class App extends React.Component {
                 />
                 
                 <ExtraTiles visible={this.state.extraTilesVisible} overlayVisible={this.state.overlayVisible}
-                            useProphecyOfKings={this.state.useProphecyOfKings} showAllExtraTiles={this.state.showAllExtraTiles}
+                            includedExpansions={this.state.includedExpansions}
+                            showAllExtraTiles={this.state.showAllExtraTiles}
                             customMapBuilding={this.state.customMapBuilding}
 
                             updateTiles={this.updateTiles} toggleShowAllExtraTiles={this.toggleShowAllExtraTiles}
@@ -1108,23 +1233,30 @@ class App extends React.Component {
                 />
                 
                 <MoreInfo visible={this.state.moreInfoVisible} currentPlayerNames={this.state.currentPlayerNames}
-                          useProphecyOfKings={this.state.useProphecyOfKings} tiles={this.state.tiles}
+                          tiles={this.state.tiles}
                           getTileNumber={this.getTileNumber}
                 />
                 
-                <MapOptions visible={this.state.isOptionsMenuShowing} useProphecyOfKings={this.state.useProphecyOfKings}
-                            currentPlayerNames={this.state.currentPlayerNames} currentRaces={this.state.currentRaces}
+                <MapOptions visible={this.state.isOptionsMenuShowing} 
+                            includedExpansions={this.state.includedExpansions}
+                            currentPlayerNames={this.state.currentPlayerNames} 
+                            currentRaces={this.state.currentRaces}
                             tiles={this.state.tiles} includedTiles={this.state.includedTiles}
                             excludedTiles={this.state.excludedTiles} lockedTiles={this.state.lockedTiles}
 
                             ref={this.mapOptions}
 
-                            toggleProphecyOfKings={this.toggleProphecyOfKings} updateTiles={this.updateTiles}
+                            toggleProphecyOfKings={this.toggleProphecyOfKings}
+                            toggleUnchartedSpace={this.toggleUnchartedSpace} 
+                            toggleDiscordantStars={this.toggleDiscordantStars} 
+                            toggleAscendentSun={this.toggleAscendentSun}
+                            toggleFanHyperlanes={this.toggleFanHyperlanes}
+                            updateTiles={this.updateTiles}
                             showExtraTiles={this.showExtraTiles} updateRaces={this.updateRaces}
                             updatePlayerNames={this.updatePlayerNames}
                 />
 
-                <ReactTooltip effect={"solid"}/>
+                <ReactTooltip id="tooltip" />
                 <BootstrapScripts />
             </div>
         );

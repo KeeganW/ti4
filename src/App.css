@@ -45,12 +45,15 @@ h1, h2, h3, h4, h5 {
     background-color: var(--hover-color);
     border-color: var(--hover-color);
 }
-.custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+.form-check .form-check-input:not(:checked){
+    border: 1px solid #adb5bd;
+}
+.form-check .form-check-input:checked{
     /* Change the background on checkboxes to be the same as buttons*/
     background-color: var(--primary-color);
     border-color: var(--primary-color);
 }
-.custom-control-label {
+.form-check-label {
     /* Change the label for checkboxes to be a pointer */
     cursor: pointer;
 }
@@ -128,7 +131,7 @@ h1, h2, h3, h4, h5 {
     top: 17px;
     user-select: none;
     /* Normally, the button should be on the left side of the options menu */
-    right: calc(var(--options-width) - 35px - var(--scroll-bar-distance));
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
 }
 #toggleOptions.full-screen {
     right: calc(100% - 35px - var(--scroll-bar-distance));
@@ -236,27 +239,33 @@ h1, h2, h3, h4, h5 {
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#extraTilesButton {
+#wormholeOverlay {
     position: fixed;
     top: calc(var(--title-height) + 155px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#moreInfoButton {
+#extraTilesButton {
     position: fixed;
     top: calc(var(--title-height) + 190px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#shareMapButton {
+#moreInfoButton {
     position: fixed;
     top: calc(var(--title-height) + 225px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }
-#loadMapButton {
+#shareMapButton {
     position: fixed;
     top: calc(var(--title-height) + 260px);
+    right: calc(var(--options-width) + var(--scroll-bar-distance));
+    z-index: 1002;
+}
+#loadMapButton {
+    position: fixed;
+    top: calc(var(--title-height) + 295px);
     right: calc(var(--options-width) + var(--scroll-bar-distance));
     z-index: 1002;
 }

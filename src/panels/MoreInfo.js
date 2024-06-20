@@ -1,6 +1,6 @@
 import React from "react";
 import adjacencyData from "../data/adjacencyData.json";
-import tileData from "../data/tileData.json";
+import tileData, {WORMHOLES, WORMHOLE_SYMBOLS} from "../data/tileData";
 
 import influence from './icons/influence.png';
 import planet from './icons/planet.png';
@@ -29,6 +29,7 @@ class MoreInfo extends React.Component {
         let planets = 0;
         let resources = 0;
         let influence = 0;
+        let wormholes = [];
         let specialties = {
             "biotic": 0,
             "warfare": 0,
@@ -66,14 +67,20 @@ class MoreInfo extends React.Component {
                     }
                 }
             }
-            if (adjacentTile > 0) {
-                for (let planetIndex in tileData.all[adjacentTile]["planets"]) {
-                    let planet = tileData.all[adjacentTile]["planets"][planetIndex];
+            if (adjacentTile in tileData.all) {
+                for (let planetIndex in tileData.all[adjacentTile].planets) {
+                    let planet = tileData.all[adjacentTile].planets[planetIndex];
+                    // console.log(planet)
                     planets += 1;
-                    resources += planet["resources"];
-                    influence += planet["influence"];
-                    specialties[planet["specialty"]] += 1;
-                    traits[planet["trait"]] += 1;
+                    resources += planet.resources;
+                    influence += planet.influence;
+                    specialties[planet.specialty] += 1;
+                    traits[planet.trait] += 1;
+                }
+                for (let wormholeIndex in tileData.all[adjacentTile].wormhole){
+                    if (!(tileData.all[adjacentTile].wormhole[wormholeIndex] in wormholes)){
+                        wormholes.push(tileData.all[adjacentTile].wormhole[wormholeIndex])
+                    }
                 }
             }
         }
@@ -83,6 +90,7 @@ class MoreInfo extends React.Component {
             "influence": influence,
             "specialties": specialties,
             "traits": traits,
+            "wormholes": wormholes
         }
     }
 
@@ -108,6 +116,7 @@ class MoreInfo extends React.Component {
                                 {[...Array(adjacentInfo.traits.cultural)].map((e, i) => <img key={playerName + "-cultural-" + i} className={"icon"} src={traitCultural} alt={"C"}/>)}
                                 {[...Array(adjacentInfo.traits.hazardous)].map((e, i) => <img key={playerName + "-hazardous-" + i} className={"icon"} src={traitHazardous} alt={"H"}/>)}
                                 {[...Array(adjacentInfo.traits.industrial)].map((e, i) => <img key={playerName + "-industrial-" + i} className={"icon"} src={traitIndustrial} alt={"I"}/>)}
+                                {[...Array(adjacentInfo.wormholes)].map((e, i) => <p className="icon" key={`${playerName}-wormhole-${i}`}>{WORMHOLE_SYMBOLS[e]}</p>)}
                             </span>
                         </td>
                         <td>

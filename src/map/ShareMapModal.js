@@ -89,7 +89,7 @@ class ShareMapModal extends React.Component {
         // Export as a png with a blank background. Scale so its not a giant file
         await exportComponentAsPNG(this.props.map, {
             fileName: "ti4-map",
-            html2CanvasOptions: {backgroundColor: null, scrollX: 0, scrollY: -window.pageYOffset, scale: 1.5}
+            html2CanvasOptions: {backgroundColor: null, scrollX: 0, scrollY: -window.pageYOffset, scale: 2}
         })
 
         // Wait a little bit, then un activate the button.
