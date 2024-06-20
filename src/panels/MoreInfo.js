@@ -1,6 +1,6 @@
 import React from "react";
 import adjacencyData from "../data/adjacencyData.json";
-import tileData, {WORMHOLES, WORMHOLE_SYMBOLS} from "../data/tileData";
+import tileData, {WORMHOLE_SYMBOLS} from "../data/tileData";
 
 import influence from './icons/influence.png';
 import planet from './icons/planet.png';

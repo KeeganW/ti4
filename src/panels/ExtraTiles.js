@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Collapse } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import tileData, {EXPANSIONS} from "../data/tileData";
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 
@@ -91,7 +91,7 @@ class ExtraTiles extends React.Component {
                 systemNumber = systemNumber.split("-")[0]
             }
 
-            if (tileData.all[systemNumber] !== undefined && 
+            if (tileData.all[systemNumber] !== undefined &&
                 tileData.all[systemNumber].planets.length > 0 &&
                 tileData.all[systemNumber].planets[0].legendary
             ) {
