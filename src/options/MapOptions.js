@@ -1843,10 +1843,14 @@ class MapOptions extends React.Component {
                     />
                     <HelpModal key={"help-racial-anomalies"} visible={this.state.ensureRacialAnomaliesHelp} hideModal={this.toggleEnsureRacialAnomaliesHelp} title={"About Ensure Racial Anomalies"}
                         content="<p>
-                         Ensures that races get their beneficial anomalies
+                         Ensures that the corresponding beneficial anomalies will be present in the galaxy for each race.
                          <br>
-                         <br>
-                         This option makes it so that Muaat will always receive a supernova, Saar will always receive an asteroid field, Empyrean will always receive a nebulae and Vuil'Raith and Nivyn (DS) will always receive a gravity rift.
+                         <ul>
+                             <li>Muatt:  Supernova</li>
+                             <li>Saar:  Asteroid Field</li>
+                             <li>Empyrean:  Nebulae</li>
+                             <li>Vuil'Raith and Nivyn (DS):  Gravity Rift</li>
+                         </ul>
                          </p>"
                     />
 
