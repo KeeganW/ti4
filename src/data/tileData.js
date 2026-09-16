@@ -4629,16 +4629,18 @@ const tileData = {
       planets: [
         {
           name: "Ordinian",
-          trait: undefined,
-          specialty: null,
-          legendary: false,
+          trait: PLANET_TRAITS.NONE,
+          specialty: TECH_SPECIALTIES.NONE,
+          ability:
+            "You may exhaust this card when you pass to draw 1 action card and gain 1 command token.",
+          legendary: true,
           resources: 0,
           influence: 0,
         },
         {
           name: "Revelation",
-          trait: undefined,
-          specialty: null,
+          trait: PLANET_TRAITS.NONE,
+          specialty: TECH_SPECIALTIES.SPACE_STATION,
           legendary: false,
           resources: 1,
           influence: 2,
@@ -4652,16 +4654,16 @@ const tileData = {
       planets: [
         {
           name: "Mez Lo Orz Pei Zsha",
-          trait: undefined,
-          specialty: null,
+          trait: PLANET_TRAITS.NONE,
+          specialty: TECH_SPECIALTIES.NONE,
           legendary: false,
           resources: 2,
           influence: 1,
         },
         {
           name: "Rep Lo Orz Oet",
-          trait: undefined,
-          specialty: null,
+          trait: PLANET_TRAITS.NONE,
+          specialty: TECH_SPECIALTIES.NONE,
           legendary: false,
           resources: 1,
           influence: 3,
@@ -4681,8 +4683,8 @@ const tileData = {
       planets: [
         {
           name: "Ikatena",
-          trait: undefined,
-          specialty: null,
+          trait: PLANET_TRAITS.NONE,
+          specialty: TECH_SPECIALTIES.NONE,
           legendary: false,
           resources: 4,
           influence: 4,
@@ -4696,16 +4698,16 @@ const tileData = {
       planets: [
         {
           name: "Cronos",
-          trait: undefined,
-          specialty: null,
+          trait: PLANET_TRAITS.NONE,
+          specialty: TECH_SPECIALTIES.NONE,
           legendary: false,
           resources: 2,
           influence: 1,
         },
         {
           name: "Tallin",
-          trait: undefined,
-          specialty: null,
+          trait: PLANET_TRAITS.NONE,
+          specialty: TECH_SPECIALTIES.NONE,
           legendary: false,
           resources: 1,
           influence: 2,
@@ -4721,6 +4723,8 @@ const tileData = {
           name: "Faunus",
           trait: PLANET_TRAITS.INDUSTRIAL,
           specialty: TECH_SPECIALTIES.BIOTIC,
+          ability:
+            "You may exhaust this card when you pass to gain control of a non-home, non-legendary planet that contains no units and has no attachments.",
           legendary: true,
           resources: 1,
           influence: 3,
@@ -4736,6 +4740,8 @@ const tileData = {
           name: "Garbozia",
           trait: PLANET_TRAITS.HAZARDOUS,
           specialty: TECH_SPECIALTIES.NONE,
+          ability:
+            "You may exhaust this card when you pass to place 1 action card from the discard pile faceup on this card; you can purge cards on this card to play them as if they were in your hand.",
           legendary: true,
           resources: 2,
           influence: 1,
@@ -4751,6 +4757,8 @@ const tileData = {
           name: "Emelpar",
           trait: PLANET_TRAITS.CULTURAL,
           specialty: TECH_SPECIALTIES.NONE,
+          ability:
+            "You may exhaust this card at the end of your turn to ready another component that isn't a strategy card.",
           legendary: true,
           resources: 0,
           influence: 2,
@@ -4766,6 +4774,8 @@ const tileData = {
           name: "Tempesta",
           trait: PLANET_TRAITS.HAZARDOUS,
           specialty: TECH_SPECIALTIES.PROPULSION,
+          ability:
+            "You may exhaust this card after you activate a system to apply +1 to the move value of 1 of your ships during this tactical action.",
           legendary: true,
           resources: 1,
           influence: 1,
@@ -5010,6 +5020,8 @@ const tileData = {
           name: "Mecatol Rex (Legendary)",
           trait: PLANET_TRAITS.NONE,
           specialty: TECH_SPECIALTIES.NONE,
+          ability:
+            "You may exhaust this card and discard 1 secret objective at the end of your turn to draw 1 secret objective.",
           legendary: true,
           resources: 1,
           influence: 6,
@@ -5037,6 +5049,8 @@ const tileData = {
           name: "Industrex",
           trait: PLANET_TRAITS.INDUSTRIAL,
           specialty: TECH_SPECIALTIES.WARFARE,
+          ability:
+            "You may exhaust this card when you pass to place 1 ship that matches a unit upgrade technology you own from your reinforcements into a system that contains your ships.",
           legendary: true,
           resources: 2,
           influence: 0,
