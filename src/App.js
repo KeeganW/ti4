@@ -16,6 +16,7 @@ import {
   calculateOffsets,
   MAX_RING,
   MAX_TILE_COUNT,
+  ringForPosition,
   ringForTileCount,
 } from "./helpers/Helpers";
 import { Tooltip as ReactTooltip } from "react-tooltip";
@@ -91,6 +92,7 @@ class App extends React.Component {
     this.updateTileClicked = this.updateTileClicked.bind(this);
     this.updateRaces = this.updateRaces.bind(this);
     this.updatePlayerNames = this.updatePlayerNames.bind(this);
+    this.updatePlayerNameOverlays = this.updatePlayerNameOverlays.bind(this);
     this.validateTiles = this.validateTiles.bind(this);
     this.toggleBackground = this.toggleBackground.bind(this);
     this.removeTrailing = this.removeTrailing.bind(this);
@@ -527,6 +529,18 @@ class App extends React.Component {
         homePositions.push(tileNumber);
       }
     }
+
+    // Some expansions occasionally place extra homeworld tiles on the board as part of the main
+    // draft pool rather than as actual player homes. With more than 8 "home-looking" tiles on the
+    // board, assume the real players sit on the outermost ring in use and drop the rest, since
+    // that's where home systems are conventionally placed.
+    if (homePositions.length > 8) {
+      let outermostRing = ringForTileCount(this.state.tiles.length);
+      homePositions = homePositions.filter(
+        (position) => ringForPosition(position) === outermostRing,
+      );
+    }
+
     return homePositions;
   }
 
@@ -1157,9 +1171,37 @@ class App extends React.Component {
   }
 
   updatePlayerNames(playerNames) {
-    this.setState({
-      currentPlayerNames: playerNames,
-    });
+    this.setState(
+      {
+        currentPlayerNames: playerNames,
+      },
+      this.updatePlayerNameOverlays,
+    );
+  }
+
+  /**
+   * Cheaply refreshes just the home-world player-name overlays' text/color/visibility, without doing a full
+   * drawMap() pass. Positioning (margin-left/top) is left untouched, since it only changes on layout/zoom/tile
+   * changes, which already go through drawMap(). This keeps typing in the player-name inputs fast.
+   */
+  updatePlayerNameOverlays() {
+    let homePositions = this.getHomePositions();
+    for (let tileNumber = 0; tileNumber < MAX_TILE_COUNT; tileNumber++) {
+      let homePlayerIndex = homePositions.indexOf(tileNumber);
+      let homePlayerName =
+        homePlayerIndex !== -1
+          ? this.state.currentPlayerNames[homePlayerIndex]
+          : "";
+      let playerNameOverlay = $("#player-name-" + tileNumber);
+      if (homePlayerName) {
+        playerNameOverlay
+          .css("color", PLAYER_COLORS[homePlayerIndex % PLAYER_COLORS.length])
+          .html(homePlayerName)
+          .show();
+      } else {
+        playerNameOverlay.hide();
+      }
+    }
   }
 
   /* MAP GENERATION */
@@ -1280,7 +1322,7 @@ class App extends React.Component {
     let offsets = calculateOffsets(constraintWidth, constraintHeight);
 
     // Loop over tiles to assign various values to them
-    let currentPlayerNumber = 0;
+    let homePositions = this.getHomePositions();
     let closestPlayerLabels = this.computeClosestPlayerLabels();
     for (let tileNumber = 0; tileNumber < offsets.length; tileNumber++) {
       // Create the selectors
@@ -1289,6 +1331,7 @@ class App extends React.Component {
       let numOverlay = $("#number-" + tileNumber);
       let wormholeOverlay = $("#wormhole-" + tileNumber);
       let closestPlayerOverlay = $("#closest-player-" + tileNumber);
+      let playerNameOverlay = $("#player-name-" + tileNumber);
       let underlay = $("#underlay-" + tileNumber);
 
       // Decide if we should be displaying this tile
@@ -1347,16 +1390,22 @@ class App extends React.Component {
         .css("margin-left", "-3px")
         .css("margin-top", "-3px");
 
-      // Set the names on the player home worlds to not be 0
-      if (Number(this.state.tiles[tileNumber]) === 0) {
-        // TODO should this override on selected races too?
-        // Show the player name, colored to match the closest-player overlay
-        numOverlay
-          .css("color", PLAYER_COLORS[currentPlayerNumber % PLAYER_COLORS.length])
-          .html(this.getPlayerLabel(currentPlayerNumber));
-        currentPlayerNumber += 1;
+      // Show a player's custom name on their home world (not the "P1"/"P2" fallback), colored to
+      // match the closest-player overlay, regardless of whether a race has been assigned yet.
+      let homePlayerIndex = homePositions.indexOf(tileNumber);
+      let homePlayerName =
+        homePlayerIndex !== -1
+          ? this.state.currentPlayerNames[homePlayerIndex]
+          : "";
+      if (homePlayerName) {
+        playerNameOverlay
+          .css("margin-left", "-10px")
+          .css("top", constraintHeight / 2 - 10)
+          .css("color", PLAYER_COLORS[homePlayerIndex % PLAYER_COLORS.length])
+          .html(homePlayerName)
+          .show();
       } else {
-        numOverlay.css("color", "");
+        playerNameOverlay.hide();
       }
     }
 

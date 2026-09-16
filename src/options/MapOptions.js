@@ -163,6 +163,7 @@ class MapOptions extends React.Component {
     this.setState({
       currentPlayerNames: newPlayerNames,
     });
+    this.props.updatePlayerNames(newPlayerNames);
   }
 
   handleRacesChange(event) {

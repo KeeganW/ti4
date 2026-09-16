@@ -61,6 +61,21 @@ export const ringForTileCount = (tilesLength) => {
 };
 
 /**
+ * Given a board position (index into the tiles array), returns which ring it falls in. Ring 0 is
+ * Mecatol Rex, ring 1 is the six tiles around it, etc. Cumulative tile counts (including Mecatol
+ * Rex) follow `3 * ring * (ring + 1) + 1`, so this walks rings outward until position fits.
+ * @param {number} position index into the tiles array
+ * @returns {number} the ring that position belongs to
+ */
+export const ringForPosition = (position) => {
+  let ring = 0;
+  while (position > 3 * ring * (ring + 1) + 1 - 1 && ring < MAX_RING) {
+    ring++;
+  }
+  return ring;
+};
+
+/**
  * Calculate offsets of the tiles in relation to Mecatol Rex (the center tile). This information
  * is stored in an array of two value arrays. The two value arrays represent the margin left
  * and margin top to offset the tile (based on size of tiles). Index 0 is Mecatol Rex, followed
