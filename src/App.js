@@ -1385,10 +1385,13 @@ class App extends React.Component {
       // Set the names on the player home worlds to not be 0
       if (this.state.tiles[tileNumber] === 0) {
         // TODO should this override on selected races too?
-        // Show the player name
-        let name = this.state.currentPlayerNames[currentPlayerNumber];
-        numOverlay.html(name === "" ? "P" + (currentPlayerNumber + 1) : name);
+        // Show the player name, colored to match the closest-player overlay
+        numOverlay
+          .css("color", PLAYER_COLORS[currentPlayerNumber % PLAYER_COLORS.length])
+          .html(this.getPlayerLabel(currentPlayerNumber));
         currentPlayerNumber += 1;
+      } else {
+        numOverlay.css("color", "");
       }
     }
 
