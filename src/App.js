@@ -10,10 +10,14 @@ import MapControls from "./map/MapControls";
 import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
 import tileData, { WORMHOLE_SYMBOLS, EXPANSIONS } from "./data/tileData";
-import boardData from "./data/boardData.json";
 import raceData from "./data/raceData.json";
 import adjacencyData from "./data/adjacencyData.json";
-import { calculateOffsets } from "./helpers/Helpers";
+import {
+  calculateOffsets,
+  MAX_RING,
+  MAX_TILE_COUNT,
+  ringForTileCount,
+} from "./helpers/Helpers";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 
 // Distinct colors used to identify each player in the closest-player overlay.
@@ -442,7 +446,7 @@ class App extends React.Component {
 
   updateTileNumberOverlays(showTiles) {
     // Toggle the tile overlays
-    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+    for (let tileNumber = 0; tileNumber < MAX_TILE_COUNT; tileNumber++) {
       let numOverlay = $("#number-" + tileNumber);
       if (showTiles) {
         // Want to show all the tiles
@@ -466,7 +470,7 @@ class App extends React.Component {
 
   updateWormholeOverlays(showTiles) {
     // Toggle the tile overlays
-    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+    for (let tileNumber = 0; tileNumber < MAX_TILE_COUNT; tileNumber++) {
       let wormholeOverlay = $("#wormhole-" + tileNumber);
       if (showTiles) {
         // Want to show all the tiles
@@ -492,7 +496,7 @@ class App extends React.Component {
 
   updateClosestPlayerOverlays(showTiles) {
     // Toggle the closest-player overlays
-    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+    for (let tileNumber = 0; tileNumber < MAX_TILE_COUNT; tileNumber++) {
       let overlay = $("#closest-player-" + tileNumber);
       if (
         showTiles &&
@@ -512,7 +516,7 @@ class App extends React.Component {
    */
   getHomePositions() {
     let homePositions = [];
-    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+    for (let tileNumber = 0; tileNumber < MAX_TILE_COUNT; tileNumber++) {
       // Tiles loaded from a shared URL come back as strings (see getTileNumber), while freshly
       // generated tiles are numbers, so normalize before comparing against the home-system data.
       let tile = Number(this.state.tiles[tileNumber]);
@@ -606,7 +610,7 @@ class App extends React.Component {
    * every other board position.
    */
   getDistancesFrom(startPosition) {
-    let distances = new Array(boardData.pokSize).fill(Infinity);
+    let distances = new Array(MAX_TILE_COUNT).fill(Infinity);
     distances[startPosition] = 0;
     let queue = [startPosition];
     while (queue.length > 0) {
@@ -635,7 +639,7 @@ class App extends React.Component {
    */
   computeClosestPlayerLabels() {
     let homePositions = this.getHomePositions();
-    let labels = new Array(boardData.pokSize).fill("");
+    let labels = new Array(MAX_TILE_COUNT).fill("");
 
     if (homePositions.length === 0) {
       return labels;
@@ -645,7 +649,7 @@ class App extends React.Component {
       this.getDistancesFrom(homePosition),
     );
 
-    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+    for (let tileNumber = 0; tileNumber < MAX_TILE_COUNT; tileNumber++) {
       let minDistance = Infinity;
       for (let playerIndex = 0; playerIndex < homePositions.length; playerIndex++) {
         minDistance = Math.min(
@@ -836,7 +840,7 @@ class App extends React.Component {
     );
 
     // Show the player names
-    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+    for (let tileNumber = 0; tileNumber < MAX_TILE_COUNT; tileNumber++) {
       if (
         Number(this.state.tiles[tileNumber]) === 0 &&
         !this.state.overlayVisible
@@ -1019,116 +1023,33 @@ class App extends React.Component {
 
   /**
    * Performs a single rotation of the tiles that make up the hex grid.
-   * Supports up to 5 rings.
+   *
+   * Each ring is a closed loop of `6 * ring` tiles; a 60-degree turn of the whole board is
+   * equivalent to cyclically shifting every ring's tiles forward by `ring` positions (one
+   * hex side). Rings 1-3 always exist (the smallest supported board); rings 4+ are only
+   * rotated once that much of the tile array is actually present.
    */
   rotateHexGrid(tilesOverride = []) {
-    let rotatedTileArray = [];
+    const source = (index) => tilesOverride[index] ?? this.state.tiles[index];
 
-    // Central tile.
-    rotatedTileArray.push(tilesOverride[0] ?? this.state.tiles[0]);
+    let rotatedTileArray = [source(0)];
 
-    // First ring of tiles.
-    rotatedTileArray.push(tilesOverride[6] ?? this.state.tiles[6]);
-    rotatedTileArray.push(tilesOverride[1] ?? this.state.tiles[1]);
-    rotatedTileArray.push(tilesOverride[2] ?? this.state.tiles[2]);
-    rotatedTileArray.push(tilesOverride[3] ?? this.state.tiles[3]);
-    rotatedTileArray.push(tilesOverride[4] ?? this.state.tiles[4]);
-    rotatedTileArray.push(tilesOverride[5] ?? this.state.tiles[5]);
+    let ringStart = 1;
+    for (let ring = 1; ring <= MAX_RING; ring++) {
+      const ringSize = 6 * ring;
 
-    // Second ring of tiles.
-    rotatedTileArray.push(tilesOverride[17] ?? this.state.tiles[17]);
-    rotatedTileArray.push(tilesOverride[18] ?? this.state.tiles[18]);
-    rotatedTileArray.push(tilesOverride[7] ?? this.state.tiles[7]);
-    rotatedTileArray.push(tilesOverride[8] ?? this.state.tiles[8]);
-    rotatedTileArray.push(tilesOverride[9] ?? this.state.tiles[9]);
-    rotatedTileArray.push(tilesOverride[10] ?? this.state.tiles[10]);
-    rotatedTileArray.push(tilesOverride[11] ?? this.state.tiles[11]);
-    rotatedTileArray.push(tilesOverride[12] ?? this.state.tiles[12]);
-    rotatedTileArray.push(tilesOverride[13] ?? this.state.tiles[13]);
-    rotatedTileArray.push(tilesOverride[14] ?? this.state.tiles[14]);
-    rotatedTileArray.push(tilesOverride[15] ?? this.state.tiles[15]);
-    rotatedTileArray.push(tilesOverride[16] ?? this.state.tiles[16]);
+      // Rings 1-3 make up the smallest board and are always rotated; larger rings are only
+      // rotated once the tile array actually extends into them.
+      if (ring > 3 && this.state.tiles.length <= ringStart) {
+        break;
+      }
 
-    // Third ring of tiles.
-    rotatedTileArray.push(tilesOverride[34] ?? this.state.tiles[34]);
-    rotatedTileArray.push(tilesOverride[35] ?? this.state.tiles[35]);
-    rotatedTileArray.push(tilesOverride[36] ?? this.state.tiles[36]);
-    rotatedTileArray.push(tilesOverride[19] ?? this.state.tiles[19]);
-    rotatedTileArray.push(tilesOverride[20] ?? this.state.tiles[20]);
-    rotatedTileArray.push(tilesOverride[21] ?? this.state.tiles[21]);
-    rotatedTileArray.push(tilesOverride[22] ?? this.state.tiles[22]);
-    rotatedTileArray.push(tilesOverride[23] ?? this.state.tiles[23]);
-    rotatedTileArray.push(tilesOverride[24] ?? this.state.tiles[24]);
-    rotatedTileArray.push(tilesOverride[25] ?? this.state.tiles[25]);
-    rotatedTileArray.push(tilesOverride[26] ?? this.state.tiles[26]);
-    rotatedTileArray.push(tilesOverride[27] ?? this.state.tiles[27]);
-    rotatedTileArray.push(tilesOverride[28] ?? this.state.tiles[28]);
-    rotatedTileArray.push(tilesOverride[29] ?? this.state.tiles[29]);
-    rotatedTileArray.push(tilesOverride[30] ?? this.state.tiles[30]);
-    rotatedTileArray.push(tilesOverride[31] ?? this.state.tiles[31]);
-    rotatedTileArray.push(tilesOverride[32] ?? this.state.tiles[32]);
-    rotatedTileArray.push(tilesOverride[33] ?? this.state.tiles[33]);
+      for (let step = 0; step < ringSize; step++) {
+        const shiftedIndex = ringStart + ((step + ringSize - ring) % ringSize);
+        rotatedTileArray.push(source(shiftedIndex));
+      }
 
-    // Fourth ring of tiles?
-    if (this.state.tiles.length > 37) {
-      rotatedTileArray.push(tilesOverride[57] ?? this.state.tiles[57]);
-      rotatedTileArray.push(tilesOverride[58] ?? this.state.tiles[58]);
-      rotatedTileArray.push(tilesOverride[59] ?? this.state.tiles[59]);
-      rotatedTileArray.push(tilesOverride[60] ?? this.state.tiles[60]);
-      rotatedTileArray.push(tilesOverride[37] ?? this.state.tiles[37]);
-      rotatedTileArray.push(tilesOverride[38] ?? this.state.tiles[38]);
-      rotatedTileArray.push(tilesOverride[39] ?? this.state.tiles[39]);
-      rotatedTileArray.push(tilesOverride[40] ?? this.state.tiles[40]);
-      rotatedTileArray.push(tilesOverride[41] ?? this.state.tiles[41]);
-      rotatedTileArray.push(tilesOverride[42] ?? this.state.tiles[42]);
-      rotatedTileArray.push(tilesOverride[43] ?? this.state.tiles[43]);
-      rotatedTileArray.push(tilesOverride[44] ?? this.state.tiles[44]);
-      rotatedTileArray.push(tilesOverride[45] ?? this.state.tiles[45]);
-      rotatedTileArray.push(tilesOverride[46] ?? this.state.tiles[46]);
-      rotatedTileArray.push(tilesOverride[47] ?? this.state.tiles[47]);
-      rotatedTileArray.push(tilesOverride[48] ?? this.state.tiles[48]);
-      rotatedTileArray.push(tilesOverride[49] ?? this.state.tiles[49]);
-      rotatedTileArray.push(tilesOverride[50] ?? this.state.tiles[50]);
-      rotatedTileArray.push(tilesOverride[51] ?? this.state.tiles[51]);
-      rotatedTileArray.push(tilesOverride[52] ?? this.state.tiles[52]);
-      rotatedTileArray.push(tilesOverride[53] ?? this.state.tiles[53]);
-      rotatedTileArray.push(tilesOverride[54] ?? this.state.tiles[54]);
-      rotatedTileArray.push(tilesOverride[55] ?? this.state.tiles[55]);
-      rotatedTileArray.push(tilesOverride[56] ?? this.state.tiles[56]);
-    }
-
-    // Fifth ring of tiles?
-    if (this.state.tiles.length > 60) {
-      rotatedTileArray.push(tilesOverride[86] ?? this.state.tiles[86]);
-      rotatedTileArray.push(tilesOverride[87] ?? this.state.tiles[87]);
-      rotatedTileArray.push(tilesOverride[88] ?? this.state.tiles[88]);
-      rotatedTileArray.push(tilesOverride[89] ?? this.state.tiles[89]);
-      rotatedTileArray.push(tilesOverride[90] ?? this.state.tiles[90]);
-      rotatedTileArray.push(tilesOverride[61] ?? this.state.tiles[61]);
-      rotatedTileArray.push(tilesOverride[62] ?? this.state.tiles[62]);
-      rotatedTileArray.push(tilesOverride[63] ?? this.state.tiles[63]);
-      rotatedTileArray.push(tilesOverride[64] ?? this.state.tiles[64]);
-      rotatedTileArray.push(tilesOverride[65] ?? this.state.tiles[65]);
-      rotatedTileArray.push(tilesOverride[66] ?? this.state.tiles[66]);
-      rotatedTileArray.push(tilesOverride[67] ?? this.state.tiles[67]);
-      rotatedTileArray.push(tilesOverride[68] ?? this.state.tiles[68]);
-      rotatedTileArray.push(tilesOverride[69] ?? this.state.tiles[69]);
-      rotatedTileArray.push(tilesOverride[70] ?? this.state.tiles[70]);
-      rotatedTileArray.push(tilesOverride[71] ?? this.state.tiles[71]);
-      rotatedTileArray.push(tilesOverride[72] ?? this.state.tiles[72]);
-      rotatedTileArray.push(tilesOverride[73] ?? this.state.tiles[73]);
-      rotatedTileArray.push(tilesOverride[74] ?? this.state.tiles[74]);
-      rotatedTileArray.push(tilesOverride[75] ?? this.state.tiles[75]);
-      rotatedTileArray.push(tilesOverride[76] ?? this.state.tiles[76]);
-      rotatedTileArray.push(tilesOverride[77] ?? this.state.tiles[77]);
-      rotatedTileArray.push(tilesOverride[78] ?? this.state.tiles[78]);
-      rotatedTileArray.push(tilesOverride[79] ?? this.state.tiles[79]);
-      rotatedTileArray.push(tilesOverride[80] ?? this.state.tiles[80]);
-      rotatedTileArray.push(tilesOverride[81] ?? this.state.tiles[81]);
-      rotatedTileArray.push(tilesOverride[82] ?? this.state.tiles[82]);
-      rotatedTileArray.push(tilesOverride[83] ?? this.state.tiles[83]);
-      rotatedTileArray.push(tilesOverride[84] ?? this.state.tiles[84]);
-      rotatedTileArray.push(tilesOverride[85] ?? this.state.tiles[85]);
+      ringStart += ringSize;
     }
 
     // Issue #131: remove duplication from the list.
@@ -1301,10 +1222,11 @@ class App extends React.Component {
       });
     }
 
-    // Set the map height based on which tiles are being used
-    // Ring 5 (indices 61-90) needs a larger bounding box than the default POK-sized board.
-    let mapNumberTilesHeight = this.state.tiles.length > 60 ? 11 : 9;
-    let mapNumberTilesWidth = this.state.tiles.length > 60 ? 11 : 9;
+    // Set the map height based on which tiles are being used. Boards up to ring 4 all fit the
+    // same default bounding box; anything bigger needs a proportionally larger one (2*ring + 1).
+    let ringCount = ringForTileCount(this.state.tiles.length);
+    let mapNumberTilesHeight = ringCount <= 4 ? 9 : 2 * ringCount + 1;
+    let mapNumberTilesWidth = mapNumberTilesHeight;
     const visibleTiles = [...Object.keys(tileData.all)];
     visibleTiles.push(0);
     // if (this.getTileNumber(this.state.tiles[37], true) in visibleTiles || this.getTileNumber(this.state.tiles[38], true) in visibleTiles || this.getTileNumber(this.state.tiles[60], true) in visibleTiles

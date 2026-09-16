@@ -1,6 +1,5 @@
 import React from "react";
 import "./MainMap.css";
-import boardData from "../data/boardData.json";
 import {
   Arrow90degLeft,
   Arrow90degRight,
@@ -12,6 +11,7 @@ import {
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import $ from "jquery";
 import tileData, { SPECIALTIES } from "../data/tileData";
+import { MAX_TILE_COUNT } from "../helpers/Helpers";
 
 class MainMap extends React.Component {
   constructor(props) {
@@ -159,8 +159,8 @@ class MainMap extends React.Component {
     // https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
     const wrap = (s) => s.replace(/(?![^\n]{1,32}$)([^\n]{1,32})\s/g, "$1\n");
 
-    // Loop over 0 to pok board size, and add in the tile objects to be displayed
-    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+    // Loop over 0 to the largest supported board size, and add in the tile objects to be displayed
+    for (let tileNumber = 0; tileNumber < MAX_TILE_COUNT; tileNumber++) {
       let systemNumber = this.props.getTileNumber(this.props.tiles[tileNumber]);
 
       // Add the tile to the array of tiles to be displayed, if they are valid tiles

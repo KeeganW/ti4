@@ -1,174 +1,98 @@
 /**
+ * The largest ring index the tile array/layout math supports. Ring 0 is Mecatol Rex.
+ */
+export const MAX_RING = 10;
+
+/**
+ * Total tile count (including Mecatol Rex) of a board that goes all the way out to MAX_RING.
+ */
+export const MAX_TILE_COUNT = 3 * MAX_RING * (MAX_RING + 1) + 1;
+
+/**
+ * The six axial hex directions, in the order tiles are walked around each ring. This order
+ * (and the choice of start direction in ringCoordinates below) is what makes index 1 land
+ * directly "north" of Mecatol Rex, matching the board's historical tile numbering.
+ */
+const HEX_DIRECTIONS = [
+  [-1, 1],
+  [-1, 0],
+  [0, -1],
+  [1, -1],
+  [1, 0],
+  [0, 1],
+];
+
+/**
+ * Axial (q, r) coordinates of every tile in ring `ring`, in the same walk order the app has
+ * always used (one side of the hexagon at a time, `ring` tiles per side).
+ * @param {number} ring ring number, where 1 is the innermost ring around Mecatol Rex
+ * @returns {[number, number][]} the `6 * ring` axial coordinates making up that ring
+ */
+const ringCoordinates = (ring) => {
+  let coordinates = [];
+  let q = ring;
+  let r = 0;
+  for (let side = 0; side < 6; side++) {
+    for (let step = 0; step < ring; step++) {
+      coordinates.push([q, r]);
+      q += HEX_DIRECTIONS[side][0];
+      r += HEX_DIRECTIONS[side][1];
+    }
+  }
+  return coordinates;
+};
+
+/**
+ * Given a tile array length, returns the outermost ring it reaches. Ring cumulative tile counts
+ * (including Mecatol Rex) follow `3 * ring * (ring + 1) + 1`, so this walks rings outward until
+ * the array length fits.
+ * @param {number} tilesLength length of the tile array
+ * @returns {number} the outermost ring present in an array of that length
+ */
+export const ringForTileCount = (tilesLength) => {
+  let ring = 3; // smallest supported board
+  while (
+    tilesLength > 3 * ring * (ring + 1) + 1 &&
+    ring < MAX_RING
+  ) {
+    ring++;
+  }
+  return ring;
+};
+
+/**
  * Calculate offsets of the tiles in relation to Mecatol Rex (the center tile). This information
- * is stored in an array of two value arrays. The two value arrays reperesent the margin left
- * and margin top to offset the tile (based on size of of tiles).
+ * is stored in an array of two value arrays. The two value arrays represent the margin left
+ * and margin top to offset the tile (based on size of tiles). Index 0 is Mecatol Rex, followed
+ * by ring 1, ring 2, etc. out to `maxRing`.
  * @param width The width (in pixels) of a single tile
  * @param height The height (in pixels) of a single tile
+ * @param maxRing The furthest ring to generate offsets for (defaults to the full supported size)
  * @returns {(number[]|(number)[])[]} an array of two value arrays.
  */
-export const calculateOffsets = (width, height) => {
-  let leftWidth = -width;
+export const calculateOffsets = (width, height, maxRing = MAX_RING) => {
+  // Kept unrounded until the final pixel offset so rounding error doesn't compound over
+  // multiple rings - rounding every intermediate constant (as earlier versions of this board
+  // did) drifts by a pixel or two by the time you're 10 rings out from Mecatol Rex.
   let topHeight = -height;
-  let halfWidth = Math.ceil(leftWidth * 0.5);
-  let halfHeight = Math.ceil(topHeight * 0.5);
-  let treQuarWidth = Math.ceil(leftWidth * 0.75);
+  let halfWidth = -width * 0.5;
+  let halfHeight = -height * 0.5;
+  let treQuarWidth = -width * 0.75;
 
-  return [
-    [halfWidth, halfHeight], // Mecatol Rex
-    // Inner ring
-    [halfWidth, halfHeight + topHeight],
-    [halfWidth - treQuarWidth, halfHeight + halfHeight],
-    [halfWidth - treQuarWidth, 0],
-    [halfWidth, halfHeight - topHeight],
-    [halfWidth + treQuarWidth, 0],
-    [halfWidth + treQuarWidth, halfHeight + halfHeight],
-    // Middle ring
-    [halfWidth, halfHeight + topHeight + topHeight],
-    [halfWidth - treQuarWidth, halfHeight + topHeight + halfHeight],
-    [halfWidth - leftWidth - halfWidth, halfHeight + topHeight],
-    [halfWidth - leftWidth - halfWidth, halfHeight],
-    [halfWidth - leftWidth - halfWidth, halfHeight - topHeight],
-    [halfWidth - treQuarWidth, halfHeight - topHeight - halfHeight],
-    [halfWidth, halfHeight - topHeight - topHeight],
-    [halfWidth + treQuarWidth, halfHeight - topHeight - halfHeight],
-    [halfWidth + leftWidth + halfWidth, halfHeight - topHeight],
-    [halfWidth + leftWidth + halfWidth, halfHeight],
-    [halfWidth + leftWidth + halfWidth, halfHeight + topHeight],
-    [halfWidth + treQuarWidth, halfHeight + topHeight + halfHeight],
-    // Outer Ring
-    [halfWidth, halfHeight + topHeight + topHeight + topHeight],
-    [halfWidth - treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
-    [halfWidth - leftWidth - halfWidth, halfHeight + topHeight + topHeight],
-    [
-      halfWidth - treQuarWidth - leftWidth - halfWidth,
-      halfHeight + topHeight + halfHeight,
-    ],
-    [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight + halfHeight],
-    [halfWidth - treQuarWidth - leftWidth - halfWidth, halfHeight - halfHeight],
-    [
-      halfWidth - treQuarWidth - leftWidth - halfWidth,
-      halfHeight - topHeight - halfHeight,
-    ],
-    [halfWidth - leftWidth - halfWidth, halfHeight - topHeight - topHeight],
-    [halfWidth - treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
-    [halfWidth, halfHeight - topHeight - topHeight - topHeight],
-    [halfWidth + treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
-    [halfWidth + leftWidth + halfWidth, halfHeight - topHeight - topHeight],
-    [
-      halfWidth + treQuarWidth + leftWidth + halfWidth,
-      halfHeight - topHeight - halfHeight,
-    ],
-    [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight - halfHeight],
-    [halfWidth + treQuarWidth + leftWidth + halfWidth, halfHeight + halfHeight],
-    [
-      halfWidth + treQuarWidth + leftWidth + halfWidth,
-      halfHeight + topHeight + halfHeight,
-    ],
-    [halfWidth + leftWidth + halfWidth, halfHeight + topHeight + topHeight],
-    [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
-    // Extended Ring
-    [halfWidth, halfHeight + topHeight + topHeight + topHeight + topHeight],
-    [
-      halfWidth - treQuarWidth,
-      halfHeight + topHeight + topHeight + topHeight + halfHeight,
-    ],
-    [
-      halfWidth - leftWidth - halfWidth,
-      halfHeight + topHeight + topHeight + topHeight,
-    ],
-    [
-      halfWidth - treQuarWidth - leftWidth - halfWidth,
-      halfHeight + topHeight + topHeight + halfHeight,
-    ],
-    [
-      halfWidth - leftWidth - leftWidth - leftWidth,
-      halfHeight + topHeight + topHeight,
-    ],
-    [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight + topHeight],
-    [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight],
-    [halfWidth - leftWidth - leftWidth - leftWidth, halfHeight - topHeight],
-    [
-      halfWidth - leftWidth - leftWidth - leftWidth,
-      halfHeight - topHeight - topHeight,
-    ],
-    [
-      halfWidth - treQuarWidth - leftWidth - halfWidth,
-      halfHeight - topHeight - topHeight - halfHeight,
-    ],
-    [
-      halfWidth - leftWidth - halfWidth,
-      halfHeight - topHeight - topHeight - topHeight,
-    ],
-    [
-      halfWidth - treQuarWidth,
-      halfHeight - topHeight - topHeight - topHeight - halfHeight,
-    ],
-    [halfWidth, halfHeight - topHeight - topHeight - topHeight - topHeight],
-    [
-      halfWidth + treQuarWidth,
-      halfHeight - topHeight - topHeight - topHeight - halfHeight,
-    ],
-    [
-      halfWidth + leftWidth + halfWidth,
-      halfHeight - topHeight - topHeight - topHeight,
-    ],
-    [
-      halfWidth + treQuarWidth + leftWidth + halfWidth,
-      halfHeight - topHeight - topHeight - halfHeight,
-    ],
-    [
-      halfWidth + leftWidth + leftWidth + leftWidth,
-      halfHeight - topHeight - topHeight,
-    ],
-    [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight - topHeight],
-    [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight],
-    [halfWidth + leftWidth + leftWidth + leftWidth, halfHeight + topHeight],
-    [
-      halfWidth + leftWidth + leftWidth + leftWidth,
-      halfHeight + topHeight + topHeight,
-    ],
-    [
-      halfWidth + treQuarWidth + leftWidth + halfWidth,
-      halfHeight + topHeight + topHeight + halfHeight,
-    ],
-    [
-      halfWidth + leftWidth + halfWidth,
-      halfHeight + topHeight + topHeight + topHeight,
-    ],
-    [
-      halfWidth + treQuarWidth,
-      halfHeight + topHeight + topHeight + topHeight + halfHeight,
-    ],
-    // Fifth ring
-    [halfWidth, halfHeight + topHeight + topHeight + topHeight + topHeight + topHeight],
-    [halfWidth - treQuarWidth, halfHeight + topHeight + topHeight + topHeight + topHeight + halfHeight],
-    [halfWidth - treQuarWidth - treQuarWidth, halfHeight + topHeight + topHeight + topHeight + topHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight + topHeight + topHeight + topHeight + halfHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight + topHeight + topHeight + topHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight + topHeight + halfHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight + halfHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight - halfHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight - topHeight - halfHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight - topHeight - topHeight - topHeight],
-    [halfWidth - treQuarWidth - treQuarWidth - treQuarWidth, halfHeight - topHeight - topHeight - topHeight - halfHeight],
-    [halfWidth - treQuarWidth - treQuarWidth, halfHeight - topHeight - topHeight - topHeight - topHeight],
-    [halfWidth - treQuarWidth, halfHeight - topHeight - topHeight - topHeight - topHeight - halfHeight],
-    [halfWidth, halfHeight - topHeight - topHeight - topHeight - topHeight - topHeight],
-    [halfWidth + treQuarWidth, halfHeight - topHeight - topHeight - topHeight - topHeight - halfHeight],
-    [halfWidth + treQuarWidth + treQuarWidth, halfHeight - topHeight - topHeight - topHeight - topHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight - topHeight - topHeight - topHeight - halfHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight - topHeight - topHeight - topHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight - topHeight - topHeight - halfHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight - topHeight - halfHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight - halfHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight + halfHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight + topHeight + halfHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight + topHeight + topHeight + halfHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight + topHeight + topHeight + topHeight],
-    [halfWidth + treQuarWidth + treQuarWidth + treQuarWidth, halfHeight + topHeight + topHeight + topHeight + halfHeight],
-    [halfWidth + treQuarWidth + treQuarWidth, halfHeight + topHeight + topHeight + topHeight + topHeight],
-    [halfWidth + treQuarWidth, halfHeight + topHeight + topHeight + topHeight + topHeight + halfHeight],
+  // Axial (q, r) -> pixel offset from Mecatol Rex, using the same two basis directions every
+  // ring in the board is built from.
+  const toOffset = (q, r) => [
+    Math.round(halfWidth - r * treQuarWidth),
+    Math.round(halfHeight + q * topHeight + r * halfHeight),
   ];
+
+  let offsets = [toOffset(0, 0)];
+
+  for (let ring = 1; ring <= maxRing; ring++) {
+    for (const [q, r] of ringCoordinates(ring)) {
+      offsets.push(toOffset(q, r));
+    }
+  }
+
+  return offsets;
 };
