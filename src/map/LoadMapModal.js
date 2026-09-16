@@ -26,8 +26,8 @@ class LoadMapModal extends React.Component {
     inputTiles = inputTiles.toString();
     inputTiles = inputTiles.split(" ");
 
-    // Add m-rex to the front, which TTS doesn't include
-    inputTiles.unshift("18");
+    // Add m-rex to the front, which TTS doesn't include (unless m-rex is not in the center)
+    if (!inputTiles.includes("18")) inputTiles.unshift("18");
 
     inputTiles = inputTiles.map((value, index) => {
       let newValue = value;

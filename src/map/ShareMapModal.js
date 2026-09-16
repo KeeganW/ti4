@@ -24,8 +24,8 @@ class ShareMapModal extends React.Component {
     let tileString = [...this.props.tiles];
     tileString = this.removeTrailing(tileString);
 
-    // Remove mecatol rex
-    tileString.shift();
+    // Remove mecatol rex if it's in the center
+    if (tileString[0] === "18") tileString.shift();
 
     tileString = tileString.toString();
     tileString = tileString.replaceAll(",-1", ",0"); // Remove the -1s because it is unused
