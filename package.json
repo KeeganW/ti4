@@ -53,5 +53,11 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint-plugin-jsonc": "^2.21.1",
     "prettier": "^3.9.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.6",
+    "shell-quote": "^1.10.0",
+    "websocket-driver": "^0.7.5",
+    "jspdf": "^4.2.1"
   }
 }
