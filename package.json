@@ -58,6 +58,296 @@
     "form-data": "^4.0.6",
     "shell-quote": "^1.10.0",
     "websocket-driver": "^0.7.5",
-    "jspdf": "^4.2.1"
+    "jspdf": "^4.2.1",
+    "@csstools/postcss-cascade-layers": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-color-function": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-font-format-keywords": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-hwb-function": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-ic-unit": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-is-pseudo-class": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-nested-calc": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-normalize-display-values": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-oklab-function": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-progressive-custom-properties": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-stepped-value-functions": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-text-decoration-shorthand": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-trigonometric-functions": {
+      "postcss": "8.5.23"
+    },
+    "@csstools/postcss-unset-value": {
+      "postcss": "8.5.23"
+    },
+    "autoprefixer": {
+      "postcss": "8.5.23"
+    },
+    "css-blank-pseudo": {
+      "postcss": "8.5.23"
+    },
+    "css-declaration-sorter": {
+      "postcss": "8.5.23"
+    },
+    "css-has-pseudo": {
+      "postcss": "8.5.23"
+    },
+    "css-loader": {
+      "postcss": "8.5.23"
+    },
+    "css-minimizer-webpack-plugin": {
+      "postcss": "8.5.23"
+    },
+    "css-prefers-color-scheme": {
+      "postcss": "8.5.23"
+    },
+    "cssnano": {
+      "postcss": "8.5.23"
+    },
+    "cssnano-preset-default": {
+      "postcss": "8.5.23"
+    },
+    "cssnano-utils": {
+      "postcss": "8.5.23"
+    },
+    "icss-utils": {
+      "postcss": "8.5.23"
+    },
+    "postcss": "8.5.23",
+    "postcss-attribute-case-insensitive": {
+      "postcss": "8.5.23"
+    },
+    "postcss-browser-comments": {
+      "postcss": "8.5.23"
+    },
+    "postcss-calc": {
+      "postcss": "8.5.23"
+    },
+    "postcss-clamp": {
+      "postcss": "8.5.23"
+    },
+    "postcss-color-functional-notation": {
+      "postcss": "8.5.23"
+    },
+    "postcss-color-hex-alpha": {
+      "postcss": "8.5.23"
+    },
+    "postcss-color-rebeccapurple": {
+      "postcss": "8.5.23"
+    },
+    "postcss-colormin": {
+      "postcss": "8.5.23"
+    },
+    "postcss-convert-values": {
+      "postcss": "8.5.23"
+    },
+    "postcss-custom-media": {
+      "postcss": "8.5.23"
+    },
+    "postcss-custom-properties": {
+      "postcss": "8.5.23"
+    },
+    "postcss-custom-selectors": {
+      "postcss": "8.5.23"
+    },
+    "postcss-dir-pseudo-class": {
+      "postcss": "8.5.23"
+    },
+    "postcss-discard-comments": {
+      "postcss": "8.5.23"
+    },
+    "postcss-discard-duplicates": {
+      "postcss": "8.5.23"
+    },
+    "postcss-discard-empty": {
+      "postcss": "8.5.23"
+    },
+    "postcss-discard-overridden": {
+      "postcss": "8.5.23"
+    },
+    "postcss-double-position-gradients": {
+      "postcss": "8.5.23"
+    },
+    "postcss-env-function": {
+      "postcss": "8.5.23"
+    },
+    "postcss-flexbugs-fixes": {
+      "postcss": "8.5.23"
+    },
+    "postcss-focus-visible": {
+      "postcss": "8.5.23"
+    },
+    "postcss-focus-within": {
+      "postcss": "8.5.23"
+    },
+    "postcss-font-variant": {
+      "postcss": "8.5.23"
+    },
+    "postcss-gap-properties": {
+      "postcss": "8.5.23"
+    },
+    "postcss-image-set-function": {
+      "postcss": "8.5.23"
+    },
+    "postcss-import": {
+      "postcss": "8.5.23"
+    },
+    "postcss-initial": {
+      "postcss": "8.5.23"
+    },
+    "postcss-js": {
+      "postcss": "8.5.23"
+    },
+    "postcss-lab-function": {
+      "postcss": "8.5.23"
+    },
+    "postcss-load-config": {
+      "postcss": "8.5.23"
+    },
+    "postcss-loader": {
+      "postcss": "8.5.23"
+    },
+    "postcss-logical": {
+      "postcss": "8.5.23"
+    },
+    "postcss-media-minmax": {
+      "postcss": "8.5.23"
+    },
+    "postcss-merge-longhand": {
+      "postcss": "8.5.23"
+    },
+    "postcss-merge-rules": {
+      "postcss": "8.5.23"
+    },
+    "postcss-minify-font-values": {
+      "postcss": "8.5.23"
+    },
+    "postcss-minify-gradients": {
+      "postcss": "8.5.23"
+    },
+    "postcss-minify-params": {
+      "postcss": "8.5.23"
+    },
+    "postcss-minify-selectors": {
+      "postcss": "8.5.23"
+    },
+    "postcss-modules-extract-imports": {
+      "postcss": "8.5.23"
+    },
+    "postcss-modules-local-by-default": {
+      "postcss": "8.5.23"
+    },
+    "postcss-modules-scope": {
+      "postcss": "8.5.23"
+    },
+    "postcss-modules-values": {
+      "postcss": "8.5.23"
+    },
+    "postcss-nested": {
+      "postcss": "8.5.23"
+    },
+    "postcss-nesting": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize-charset": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize-display-values": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize-positions": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize-repeat-style": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize-string": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize-timing-functions": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize-unicode": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize-url": {
+      "postcss": "8.5.23"
+    },
+    "postcss-normalize-whitespace": {
+      "postcss": "8.5.23"
+    },
+    "postcss-opacity-percentage": {
+      "postcss": "8.5.23"
+    },
+    "postcss-ordered-values": {
+      "postcss": "8.5.23"
+    },
+    "postcss-overflow-shorthand": {
+      "postcss": "8.5.23"
+    },
+    "postcss-page-break": {
+      "postcss": "8.5.23"
+    },
+    "postcss-place": {
+      "postcss": "8.5.23"
+    },
+    "postcss-preset-env": {
+      "postcss": "8.5.23"
+    },
+    "postcss-pseudo-class-any-link": {
+      "postcss": "8.5.23"
+    },
+    "postcss-reduce-initial": {
+      "postcss": "8.5.23"
+    },
+    "postcss-reduce-transforms": {
+      "postcss": "8.5.23"
+    },
+    "postcss-replace-overflow-wrap": {
+      "postcss": "8.5.23"
+    },
+    "postcss-selector-not": {
+      "postcss": "8.5.23"
+    },
+    "postcss-svgo": {
+      "postcss": "8.5.23"
+    },
+    "postcss-unique-selectors": {
+      "postcss": "8.5.23"
+    },
+    "react-scripts": {
+      "postcss": "8.5.23"
+    },
+    "resolve-url-loader": "5.0.0",
+    "stylehacks": {
+      "postcss": "8.5.23"
+    },
+    "tailwindcss": {
+      "postcss": "8.5.23"
+    }
   }
 }
