@@ -12,8 +12,21 @@ import MapOptions from "./options/MapOptions";
 import tileData, { WORMHOLE_SYMBOLS, EXPANSIONS } from "./data/tileData";
 import boardData from "./data/boardData.json";
 import raceData from "./data/raceData.json";
+import adjacencyData from "./data/adjacencyData.json";
 import { calculateOffsets } from "./helpers/Helpers";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+
+// Distinct colors used to identify each player in the closest-player overlay.
+const PLAYER_COLORS = [
+  "#e63946",
+  "#4dd671",
+  "#4d94ff",
+  "#ffd23f",
+  "#b84dff",
+  "#ff944d",
+  "#4dd9ec",
+  "#ff6fc4",
+];
 
 /**
  * The core application page. Holds the states for common objects like tile data and player names. Responsible for
@@ -35,6 +48,7 @@ class App extends React.Component {
       unusedTiles: [],
       overlayVisible: false,
       wormholeOverlayVisible: false,
+      closestPlayerOverlayVisible: false,
       zoom: 1.0,
       lastCall: 0,
       mobileBreakpoint: 700,
@@ -87,6 +101,7 @@ class App extends React.Component {
     this.toggleThundersEdge = this.toggleThundersEdge.bind(this);
     this.toggleOverlay = this.toggleOverlay.bind(this);
     this.toggleWormholeOverlay = this.toggleWormholeOverlay.bind(this);
+    this.toggleClosestPlayerOverlay = this.toggleClosestPlayerOverlay.bind(this);
     this.updateTileNumberOverlays = this.updateTileNumberOverlays.bind(this);
     this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
     this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
@@ -411,6 +426,17 @@ class App extends React.Component {
     });
   }
 
+  /**
+   * Toggle the closest-player-per-tile overlay.
+   */
+  toggleClosestPlayerOverlay() {
+    this.updateClosestPlayerOverlays(!this.state.closestPlayerOverlayVisible);
+
+    this.setState({
+      closestPlayerOverlayVisible: !this.state.closestPlayerOverlayVisible,
+    });
+  }
+
   updateTileNumberOverlays(showTiles) {
     // Toggle the tile overlays
     for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
@@ -461,6 +487,194 @@ class App extends React.Component {
     }
   }
 
+  updateClosestPlayerOverlays(showTiles) {
+    // Toggle the closest-player overlays
+    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+      let overlay = $("#closest-player-" + tileNumber);
+      if (
+        showTiles &&
+        (this.getTileNumber(this.state.tiles[tileNumber]) !== -1 ||
+          this.state.customMapBuilding)
+      ) {
+        overlay.show();
+      } else {
+        overlay.hide();
+      }
+    }
+  }
+
+  /**
+   * Finds the board positions of every player's home system, in ascending board-position order (which matches the
+   * player ordering used by currentPlayerNames/currentRaces).
+   */
+  getHomePositions() {
+    let homePositions = [];
+    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+      let tile = this.state.tiles[tileNumber];
+      if (
+        tile === 0 ||
+        (typeof tile === "number" && tile in raceData.homeSystemToRaceMap)
+      ) {
+        homePositions.push(tileNumber);
+      }
+    }
+    return homePositions;
+  }
+
+  /**
+   * A hyperlane tile has no adjacency of its own — per the TI4 rules, any real systems connected through a chain of
+   * hyperlane tiles are directly adjacent to each other (a single hop), no matter how many hyperlane tiles are
+   * strung between them. Given we just entered hyperlanePosition from fromPosition, this chases the printed lines
+   * (through any further chained hyperlane tiles) and returns the real, non-hyperlane systems reachable that way.
+   */
+  getHyperlaneEndpoints(hyperlanePosition, fromPosition, visited) {
+    if (visited.has(hyperlanePosition)) {
+      return [];
+    }
+    visited.add(hyperlanePosition);
+
+    let physicalNeighbors = adjacencyData[hyperlanePosition] || [];
+    let directionIn = physicalNeighbors.indexOf(fromPosition);
+    if (directionIn < 0) {
+      return [];
+    }
+
+    let tileValue = this.state.tiles[hyperlanePosition];
+    let system = this.getTileNumber(tileValue);
+    let currentRotation = Number(String(tileValue).split("-")[1]) || 0;
+    let hyperlaneLinks = (tileData.all[system] || {}).hyperlanes || [];
+
+    let endpoints = [];
+    for (let [start, end] of hyperlaneLinks) {
+      let startDir = (start + currentRotation) % 6;
+      let endDir = (end + currentRotation) % 6;
+      let outDir =
+        startDir === directionIn
+          ? endDir
+          : endDir === directionIn
+            ? startDir
+            : -1;
+      if (outDir < 0) {
+        continue;
+      }
+
+      let outNeighbor = physicalNeighbors[outDir];
+      if (outNeighbor === undefined) {
+        continue;
+      }
+
+      let outSystem = this.getTileNumber(this.state.tiles[outNeighbor]);
+      if (tileData.hyperlanes.indexOf(outSystem) >= 0) {
+        endpoints.push(
+          ...this.getHyperlaneEndpoints(outNeighbor, hyperlanePosition, visited),
+        );
+      } else {
+        endpoints.push(outNeighbor);
+      }
+    }
+    return endpoints;
+  }
+
+  /**
+   * Board positions that are one hop away from startPosition, honoring hyperlane rules: a physical neighbor that is
+   * a hyperlane tile is skipped over entirely, connecting straight through to whatever real systems the hyperlane
+   * (or chain of hyperlanes) links to.
+   */
+  getDistanceNeighbors(startPosition) {
+    let physicalNeighbors = adjacencyData[startPosition] || [];
+    let neighbors = [];
+    for (let neighbor of physicalNeighbors) {
+      let neighborSystem = this.getTileNumber(this.state.tiles[neighbor]);
+      if (tileData.hyperlanes.indexOf(neighborSystem) >= 0) {
+        neighbors.push(
+          ...this.getHyperlaneEndpoints(neighbor, startPosition, new Set()),
+        );
+      } else {
+        neighbors.push(neighbor);
+      }
+    }
+    return neighbors;
+  }
+
+  /**
+   * Breadth-first search over the board-position adjacency graph, returning the hex distance from startPosition to
+   * every other board position.
+   */
+  getDistancesFrom(startPosition) {
+    let distances = new Array(boardData.pokSize).fill(Infinity);
+    distances[startPosition] = 0;
+    let queue = [startPosition];
+    while (queue.length > 0) {
+      let current = queue.shift();
+      for (let neighbor of this.getDistanceNeighbors(current)) {
+        if (distances[neighbor] === Infinity) {
+          distances[neighbor] = distances[current] + 1;
+          queue.push(neighbor);
+        }
+      }
+    }
+    return distances;
+  }
+
+  /**
+   * Returns the display label for a player, preferring the name they've set, falling back to "P<n>".
+   */
+  getPlayerLabel(playerIndex) {
+    let name = this.state.currentPlayerNames[playerIndex];
+    return name === undefined || name === "" ? "P" + (playerIndex + 1) : name;
+  }
+
+  /**
+   * Computes, per board position, an HTML label naming the closest player's home system (by hex distance). Ties are
+   * shown as multiple colored labels separated by "/". Home systems show the owning player's label instead of "0".
+   */
+  computeClosestPlayerLabels() {
+    let homePositions = this.getHomePositions();
+    let labels = new Array(boardData.pokSize).fill("");
+
+    if (homePositions.length === 0) {
+      return labels;
+    }
+
+    let distancesByPlayer = homePositions.map((homePosition) =>
+      this.getDistancesFrom(homePosition),
+    );
+
+    for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
+      let minDistance = Infinity;
+      for (let playerIndex = 0; playerIndex < homePositions.length; playerIndex++) {
+        minDistance = Math.min(
+          minDistance,
+          distancesByPlayer[playerIndex][tileNumber],
+        );
+      }
+
+      if (minDistance === Infinity) {
+        continue;
+      }
+
+      let closestPlayers = [];
+      for (let playerIndex = 0; playerIndex < homePositions.length; playerIndex++) {
+        if (distancesByPlayer[playerIndex][tileNumber] === minDistance) {
+          closestPlayers.push(playerIndex);
+        }
+      }
+
+      labels[tileNumber] = closestPlayers
+        .map((playerIndex) => {
+          let color = PLAYER_COLORS[playerIndex % PLAYER_COLORS.length];
+          let text =
+            homePositions[playerIndex] === tileNumber
+              ? this.getPlayerLabel(playerIndex)
+              : String(minDistance);
+          return '<span style="color:' + color + '">' + text + "</span>";
+        })
+        .join("/");
+    }
+
+    return labels;
+  }
+
   toggleShowAllExtraTiles() {
     this.setState(
       {
@@ -498,6 +712,10 @@ class App extends React.Component {
       () => {
         this.updateTileNumberOverlays(
           this.state.customMapBuilding || this.state.overlayVisible,
+        );
+        this.updateClosestPlayerOverlays(
+          this.state.customMapBuilding ||
+            this.state.closestPlayerOverlayVisible,
         );
         this.showExtraTiles();
         this.drawMap();
@@ -1098,12 +1316,14 @@ class App extends React.Component {
 
     // Loop over tiles to assign various values to them
     let currentPlayerNumber = 0;
+    let closestPlayerLabels = this.computeClosestPlayerLabels();
     for (let tileNumber = 0; tileNumber < offsets.length; tileNumber++) {
       // Create the selectors
       let tile = $("#tile-" + tileNumber);
       let tileWrapper = $("#tile-wrapper-" + tileNumber);
       let numOverlay = $("#number-" + tileNumber);
       let wormholeOverlay = $("#wormhole-" + tileNumber);
+      let closestPlayerOverlay = $("#closest-player-" + tileNumber);
       let underlay = $("#underlay-" + tileNumber);
 
       // Decide if we should be displaying this tile
@@ -1150,6 +1370,11 @@ class App extends React.Component {
         .css("top", constraintHeight / 2 - 23)
         .css("font-size", "2rem")
         .html("");
+
+      closestPlayerOverlay
+        .css("margin-left", "-10px")
+        .css("top", constraintHeight / 2 - 10)
+        .html(closestPlayerLabels[tileNumber]);
 
       underlay
         .css("width", constraintWidth + 6)
@@ -1416,11 +1641,14 @@ class App extends React.Component {
           extraTilesVisible={this.state.extraTilesVisible}
           moreInfoVisible={this.state.moreInfoVisible}
           overlayVisible={this.state.overlayVisible}
+          wormholeOverlayVisible={this.state.wormholeOverlayVisible}
+          closestPlayerOverlayVisible={this.state.closestPlayerOverlayVisible}
           tiles={this.state.tiles}
           map={this.map}
 
           toggleOverlay={this.toggleOverlay}
           toggleWormholeOverlay={this.toggleWormholeOverlay}
+          toggleClosestPlayerOverlay={this.toggleClosestPlayerOverlay}
           toggleMoreInfo={this.toggleMoreInfo}
           toggleExtraTiles={this.toggleExtraTiles}
           zoomPlus={this.zoomPlusClick}

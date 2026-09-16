@@ -5,6 +5,7 @@ import {
   CardImage,
   Dash,
   InfoCircle,
+  PeopleFill,
   Plus,
   Share,
   Upload,
@@ -177,6 +178,45 @@ class MapControls extends React.Component {
               >
                 β
               </text>
+            </svg>
+          </button>
+        </div>
+
+        <div
+          id="closestPlayerOverlay"
+          className={
+            "btn-group-justified btn-group-sm" +
+            (this.props.visible ? "" : " d-none")
+          }
+          onClick={this.props.toggleClosestPlayerOverlay}
+        >
+          <button
+            className={
+              "btn btn-primary" +
+              (this.props.closestPlayerOverlayVisible ? " active" : "")
+            }
+            id="showClosestPlayerOverlay"
+            data-tooltip-id="tooltip"
+            data-tooltip-content="Closest Player Overlay"
+            data-tooltip-place="left"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 194.78 169.62"
+              className="icon"
+              fill="currentColor"
+            >
+              <polygon
+                className="overlay-cls-1"
+                points="148.03 4 51.81 4 4.61 86.92 52.02 169.84 148.03 169.84 195.03 86.92 148.03 4"
+              />
+              <PeopleFill
+                className="overlay-cls-2"
+                x="57"
+                y="60"
+                width="80"
+                height="80"
+              />
             </svg>
           </button>
         </div>
