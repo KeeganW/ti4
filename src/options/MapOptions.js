@@ -44,9 +44,11 @@ class MapOptions extends React.Component {
       placementStyles: ["slice", "initial", "home", "random"],
       races: [...raceData["races"]],
       pokRaces: [...raceData["pokRaces"]],
+      teRaces: [...raceData["teRaces"]],
       dsRaces: [...raceData["dsRaces"]],
       homeworlds: raceData["homeSystems"],
       pokHomeworlds: raceData["pokHomeSystems"],
+      teHomeworlds: raceData["teHomeSystems"],
       dsHomeworlds: raceData["dsHomeworlds"],
     };
     const startingPlayers = 6;
@@ -166,14 +168,21 @@ class MapOptions extends React.Component {
       newCurrentRaces = [];
     } else if (race === "all") {
       // The deselect all option
+      newCurrentRaces = [...this.state.optionsPossible.races];
       if (this.props.includedExpansions[EXPANSIONS.POK]) {
-        newCurrentRaces = [
-          ...this.state.optionsPossible.races.concat(
-            this.state.optionsPossible.pokRaces,
-          ),
-        ];
-      } else {
-        newCurrentRaces = [...this.state.optionsPossible.races];
+        newCurrentRaces = newCurrentRaces.concat(
+          this.state.optionsPossible.pokRaces,
+        );
+      }
+      if (this.props.includedExpansions[EXPANSIONS.TE]) {
+        newCurrentRaces = newCurrentRaces.concat(
+          this.state.optionsPossible.teRaces,
+        );
+      }
+      if (this.props.includedExpansions[EXPANSIONS.DS]) {
+        newCurrentRaces = newCurrentRaces.concat(
+          this.state.optionsPossible.dsRaces,
+        );
       }
     } else {
       let indexToToggle = newCurrentRaces.indexOf(race);
@@ -189,6 +198,8 @@ class MapOptions extends React.Component {
 
   updatePok(event) {
     let races = [...this.state.optionsPossible.races];
+    if (this.props.includedExpansions[EXPANSIONS.TE])
+      races = races.concat(this.state.optionsPossible.teRaces);
     if (this.props.includedExpansions[EXPANSIONS.DS])
       races = races.concat(this.state.optionsPossible.dsRaces);
     let boardOptions = this.state.optionsPossible.boardStyles;
@@ -250,6 +261,18 @@ class MapOptions extends React.Component {
   }
 
   updateTE(event) {
+    let races = [...this.state.optionsPossible.races];
+    if (this.props.includedExpansions[EXPANSIONS.POK])
+      races = races.concat(this.state.optionsPossible.pokRaces);
+    if (this.props.includedExpansions[EXPANSIONS.DS])
+      races = races.concat(this.state.optionsPossible.dsRaces);
+    if (event.target.checked) {
+      this.props.updateRaces([
+        ...races.concat(this.state.optionsPossible.teRaces),
+      ]);
+    } else {
+      this.props.updateRaces(races);
+    }
     this.props.toggleThundersEdge(event);
   }
 
@@ -257,6 +280,8 @@ class MapOptions extends React.Component {
     let races = [...this.state.optionsPossible.races];
     if (this.props.includedExpansions[EXPANSIONS.POK])
       races = races.concat(this.state.optionsPossible.pokRaces);
+    if (this.props.includedExpansions[EXPANSIONS.TE])
+      races = races.concat(this.state.optionsPossible.teRaces);
     if (event.target.checked) {
       this.props.updateRaces([
         ...races.concat(this.state.optionsPossible.dsRaces),
@@ -401,10 +426,12 @@ class MapOptions extends React.Component {
       encodedSettings += this.state.ensureRacialAnomalies ? "T" : "F";
       let combinedRaces = this.state.optionsPossible.races
         .concat(this.state.optionsPossible.pokRaces)
-        .concat(this.state.optionsPossible.dsRaces);
+        .concat(this.state.optionsPossible.dsRaces)
+        .concat(this.state.optionsPossible.teRaces);
       let expectedRaces = 17;
       if (this.props.includedExpansions[EXPANSIONS.POK]) expectedRaces += 7;
       if (this.props.includedExpansions[EXPANSIONS.DS]) expectedRaces += 34;
+      if (this.props.includedExpansions[EXPANSIONS.TE]) expectedRaces += 5;
       if (this.props.currentRaces.length !== expectedRaces) {
         // Need to encode all races, because it is not the default
         for (let race of this.props.currentRaces) {
@@ -575,7 +602,8 @@ class MapOptions extends React.Component {
           currentRaces = [];
           let combinedRaces = this.state.optionsPossible.races
             .concat(this.state.optionsPossible.pokRaces)
-            .concat(this.state.optionsPossible.dsRaces);
+            .concat(this.state.optionsPossible.dsRaces)
+            .concat(this.state.optionsPossible.teRaces);
           while (
             newSettings[currentIndex] !== "|" &&
             currentIndex !== newSettings.length
@@ -592,6 +620,10 @@ class MapOptions extends React.Component {
           if (useExpansions[EXPANSIONS.POK])
             currentRaces = currentRaces.concat(
               this.state.optionsPossible.pokRaces,
+            );
+          if (useExpansions[EXPANSIONS.TE])
+            currentRaces = currentRaces.concat(
+              this.state.optionsPossible.teRaces,
             );
           if (useExpansions[EXPANSIONS.DS])
             currentRaces = currentRaces.concat(
@@ -2351,6 +2383,7 @@ class MapOptions extends React.Component {
             races={this.state.optionsPossible.races}
             includedExpansions={this.props.includedExpansions}
             pokRaces={this.state.optionsPossible.pokRaces}
+            teRaces={this.state.optionsPossible.teRaces}
             dsRaces={this.state.optionsPossible.dsRaces}
             currentRaces={this.props.currentRaces}
             hideModal={this.toggleSetRacesHelp}

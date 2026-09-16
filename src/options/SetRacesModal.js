@@ -25,6 +25,9 @@ class SetRacesModal extends React.Component {
     if (this.props.includedExpansions[EXPANSIONS.POK]) {
       visibleRaces = visibleRaces.concat(this.props.pokRaces);
     }
+    if (this.props.includedExpansions[EXPANSIONS.TE]) {
+      visibleRaces = visibleRaces.concat(this.props.teRaces);
+    }
     if (this.props.includedExpansions[EXPANSIONS.DS]) {
       visibleRaces = visibleRaces.concat(this.props.dsRaces);
     }
