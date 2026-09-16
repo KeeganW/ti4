@@ -332,7 +332,9 @@ class App extends React.Component {
    * @returns {number[]} the clean tile string
    */
   removeTrailing(tiles) {
-    while (tiles[tiles.length - 1] === -1) {
+    // Keep tile array length a minimum of 37 in order to support small maps
+    // Specifically rotation capabilities require the correct array length
+    while (tiles[tiles.length - 1] === -1 && tiles.length > 37) {
       tiles.pop();
     }
     return tiles;
@@ -435,12 +437,10 @@ class App extends React.Component {
 
   updateWormholeOverlays(showTiles) {
     // Toggle the tile overlays
-    console.log(this.state.tiles);
     for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
       let wormholeOverlay = $("#wormhole-" + tileNumber);
       if (showTiles) {
         // Want to show all the tiles
-        console.log(this.state.tiles[tileNumber]);
         if (
           tileData.all[this.state.tiles[tileNumber]] &&
           tileData.all[this.state.tiles[tileNumber]].wormhole.length > 0 &&
@@ -686,6 +686,7 @@ class App extends React.Component {
     systemNumbers = systemNumbers
       .concat(tileData.blue)
       .concat(tileData.red)
+      .concat(tileData.green)
       .filter(expansionCheck(this.state.includedExpansions));
 
     if (this.state.customMapBuilding) {
@@ -868,6 +869,21 @@ class App extends React.Component {
       rotatedTileArray.push(tilesOverride[54] ?? this.state.tiles[54]);
       rotatedTileArray.push(tilesOverride[55] ?? this.state.tiles[55]);
       rotatedTileArray.push(tilesOverride[56] ?? this.state.tiles[56]);
+    }
+
+    // Issue #131: remove duplication from the list.
+    // Duplicates can occur during small map sizes, which leads to invalid maps.
+    for (let i = 0; i < rotatedTileArray.length; i++) {
+      for (let j = i + 1; j < rotatedTileArray.length; j++) {
+        if (
+          rotatedTileArray[i] &&
+          rotatedTileArray[j] &&
+          rotatedTileArray[i].toString().split("-")[0] ===
+            rotatedTileArray[j].toString().split("-")[0]
+        ) {
+          rotatedTileArray[j] = -1;
+        }
+      }
     }
 
     return rotatedTileArray;
