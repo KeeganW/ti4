@@ -48,6 +48,7 @@ class App extends React.Component {
                 [EXPANSIONS.DS, false],
                 [EXPANSIONS.AS, false],
                 [EXPANSIONS.Async, false],
+                [EXPANSIONS.TE, false],
             ]),
             currentPlayerNames: ["", "", "", "", "", "", "", ""],
             currentRaces: [...raceData.races],
@@ -84,6 +85,7 @@ class App extends React.Component {
         this.toggleDiscordantStars = this.toggleDiscordantStars.bind(this);
         this.toggleAscendentSun = this.toggleAscendentSun.bind(this)
         this.toggleFanHyperlanes = this.toggleFanHyperlanes.bind(this)
+        this.toggleThundersEdge = this.toggleThundersEdge.bind(this)
         this.toggleOverlay = this.toggleOverlay.bind(this);
         this.toggleWormholeOverlay = this.toggleWormholeOverlay.bind(this);
         this.updateTileNumberOverlays = this.updateTileNumberOverlays.bind(this);
@@ -244,7 +246,7 @@ class App extends React.Component {
         let systemNumbers = []
 
         const expansionCheck = (includedExpansions) => (
-            (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async])
+            (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async]) && (!tileData.te.includes(id) || includedExpansions[EXPANSIONS.TE])
         )
 
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(this.state.includedExpansions));
@@ -498,6 +500,17 @@ class App extends React.Component {
     }
 
     /**
+     * Toggle whether we need to use the Thunder's Edge fan expansion or not
+     */
+    toggleThundersEdge() {
+        const newIncludedExpansions = this.state.includedExpansions;
+        newIncludedExpansions[EXPANSIONS.TE] = !newIncludedExpansions[EXPANSIONS.TE]
+        this.setState({
+            includedExpansions: newIncludedExpansions,
+        }, this.showExtraTiles);
+    }
+
+    /**
      * Toggle whether we need to use the discordant stars races or not
      */
     toggleDiscordantStars() {
@@ -574,7 +587,7 @@ class App extends React.Component {
         let systemNumbers = []
 
         const expansionCheck = (includedExpansions) => (
-            (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async])
+            (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async]) && (!tileData.te.includes(id) || includedExpansions[EXPANSIONS.TE])
         )
 
         systemNumbers = systemNumbers.concat(tileData.blue).concat(tileData.red).filter(expansionCheck(this.state.includedExpansions));
@@ -1251,6 +1264,7 @@ class App extends React.Component {
                             toggleDiscordantStars={this.toggleDiscordantStars} 
                             toggleAscendentSun={this.toggleAscendentSun}
                             toggleFanHyperlanes={this.toggleFanHyperlanes}
+                            toggleThundersEdge={this.toggleThundersEdge}
                             updateTiles={this.updateTiles}
                             showExtraTiles={this.showExtraTiles} updateRaces={this.updateRaces}
                             updatePlayerNames={this.updatePlayerNames}

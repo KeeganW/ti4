@@ -10,7 +10,7 @@ import SetPlayerNameModal from "./SetPlayerNameModal";
 import SetRacesModal from "./SetRacesModal";
 
 const expansionCheck = (includedExpansions) => (
-    (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async])
+    (id) => (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) && (!tileData.uncharted.includes(id) || includedExpansions[EXPANSIONS.UnS]) && (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) && (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async]) && (!tileData.te.includes(id) || includedExpansions[EXPANSIONS.TE])
 )
 
 class MapOptions extends React.Component {
@@ -117,6 +117,7 @@ class MapOptions extends React.Component {
         this.toggleDiscordantStarsHelp = this.toggleDiscordantStarsHelp.bind(this);
         this.toggleAscendentSunHelp = this.toggleAscendentSunHelp.bind(this);
         this.toggleFanHyperlanesHelp = this.toggleFanHyperlanesHelp.bind(this);
+        this.updateTE = this.updateTE.bind(this);
         this.togglePickRacesHelp = this.togglePickRacesHelp.bind(this);
         this.toggleBoardStyleHelp = this.toggleBoardStyleHelp.bind(this);
         this.togglePickStyleHelp = this.togglePickStyleHelp.bind(this);
@@ -211,6 +212,10 @@ class MapOptions extends React.Component {
         this.props.toggleFanHyperlanes(event);
     }
 
+    updateTE(event) {
+        this.props.toggleThundersEdge(event);
+    }
+
     updateDS(event) {
         let races = [...this.state.optionsPossible.races]
         if (this.props.includedExpansions[EXPANSIONS.POK]) races = races.concat(this.state.optionsPossible.pokRaces)
@@ -297,6 +302,7 @@ class MapOptions extends React.Component {
         let encodedSettings = "";
 
         encodedSettings += this.props.includedExpansions[EXPANSIONS.POK] ? "T" : "F";
+        encodedSettings += this.props.includedExpansions[EXPANSIONS.TE] ? "T" : "F";
         if (this.state.fanContent) {
             encodedSettings += this.props.includedExpansions[EXPANSIONS.UnS] ? "T" : "F";
             encodedSettings += this.props.includedExpansions[EXPANSIONS.DS] ? "T" : "F";
@@ -365,6 +371,7 @@ class MapOptions extends React.Component {
             [EXPANSIONS.DS, false],
             [EXPANSIONS.AS, false],
             [EXPANSIONS.Async, false],
+            [EXPANSIONS.TE, false],
         ]
         )
         let useFanContent = false
@@ -372,6 +379,12 @@ class MapOptions extends React.Component {
         // Prophecy of Kings
         useExpansions[EXPANSIONS.POK] = newSettings[currentIndex] === "T";
         currentIndex += 1;
+
+        // Thunder's Edge - only present in links generated after this expansion was added
+        if (newSettings[currentIndex] === "T" || newSettings[currentIndex] === "F") {
+            useExpansions[EXPANSIONS.TE] = newSettings[currentIndex] === "T";
+            currentIndex += 1;
+        }
 
         // Fan Content
         // Compatability with old URL formatting
@@ -513,6 +526,9 @@ class MapOptions extends React.Component {
             if ((useExpansions[EXPANSIONS.DS] && !this.props.includedExpansions[EXPANSIONS.DS]) || (!useExpansions[EXPANSIONS.DS] && this.props.includedExpansions[EXPANSIONS.DS])) {
                 this.props.toggleDiscordantStars();
             }
+            if ((useExpansions[EXPANSIONS.TE] && !this.props.includedExpansions[EXPANSIONS.TE]) || (!useExpansions[EXPANSIONS.TE] && this.props.includedExpansions[EXPANSIONS.TE])) {
+                this.props.toggleThundersEdge();
+            }
 
             if (newTiles.length > 0) {
                 // Tiles were changed after rendering, so we need to display them
@@ -560,6 +576,7 @@ class MapOptions extends React.Component {
                 [EXPANSIONS.UnS, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.UnS]],
                 [EXPANSIONS.AS, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.AS]],
                 [EXPANSIONS.Async, this.state.fanContent && this.props.includedExpansions[EXPANSIONS.Async]],
+                [EXPANSIONS.TE, this.props.includedExpansions[EXPANSIONS.TE]],
             ]
             )
         }
@@ -1540,6 +1557,10 @@ class MapOptions extends React.Component {
 
                     <Form.Group className="mb-3 d-flex" controlId="pokExpansion">
                         <Form.Check name="pokExpansion" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.POK]} onChange={this.updatePok} label="Use POK Tiles" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3 d-flex" controlId="useThundersEdge">
+                        <Form.Check name="useThundersEdge" type="checkbox" checked={this.props.includedExpansions[EXPANSIONS.TE]} onChange={this.updateTE} label="Use Thunder's Edge Tiles" />
                     </Form.Group>
 
                     <Form.Group className="mb-3 d-flex" controlId="fanContent">

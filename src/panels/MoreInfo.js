@@ -10,6 +10,8 @@ import specialtyBiotic from './icons/specialty-biotic.png';
 import specialtyWarfare from './icons/specialty-warfare.png';
 import specialtyPropulsion from './icons/specialty-propulsion.png';
 import specialtyCybernetic from './icons/specialty-cybernetic.png';
+import specialtySpaceStation from './icons/specialty-space-station.png';
+import specialtyLegendary from './icons/specialty-legendary.png';
 import traitCultural from './icons/trait-cultural.png';
 import traitHazardous from './icons/trait-hazardous.png';
 import traitIndustrial from './icons/trait-industrial.png';
@@ -35,7 +37,9 @@ class MoreInfo extends React.Component {
             "biotic": 0,
             "warfare": 0,
             "propulsion": 0,
-            "cybernetic": 0
+            "cybernetic": 0,
+            "space-station": 0,
+            "legendary": 0
         };
         let traits = {
             "cultural": 0,
@@ -75,8 +79,20 @@ class MoreInfo extends React.Component {
                     planets += 1;
                     resources += planet.resources;
                     influence += planet.influence;
-                    specialties[planet.specialty] += 1;
-                    traits[planet.trait] += 1;
+                    let planetSpecialties = [].concat(planet.specialty);
+                    if (planet.legendary) {
+                        planetSpecialties.push("legendary");
+                    }
+                    for (let specialty of planetSpecialties) {
+                        if (specialty in specialties) {
+                            specialties[specialty] += 1;
+                        }
+                    }
+                    for (let trait of [].concat(planet.trait)) {
+                        if (trait in traits) {
+                            traits[trait] += 1;
+                        }
+                    }
                 }
                 for (let wormholeIndex in tileData.all[adjacentTile].wormhole){
                     if (!(tileData.all[adjacentTile].wormhole[wormholeIndex] in wormholes)){
@@ -127,6 +143,8 @@ class MoreInfo extends React.Component {
                                 {[...Array(adjacentInfo.specialties.warfare)].map((e, i) => <img key={playerName + "-warfare-" + i} className={"icon"} src={specialtyWarfare} alt={"W"}/>)}
                                 {[...Array(adjacentInfo.specialties.propulsion)].map((e, i) => <img key={playerName + "-propulsion-" + i} className={"icon"} src={specialtyPropulsion} alt={"P"}/>)}
                                 {[...Array(adjacentInfo.specialties.cybernetic)].map((e, i) => <img key={playerName + "-cybernetic-" + i} className={"icon"} src={specialtyCybernetic} alt={"C"}/>)}
+                                {[...Array(adjacentInfo.specialties["space-station"])].map((e, i) => <img key={playerName + "-space-station-" + i} className={"icon"} src={specialtySpaceStation} alt={"S"}/>)}
+                                {[...Array(adjacentInfo.specialties.legendary)].map((e, i) => <img key={playerName + "-legendary-" + i} className={"icon"} src={specialtyLegendary} alt={"L"}/>)}
                             </span>
                         </td>
                     </tr>

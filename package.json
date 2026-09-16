@@ -25,7 +25,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint:json": "eslint -c .eslintrc.json.js --no-eslintrc --ext .json src/data",
+    "lint:js": "eslint --ext .js src",
+    "format": "prettier --write",
+    "format:check": "prettier --check"
   },
   "eslintConfig": {
     "extends": [
@@ -46,6 +50,8 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "eslint-plugin-jsonc": "^2.21.1",
+    "prettier": "^3.9.6"
   }
 }
