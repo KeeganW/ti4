@@ -1,4 +1,5 @@
 # TI4 Generator
+
 A web tool to generate Twilight Imperium 4 game boards through many custom settings.
 
 ## Web Quick Start
@@ -16,16 +17,16 @@ Visit the [web page located on github pages](https://keeganw.github.io/ti4/). Th
 The tool has many features, go poke around! Here is a list of notable features:
 
 - Automatic map generation based on user input. Options include:
-    - Using new Prophecy of Kings content
-    - Setting the player count
-    - Setting what the board will look like from various custom maps
-    - Setting how tiles are places by working with their weights
-    - Seeding the generation with a custom number between 1-10,000
-    - Automatically picking races for players
-    - Set player names for showing on the map
-    - Set races that can be picked from
-    - Randomization of how tiles are placed
-    - Moving better planets towards the middle
+  - Using new Prophecy of Kings content
+  - Setting the player count
+  - Setting what the board will look like from various custom maps
+  - Setting how tiles are places by working with their weights
+  - Seeding the generation with a custom number between 1-10,000
+  - Automatically picking races for players
+  - Set player names for showing on the map
+  - Set races that can be picked from
+  - Randomization of how tiles are placed
+  - Moving better planets towards the middle
 - Drag and drop tiles to customize your board
 - Zoom in and out to get a better idea of what certain tiles are
 - Show an overlay with the tile numbers for when you are ready to build your board

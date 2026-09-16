@@ -19,6 +19,7 @@ A client-only React web app (Create React App) that generates and edits Twilight
 **`src/App.js`** is the single stateful root component (class component). It owns almost all app state — the current `tiles` array, player names, races, expansion toggles, zoom, and UI panel visibility — and passes state + callbacks down to children. There is no state management library; everything is prop-drilled from `App`.
 
 **Tile representation**: the board is a flat array (`state.tiles`) indexed by position in the hex grid (ring order: center, ring 1, ring 2, ring 3, extended ring — see the index groupings in `rotateHexGrid()` for the exact layout). Each entry is either:
+
 - a tile-number id (from `src/data/tileData.js`), `-1` for empty, or `0` for a home system placeholder, or
 - a string like `"84A-2"` for hyperlane tiles, where the suffix after `-` is a 0–5 rotation index (60° increments).
 
@@ -33,6 +34,7 @@ A client-only React web app (Create React App) that generates and edits Twilight
 **Drag-and-drop tile swapping** (`drag`/`drop`/`handleDrop`/touch equivalents in `App.js`) reassigns entries in the `tiles` array by parsing DOM element ids (`tile-N`, `extra-N`) rather than using any DnD library.
 
 **Data files** (`src/data/`):
+
 - `tileData.js` — the tile catalog: per-tile planets, wormholes, anomalies, tech specialties, traits, and expansion membership (`base`, `pok`, `uncharted`, `sun`, `asyncLanes`, `hyperlanes`). Also exports shared enums (`PLANET_TRAITS`, `WORMHOLES`, `ANOMALIES`, `EXPANSIONS`, etc.) used throughout the app.
 - `boardData.json` — per-player-count, per-style board layouts (home world positions, tile-slot tiers) plus `pokSize`/`size` grid constants.
 - `raceData.json` — race lists and home-system mappings per expansion (base, PoK, Discordant Stars).
