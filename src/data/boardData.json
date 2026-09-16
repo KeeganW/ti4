@@ -1,11 +1,12 @@
 {
   "size": 37,
-  "pokSize": 61,
+  "pokSize": 91,
   "blankMap": [
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
   ],
   "styles": {
     "2": {
@@ -249,6 +250,24 @@
         "tertiary_tiles": [
           1, 2, 3, 4, 5, 6, 16, 14, 12, 10, 8, 18, 20, 23, 26, 29, 32, 35, 33,
           30, 27, 24, 21, 36, 39, 43, 47, 51, 55, 59
+        ],
+        "hyperlane_tiles": []
+      },
+      "extraLarge": {
+        "description": "An expansive board with a 5th ring of frontier space, for very large or long-form games. Needs a large tile pool to fill all 90 non-Mecatol tiles — enable PoK plus fan-made tile content (Uncharted Space / Eronous / Thunder's Edge) or some tiles may be left empty.",
+        "source": "Community",
+        "home_worlds": [61, 66, 71, 76, 81, 86],
+        "primary_tiles": [
+          62, 63, 64, 65, 67, 68, 69, 70, 72, 73, 74, 75, 77, 78, 79, 80, 82,
+          83, 84, 85, 87, 88, 89, 90
+        ],
+        "secondary_tiles": [
+          37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53,
+          54, 55, 56, 57, 58, 59, 60
+        ],
+        "tertiary_tiles": [
+          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36
         ],
         "hyperlane_tiles": []
       }

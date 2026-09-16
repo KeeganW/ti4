@@ -430,10 +430,13 @@ class App extends React.Component {
    * Toggle the closest-player-per-tile overlay.
    */
   toggleClosestPlayerOverlay() {
-    this.updateClosestPlayerOverlays(!this.state.closestPlayerOverlayVisible);
+    let closestPlayerOverlayVisible = !this.state.closestPlayerOverlayVisible;
+    this.updateClosestPlayerOverlays(
+      closestPlayerOverlayVisible && !this.state.customMapBuilding,
+    );
 
     this.setState({
-      closestPlayerOverlayVisible: !this.state.closestPlayerOverlayVisible,
+      closestPlayerOverlayVisible: closestPlayerOverlayVisible,
     });
   }
 
@@ -714,7 +717,7 @@ class App extends React.Component {
           this.state.customMapBuilding || this.state.overlayVisible,
         );
         this.updateClosestPlayerOverlays(
-          this.state.customMapBuilding ||
+          !this.state.customMapBuilding &&
             this.state.closestPlayerOverlayVisible,
         );
         this.showExtraTiles();
@@ -1011,7 +1014,7 @@ class App extends React.Component {
 
   /**
    * Performs a single rotation of the tiles that make up the hex grid.
-   * Supports up to 4 rings.
+   * Supports up to 5 rings.
    */
   rotateHexGrid(tilesOverride = []) {
     let rotatedTileArray = [];
@@ -1087,6 +1090,40 @@ class App extends React.Component {
       rotatedTileArray.push(tilesOverride[54] ?? this.state.tiles[54]);
       rotatedTileArray.push(tilesOverride[55] ?? this.state.tiles[55]);
       rotatedTileArray.push(tilesOverride[56] ?? this.state.tiles[56]);
+    }
+
+    // Fifth ring of tiles?
+    if (this.state.tiles.length > 60) {
+      rotatedTileArray.push(tilesOverride[86] ?? this.state.tiles[86]);
+      rotatedTileArray.push(tilesOverride[87] ?? this.state.tiles[87]);
+      rotatedTileArray.push(tilesOverride[88] ?? this.state.tiles[88]);
+      rotatedTileArray.push(tilesOverride[89] ?? this.state.tiles[89]);
+      rotatedTileArray.push(tilesOverride[90] ?? this.state.tiles[90]);
+      rotatedTileArray.push(tilesOverride[61] ?? this.state.tiles[61]);
+      rotatedTileArray.push(tilesOverride[62] ?? this.state.tiles[62]);
+      rotatedTileArray.push(tilesOverride[63] ?? this.state.tiles[63]);
+      rotatedTileArray.push(tilesOverride[64] ?? this.state.tiles[64]);
+      rotatedTileArray.push(tilesOverride[65] ?? this.state.tiles[65]);
+      rotatedTileArray.push(tilesOverride[66] ?? this.state.tiles[66]);
+      rotatedTileArray.push(tilesOverride[67] ?? this.state.tiles[67]);
+      rotatedTileArray.push(tilesOverride[68] ?? this.state.tiles[68]);
+      rotatedTileArray.push(tilesOverride[69] ?? this.state.tiles[69]);
+      rotatedTileArray.push(tilesOverride[70] ?? this.state.tiles[70]);
+      rotatedTileArray.push(tilesOverride[71] ?? this.state.tiles[71]);
+      rotatedTileArray.push(tilesOverride[72] ?? this.state.tiles[72]);
+      rotatedTileArray.push(tilesOverride[73] ?? this.state.tiles[73]);
+      rotatedTileArray.push(tilesOverride[74] ?? this.state.tiles[74]);
+      rotatedTileArray.push(tilesOverride[75] ?? this.state.tiles[75]);
+      rotatedTileArray.push(tilesOverride[76] ?? this.state.tiles[76]);
+      rotatedTileArray.push(tilesOverride[77] ?? this.state.tiles[77]);
+      rotatedTileArray.push(tilesOverride[78] ?? this.state.tiles[78]);
+      rotatedTileArray.push(tilesOverride[79] ?? this.state.tiles[79]);
+      rotatedTileArray.push(tilesOverride[80] ?? this.state.tiles[80]);
+      rotatedTileArray.push(tilesOverride[81] ?? this.state.tiles[81]);
+      rotatedTileArray.push(tilesOverride[82] ?? this.state.tiles[82]);
+      rotatedTileArray.push(tilesOverride[83] ?? this.state.tiles[83]);
+      rotatedTileArray.push(tilesOverride[84] ?? this.state.tiles[84]);
+      rotatedTileArray.push(tilesOverride[85] ?? this.state.tiles[85]);
     }
 
     // Issue #131: remove duplication from the list.
@@ -1260,8 +1297,9 @@ class App extends React.Component {
     }
 
     // Set the map height based on which tiles are being used
-    let mapNumberTilesHeight = 9;
-    let mapNumberTilesWidth = 9;
+    // Ring 5 (indices 61-90) needs a larger bounding box than the default POK-sized board.
+    let mapNumberTilesHeight = this.state.tiles.length > 60 ? 11 : 9;
+    let mapNumberTilesWidth = this.state.tiles.length > 60 ? 11 : 9;
     const visibleTiles = [...Object.keys(tileData.all)];
     visibleTiles.push(0);
     // if (this.getTileNumber(this.state.tiles[37], true) in visibleTiles || this.getTileNumber(this.state.tiles[38], true) in visibleTiles || this.getTileNumber(this.state.tiles[60], true) in visibleTiles
