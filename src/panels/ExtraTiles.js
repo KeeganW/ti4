@@ -1,6 +1,6 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import tileData, { EXPANSIONS } from "../data/tileData";
+import tileData, { EXPANSIONS, SPECIALTIES } from "../data/tileData";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 
 class ExtraTiles extends React.Component {
@@ -104,7 +104,9 @@ class ExtraTiles extends React.Component {
       if (
         tileData.all[systemNumber] !== undefined &&
         tileData.all[systemNumber].planets.length > 0 &&
-        tileData.all[systemNumber].planets[0].legendary
+        tileData.all[systemNumber].planets[0].specialty.includes(
+          SPECIALTIES.LEGENDARY,
+        )
       ) {
         tileObjects.push(
           <ReactTooltip

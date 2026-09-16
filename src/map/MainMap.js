@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap-icons";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import $ from "jquery";
-import tileData from "../data/tileData";
+import tileData, { SPECIALTIES } from "../data/tileData";
 
 class MainMap extends React.Component {
   constructor(props) {
@@ -168,7 +168,9 @@ class MainMap extends React.Component {
         if (
           tileData.all[systemNumber] !== undefined &&
           tileData.all[systemNumber].planets.length > 0 &&
-          tileData.all[systemNumber].planets[0].legendary
+          tileData.all[systemNumber].planets[0].specialty.includes(
+            SPECIALTIES.LEGENDARY,
+          )
         ) {
           mapTiles.push(
             <ReactTooltip

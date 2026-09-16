@@ -91,9 +91,6 @@ class MoreInfo extends React.Component {
           resources += planet.resources;
           influence += planet.influence;
           let planetSpecialties = [].concat(planet.specialty);
-          if (planet.legendary) {
-            planetSpecialties.push("legendary");
-          }
           for (let specialty of planetSpecialties) {
             if (specialty in specialties) {
               specialties[specialty] += 1;

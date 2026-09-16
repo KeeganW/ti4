@@ -1878,7 +1878,10 @@ class MapOptions extends React.Component {
       total_weight += (planet["resources"] / 4) * weights["resource"];
       total_weight += (planet["influence"] / 4) * weights["influence"];
       total_weight += weights["planet_count"] / 2;
-      total_weight += planet["specialty"] ? weights["specialty"] : 0;
+      total_weight +=
+        planet["specialty"] && planet["specialty"].length > 0
+          ? weights["specialty"]
+          : 0;
     }
 
     // Handle anomalies
