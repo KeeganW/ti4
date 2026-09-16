@@ -4896,7 +4896,7 @@ const tileData = {
         {
           name: "Tiamat",
           trait: PLANET_TRAITS.CULTURAL,
-          specialty: TECH_SPECIALTIES.CYBERNETIC,
+          specialty: [TECH_SPECIALTIES.CYBERNETIC, TECH_SPECIALTIES.CYBERNETIC],
           legendary: false,
           resources: 2,
           influence: 1,
