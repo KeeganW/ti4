@@ -4653,7 +4653,7 @@ const tileData = {
       type: "green",
       planets: [
         {
-          name: "Mez Lo Orz Pei Zsha",
+          name: "Mez Lo Orz Fei Zsha",
           trait: PLANET_TRAITS.NONE,
           specialty: TECH_SPECIALTIES.NONE,
           legendary: false,
@@ -4661,7 +4661,7 @@ const tileData = {
           influence: 1,
         },
         {
-          name: "Rep Lo Orz Oet",
+          name: "Rep Lo Orz Qet",
           trait: PLANET_TRAITS.NONE,
           specialty: TECH_SPECIALTIES.NONE,
           legendary: false,
@@ -4971,7 +4971,7 @@ const tileData = {
           influence: 2,
         },
         {
-          name: "Elnath",
+          name: "El'Nath",
           trait: PLANET_TRAITS.HAZARDOUS,
           specialty: TECH_SPECIALTIES.NONE,
           legendary: false,
@@ -5017,7 +5017,7 @@ const tileData = {
       type: "blue",
       planets: [
         {
-          name: "Mecatol Rex (Legendary)",
+          name: "Mecatol Rex",
           trait: PLANET_TRAITS.NONE,
           specialty: TECH_SPECIALTIES.NONE,
           ability:
