@@ -14,6 +14,8 @@ A client-only React web app (Create React App) that generates and edits Twilight
 - `npm run build` — production build into `build/`
 - `npm run deploy` — build and publish `build/` to the `gh-pages` branch (publishes the live site)
 
+Never run `npm start` (or otherwise launch the dev server) yourself. If you need to verify a change, ask the user to run it, or rely on `npm run build`/`npm test`.
+
 ## Architecture
 
 **`src/App.js`** is the single stateful root component (class component). It owns almost all app state — the current `tiles` array, player names, races, expansion toggles, zoom, and UI panel visibility — and passes state + callbacks down to children. There is no state management library; everything is prop-drilled from `App`.
