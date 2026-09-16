@@ -2,6 +2,7 @@ import React from "react";
 import Modal from "react-bootstrap/Modal";
 import $ from "jquery";
 import { exportComponentAsPNG } from "react-component-export-image";
+import tileData from "../data/tileData";
 
 class ShareMapModal extends React.Component {
   constructor(props) {
@@ -13,6 +14,85 @@ class ShareMapModal extends React.Component {
     this.removeTrailing = this.removeTrailing.bind(this);
     this.sleep = this.sleep.bind(this);
     this.downloadImage = this.downloadImage.bind(this);
+    this.getBaseTileId = this.getBaseTileId.bind(this);
+    this.getUniqueTileIds = this.getUniqueTileIds.bind(this);
+    this.getNumericSortedTiles = this.getNumericSortedTiles.bind(this);
+    this.getAlphabeticalSortedTiles = this.getAlphabeticalSortedTiles.bind(this);
+  }
+
+  /**
+   * Strips rotation info off a tile id, returning the id used to key tileData.all
+   * (e.g. "84A-2" -> "84A", "35-1" -> "35").
+   * @param {string|number} tile the raw tile entry from the tiles array
+   * @returns {string|number} the base tile id, or -1 if it can't be parsed
+   */
+  getBaseTileId(tile) {
+    let hyperlaneRegex = /^((8[3-9]|90|91)[AB])-?([0-5])?$/;
+    let altHyperlaneRegex = /^(hyp.+?)-?([0-5])?$/;
+    let result = hyperlaneRegex.exec(tile);
+    if (result) return result[1];
+    let altResult = altHyperlaneRegex.exec(tile);
+    if (altResult) return altResult[1];
+    let regex = /^((?:er)?\d{1,4})-?([0-5])?$/;
+    result = regex.exec(tile);
+    if (result) return result[1];
+    return -1;
+  }
+
+  /**
+   * Gets the set of unique physical tiles used on the board, excluding empty/home placeholders.
+   * @returns {string[]} unique base tile ids
+   */
+  getUniqueTileIds() {
+    let ids = new Set();
+    for (let tile of this.props.tiles) {
+      if (tile === -1 || tile === 0 || tile === "0" || tile === "-1") continue;
+      let id = this.getBaseTileId(tile);
+      if (id !== -1 && id !== undefined) ids.add(String(id));
+    }
+    return [...ids];
+  }
+
+  /**
+   * Sorts tile ids the way they're numbered on the back of the physical tiles.
+   * @returns {string[]} tile ids in numeric order
+   */
+  getNumericSortedTiles() {
+    return this.getUniqueTileIds().sort((a, b) => {
+      let numA = parseInt(a.replace(/^er/, ""), 10);
+      let numB = parseInt(b.replace(/^er/, ""), 10);
+      if (numA !== numB) return numA - numB;
+      return a.localeCompare(b);
+    });
+  }
+
+  /**
+   * Sorts tiles by the name of the first planet printed on them, the way some players
+   * sort their physical tiles out of the box. Tiles with no planet (empty, hyperlane,
+   * anomaly-only tiles) are listed afterwards in numeric order.
+   * @returns {{id: string, label: string}[]} tiles in alphabetical order with display labels
+   */
+  getAlphabeticalSortedTiles() {
+    let ids = this.getUniqueTileIds();
+    let withPlanet = [];
+    let withoutPlanet = [];
+    for (let id of ids) {
+      let info = tileData.all[id];
+      let planetName = info && info.planets && info.planets.length > 0 ? info.planets[0].name : null;
+      if (planetName) {
+        withPlanet.push({ id, label: `${planetName} (${id})` });
+      } else {
+        withoutPlanet.push({ id, label: `${id}` });
+      }
+    }
+    withPlanet.sort((a, b) => a.label.localeCompare(b.label));
+    withoutPlanet.sort((a, b) => {
+      let numA = parseInt(a.id.replace(/^er/, ""), 10);
+      let numB = parseInt(b.id.replace(/^er/, ""), 10);
+      if (numA !== numB) return numA - numB;
+      return a.id.localeCompare(b.id);
+    });
+    return withPlanet.concat(withoutPlanet);
   }
 
   /**
@@ -105,6 +185,8 @@ class ShareMapModal extends React.Component {
 
   render() {
     let tileString = this.getTTSTileString();
+    let numericSortedTiles = this.getNumericSortedTiles();
+    let alphabeticalSortedTiles = this.getAlphabeticalSortedTiles();
     return (
       <Modal show={this.props.visible} onHide={this.props.hideModal}>
         <Modal.Header closeButton>
@@ -160,6 +242,18 @@ class ShareMapModal extends React.Component {
             >
               Download Map Image
             </button>
+          </div>
+
+          <hr />
+
+          <h6>Pulling Tiles From the Box</h6>
+          <div className="mb-3">
+            <div className="fw-bold">Numeric Order</div>
+            <div>{numericSortedTiles.join(", ")}</div>
+          </div>
+          <div className="mb-3">
+            <div className="fw-bold">Alphabetical Order (by first planet)</div>
+            <div>{alphabeticalSortedTiles.map((tile) => tile.label).join(", ")}</div>
           </div>
         </Modal.Body>
       </Modal>
