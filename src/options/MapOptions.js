@@ -1,5 +1,5 @@
 import React from "react";
-import { QuestionCircle } from "react-bootstrap-icons";
+import { QuestionCircle, ChevronDown, ChevronUp } from "react-bootstrap-icons";
 import { Button, Form, Collapse } from "react-bootstrap";
 import boardData from "../data/boardData.json";
 import tileData, { WORMHOLES, EXPANSIONS, ANOMALIES } from "../data/tileData";
@@ -68,8 +68,10 @@ class MapOptions extends React.Component {
       pickMultipleRaces: false,
       shuffleBoards: false,
       reversePlacementOrder: false,
+      forceWormholes: false,
       ensureRacialAnomalies: true,
       generated: false,
+      advancedSettingsOpen: false,
 
       fanContentHelp: false,
       unchartedSpaceHelp: false,
@@ -84,6 +86,7 @@ class MapOptions extends React.Component {
       pickMultipleRacesHelp: false,
       shufflePriorityHelp: false,
       reversePlacementOrderHelp: false,
+      forceWormholesHelp: false,
       ensureRacialAnomaliesHelp: false,
 
       resourceWeight: 70,
@@ -136,8 +139,10 @@ class MapOptions extends React.Component {
     this.toggleShufflePriorityHelp = this.toggleShufflePriorityHelp.bind(this);
     this.toggleReversePlacementOrderHelp =
       this.toggleReversePlacementOrderHelp.bind(this);
+    this.toggleForceWormholesHelp = this.toggleForceWormholesHelp.bind(this);
     this.toggleEnsureRacialAnomaliesHelp =
       this.toggleEnsureRacialAnomaliesHelp.bind(this);
+    this.toggleAdvancedSettings = this.toggleAdvancedSettings.bind(this);
   }
 
   handleInputChange(event) {
@@ -421,6 +426,7 @@ class MapOptions extends React.Component {
     encodedSettings += this.state.currentSeed.toString().padStart(4, "0");
     encodedSettings += this.state.shuffleBoards ? "T" : "F";
     encodedSettings += this.state.reversePlacementOrder ? "T" : "F";
+    encodedSettings += this.state.forceWormholes ? "T" : "F";
     encodedSettings += this.state.pickRaces ? "T" : "F";
     if (this.state.pickRaces) {
       encodedSettings += this.state.ensureRacialAnomalies ? "T" : "F";
@@ -584,6 +590,10 @@ class MapOptions extends React.Component {
     let reversePlacementOrder = newSettings[currentIndex] === "T";
     currentIndex += 1;
 
+    // Force Alpha and Beta Wormholes
+    let forceWormholes = newSettings[currentIndex] === "T";
+    currentIndex += 1;
+
     // Pick Races
     let pickRaces = newSettings[currentIndex] === "T";
     currentIndex += 1;
@@ -657,6 +667,7 @@ class MapOptions extends React.Component {
         currentSeed: currentSeed,
         shuffleBoards: shuffleBoards,
         reversePlacementOrder: reversePlacementOrder,
+        forceWormholes: forceWormholes,
         pickRaces: pickRaces,
         ensureRacialAnomalies: ensureRacialAnomalies,
       },
@@ -973,6 +984,14 @@ class MapOptions extends React.Component {
     const excludedWormholes = [];
     for (const wormhole in WORMHOLES) {
       if (WORMHOLES[wormhole] === WORMHOLES.DELTA) continue;
+      if (
+        this.state.forceWormholes &&
+        (WORMHOLES[wormhole] === WORMHOLES.ALPHA ||
+          WORMHOLES[wormhole] === WORMHOLES.BETA)
+      ) {
+        // Alpha and Beta are forced to be included, so they are never candidates for random exclusion
+        continue;
+      }
 
       let wormholeCount = allReds.filter((systemID) =>
         tileData.all[systemID].wormhole.includes(WORMHOLES[wormhole]),
@@ -1151,6 +1170,41 @@ class MapOptions extends React.Component {
           }
         }
       });
+    }
+
+    // Force Alpha and Beta wormholes to actually be placed on the board, if enabled
+    if (this.state.forceWormholes) {
+      for (const wormholeType of [WORMHOLES.ALPHA, WORMHOLES.BETA]) {
+        const allWormholesOfType = tileData[
+          `${wormholeType}Wormholes`
+        ].filter(expansionCheck(includedExpansions));
+        let existingCount = 0;
+        for (const tile of allWormholesOfType) {
+          if (newSystems.includes(tile)) existingCount += 1;
+        }
+        let neededCount = 2 - existingCount;
+        if (neededCount <= 0) continue;
+
+        const candidates = this.shuffle(
+          allWormholesOfType.filter(
+            (tile) => allReds.includes(tile) || allBlues.includes(tile),
+          ),
+        );
+        while (neededCount > 0 && candidates.length > 0) {
+          const tile = candidates.pop();
+          if (allReds.includes(tile)) {
+            if (redsToPlace <= 0) continue;
+            allReds.splice(allReds.indexOf(tile), 1);
+            redsToPlace -= 1;
+          } else {
+            if (bluesToPlace <= 0) continue;
+            allBlues.splice(allBlues.indexOf(tile), 1);
+            bluesToPlace -= 1;
+          }
+          newSystems.push(tile);
+          neededCount -= 1;
+        }
+      }
     }
 
     // Place as many as possible from tile type if there is not enough to place
@@ -1975,9 +2029,19 @@ class MapOptions extends React.Component {
       reversePlacementOrderHelp: !this.state.reversePlacementOrderHelp,
     });
   }
+  toggleForceWormholesHelp(event) {
+    this.setState({
+      forceWormholesHelp: !this.state.forceWormholesHelp,
+    });
+  }
   toggleEnsureRacialAnomaliesHelp(event) {
     this.setState({
       ensureRacialAnomaliesHelp: !this.state.ensureRacialAnomaliesHelp,
+    });
+  }
+  toggleAdvancedSettings(event) {
+    this.setState({
+      advancedSettingsOpen: !this.state.advancedSettingsOpen,
     });
   }
 
@@ -2341,43 +2405,70 @@ class MapOptions extends React.Component {
                         </div>
                     </div> */}
 
-          <Form.Group className="mb-3 d-flex" controlId="shuffleBoards">
-            <Form.Check
-              name="shuffleBoards"
-              type="checkbox"
-              checked={this.props.shuffleBoards}
-              onChange={this.handleInputChange}
-              label="Randomize Priorities Before Placement"
-            />
-            <QuestionCircle
-              className="icon"
-              onClick={this.toggleShufflePriorityHelp}
-            />
-          </Form.Group>
-          {/* <div className="custom-control custom-checkbox mb-3 d-flex">
-                        <input type="checkbox" className="custom-control-input" id="shuffleBoards" name="shuffleBoards" checked={this.state.shuffleBoards} onChange={this.handleInputChange} />
-                        <label className="custom-control-label" htmlFor="shuffleBoards">Randomize Priorities Before Placement</label>
-                        <QuestionCircle className="icon" onClick={this.toggleShufflePriorityHelp} />
-                    </div> */}
+          <div
+            className="d-flex justify-content-between align-items-center my-3"
+            style={{ cursor: "pointer" }}
+            onClick={this.toggleAdvancedSettings}
+            aria-controls="advancedSettings"
+            aria-expanded={this.state.advancedSettingsOpen}
+          >
+            <strong>Advanced Settings</strong>
+            {this.state.advancedSettingsOpen ? (
+              <ChevronUp className="icon" />
+            ) : (
+              <ChevronDown className="icon" />
+            )}
+          </div>
+          <Collapse in={this.state.advancedSettingsOpen}>
+            <div id="advancedSettings">
+              <div className="card card-body">
+                <Form.Group className="mb-3 d-flex" controlId="shuffleBoards">
+                  <Form.Check
+                    name="shuffleBoards"
+                    type="checkbox"
+                    checked={this.props.shuffleBoards}
+                    onChange={this.handleInputChange}
+                    label="Randomize Priorities Before Placement"
+                  />
+                  <QuestionCircle
+                    className="icon"
+                    onClick={this.toggleShufflePriorityHelp}
+                  />
+                </Form.Group>
 
-          <Form.Group className="mb-3 d-flex" controlId="reversePlacementOrder">
-            <Form.Check
-              name="reversePlacementOrder"
-              type="checkbox"
-              checked={this.props.reversePlacementOrder}
-              onChange={this.handleInputChange}
-              label="Reverse Placement Order"
-            />
-            <QuestionCircle
-              className="icon"
-              onClick={this.toggleReversePlacementOrderHelp}
-            />
-          </Form.Group>
-          {/* <div className="custom-control custom-checkbox mb-3 d-flex">
-                        <input type="checkbox" className="custom-control-input" id="reversePlacementOrder" name="reversePlacementOrder" checked={this.state.reversePlacementOrder} onChange={this.handleInputChange} />
-                        <label className="custom-control-label" htmlFor="reversePlacementOrder">Reverse Placement Order</label>
-                        <QuestionCircle className="icon" onClick={this.toggleReversePlacementOrderHelp} />
-                    </div> */}
+                <Form.Group
+                  className="mb-3 d-flex"
+                  controlId="reversePlacementOrder"
+                >
+                  <Form.Check
+                    name="reversePlacementOrder"
+                    type="checkbox"
+                    checked={this.props.reversePlacementOrder}
+                    onChange={this.handleInputChange}
+                    label="Reverse Placement Order"
+                  />
+                  <QuestionCircle
+                    className="icon"
+                    onClick={this.toggleReversePlacementOrderHelp}
+                  />
+                </Form.Group>
+
+                <Form.Group className="d-flex" controlId="forceWormholes">
+                  <Form.Check
+                    name="forceWormholes"
+                    type="checkbox"
+                    checked={this.state.forceWormholes}
+                    onChange={this.handleInputChange}
+                    label="Force Alpha and Beta Wormholes"
+                  />
+                  <QuestionCircle
+                    className="icon"
+                    onClick={this.toggleForceWormholesHelp}
+                  />
+                </Form.Group>
+              </div>
+            </div>
+          </Collapse>
 
           <SetPlayerNameModal
             visible={this.state.setPlayerNamesHelp}
@@ -2557,6 +2648,18 @@ class MapOptions extends React.Component {
                          <br>
                          <br>
                          Tiles are normally placed in priority (see randomize priority help). This reverses the order, so that the last picks are first, which generally has the effect of pushing the more valuable tiles towards the center of the galaxy.
+                         </p>"
+          />
+          <HelpModal
+            key={"help-force-wormholes"}
+            visible={this.state.forceWormholesHelp}
+            hideModal={this.toggleForceWormholesHelp}
+            title={"About Forcing Alpha and Beta Wormholes"}
+            content="<p>
+                         Normally, map generation randomly chooses a handful of wormhole types (out of all those eligible) to actually place on the board, which means Alpha and Beta wormholes are not guaranteed to show up, especially when fan-made wormhole types are enabled.
+                         <br>
+                         <br>
+                         Turning this on ensures that a pair of Alpha wormholes and a pair of Beta wormholes are always included in the generated galaxy.
                          </p>"
           />
           <HelpModal
