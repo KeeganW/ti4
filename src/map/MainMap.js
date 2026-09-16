@@ -174,6 +174,7 @@ class MainMap extends React.Component {
         ) {
           mapTiles.push(
             <ReactTooltip
+              key={"tooltip-" + tileNumber}
               style={{ zIndex: 1 }}
               anchorSelect={`#${"tile-wrapper-" + tileNumber}`}
               place="top"
