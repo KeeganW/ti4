@@ -513,10 +513,12 @@ class App extends React.Component {
   getHomePositions() {
     let homePositions = [];
     for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
-      let tile = this.state.tiles[tileNumber];
+      // Tiles loaded from a shared URL come back as strings (see getTileNumber), while freshly
+      // generated tiles are numbers, so normalize before comparing against the home-system data.
+      let tile = Number(this.state.tiles[tileNumber]);
       if (
         tile === 0 ||
-        (typeof tile === "number" && tile in raceData.homeSystemToRaceMap)
+        (!isNaN(tile) && tile in raceData.homeSystemToRaceMap)
       ) {
         homePositions.push(tileNumber);
       }
@@ -835,7 +837,10 @@ class App extends React.Component {
 
     // Show the player names
     for (let tileNumber = 0; tileNumber < boardData.pokSize; tileNumber++) {
-      if (this.state.tiles[tileNumber] === 0 && !this.state.overlayVisible) {
+      if (
+        Number(this.state.tiles[tileNumber]) === 0 &&
+        !this.state.overlayVisible
+      ) {
         let numOverlay = $("#number-" + tileNumber);
         if (!this.state.moreInfoVisible) {
           // more info button pressed, so show overlay
@@ -1421,7 +1426,7 @@ class App extends React.Component {
         .css("margin-top", "-3px");
 
       // Set the names on the player home worlds to not be 0
-      if (this.state.tiles[tileNumber] === 0) {
+      if (Number(this.state.tiles[tileNumber]) === 0) {
         // TODO should this override on selected races too?
         // Show the player name, colored to match the closest-player overlay
         numOverlay

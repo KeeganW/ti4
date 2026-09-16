@@ -485,51 +485,86 @@ class MapOptions extends React.Component {
     useExpansions[EXPANSIONS.POK] = newSettings[currentIndex] === "T";
     currentIndex += 1;
 
-    // Thunder's Edge - only present in links generated after this expansion was added
-    if (
-      newSettings[currentIndex] === "T" ||
-      newSettings[currentIndex] === "F"
-    ) {
-      useExpansions[EXPANSIONS.TE] = newSettings[currentIndex] === "T";
-      currentIndex += 1;
+    // Thunder's Edge, Fan Content, Number of Players, and Board Style.
+    // Thunder's Edge is only present in links generated after that
+    // expansion was added, but a single-character T/F flag is
+    // indistinguishable from the fan content flags that follow it, so we
+    // can't tell from the character alone whether it's present. Instead we
+    // optimistically assume it's present (the current/common case) and
+    // validate the resulting board style; if that parse doesn't produce a
+    // valid board style, we retry assuming the flag is absent, which is
+    // what old shared links (created before Thunder's Edge existed) use.
+    const parseExpansionsAndBoardStyle = (consumeTE) => {
+      let index = currentIndex;
+      let expansions = { ...useExpansions };
+      let fanContent = false;
+
+      if (consumeTE) {
+        expansions[EXPANSIONS.TE] = newSettings[index] === "T";
+        index += 1;
+      } else {
+        expansions[EXPANSIONS.TE] = false;
+      }
+
+      // Fan Content
+      // Compatability with old URL formatting
+      if (newSettings[index] === "T" || newSettings[index] === "F") {
+        expansions[EXPANSIONS.UnS] = newSettings[index] === "T";
+        fanContent = fanContent || expansions[EXPANSIONS.UnS];
+        index += 1;
+        expansions[EXPANSIONS.DS] = newSettings[index] === "T";
+        fanContent = fanContent || expansions[EXPANSIONS.DS];
+        index += 1;
+        expansions[EXPANSIONS.AS] = newSettings[index] === "T";
+        fanContent = fanContent || expansions[EXPANSIONS.AS];
+        index += 1;
+        expansions[EXPANSIONS.Async] = newSettings[index] === "T";
+        fanContent = fanContent || expansions[EXPANSIONS.Async];
+        index += 1;
+      }
+
+      // Number of Players
+      let numberOfPlayers = Number(newSettings[index]);
+      index += 1;
+      let numberOfPlayersOptions = expansions[EXPANSIONS.POK]
+        ? this.state.optionsPossible.numberOfPlayers.concat(
+            this.state.optionsPossible.pokNumberOfPlayers,
+          )
+        : this.state.optionsPossible.numberOfPlayers;
+
+      // Board Style
+      let boardStyleOptions = expansions[EXPANSIONS.POK]
+        ? this.state.optionsPossible.boardStylesPok[numberOfPlayers]
+        : this.state.optionsPossible.boardStyles[numberOfPlayers];
+      let boardStyle = boardStyleOptions
+        ? boardStyleOptions[Number(newSettings[index])]
+        : undefined;
+      index += 1;
+
+      return {
+        expansions,
+        fanContent,
+        index,
+        numberOfPlayers,
+        numberOfPlayersOptions,
+        boardStyleOptions,
+        boardStyle,
+        valid: boardStyleOptions !== undefined && boardStyle !== undefined,
+      };
+    };
+
+    let parsedSettings = parseExpansionsAndBoardStyle(true);
+    if (!parsedSettings.valid) {
+      parsedSettings = parseExpansionsAndBoardStyle(false);
     }
 
-    // Fan Content
-    // Compatability with old URL formatting
-    if (
-      newSettings[currentIndex] === "T" ||
-      newSettings[currentIndex] === "F"
-    ) {
-      useExpansions[EXPANSIONS.UnS] = newSettings[currentIndex] === "T";
-      useFanContent = useFanContent || useExpansions[EXPANSIONS.UnS];
-      currentIndex += 1;
-      useExpansions[EXPANSIONS.DS] = newSettings[currentIndex] === "T";
-      useFanContent = useFanContent || useExpansions[EXPANSIONS.DS];
-      currentIndex += 1;
-      useExpansions[EXPANSIONS.AS] = newSettings[currentIndex] === "T";
-      useFanContent = useFanContent || useExpansions[EXPANSIONS.AS];
-      currentIndex += 1;
-      useExpansions[EXPANSIONS.Async] = newSettings[currentIndex] === "T";
-      useFanContent = useFanContent || useExpansions[EXPANSIONS.Async];
-      currentIndex += 1;
-    }
-
-    // Number of Players
-    let currentNumberOfPlayers = Number(newSettings[currentIndex]);
-    currentIndex += 1;
-    let currentNumberOfPlayersOptions = useExpansions[EXPANSIONS.POK]
-      ? this.state.optionsPossible.numberOfPlayers.concat(
-          this.state.optionsPossible.pokNumberOfPlayers,
-        )
-      : this.state.optionsPossible.numberOfPlayers;
-
-    // Board Style
-    let currentBoardStyleOptions = useExpansions[EXPANSIONS.POK]
-      ? this.state.optionsPossible.boardStylesPok[currentNumberOfPlayers]
-      : this.state.optionsPossible.boardStyles[currentNumberOfPlayers];
-    let currentBoardStyle =
-      currentBoardStyleOptions[Number(newSettings[currentIndex])];
-    currentIndex += 1;
+    useExpansions = parsedSettings.expansions;
+    useFanContent = parsedSettings.fanContent;
+    currentIndex = parsedSettings.index;
+    let currentNumberOfPlayers = parsedSettings.numberOfPlayers;
+    let currentNumberOfPlayersOptions = parsedSettings.numberOfPlayersOptions;
+    let currentBoardStyleOptions = parsedSettings.boardStyleOptions;
+    let currentBoardStyle = parsedSettings.boardStyle;
 
     // Placement Style
     let currentPlacementStyle =
