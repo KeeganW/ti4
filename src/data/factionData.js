@@ -1,5 +1,5 @@
-const raceData = {
-  races: [
+const factionData = {
+  factions: [
     "The Arborec",
     "The Barony of Letnev",
     "The Clan of Saar",
@@ -18,7 +18,7 @@ const raceData = {
     "The Yin Brotherhood",
     "The Yssaril Tribes",
   ],
-  pokRaces: [
+  pokFactions: [
     "The Argent Flight",
     "The Empyrean",
     "The Mahact Gene-sorcerers",
@@ -27,14 +27,14 @@ const raceData = {
     "The Titans of Ul",
     "The Vuil'raith Cabal",
   ],
-  teRaces: [
+  teFactions: [
     "The Crimson Rebellion",
     "The Deepwrought Scholarate",
     "The Firmament",
     "Last Bastion",
     "The Ral Nel Consortium",
   ],
-  dsRaces: [
+  dsFactions: [
     "The Shipwrights of Axis",
     "The Celdauri Trade Confederation",
     "The Savages of Cymiae",
@@ -78,7 +78,7 @@ const raceData = {
     3213, 3214, 3215, 3216, 3217, 3218, 3219, 3220, 3221, 3222, 3223, 3224,
     3226, 3227, 3228, 3229, 3230, 3231, 3232, 3233, 3234, 3235,
   ],
-  homeSystemToRaceMap: {
+  homeSystemToFactionMap: {
     1: "The Federation of Sol",
     2: "The Mentak Coalition",
     3: "The Yin Brotherhood",
@@ -144,7 +144,7 @@ const raceData = {
     3234: "The Cheiran Hordes",
     3235: "The Edyn Mandate",
   },
-  raceToHomeSystemMap: {
+  factionToHomeSystemMap: {
     "The Federation of Sol": 1,
     "The Mentak Coalition": 2,
     "The Yin Brotherhood": 3,
@@ -212,4 +212,4 @@ const raceData = {
   },
 };
 
-export default raceData;
+export default factionData;

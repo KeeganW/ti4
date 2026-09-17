@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
 import { EXPANSIONS } from "../data/tileData";
 
-class SetRacesModal extends React.Component {
+class SetFactionsModal extends React.Component {
   constructor(props) {
     super(props);
 
@@ -21,15 +21,15 @@ class SetRacesModal extends React.Component {
   }
 
   render() {
-    let visibleRaces = this.props.races;
+    let visibleFactions = this.props.factions;
     if (this.props.includedExpansions[EXPANSIONS.POK]) {
-      visibleRaces = visibleRaces.concat(this.props.pokRaces);
+      visibleFactions = visibleFactions.concat(this.props.pokFactions);
     }
     if (this.props.includedExpansions[EXPANSIONS.TE]) {
-      visibleRaces = visibleRaces.concat(this.props.teRaces);
+      visibleFactions = visibleFactions.concat(this.props.teFactions);
     }
     if (this.props.includedExpansions[EXPANSIONS.DS]) {
-      visibleRaces = visibleRaces.concat(this.props.dsRaces);
+      visibleFactions = visibleFactions.concat(this.props.dsFactions);
     }
 
     let breakStyle = {
@@ -39,14 +39,14 @@ class SetRacesModal extends React.Component {
     return (
       <Modal show={this.props.visible} onHide={this.props.hideModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Set Races</Modal.Title>
+          <Modal.Title>Set Factions</Modal.Title>
         </Modal.Header>
         <div style={breakStyle}>
           <button
             type="button"
             name={"all"}
             className="btn btn-outline-primary m-2 ml-3"
-            onClick={this.props.handleRacesChange}
+            onClick={this.props.handleFactionsChange}
           >
             Select All
           </button>
@@ -54,48 +54,50 @@ class SetRacesModal extends React.Component {
             type="button"
             name={"none"}
             className="btn btn-outline-primary m-2"
-            onClick={this.props.handleRacesChange}
+            onClick={this.props.handleFactionsChange}
           >
             Deselect All
           </button>
         </div>
         <Modal.Body>
-          <form id={"includedRacesForm"}>
+          <form id={"includedFactionsForm"}>
             <div className={"form-group mb-3"}>
               <input
                 className={"form-control"}
-                id={"filterRaces"}
+                id={"filterFactions"}
                 type={"text"}
-                placeholder={"Filter Races..."}
+                placeholder={"Filter Factions..."}
                 value={this.state.searchString}
                 onChange={this.updateSearchString}
               />
             </div>
-            {visibleRaces.map((raceName, raceIndex) => {
-              let raceVisible = raceName
+            {visibleFactions.map((factionName, factionIndex) => {
+              let factionVisible = factionName
                 .toLowerCase()
                 .includes(this.state.searchString);
               return (
                 <Form.Group
                   className={
-                    "custom-control custom-checkbox mb-2 races" +
-                    (raceVisible ? "" : " d-none")
+                    "custom-control custom-checkbox mb-2 factions" +
+                    (factionVisible ? "" : " d-none")
                   }
-                  controlId={"include" + raceName.replace(" ", "")}
-                  key={"set-races-" + raceIndex}
+                  controlId={"include" + factionName.replace(" ", "")}
+                  key={"set-factions-" + factionIndex}
                 >
                   <Form.Check
                     inline
-                    name={raceName}
+                    name={factionName}
                     type="checkbox"
-                    checked={this.props.currentRaces.indexOf(raceName) > -1}
-                    onChange={this.props.handleRacesChange}
-                    label={raceName}
+                    checked={
+                      this.props.currentFactions.indexOf(factionName) > -1
+                    }
+                    onChange={this.props.handleFactionsChange}
+                    label={factionName}
                   />
                 </Form.Group>
-                // <div className={"custom-control custom-checkbox mb-2 races" + (raceVisible ? "" : " d-none")} key={"set-races-" + raceIndex}>
-                //     <input className={"custom-control-input"} name={raceName} type={"checkbox"} id={"include" + raceName.replace(" ", "")} checked={this.props.currentRaces.indexOf(raceName) > -1} onChange={this.props.handleRacesChange} />
-                //     <label className={"custom-control-label"} htmlFor={"include" + raceName.replace(" ", "")}>{raceName}</label>
+                // <div className={"custom-control custom-checkbox mb-2 factions" + (factionVisible ? "" : " d-none")} key={"set-factions-" + factionIndex}>
+                //     <input className={"custom-control-input"} name={factionName} type={"checkbox"} id={"include" + factionName.replace(" ", "")} checked={this.props.currentFactions.indexOf(factionName) > -1} onChange={this.props.handleFactionsChange} />
+                //     <label className={"custom-control-label"} htmlFor={"include" + factionName.replace(" ", "")}>{factionName}</label>
                 // </div>
               );
             })}
@@ -105,4 +107,4 @@ class SetRacesModal extends React.Component {
     );
   }
 }
-export default SetRacesModal;
+export default SetFactionsModal;

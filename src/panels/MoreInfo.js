@@ -1,7 +1,7 @@
 import React from "react";
 import adjacencyData from "../data/adjacencyData.json";
 import tileData, { WORMHOLE_SYMBOLS } from "../data/tileData";
-import raceData from "../data/raceData";
+import factionData from "../data/factionData";
 
 import influence from "./icons/influence.png";
 import planet from "./icons/planet.png";
@@ -141,7 +141,7 @@ class MoreInfo extends React.Component {
           <tr key={"more-info-" + playerName}>
             <th scope="row">{playerName}</th>
             <td>
-              {raceData.homeSystemToRaceMap[this.props.tiles[tileNumber]]}
+              {factionData.homeSystemToFactionMap[this.props.tiles[tileNumber]]}
               <br />
               Home Tile: {this.props.tiles[tileNumber]}
             </td>
@@ -253,7 +253,7 @@ class MoreInfo extends React.Component {
             <thead>
               <tr>
                 <th scope="col"></th>
-                <th scope="col">Race</th>
+                <th scope="col">Faction</th>
                 <th scope="col">
                   <img className={"icon"} src={resource} alt={"Res."} />
                 </th>

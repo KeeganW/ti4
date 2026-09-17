@@ -8,11 +8,11 @@ import tileData, {
   ANOMALIES,
   PLANET_TRAITS,
 } from "../data/tileData";
-import raceData from "../data/raceData";
+import factionData from "../data/factionData";
 import adjacencyData from "../data/adjacencyData.json";
 import HelpModal from "./HelpModal";
 import SetPlayerNameModal from "./SetPlayerNameModal";
-import SetRacesModal from "./SetRacesModal";
+import SetFactionsModal from "./SetFactionsModal";
 
 const expansionCheck = (includedExpansions) => (id) =>
   (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) &&
@@ -47,14 +47,14 @@ class MapOptions extends React.Component {
       },
       pickStyles: ["balanced", "random", "resource", "influence", "custom"],
       placementStyles: ["slice", "initial", "home", "random"],
-      races: [...raceData["races"]],
-      pokRaces: [...raceData["pokRaces"]],
-      teRaces: [...raceData["teRaces"]],
-      dsRaces: [...raceData["dsRaces"]],
-      homeworlds: raceData["homeSystems"],
-      pokHomeworlds: raceData["pokHomeSystems"],
-      teHomeworlds: raceData["teHomeSystems"],
-      dsHomeworlds: raceData["dsHomeSystems"],
+      factions: [...factionData["factions"]],
+      pokFactions: [...factionData["pokFactions"]],
+      teFactions: [...factionData["teFactions"]],
+      dsFactions: [...factionData["dsFactions"]],
+      homeworlds: factionData["homeSystems"],
+      pokHomeworlds: factionData["pokHomeSystems"],
+      teHomeworlds: factionData["teHomeSystems"],
+      dsHomeworlds: factionData["dsHomeSystems"],
     };
     const startingPlayers = 6;
 
@@ -69,12 +69,12 @@ class MapOptions extends React.Component {
       currentSeed: "",
       userSetSeed: false,
       fanContent: false,
-      pickRaces: false,
-      pickMultipleRaces: false,
+      pickFactions: false,
+      pickMultipleFactions: false,
       shuffleBoards: false,
       reversePlacementOrder: false,
       forceWormholes: false,
-      ensureRacialAnomalies: true,
+      ensureFactionAnomalies: true,
       balancePlanetTraits: false,
       generated: false,
       advancedSettingsOpen: false,
@@ -83,17 +83,17 @@ class MapOptions extends React.Component {
       unchartedSpaceHelp: false,
       discordantStarsHelp: false,
       ascendentSunHelp: false,
-      pickRacesHelp: false,
+      pickFactionsHelp: false,
       boardStyleHelp: false,
       pickStyleHelp: false,
       placementStyleHelp: false,
       setPlayerNamesHelp: false,
-      setRacesHelp: false,
-      pickMultipleRacesHelp: false,
+      setFactionsHelp: false,
+      pickMultipleFactionsHelp: false,
       shufflePriorityHelp: false,
       reversePlacementOrderHelp: false,
       forceWormholesHelp: false,
-      ensureRacialAnomaliesHelp: false,
+      ensureFactionAnomaliesHelp: false,
       balancePlanetTraitsHelp: false,
 
       resourceWeight: 70,
@@ -108,7 +108,7 @@ class MapOptions extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleRacesChange = this.handleRacesChange.bind(this);
+    this.handleFactionsChange = this.handleFactionsChange.bind(this);
     this.updatePok = this.updatePok.bind(this);
     this.updateUncharted = this.updateUncharted.bind(this);
     this.updateDS = this.updateDS.bind(this);
@@ -136,20 +136,20 @@ class MapOptions extends React.Component {
     this.toggleAscendentSunHelp = this.toggleAscendentSunHelp.bind(this);
     this.toggleFanHyperlanesHelp = this.toggleFanHyperlanesHelp.bind(this);
     this.updateTE = this.updateTE.bind(this);
-    this.togglePickRacesHelp = this.togglePickRacesHelp.bind(this);
+    this.togglePickFactionsHelp = this.togglePickFactionsHelp.bind(this);
     this.toggleBoardStyleHelp = this.toggleBoardStyleHelp.bind(this);
     this.togglePickStyleHelp = this.togglePickStyleHelp.bind(this);
     this.togglePlacementStyleHelp = this.togglePlacementStyleHelp.bind(this);
     this.toggleSetPlayerNamesHelp = this.toggleSetPlayerNamesHelp.bind(this);
-    this.toggleSetRacesHelp = this.toggleSetRacesHelp.bind(this);
-    this.togglePickMultipleRacesHelp =
-      this.togglePickMultipleRacesHelp.bind(this);
+    this.toggleSetFactionsHelp = this.toggleSetFactionsHelp.bind(this);
+    this.togglePickMultipleFactionsHelp =
+      this.togglePickMultipleFactionsHelp.bind(this);
     this.toggleShufflePriorityHelp = this.toggleShufflePriorityHelp.bind(this);
     this.toggleReversePlacementOrderHelp =
       this.toggleReversePlacementOrderHelp.bind(this);
     this.toggleForceWormholesHelp = this.toggleForceWormholesHelp.bind(this);
-    this.toggleEnsureRacialAnomaliesHelp =
-      this.toggleEnsureRacialAnomaliesHelp.bind(this);
+    this.toggleEnsureFactionAnomaliesHelp =
+      this.toggleEnsureFactionAnomaliesHelp.bind(this);
     this.toggleBalancePlanetTraitsHelp =
       this.toggleBalancePlanetTraitsHelp.bind(this);
     this.toggleAdvancedSettings = this.toggleAdvancedSettings.bind(this);
@@ -176,48 +176,48 @@ class MapOptions extends React.Component {
     this.props.updatePlayerNames(newPlayerNames);
   }
 
-  handleRacesChange(event) {
-    let race = event.target.name;
-    let newCurrentRaces = this.props.currentRaces;
-    if (race === "none") {
+  handleFactionsChange(event) {
+    let faction = event.target.name;
+    let newCurrentFactions = this.props.currentFactions;
+    if (faction === "none") {
       // The deselect all option
-      newCurrentRaces = [];
-    } else if (race === "all") {
+      newCurrentFactions = [];
+    } else if (faction === "all") {
       // The deselect all option
-      newCurrentRaces = [...this.state.optionsPossible.races];
+      newCurrentFactions = [...this.state.optionsPossible.factions];
       if (this.props.includedExpansions[EXPANSIONS.POK]) {
-        newCurrentRaces = newCurrentRaces.concat(
-          this.state.optionsPossible.pokRaces,
+        newCurrentFactions = newCurrentFactions.concat(
+          this.state.optionsPossible.pokFactions,
         );
       }
       if (this.props.includedExpansions[EXPANSIONS.TE]) {
-        newCurrentRaces = newCurrentRaces.concat(
-          this.state.optionsPossible.teRaces,
+        newCurrentFactions = newCurrentFactions.concat(
+          this.state.optionsPossible.teFactions,
         );
       }
       if (this.props.includedExpansions[EXPANSIONS.DS]) {
-        newCurrentRaces = newCurrentRaces.concat(
-          this.state.optionsPossible.dsRaces,
+        newCurrentFactions = newCurrentFactions.concat(
+          this.state.optionsPossible.dsFactions,
         );
       }
     } else {
-      let indexToToggle = newCurrentRaces.indexOf(race);
+      let indexToToggle = newCurrentFactions.indexOf(faction);
       if (indexToToggle >= 0) {
-        newCurrentRaces.splice(indexToToggle, 1);
+        newCurrentFactions.splice(indexToToggle, 1);
       } else {
-        newCurrentRaces.push(race);
+        newCurrentFactions.push(faction);
       }
     }
 
-    this.props.updateRaces(newCurrentRaces);
+    this.props.updateFactions(newCurrentFactions);
   }
 
   updatePok(event) {
-    let races = [...this.state.optionsPossible.races];
+    let factions = [...this.state.optionsPossible.factions];
     if (this.props.includedExpansions[EXPANSIONS.TE])
-      races = races.concat(this.state.optionsPossible.teRaces);
+      factions = factions.concat(this.state.optionsPossible.teFactions);
     if (this.props.includedExpansions[EXPANSIONS.DS])
-      races = races.concat(this.state.optionsPossible.dsRaces);
+      factions = factions.concat(this.state.optionsPossible.dsFactions);
     let boardOptions = this.state.optionsPossible.boardStyles;
     if (event.target.checked) {
       boardOptions = this.state.optionsPossible.boardStylesPok;
@@ -232,8 +232,8 @@ class MapOptions extends React.Component {
             boardOptions[this.state.currentNumberOfPlayers],
         },
         () => {
-          this.props.updateRaces([
-            ...races.concat(this.state.optionsPossible.pokRaces),
+          this.props.updateFactions([
+            ...factions.concat(this.state.optionsPossible.pokFactions),
           ]);
           this.props.toggleProphecyOfKings(event);
         },
@@ -257,7 +257,7 @@ class MapOptions extends React.Component {
               : boardOptions[this.state.currentNumberOfPlayers],
         },
         () => {
-          this.props.updateRaces(races);
+          this.props.updateFactions(factions);
           this.props.toggleProphecyOfKings(event);
         },
       );
@@ -277,33 +277,33 @@ class MapOptions extends React.Component {
   }
 
   updateTE(event) {
-    let races = [...this.state.optionsPossible.races];
+    let factions = [...this.state.optionsPossible.factions];
     if (this.props.includedExpansions[EXPANSIONS.POK])
-      races = races.concat(this.state.optionsPossible.pokRaces);
+      factions = factions.concat(this.state.optionsPossible.pokFactions);
     if (this.props.includedExpansions[EXPANSIONS.DS])
-      races = races.concat(this.state.optionsPossible.dsRaces);
+      factions = factions.concat(this.state.optionsPossible.dsFactions);
     if (event.target.checked) {
-      this.props.updateRaces([
-        ...races.concat(this.state.optionsPossible.teRaces),
+      this.props.updateFactions([
+        ...factions.concat(this.state.optionsPossible.teFactions),
       ]);
     } else {
-      this.props.updateRaces(races);
+      this.props.updateFactions(factions);
     }
     this.props.toggleThundersEdge(event);
   }
 
   updateDS(event) {
-    let races = [...this.state.optionsPossible.races];
+    let factions = [...this.state.optionsPossible.factions];
     if (this.props.includedExpansions[EXPANSIONS.POK])
-      races = races.concat(this.state.optionsPossible.pokRaces);
+      factions = factions.concat(this.state.optionsPossible.pokFactions);
     if (this.props.includedExpansions[EXPANSIONS.TE])
-      races = races.concat(this.state.optionsPossible.teRaces);
+      factions = factions.concat(this.state.optionsPossible.teFactions);
     if (event.target.checked) {
-      this.props.updateRaces([
-        ...races.concat(this.state.optionsPossible.dsRaces),
+      this.props.updateFactions([
+        ...factions.concat(this.state.optionsPossible.dsFactions),
       ]);
     } else {
-      this.props.updateRaces(races);
+      this.props.updateFactions(factions);
     }
     this.props.toggleDiscordantStars(event);
   }
@@ -439,23 +439,23 @@ class MapOptions extends React.Component {
     encodedSettings += this.state.reversePlacementOrder ? "T" : "F";
     encodedSettings += this.state.forceWormholes ? "T" : "F";
     encodedSettings += this.state.balancePlanetTraits ? "T" : "F";
-    encodedSettings += this.state.pickRaces ? "T" : "F";
-    if (this.state.pickRaces) {
-      encodedSettings += this.state.ensureRacialAnomalies ? "T" : "F";
-      let combinedRaces = this.state.optionsPossible.races
-        .concat(this.state.optionsPossible.pokRaces)
-        .concat(this.state.optionsPossible.dsRaces)
-        .concat(this.state.optionsPossible.teRaces);
-      let expectedRaces = 17;
-      if (this.props.includedExpansions[EXPANSIONS.POK]) expectedRaces += 7;
-      if (this.props.includedExpansions[EXPANSIONS.DS]) expectedRaces += 34;
-      if (this.props.includedExpansions[EXPANSIONS.TE]) expectedRaces += 5;
-      if (this.props.currentRaces.length !== expectedRaces) {
-        // Need to encode all races, because it is not the default
-        for (let race of this.props.currentRaces) {
-          if (combinedRaces.indexOf(race) >= 0) {
-            encodedSettings += combinedRaces
-              .indexOf(race)
+    encodedSettings += this.state.pickFactions ? "T" : "F";
+    if (this.state.pickFactions) {
+      encodedSettings += this.state.ensureFactionAnomalies ? "T" : "F";
+      let combinedFactions = this.state.optionsPossible.factions
+        .concat(this.state.optionsPossible.pokFactions)
+        .concat(this.state.optionsPossible.dsFactions)
+        .concat(this.state.optionsPossible.teFactions);
+      let expectedFactions = 17;
+      if (this.props.includedExpansions[EXPANSIONS.POK]) expectedFactions += 7;
+      if (this.props.includedExpansions[EXPANSIONS.DS]) expectedFactions += 34;
+      if (this.props.includedExpansions[EXPANSIONS.TE]) expectedFactions += 5;
+      if (this.props.currentFactions.length !== expectedFactions) {
+        // Need to encode all factions, because it is not the default
+        for (let faction of this.props.currentFactions) {
+          if (combinedFactions.indexOf(faction) >= 0) {
+            encodedSettings += combinedFactions
+              .indexOf(faction)
               .toString()
               .padStart(2, "0");
           }
@@ -645,54 +645,54 @@ class MapOptions extends React.Component {
     let balancePlanetTraits = newSettings[currentIndex] === "T";
     currentIndex += 1;
 
-    // Pick Races
-    let pickRaces = newSettings[currentIndex] === "T";
+    // Pick Factions
+    let pickFactions = newSettings[currentIndex] === "T";
     currentIndex += 1;
 
     let currentPlayerNames = this.props.currentPlayerNames;
-    let currentRaces = this.props.currentRaces;
-    let ensureRacialAnomalies = this.props.ensureRacialAnomalies;
-    if (pickRaces) {
-      // Ensure Racial Anomalies
-      ensureRacialAnomalies = newSettings[currentIndex] === "T";
+    let currentFactions = this.props.currentFactions;
+    let ensureFactionAnomalies = this.props.ensureFactionAnomalies;
+    if (pickFactions) {
+      // Ensure Faction Anomalies
+      ensureFactionAnomalies = newSettings[currentIndex] === "T";
       currentIndex += 1;
 
       if (newSettings[currentIndex] !== "|") {
         if (newSettings[currentIndex] !== undefined) {
-          // Custom races, but not all of them
-          currentRaces = [];
-          let combinedRaces = this.state.optionsPossible.races
-            .concat(this.state.optionsPossible.pokRaces)
-            .concat(this.state.optionsPossible.dsRaces)
-            .concat(this.state.optionsPossible.teRaces);
+          // Custom factions, but not all of them
+          currentFactions = [];
+          let combinedFactions = this.state.optionsPossible.factions
+            .concat(this.state.optionsPossible.pokFactions)
+            .concat(this.state.optionsPossible.dsFactions)
+            .concat(this.state.optionsPossible.teFactions);
           while (
             newSettings[currentIndex] !== "|" &&
             currentIndex !== newSettings.length
           ) {
-            currentRaces.push(
-              combinedRaces[
+            currentFactions.push(
+              combinedFactions[
                 Number(newSettings.substring(currentIndex, currentIndex + 2))
               ],
             );
             currentIndex += 2;
           }
         } else {
-          currentRaces = this.state.optionsPossible.races;
+          currentFactions = this.state.optionsPossible.factions;
           if (useExpansions[EXPANSIONS.POK])
-            currentRaces = currentRaces.concat(
-              this.state.optionsPossible.pokRaces,
+            currentFactions = currentFactions.concat(
+              this.state.optionsPossible.pokFactions,
             );
           if (useExpansions[EXPANSIONS.TE])
-            currentRaces = currentRaces.concat(
-              this.state.optionsPossible.teRaces,
+            currentFactions = currentFactions.concat(
+              this.state.optionsPossible.teFactions,
             );
           if (useExpansions[EXPANSIONS.DS])
-            currentRaces = currentRaces.concat(
-              this.state.optionsPossible.dsRaces,
+            currentFactions = currentFactions.concat(
+              this.state.optionsPossible.dsFactions,
             );
         }
       } else {
-        // No custom races, but player names are specified, so parse them
+        // No custom factions, but player names are specified, so parse them
         currentPlayerNames = newSettings
           .substring(currentIndex)
           .split("|")
@@ -720,11 +720,11 @@ class MapOptions extends React.Component {
         reversePlacementOrder: reversePlacementOrder,
         forceWormholes: forceWormholes,
         balancePlanetTraits: balancePlanetTraits,
-        pickRaces: pickRaces,
-        ensureRacialAnomalies: ensureRacialAnomalies,
+        pickFactions: pickFactions,
+        ensureFactionAnomalies: ensureFactionAnomalies,
       },
       () => {
-        this.props.updateRaces(currentRaces);
+        this.props.updateFactions(currentFactions);
         this.props.updatePlayerNames(currentPlayerNames);
 
         if (
@@ -781,7 +781,7 @@ class MapOptions extends React.Component {
           this.props.updateTiles(newTiles, newSettings);
         } else {
           this.props.updateTiles(
-            this.getNewTileSet(currentRaces, useExpansions),
+            this.getNewTileSet(currentFactions, useExpansions),
             newSettings,
             false,
           );
@@ -824,7 +824,7 @@ class MapOptions extends React.Component {
   /**
    * Create a set of new tiles for the board based on the user's input.
    */
-  getNewTileSet(currentRaces, includedExpansions) {
+  getNewTileSet(currentFactions, includedExpansions) {
     if (includedExpansions === undefined) {
       includedExpansions = Object.fromEntries([
         [EXPANSIONS.POK, this.props.includedExpansions[EXPANSIONS.POK]],
@@ -866,19 +866,22 @@ class MapOptions extends React.Component {
     // Get an ordered list of board spaces that need to have non-home systems assigned to them
     let systemIndexes = this.getNewTilesToPlace();
 
-    // Get current races for placing races, and shuffle them around
-    if (currentRaces === undefined) {
-      currentRaces = [...this.props.currentRaces];
+    // Get current factions for placing factions, and shuffle them around
+    if (currentFactions === undefined) {
+      currentFactions = [...this.props.currentFactions];
     } else {
-      currentRaces = [...currentRaces];
+      currentFactions = [...currentFactions];
     }
-    this.shuffle(currentRaces);
-    currentRaces = currentRaces.slice(0, this.state.currentNumberOfPlayers);
+    this.shuffle(currentFactions);
+    currentFactions = currentFactions.slice(
+      0,
+      this.state.currentNumberOfPlayers,
+    );
 
     // Get a set of systems to make the board with, ordered based on user supplied weights
     let newSystems = this.getNewSystemsToPlace(
       systemIndexes.length,
-      currentRaces,
+      currentFactions,
       includedExpansions,
     );
 
@@ -892,7 +895,7 @@ class MapOptions extends React.Component {
     this.placeHyperlanes(newTiles);
 
     // Place home planets
-    this.placeHomeSystems(newTiles, currentRaces);
+    this.placeHomeSystems(newTiles, currentFactions);
 
     // Place planets one at a time, using the indexes to place combined with the ordered planet list
     for (let systemIndex of systemIndexes) {
@@ -1018,7 +1021,7 @@ class MapOptions extends React.Component {
    * @param {boolean} includedExpansions Dictionary of expansions to include based on the enum EXPANSIONS
    * @returns {[]}
    */
-  getNewSystemsToPlace(numberOfSystems, currentRaces, includedExpansions) {
+  getNewSystemsToPlace(numberOfSystems, currentFactions, includedExpansions) {
     // Pick our a random set of systems, following the needed number of anomalies
     let allBlues = tileData.blue.filter(expansionCheck(includedExpansions));
     let allReds = tileData.red.filter(expansionCheck(includedExpansions));
@@ -1170,35 +1173,35 @@ class MapOptions extends React.Component {
       }
     }
 
-    // These tiles are ensured for races and may not be replaced
+    // These tiles are ensured for factions and may not be replaced
     const ensuredAnomalies = [];
 
-    if (this.state.ensureRacialAnomalies && this.state.pickRaces) {
-      currentRaces.forEach((race) => {
+    if (this.state.ensureFactionAnomalies && this.state.pickFactions) {
+      currentFactions.forEach((faction) => {
         let anomalies = [];
         let match = false;
         // If The Clan of Saar are in the game, ensure we have an asteroid field
-        if (race === "The Clan of Saar") {
+        if (faction === "The Clan of Saar") {
           anomalies = tileData.asteroidFields.filter(
             expansionCheck(includedExpansions),
           );
           match = true;
           // If The Embers of Muaat are in the game, ensure we have a supernova
-        } else if (race === "The Embers of Muaat") {
+        } else if (faction === "The Embers of Muaat") {
           anomalies = tileData.supernovas.filter(
             expansionCheck(includedExpansions),
           );
           match = true;
           // If The Empyrean are in the game, ensure we have a nebulae
-        } else if (race === "The Empyrean") {
+        } else if (faction === "The Empyrean") {
           anomalies = tileData.nebulae.filter(
             expansionCheck(includedExpansions),
           );
           match = true;
           // If The Vuil'Raith Cabal or Nivyn Star Kings are in the game, ensure we have a gravity rift
         } else if (
-          race === "The Vuil'Raith Cabal" ||
-          race === "The Nivyn Star Kings"
+          faction === "The Vuil'Raith Cabal" ||
+          faction === "The Nivyn Star Kings"
         ) {
           anomalies = tileData.gravityRifts.filter(
             expansionCheck(includedExpansions),
@@ -1331,7 +1334,7 @@ class MapOptions extends React.Component {
           specialty: parseInt(this.state.specialtyWeight),
           anomaly: parseInt(this.state.anomalyWeight),
           wormhole: parseInt(this.state.wormholeWeight),
-          racial: parseInt(this.state.wormholeWeight) - 5,
+          faction: parseInt(this.state.wormholeWeight) - 5,
         };
         break;
       case "resource":
@@ -1342,7 +1345,7 @@ class MapOptions extends React.Component {
           specialty: 10,
           anomaly: 10,
           wormhole: 10,
-          racial: 5,
+          faction: 5,
         };
         break;
       case "influence":
@@ -1353,7 +1356,7 @@ class MapOptions extends React.Component {
           specialty: 10,
           anomaly: 10,
           wormhole: 10,
-          racial: 5,
+          faction: 5,
         };
         break;
       case "balanced":
@@ -1366,7 +1369,7 @@ class MapOptions extends React.Component {
             specialty: 50,
             anomaly: 40,
             wormhole: 25,
-            racial: 20,
+            faction: 20,
           };
         } else {
           weights = {
@@ -1376,7 +1379,7 @@ class MapOptions extends React.Component {
             specialty: 40,
             anomaly: 30,
             wormhole: 25,
-            racial: 20,
+            faction: 20,
           };
         }
         break;
@@ -1408,7 +1411,7 @@ class MapOptions extends React.Component {
       newTiles[hyperlaneData[0]] = hyperlaneData[1] + "-" + hyperlaneData[2];
     }
   }
-  placeHomeSystems(newTiles, currentRaces) {
+  placeHomeSystems(newTiles, currentFactions) {
     // Place data for the homeSystems from board data
     for (
       let index = 0;
@@ -1422,12 +1425,13 @@ class MapOptions extends React.Component {
         boardData.styles[this.state.currentNumberOfPlayers.toString()][
           this.state.currentBoardStyle
         ]["home_worlds"][index];
-      if (this.state.pickRaces && !this.state.pickMultipleRaces) {
-        // Convert races into race hexes and assign a random race to a player
-        newTiles[planetIndex] = raceData.raceToHomeSystemMap[currentRaces[0]];
-        currentRaces.shift();
+      if (this.state.pickFactions && !this.state.pickMultipleFactions) {
+        // Convert factions into faction hexes and assign a random faction to a player
+        newTiles[planetIndex] =
+          factionData.factionToHomeSystemMap[currentFactions[0]];
+        currentFactions.shift();
       } else {
-        // Set home worlds to 0, races to be decided later
+        // Set home worlds to 0, factions to be decided later
         newTiles[planetIndex] = 0;
       }
     }
@@ -1887,7 +1891,7 @@ class MapOptions extends React.Component {
    * Ensure that no planet trait (cultural, industrial, hazardous) is left so scarce that
    * a trait-based objective becomes nearly unscorable. Tops up whichever trait is most
    * underrepresented relative to an even three-way split, swapping in tiles from the
-   * unused pool in place of tiles that aren't wormholes or ensured racial anomalies.
+   * unused pool in place of tiles that aren't wormholes or ensured faction anomalies.
    * @param possibleTiles {Int8Array} The ordered list of tiles, cut to the needed size
    * @param ensuredAnomalies {Int8Array} Tiles that must be included if possible
    * @param includedExpansions {Object} List of expansions to include
@@ -2074,7 +2078,7 @@ class MapOptions extends React.Component {
     }
     total_weight += tile["wormhole"].length > 0 ? weights["wormhole"] : 0;
     total_weight +=
-      ensuredAnomalies.indexOf(planetTileNumber) > -1 ? weights["racial"] : 0;
+      ensuredAnomalies.indexOf(planetTileNumber) > -1 ? weights["faction"] : 0;
 
     return total_weight;
   }
@@ -2103,9 +2107,9 @@ class MapOptions extends React.Component {
       fanHyperlanesHelp: !this.state.fanHyperlanesHelp,
     });
   }
-  togglePickRacesHelp(event) {
+  togglePickFactionsHelp(event) {
     this.setState({
-      pickRacesHelp: !this.state.pickRacesHelp,
+      pickFactionsHelp: !this.state.pickFactionsHelp,
     });
   }
   toggleBoardStyleHelp(event) {
@@ -2128,14 +2132,14 @@ class MapOptions extends React.Component {
       setPlayerNamesHelp: !this.state.setPlayerNamesHelp,
     });
   }
-  toggleSetRacesHelp(event) {
+  toggleSetFactionsHelp(event) {
     this.setState({
-      setRacesHelp: !this.state.setRacesHelp,
+      setFactionsHelp: !this.state.setFactionsHelp,
     });
   }
-  togglePickMultipleRacesHelp(event) {
+  togglePickMultipleFactionsHelp(event) {
     this.setState({
-      pickMultipleRacesHelp: !this.state.pickMultipleRacesHelp,
+      pickMultipleFactionsHelp: !this.state.pickMultipleFactionsHelp,
     });
   }
   toggleShufflePriorityHelp(event) {
@@ -2153,9 +2157,9 @@ class MapOptions extends React.Component {
       forceWormholesHelp: !this.state.forceWormholesHelp,
     });
   }
-  toggleEnsureRacialAnomaliesHelp(event) {
+  toggleEnsureFactionAnomaliesHelp(event) {
     this.setState({
-      ensureRacialAnomaliesHelp: !this.state.ensureRacialAnomaliesHelp,
+      ensureFactionAnomaliesHelp: !this.state.ensureFactionAnomaliesHelp,
     });
   }
   toggleBalancePlanetTraitsHelp(event) {
@@ -2237,7 +2241,7 @@ class MapOptions extends React.Component {
                     type="checkbox"
                     checked={this.props.includedExpansions[EXPANSIONS.DS]}
                     onChange={this.updateDS}
-                    label="Use DS Fan Races"
+                    label="Use DS Fan Factions"
                   />
                   <QuestionCircle
                     className="icon"
@@ -2465,28 +2469,28 @@ class MapOptions extends React.Component {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3 d-flex" controlId="pickRaces">
+          <Form.Group className="mb-3 d-flex" controlId="pickFactions">
             <Form.Check
-              name="pickRaces"
+              name="pickFactions"
               type="checkbox"
-              checked={this.props.pickRaces}
+              checked={this.props.pickFactions}
               onChange={this.handleInputChange}
-              label="Pick Races for Players"
+              label="Pick Factions for Players"
             />
             <QuestionCircle
               className="icon"
-              onClick={this.togglePickRacesHelp}
+              onClick={this.togglePickFactionsHelp}
             />
           </Form.Group>
-          <Collapse in={this.state.pickRaces}>
+          <Collapse in={this.state.pickFactions}>
             <div>
               <div className="card card-body">
                 <button
                   type="button"
                   className="btn btn-outline-primary mb-2"
-                  onClick={this.toggleSetRacesHelp}
+                  onClick={this.toggleSetFactionsHelp}
                 >
-                  Set Included Races
+                  Set Included Factions
                 </button>
 
                 <button
@@ -2499,32 +2503,32 @@ class MapOptions extends React.Component {
 
                 <Form.Group
                   className="d-flex"
-                  controlId="ensureRacialAnomalies"
+                  controlId="ensureFactionAnomalies"
                 >
                   <Form.Check
-                    name="ensureRacialAnomalies"
+                    name="ensureFactionAnomalies"
                     type="checkbox"
-                    checked={this.props.ensureRacialAnomalies}
+                    checked={this.props.ensureFactionAnomalies}
                     onChange={this.handleInputChange}
-                    label="Ensure Racial Anomalies"
+                    label="Ensure Faction Anomalies"
                   />
                   <QuestionCircle
                     className="icon"
-                    onClick={this.toggleEnsureRacialAnomaliesHelp}
+                    onClick={this.toggleEnsureFactionAnomaliesHelp}
                   />
                 </Form.Group>
               </div>
             </div>
           </Collapse>
-          {/* <div className={"ml-2 mb-2 collapse " + (this.state.pickRaces ? "show" : "")} id="pickRacesCollapse">
+          {/* <div className={"ml-2 mb-2 collapse " + (this.state.pickFactions ? "show" : "")} id="pickFactionsCollapse">
                         <div className="card card-body">
-                            <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetRacesHelp}>Set Included Races</button>
+                            <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetFactionsHelp}>Set Included Factions</button>
 
                             <button type="button" className="btn btn-outline-primary mb-2" onClick={this.toggleSetPlayerNamesHelp}>Set Player Names</button>
 
-                            <Form.Group className="mb-3 d-flex" controlId="ensureRacialAnomalies">
-                                <Form.Check name="ensureRacialAnomalies" type="checkbox" checked={this.props.ensureRacialAnomalies} onChange={this.handleInputChange} label="Ensure Racial Anomalies" />
-                                <QuestionCircle className="icon" onClick={this.toggleEnsureRacialAnomaliesHelp} />
+                            <Form.Group className="mb-3 d-flex" controlId="ensureFactionAnomalies">
+                                <Form.Check name="ensureFactionAnomalies" type="checkbox" checked={this.props.ensureFactionAnomalies} onChange={this.handleInputChange} label="Ensure Faction Anomalies" />
+                                <QuestionCircle className="icon" onClick={this.toggleEnsureFactionAnomaliesHelp} />
                             </Form.Group>
                         </div>
                     </div> */}
@@ -2614,16 +2618,16 @@ class MapOptions extends React.Component {
             hideModal={this.toggleSetPlayerNamesHelp}
             handleNameChange={this.handleNameChange}
           />
-          <SetRacesModal
-            visible={this.state.setRacesHelp}
-            races={this.state.optionsPossible.races}
+          <SetFactionsModal
+            visible={this.state.setFactionsHelp}
+            factions={this.state.optionsPossible.factions}
             includedExpansions={this.props.includedExpansions}
-            pokRaces={this.state.optionsPossible.pokRaces}
-            teRaces={this.state.optionsPossible.teRaces}
-            dsRaces={this.state.optionsPossible.dsRaces}
-            currentRaces={this.props.currentRaces}
-            hideModal={this.toggleSetRacesHelp}
-            handleRacesChange={this.handleRacesChange}
+            pokFactions={this.state.optionsPossible.pokFactions}
+            teFactions={this.state.optionsPossible.teFactions}
+            dsFactions={this.state.optionsPossible.dsFactions}
+            currentFactions={this.props.currentFactions}
+            hideModal={this.toggleSetFactionsHelp}
+            handleFactionsChange={this.handleFactionsChange}
           />
 
           <HelpModal
@@ -2668,7 +2672,7 @@ class MapOptions extends React.Component {
                          <a href="https://docs.google.com/document/d/1214N4Py1NqvkQzFN5YULKiR7rmn1qpf4OdFqb8_vQUg">Reference document for this content</a>
                          <br>
                          <br>
-                         This option will only matter if you choose to pick races for players. This will add these factions to the pool of random faction, include their home system in the graphics, and influence racial anomalies.
+                         This option will only matter if you choose to pick factions for players. This will add these factions to the pool of random faction, include their home system in the graphics, and influence faction anomalies.
                          </p>`}
           />
           <HelpModal
@@ -2738,27 +2742,27 @@ class MapOptions extends React.Component {
                          </p>'
           />
           <HelpModal
-            key={"help-races"}
-            visible={this.state.pickRacesHelp}
-            hideModal={this.togglePickRacesHelp}
-            title={"About Picking Races"}
+            key={"help-factions"}
+            visible={this.state.pickFactionsHelp}
+            hideModal={this.togglePickFactionsHelp}
+            title={"About Picking Factions"}
             content="<p>
-                         Automatically assigns races to the players on the boards.
+                         Automatically assigns factions to the players on the boards.
                          <br>
                          <br>
-                         From the set of races, turning this on will assign every player a random race (designated by assigning them the homeworld tile of that race). You should pick which player sits at a certain position before turning this on.
+                         From the set of factions, turning this on will assign every player a random faction (designated by assigning them the homeworld tile of that faction). You should pick which player sits at a certain position before turning this on.
                          </p>"
           />
           <HelpModal
             key={"help-multiple"}
-            visible={this.state.pickMultipleRacesHelp}
-            hideModal={this.togglePickMultipleRacesHelp}
-            title={"About Picking Multiple Races"}
+            visible={this.state.pickMultipleFactionsHelp}
+            hideModal={this.togglePickMultipleFactionsHelp}
+            title={"About Picking Multiple Factions"}
             content="<p>
-                         Divides all the races evenly up amongst the players in the game (with no overflow), so that they can choose from a selection instead of being specifically assigned one race.
+                         Divides all the factions evenly up amongst the players in the game (with no overflow), so that they can choose from a selection instead of being specifically assigned one faction.
                          <br>
                          <br>
-                         Some groups prefer to have a draft, where every player is given a few races to pick between. This lets them pick the races that they want to play, but not have any conflicts with other players about playing a certain race.
+                         Some groups prefer to have a draft, where every player is given a few factions to pick between. This lets them pick the factions that they want to play, but not have any conflicts with other players about playing a certain faction.
                          </p>"
           />
           <HelpModal
@@ -2813,12 +2817,12 @@ class MapOptions extends React.Component {
                          </p>"
           />
           <HelpModal
-            key={"help-racial-anomalies"}
-            visible={this.state.ensureRacialAnomaliesHelp}
-            hideModal={this.toggleEnsureRacialAnomaliesHelp}
-            title={"About Ensure Racial Anomalies"}
+            key={"help-faction-anomalies"}
+            visible={this.state.ensureFactionAnomaliesHelp}
+            hideModal={this.toggleEnsureFactionAnomaliesHelp}
+            title={"About Ensure Faction Anomalies"}
             content="<p>
-                         Ensures that the corresponding beneficial anomalies will be present in the galaxy for each race.
+                         Ensures that the corresponding beneficial anomalies will be present in the galaxy for each faction.
                          <br>
                          <ul>
                              <li>Muatt:  Supernova</li>

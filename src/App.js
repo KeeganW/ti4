@@ -10,7 +10,7 @@ import MapControls from "./map/MapControls";
 import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
 import tileData, { WORMHOLE_SYMBOLS, EXPANSIONS } from "./data/tileData";
-import raceData from "./data/raceData";
+import factionData from "./data/factionData";
 import adjacencyData from "./data/adjacencyData.json";
 import {
   calculateOffsets,
@@ -69,7 +69,7 @@ class App extends React.Component {
         [EXPANSIONS.TE, false],
       ]),
       currentPlayerNames: ["", "", "", "", "", "", "", ""],
-      currentRaces: [...raceData.races],
+      currentFactions: [...factionData.factions],
 
       lockedTiles: [],
       excludedTiles: [],
@@ -90,7 +90,7 @@ class App extends React.Component {
     this.updateLockedTiles = this.updateLockedTiles.bind(this);
     this.updateInExcludedTiles = this.updateInExcludedTiles.bind(this);
     this.updateTileClicked = this.updateTileClicked.bind(this);
-    this.updateRaces = this.updateRaces.bind(this);
+    this.updateFactions = this.updateFactions.bind(this);
     this.updatePlayerNames = this.updatePlayerNames.bind(this);
     this.updatePlayerNameOverlays = this.updatePlayerNameOverlays.bind(this);
     this.validateTiles = this.validateTiles.bind(this);
@@ -515,7 +515,7 @@ class App extends React.Component {
 
   /**
    * Finds the board positions of every player's home system, in ascending board-position order (which matches the
-   * player ordering used by currentPlayerNames/currentRaces).
+   * player ordering used by currentPlayerNames/currentFactions).
    */
   getHomePositions() {
     let homePositions = [];
@@ -525,7 +525,7 @@ class App extends React.Component {
       let tile = Number(this.state.tiles[tileNumber]);
       if (
         tile === 0 ||
-        (!isNaN(tile) && tile in raceData.homeSystemToRaceMap)
+        (!isNaN(tile) && tile in factionData.homeSystemToFactionMap)
       ) {
         homePositions.push(tileNumber);
       }
@@ -835,7 +835,7 @@ class App extends React.Component {
   }
 
   /**
-   * Toggle whether we need to use the discordant stars races or not
+   * Toggle whether we need to use the discordant stars factions or not
    */
   toggleDiscordantStars() {
     const newIncludedExpansions = this.state.includedExpansions;
@@ -1177,9 +1177,9 @@ class App extends React.Component {
     );
   }
 
-  updateRaces(races) {
+  updateFactions(factions) {
     this.setState({
-      currentRaces: races,
+      currentFactions: factions,
     });
   }
 
@@ -1404,7 +1404,7 @@ class App extends React.Component {
         .css("margin-top", "-3px");
 
       // Show a player's custom name on their home world (not the "P1"/"P2" fallback), colored to
-      // match the closest-player overlay, regardless of whether a race has been assigned yet.
+      // match the closest-player overlay, regardless of whether a faction has been assigned yet.
       let homePlayerIndex = homePositions.indexOf(tileNumber);
       let homePlayerName =
         homePlayerIndex !== -1
@@ -1718,7 +1718,7 @@ class App extends React.Component {
           visible={this.state.isOptionsMenuShowing}
           includedExpansions={this.state.includedExpansions}
           currentPlayerNames={this.state.currentPlayerNames}
-          currentRaces={this.state.currentRaces}
+          currentFactions={this.state.currentFactions}
           tiles={this.state.tiles}
           includedTiles={this.state.includedTiles}
           excludedTiles={this.state.excludedTiles}
@@ -1734,7 +1734,7 @@ class App extends React.Component {
           toggleThundersEdge={this.toggleThundersEdge}
           updateTiles={this.updateTiles}
           showExtraTiles={this.showExtraTiles}
-          updateRaces={this.updateRaces}
+          updateFactions={this.updateFactions}
           updatePlayerNames={this.updatePlayerNames}
         />
 

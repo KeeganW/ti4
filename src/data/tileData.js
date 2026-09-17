@@ -103,7 +103,7 @@ const tileData = {
   all: {
     1: {
       type: "green",
-      race: "The Federation of Sol",
+      faction: "The Federation of Sol",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -118,7 +118,7 @@ const tileData = {
     },
     2: {
       type: "green",
-      race: "The Mentak Coalition",
+      faction: "The Mentak Coalition",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -133,7 +133,7 @@ const tileData = {
     },
     3: {
       type: "green",
-      race: "The Yin Brotherhood",
+      faction: "The Yin Brotherhood",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -148,7 +148,7 @@ const tileData = {
     },
     4: {
       type: "green",
-      race: "The Embers of Muaat",
+      faction: "The Embers of Muaat",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -163,7 +163,7 @@ const tileData = {
     },
     5: {
       type: "green",
-      race: "The Arborec",
+      faction: "The Arborec",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -178,7 +178,7 @@ const tileData = {
     },
     6: {
       type: "green",
-      race: "The Lizix Mindnet",
+      faction: "The Lizix Mindnet",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -193,7 +193,7 @@ const tileData = {
     },
     7: {
       type: "green",
-      race: "The Winnu",
+      faction: "The Winnu",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -208,7 +208,7 @@ const tileData = {
     },
     8: {
       type: "green",
-      race: "The Nekro Virus",
+      faction: "The Nekro Virus",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -223,7 +223,7 @@ const tileData = {
     },
     9: {
       type: "green",
-      race: "The Naalu Collective",
+      faction: "The Naalu Collective",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -245,7 +245,7 @@ const tileData = {
     },
     10: {
       type: "green",
-      race: "The Barony of Letnev",
+      faction: "The Barony of Letnev",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -267,7 +267,7 @@ const tileData = {
     },
     11: {
       type: "green",
-      race: "The Clan of Saar",
+      faction: "The Clan of Saar",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -289,7 +289,7 @@ const tileData = {
     },
     12: {
       type: "green",
-      race: "The Universities of Jol-Nar",
+      faction: "The Universities of Jol-Nar",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -311,7 +311,7 @@ const tileData = {
     },
     13: {
       type: "green",
-      race: "Sardakk N'orr",
+      faction: "Sardakk N'orr",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -333,7 +333,7 @@ const tileData = {
     },
     14: {
       type: "green",
-      race: "The Xxcha Kingdom",
+      faction: "The Xxcha Kingdom",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -355,7 +355,7 @@ const tileData = {
     },
     15: {
       type: "green",
-      race: "The Yssaril Tribes",
+      faction: "The Yssaril Tribes",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -377,7 +377,7 @@ const tileData = {
     },
     16: {
       type: "green",
-      race: "The Emirates of Hacan",
+      faction: "The Emirates of Hacan",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -406,7 +406,7 @@ const tileData = {
     },
     17: {
       type: "green",
-      race: "The Ghosts of Creuss",
+      faction: "The Ghosts of Creuss",
       wormhole: ["delta"],
       anomaly: [],
       planets: [],
@@ -876,7 +876,7 @@ const tileData = {
     },
     52: {
       type: "green",
-      race: "The Mahact Gene-sorcerers",
+      faction: "The Mahact Gene-sorcerers",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -891,7 +891,7 @@ const tileData = {
     },
     53: {
       type: "green",
-      race: "The Nomad",
+      faction: "The Nomad",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -906,7 +906,7 @@ const tileData = {
     },
     54: {
       type: "green",
-      race: "The Vuil'raith Cabal",
+      faction: "The Vuil'raith Cabal",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -921,7 +921,7 @@ const tileData = {
     },
     55: {
       type: "green",
-      race: "The Titans of Ul",
+      faction: "The Titans of Ul",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -936,7 +936,7 @@ const tileData = {
     },
     56: {
       type: "green",
-      race: "The Empyrean",
+      faction: "The Empyrean",
       wormhole: [],
       anomaly: [ANOMALIES.NEBULA],
       planets: [
@@ -951,7 +951,7 @@ const tileData = {
     },
     57: {
       type: "green",
-      race: "The Naaz-Rokha Alliance",
+      faction: "The Naaz-Rokha Alliance",
       wormhole: [],
       anomaly: [],
       planets: [
@@ -973,7 +973,7 @@ const tileData = {
     },
     58: {
       type: "green",
-      race: "The Argent Flight",
+      faction: "The Argent Flight",
       wormhole: [],
       anomaly: [],
       planets: [
