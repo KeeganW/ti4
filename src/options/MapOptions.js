@@ -8,7 +8,7 @@ import tileData, {
   ANOMALIES,
   PLANET_TRAITS,
 } from "../data/tileData";
-import raceData from "../data/raceData.json";
+import raceData from "../data/raceData";
 import adjacencyData from "../data/adjacencyData.json";
 import HelpModal from "./HelpModal";
 import SetPlayerNameModal from "./SetPlayerNameModal";
@@ -54,7 +54,7 @@ class MapOptions extends React.Component {
       homeworlds: raceData["homeSystems"],
       pokHomeworlds: raceData["pokHomeSystems"],
       teHomeworlds: raceData["teHomeSystems"],
-      dsHomeworlds: raceData["dsHomeworlds"],
+      dsHomeworlds: raceData["dsHomeSystems"],
     };
     const startingPlayers = 6;
 

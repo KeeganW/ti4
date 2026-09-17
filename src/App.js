@@ -10,7 +10,7 @@ import MapControls from "./map/MapControls";
 import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
 import tileData, { WORMHOLE_SYMBOLS, EXPANSIONS } from "./data/tileData";
-import raceData from "./data/raceData.json";
+import raceData from "./data/raceData";
 import adjacencyData from "./data/adjacencyData.json";
 import {
   calculateOffsets,
