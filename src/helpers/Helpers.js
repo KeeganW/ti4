@@ -51,10 +51,7 @@ const ringCoordinates = (ring) => {
  */
 export const ringForTileCount = (tilesLength) => {
   let ring = 3; // smallest supported board
-  while (
-    tilesLength > 3 * ring * (ring + 1) + 1 &&
-    ring < MAX_RING
-  ) {
+  while (tilesLength > 3 * ring * (ring + 1) + 1 && ring < MAX_RING) {
     ring++;
   }
   return ring;

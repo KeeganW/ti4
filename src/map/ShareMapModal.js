@@ -17,7 +17,8 @@ class ShareMapModal extends React.Component {
     this.getBaseTileId = this.getBaseTileId.bind(this);
     this.getUniqueTileIds = this.getUniqueTileIds.bind(this);
     this.getNumericSortedTiles = this.getNumericSortedTiles.bind(this);
-    this.getAlphabeticalSortedTiles = this.getAlphabeticalSortedTiles.bind(this);
+    this.getAlphabeticalSortedTiles =
+      this.getAlphabeticalSortedTiles.bind(this);
   }
 
   /**
@@ -78,7 +79,10 @@ class ShareMapModal extends React.Component {
     let withoutPlanet = [];
     for (let id of ids) {
       let info = tileData.all[id];
-      let planetName = info && info.planets && info.planets.length > 0 ? info.planets[0].name : null;
+      let planetName =
+        info && info.planets && info.planets.length > 0
+          ? info.planets[0].name
+          : null;
       if (planetName) {
         withPlanet.push({ id, label: `${planetName} (${id})` });
       } else {
@@ -253,7 +257,9 @@ class ShareMapModal extends React.Component {
           </div>
           <div className="mb-3">
             <div className="fw-bold">Alphabetical Order (by first planet)</div>
-            <div>{alphabeticalSortedTiles.map((tile) => tile.label).join(", ")}</div>
+            <div>
+              {alphabeticalSortedTiles.map((tile) => tile.label).join(", ")}
+            </div>
           </div>
         </Modal.Body>
       </Modal>

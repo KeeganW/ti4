@@ -1227,9 +1227,9 @@ class MapOptions extends React.Component {
     // Force Alpha and Beta wormholes to actually be placed on the board, if enabled
     if (this.state.forceWormholes) {
       for (const wormholeType of [WORMHOLES.ALPHA, WORMHOLES.BETA]) {
-        const allWormholesOfType = tileData[
-          `${wormholeType}Wormholes`
-        ].filter(expansionCheck(includedExpansions));
+        const allWormholesOfType = tileData[`${wormholeType}Wormholes`].filter(
+          expansionCheck(includedExpansions),
+        );
         let existingCount = 0;
         for (const tile of allWormholesOfType) {
           if (newSystems.includes(tile)) existingCount += 1;
@@ -1893,7 +1893,11 @@ class MapOptions extends React.Component {
    * @param includedExpansions {Object} List of expansions to include
    * @returns {Int8Array} An ordered list of tiles, with underrepresented traits topped up
    */
-  ensurePlanetTraitBalance(possibleTiles, ensuredAnomalies, includedExpansions) {
+  ensurePlanetTraitBalance(
+    possibleTiles,
+    ensuredAnomalies,
+    includedExpansions,
+  ) {
     const excludedTiles = tileData.wormholes.concat(ensuredAnomalies);
     const traits = [
       PLANET_TRAITS.CULTURAL,

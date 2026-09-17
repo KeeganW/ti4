@@ -29,12 +29,26 @@
     "lint:json": "eslint -c .eslintrc.json.js --no-eslintrc --ext .json src/data",
     "lint:js": "eslint --ext .js src",
     "format": "prettier --write",
-    "format:check": "prettier --check"
+    "format:check": "prettier --check",
+    "prepare": "husky"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "src/data/**/*.json": [
+      "eslint -c .eslintrc.json.js --no-eslintrc --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
     ]
   },
   "browserslist": {
@@ -52,6 +66,8 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint-plugin-jsonc": "^2.21.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
     "prettier": "^3.9.6"
   },
   "overrides": {

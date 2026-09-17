@@ -255,10 +255,7 @@ class MainMap extends React.Component {
               className={"overlay"}
               style={hidden}
             ></span>
-            <span
-              id={"player-name-" + tileNumber}
-              className={"overlay"}
-            ></span>
+            <span id={"player-name-" + tileNumber} className={"overlay"}></span>
             <img
               id={"tile-" + tileNumber}
               className="tile"

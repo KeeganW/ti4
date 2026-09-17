@@ -4345,7 +4345,7 @@ const tileData = {
           trait: PLANET_TRAITS.NONE,
           specialty: [SPECIALTIES.LEGENDARY],
           ability:
-            "4X4ID \"Hyperion\" VI - You may exhaust this card when you pass to draw 1 action card and gain 1 command token.",
+            '4X4ID "Hyperion" VI - You may exhaust this card when you pass to draw 1 action card and gain 1 command token.',
           resources: 0,
           influence: 0,
         },

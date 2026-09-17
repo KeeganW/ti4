@@ -107,7 +107,8 @@ class App extends React.Component {
     this.toggleThundersEdge = this.toggleThundersEdge.bind(this);
     this.toggleOverlay = this.toggleOverlay.bind(this);
     this.toggleWormholeOverlay = this.toggleWormholeOverlay.bind(this);
-    this.toggleClosestPlayerOverlay = this.toggleClosestPlayerOverlay.bind(this);
+    this.toggleClosestPlayerOverlay =
+      this.toggleClosestPlayerOverlay.bind(this);
     this.updateTileNumberOverlays = this.updateTileNumberOverlays.bind(this);
     this.toggleMoreInfo = this.toggleMoreInfo.bind(this);
     this.toggleExtraTiles = this.toggleExtraTiles.bind(this);
@@ -589,7 +590,11 @@ class App extends React.Component {
       let outSystem = this.getTileNumber(this.state.tiles[outNeighbor]);
       if (tileData.hyperlanes.indexOf(outSystem) >= 0) {
         endpoints.push(
-          ...this.getHyperlaneEndpoints(outNeighbor, hyperlanePosition, visited),
+          ...this.getHyperlaneEndpoints(
+            outNeighbor,
+            hyperlanePosition,
+            visited,
+          ),
         );
       } else {
         endpoints.push(outNeighbor);
@@ -665,7 +670,11 @@ class App extends React.Component {
 
     for (let tileNumber = 0; tileNumber < MAX_TILE_COUNT; tileNumber++) {
       let minDistance = Infinity;
-      for (let playerIndex = 0; playerIndex < homePositions.length; playerIndex++) {
+      for (
+        let playerIndex = 0;
+        playerIndex < homePositions.length;
+        playerIndex++
+      ) {
         minDistance = Math.min(
           minDistance,
           distancesByPlayer[playerIndex][tileNumber],
@@ -677,7 +686,11 @@ class App extends React.Component {
       }
 
       let closestPlayers = [];
-      for (let playerIndex = 0; playerIndex < homePositions.length; playerIndex++) {
+      for (
+        let playerIndex = 0;
+        playerIndex < homePositions.length;
+        playerIndex++
+      ) {
         if (distancesByPlayer[playerIndex][tileNumber] === minDistance) {
           closestPlayers.push(playerIndex);
         }
@@ -1429,13 +1442,11 @@ class App extends React.Component {
       //  this? https://stackoverflow.com/questions/6519043/get-mouse-position-on-scroll
 
       // Center Mecatol Rex on the screen
-      $("#tile-0")
-        .get(0)
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-          inline: "center",
-        });
+      $("#tile-0").get(0).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
     } else {
       // No need to move the map around, just center it on the screen
       this.$tiMap.addClass("center-map");
