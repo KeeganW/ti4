@@ -1368,6 +1368,8 @@ const tileData = {
           influence: 3,
           trait: "cultural",
           specialty: [SPECIALTIES.LEGENDARY],
+          ability:
+            "Exterrix Headquarters - You may exhaust this card at the end of your turn to gain 2 trade goods or convert all of your commodities into trade goods.",
         },
       ],
     },
@@ -4343,7 +4345,7 @@ const tileData = {
           trait: PLANET_TRAITS.NONE,
           specialty: [SPECIALTIES.LEGENDARY],
           ability:
-            "You may exhaust this card when you pass to draw 1 action card and gain 1 command token.",
+            "4X4ID \"Hyperion\" VI - You may exhaust this card when you pass to draw 1 action card and gain 1 command token.",
           resources: 0,
           influence: 0,
         },
@@ -4428,7 +4430,7 @@ const tileData = {
           trait: PLANET_TRAITS.INDUSTRIAL,
           specialty: [SPECIALTIES.BIOTIC, SPECIALTIES.LEGENDARY],
           ability:
-            "You may exhaust this card when you pass to gain control of a non-home, non-legendary planet that contains no units and has no attachments.",
+            "Maxis Central Control - You may exhaust this card when you pass to gain control of a non-home, non-legendary planet that contains no units and has no attachments.",
           resources: 1,
           influence: 3,
         },
@@ -4444,7 +4446,7 @@ const tileData = {
           trait: PLANET_TRAITS.HAZARDOUS,
           specialty: [SPECIALTIES.LEGENDARY],
           ability:
-            "You may exhaust this card when you pass to place 1 action card from the discard pile faceup on this card; you can purge cards on this card to play them as if they were in your hand.",
+            "Dok 'N Pic's Salvage Yard - You may exhaust this card when you pass to place 1 action card from the discard pile faceup on this card; you can purge cards on this card to play them as if they were in your hand.",
           resources: 2,
           influence: 1,
         },
@@ -4460,7 +4462,7 @@ const tileData = {
           trait: PLANET_TRAITS.CULTURAL,
           specialty: [SPECIALTIES.LEGENDARY],
           ability:
-            "You may exhaust this card at the end of your turn to ready another component that isn't a strategy card.",
+            "The Acropolis - You may exhaust this card at the end of your turn to ready another component that isn't a strategy card.",
           resources: 0,
           influence: 2,
         },
@@ -4476,7 +4478,7 @@ const tileData = {
           trait: PLANET_TRAITS.HAZARDOUS,
           specialty: [SPECIALTIES.PROPULSION, SPECIALTIES.LEGENDARY],
           ability:
-            "You may exhaust this card after you activate a system to apply +1 to the move value of 1 of your ships during this tactical action.",
+            "Ionian Fuel Refinery - You may exhaust this card after you activate a system to apply +1 to the move value of 1 of your ships during this tactical action.",
           resources: 1,
           influence: 1,
         },
@@ -4702,7 +4704,7 @@ const tileData = {
           trait: PLANET_TRAITS.NONE,
           specialty: [SPECIALTIES.LEGENDARY],
           ability:
-            "You may exhaust this card and discard 1 secret objective at the end of your turn to draw 1 secret objective.",
+            "The Galactic Council - You may exhaust this card and discard 1 secret objective at the end of your turn to draw 1 secret objective.",
           resources: 1,
           influence: 6,
         },
@@ -4730,7 +4732,7 @@ const tileData = {
           trait: PLANET_TRAITS.INDUSTRIAL,
           specialty: [SPECIALTIES.WARFARE, SPECIALTIES.LEGENDARY],
           ability:
-            "You may exhaust this card when you pass to place 1 ship that matches a unit upgrade technology you own from your reinforcements into a system that contains your ships.",
+            "Aeurex Mechanica - You may exhaust this card when you pass to place 1 ship that matches a unit upgrade technology you own from your reinforcements into a system that contains your ships.",
           resources: 2,
           influence: 0,
         },
