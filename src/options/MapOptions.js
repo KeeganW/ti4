@@ -2,7 +2,12 @@ import React from "react";
 import { QuestionCircle, ChevronDown, ChevronUp } from "react-bootstrap-icons";
 import { Button, Form, Collapse } from "react-bootstrap";
 import boardData from "../data/boardData.json";
-import tileData, { WORMHOLES, EXPANSIONS, ANOMALIES } from "../data/tileData";
+import tileData, {
+  WORMHOLES,
+  EXPANSIONS,
+  ANOMALIES,
+  PLANET_TRAITS,
+} from "../data/tileData";
 import raceData from "../data/raceData.json";
 import adjacencyData from "../data/adjacencyData.json";
 import HelpModal from "./HelpModal";
@@ -70,6 +75,7 @@ class MapOptions extends React.Component {
       reversePlacementOrder: false,
       forceWormholes: false,
       ensureRacialAnomalies: true,
+      balancePlanetTraits: false,
       generated: false,
       advancedSettingsOpen: false,
 
@@ -88,6 +94,7 @@ class MapOptions extends React.Component {
       reversePlacementOrderHelp: false,
       forceWormholesHelp: false,
       ensureRacialAnomaliesHelp: false,
+      balancePlanetTraitsHelp: false,
 
       resourceWeight: 70,
       influenceWeight: 30,
@@ -113,6 +120,7 @@ class MapOptions extends React.Component {
 
     this.ensureAnomalies = this.ensureAnomalies.bind(this);
     this.ensureWormholesForType = this.ensureWormholesForType.bind(this);
+    this.ensurePlanetTraitBalance = this.ensurePlanetTraitBalance.bind(this);
 
     this.updateBoardStyleOptions = this.updateBoardStyleOptions.bind(this); // TODO is the bind needed?
 
@@ -142,6 +150,8 @@ class MapOptions extends React.Component {
     this.toggleForceWormholesHelp = this.toggleForceWormholesHelp.bind(this);
     this.toggleEnsureRacialAnomaliesHelp =
       this.toggleEnsureRacialAnomaliesHelp.bind(this);
+    this.toggleBalancePlanetTraitsHelp =
+      this.toggleBalancePlanetTraitsHelp.bind(this);
     this.toggleAdvancedSettings = this.toggleAdvancedSettings.bind(this);
   }
 
@@ -428,6 +438,7 @@ class MapOptions extends React.Component {
     encodedSettings += this.state.shuffleBoards ? "T" : "F";
     encodedSettings += this.state.reversePlacementOrder ? "T" : "F";
     encodedSettings += this.state.forceWormholes ? "T" : "F";
+    encodedSettings += this.state.balancePlanetTraits ? "T" : "F";
     encodedSettings += this.state.pickRaces ? "T" : "F";
     if (this.state.pickRaces) {
       encodedSettings += this.state.ensureRacialAnomalies ? "T" : "F";
@@ -630,6 +641,10 @@ class MapOptions extends React.Component {
     let forceWormholes = newSettings[currentIndex] === "T";
     currentIndex += 1;
 
+    // Balance Planet Traits
+    let balancePlanetTraits = newSettings[currentIndex] === "T";
+    currentIndex += 1;
+
     // Pick Races
     let pickRaces = newSettings[currentIndex] === "T";
     currentIndex += 1;
@@ -704,6 +719,7 @@ class MapOptions extends React.Component {
         shuffleBoards: shuffleBoards,
         reversePlacementOrder: reversePlacementOrder,
         forceWormholes: forceWormholes,
+        balancePlanetTraits: balancePlanetTraits,
         pickRaces: pickRaces,
         ensureRacialAnomalies: ensureRacialAnomalies,
       },
@@ -1292,6 +1308,15 @@ class MapOptions extends React.Component {
       );
     }
 
+    // Ensure no planet trait (cultural/industrial/hazardous) is left too scarce to score
+    if (this.state.balancePlanetTraits) {
+      newSystems = this.ensurePlanetTraitBalance(
+        newSystems,
+        ensuredAnomalies,
+        includedExpansions,
+      );
+    }
+
     // Based on the system style, order the systems according to their weights
     let weights = {};
     switch (this.state.currentPickStyle) {
@@ -1859,6 +1884,60 @@ class MapOptions extends React.Component {
   }
 
   /**
+   * Ensure that no planet trait (cultural, industrial, hazardous) is left so scarce that
+   * a trait-based objective becomes nearly unscorable. Tops up whichever trait is most
+   * underrepresented relative to an even three-way split, swapping in tiles from the
+   * unused pool in place of tiles that aren't wormholes or ensured racial anomalies.
+   * @param possibleTiles {Int8Array} The ordered list of tiles, cut to the needed size
+   * @param ensuredAnomalies {Int8Array} Tiles that must be included if possible
+   * @param includedExpansions {Object} List of expansions to include
+   * @returns {Int8Array} An ordered list of tiles, with underrepresented traits topped up
+   */
+  ensurePlanetTraitBalance(possibleTiles, ensuredAnomalies, includedExpansions) {
+    const excludedTiles = tileData.wormholes.concat(ensuredAnomalies);
+    const traits = [
+      PLANET_TRAITS.CULTURAL,
+      PLANET_TRAITS.INDUSTRIAL,
+      PLANET_TRAITS.HAZARDOUS,
+    ];
+
+    // Tally up how far short of an even split each trait is
+    const deficits = traits
+      .map((trait) => {
+        const traitTiles = tileData[`${trait}Tiles`].filter(
+          expansionCheck(includedExpansions),
+        );
+        const currentCount = possibleTiles.filter((id) =>
+          traitTiles.includes(id),
+        ).length;
+        // Allow some slack below a perfectly even three-way split, since tile
+        // pools are rarely evenly distributed between the three traits
+        const target = Math.ceil((possibleTiles.length / 3) * 0.6);
+        return { traitTiles, needed: target - currentCount };
+      })
+      .sort((a, b) => b.needed - a.needed);
+
+    // Handle the most-deficient trait first so passes don't undo each other
+    let updatedTiles = possibleTiles;
+    for (const { traitTiles, needed } of deficits) {
+      if (needed <= 0) continue;
+      const currentTiles = updatedTiles;
+      const candidates = this.shuffle(
+        traitTiles.filter((id) => !currentTiles.includes(id)),
+      );
+      updatedTiles = this.reverseReplace(
+        currentTiles,
+        needed,
+        candidates,
+        excludedTiles,
+        false,
+      );
+    }
+
+    return updatedTiles;
+  }
+
+  /**
    * Replace tiles starting from the lowest weight (bottom of the list being defined by reversPlacementOrder)
    * @param possibleTiles {Int8Array} The ordered list of tiles, cut to the needed size
    * @param numTilesToReplace {Number} The number of tiles we need to try to replace from replacement into possible
@@ -2073,6 +2152,11 @@ class MapOptions extends React.Component {
   toggleEnsureRacialAnomaliesHelp(event) {
     this.setState({
       ensureRacialAnomaliesHelp: !this.state.ensureRacialAnomaliesHelp,
+    });
+  }
+  toggleBalancePlanetTraitsHelp(event) {
+    this.setState({
+      balancePlanetTraitsHelp: !this.state.balancePlanetTraitsHelp,
     });
   }
   toggleAdvancedSettings(event) {
@@ -2502,6 +2586,20 @@ class MapOptions extends React.Component {
                     onClick={this.toggleForceWormholesHelp}
                   />
                 </Form.Group>
+
+                <Form.Group className="d-flex" controlId="balancePlanetTraits">
+                  <Form.Check
+                    name="balancePlanetTraits"
+                    type="checkbox"
+                    checked={this.state.balancePlanetTraits}
+                    onChange={this.handleInputChange}
+                    label="Balance Planet Traits"
+                  />
+                  <QuestionCircle
+                    className="icon"
+                    onClick={this.toggleBalancePlanetTraitsHelp}
+                  />
+                </Form.Group>
               </div>
             </div>
           </Collapse>
@@ -2696,6 +2794,18 @@ class MapOptions extends React.Component {
                          <br>
                          <br>
                          Turning this on ensures that a pair of Alpha wormholes and a pair of Beta wormholes are always included in the generated galaxy.
+                         </p>"
+          />
+          <HelpModal
+            key={"help-balance-planet-traits"}
+            visible={this.state.balancePlanetTraitsHelp}
+            hideModal={this.toggleBalancePlanetTraitsHelp}
+            title={"About Balance Planet Traits"}
+            content="<p>
+                         Normally, the mix of Cultural, Industrial, and Hazardous planets on the board is left entirely to chance, which can occasionally leave one trait so scarce that a trait-based objective becomes nearly unscorable for most players.
+                         <br>
+                         <br>
+                         Turning this on tops up whichever trait is most underrepresented after generation, swapping in additional tiles of that trait so all three remain reasonably achievable.
                          </p>"
           />
           <HelpModal

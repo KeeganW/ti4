@@ -5180,4 +5180,15 @@ for (const wormhole in WORMHOLES) {
     .filter((id) => !tileData.all[id].special);
 }
 
+for (const trait in PLANET_TRAITS) {
+  if (PLANET_TRAITS[trait] === PLANET_TRAITS.NONE) continue;
+  tileData[`${PLANET_TRAITS[trait]}Tiles`] = Object.keys(tileData.all).filter(
+    (id) =>
+      !tileData.all[id].special &&
+      tileData.all[id].planets.some(
+        (planet) => planet.trait === PLANET_TRAITS[trait],
+      ),
+  );
+}
+
 export default tileData;
