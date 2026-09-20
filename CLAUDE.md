@@ -10,7 +10,7 @@ A client-only React web app (Create React App) that generates and edits Twilight
 
 - `npm install` — install dependencies
 - `npm start` — run dev server at `localhost:3000/ti4`
-- `npm test` — run tests via `react-scripts test` (CRA/Jest watch mode). No test files currently exist in the repo.
+- `npm test` — run tests via `react-scripts test` (CRA/Jest watch mode). `CI=true npm test` runs them once and exits. Tests live next to the code they cover (`*.test.js`); coverage is thin, currently just the adjacency helpers and the generator's adjacency post-processing.
 - `npm run build` — production build into `build/`
 - `npm run deploy` — build and publish `build/` to the `gh-pages` branch (publishes the live site)
 

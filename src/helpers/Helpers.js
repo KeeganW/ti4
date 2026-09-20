@@ -43,6 +43,60 @@ const ringCoordinates = (ring) => {
 };
 
 /**
+ * Axial coordinates of every board position out to MAX_RING, in tile-array order, plus the
+ * reverse lookup. Built once on first use — the full board is only a few hundred tiles.
+ */
+let axialByPosition = null;
+let positionByAxial = null;
+
+const buildCoordinateLookups = () => {
+  if (axialByPosition) return;
+  axialByPosition = [[0, 0]];
+  positionByAxial = new Map([["0,0", 0]]);
+  for (let ring = 1; ring <= MAX_RING; ring++) {
+    for (const [q, r] of ringCoordinates(ring)) {
+      positionByAxial.set(`${q},${r}`, axialByPosition.length);
+      axialByPosition.push([q, r]);
+    }
+  }
+};
+
+/**
+ * The six hex directions in the order tile edges are numbered: index 0 is the top edge, counting
+ * clockwise from there. This is the numbering the hyperlane link data in tileData uses (and what
+ * a tile's rotation index is added to), so it has to stay in this order.
+ */
+const EDGE_DIRECTIONS = [
+  [1, 0],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [0, -1],
+  [1, -1],
+];
+
+/**
+ * The board positions sharing each of a position's six edges, indexed by edge direction (0 is the
+ * top edge, counting clockwise). Entries are undefined where the neighbor would fall outside
+ * MAX_RING. Note this is deliberately computed from the hex geometry rather than read out of
+ * adjacencyData.json: that file lists the right neighbors, but only lists them in edge order for
+ * the inner four rings, so it can't be indexed by direction on the bigger boards.
+ * @param {number} position index into the tiles array
+ * @returns {(number|undefined)[]} six neighbor positions, by edge direction
+ */
+export const neighborPositions = (position) => {
+  buildCoordinateLookups();
+  const axial = axialByPosition[position];
+  if (!axial) {
+    return [];
+  }
+  const [q, r] = axial;
+  return EDGE_DIRECTIONS.map(([dq, dr]) =>
+    positionByAxial.get(`${q + dq},${r + dr}`),
+  );
+};
+
+/**
  * Given a tile array length, returns the outermost ring it reaches. Ring cumulative tile counts
  * (including Mecatol Rex) follow `3 * ring * (ring + 1) + 1`, so this walks rings outward until
  * the array length fits.

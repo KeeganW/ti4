@@ -11,7 +11,6 @@ import OptionsControls from "./options/OptionsControls";
 import MapOptions from "./options/MapOptions";
 import tileData, { WORMHOLE_SYMBOLS, EXPANSIONS } from "./data/tileData";
 import factionData from "./data/factionData";
-import adjacencyData from "./data/adjacencyData.json";
 import {
   calculateOffsets,
   MAX_RING,
@@ -19,6 +18,7 @@ import {
   ringForPosition,
   ringForTileCount,
 } from "./helpers/Helpers";
+import { getAdjacentPositions } from "./helpers/Adjacency";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 
 // Distinct colors used to identify each player in the closest-player overlay.
@@ -546,85 +546,6 @@ class App extends React.Component {
   }
 
   /**
-   * A hyperlane tile has no adjacency of its own — per the TI4 rules, any real systems connected through a chain of
-   * hyperlane tiles are directly adjacent to each other (a single hop), no matter how many hyperlane tiles are
-   * strung between them. Given we just entered hyperlanePosition from fromPosition, this chases the printed lines
-   * (through any further chained hyperlane tiles) and returns the real, non-hyperlane systems reachable that way.
-   */
-  getHyperlaneEndpoints(hyperlanePosition, fromPosition, visited) {
-    if (visited.has(hyperlanePosition)) {
-      return [];
-    }
-    visited.add(hyperlanePosition);
-
-    let physicalNeighbors = adjacencyData[hyperlanePosition] || [];
-    let directionIn = physicalNeighbors.indexOf(fromPosition);
-    if (directionIn < 0) {
-      return [];
-    }
-
-    let tileValue = this.state.tiles[hyperlanePosition];
-    let system = this.getTileNumber(tileValue);
-    let currentRotation = Number(String(tileValue).split("-")[1]) || 0;
-    let hyperlaneLinks = (tileData.all[system] || {}).hyperlanes || [];
-
-    let endpoints = [];
-    for (let [start, end] of hyperlaneLinks) {
-      let startDir = (start + currentRotation) % 6;
-      let endDir = (end + currentRotation) % 6;
-      let outDir =
-        startDir === directionIn
-          ? endDir
-          : endDir === directionIn
-            ? startDir
-            : -1;
-      if (outDir < 0) {
-        continue;
-      }
-
-      let outNeighbor = physicalNeighbors[outDir];
-      if (outNeighbor === undefined) {
-        continue;
-      }
-
-      let outSystem = this.getTileNumber(this.state.tiles[outNeighbor]);
-      if (tileData.hyperlanes.indexOf(outSystem) >= 0) {
-        endpoints.push(
-          ...this.getHyperlaneEndpoints(
-            outNeighbor,
-            hyperlanePosition,
-            visited,
-          ),
-        );
-      } else {
-        endpoints.push(outNeighbor);
-      }
-    }
-    return endpoints;
-  }
-
-  /**
-   * Board positions that are one hop away from startPosition, honoring hyperlane rules: a physical neighbor that is
-   * a hyperlane tile is skipped over entirely, connecting straight through to whatever real systems the hyperlane
-   * (or chain of hyperlanes) links to.
-   */
-  getDistanceNeighbors(startPosition) {
-    let physicalNeighbors = adjacencyData[startPosition] || [];
-    let neighbors = [];
-    for (let neighbor of physicalNeighbors) {
-      let neighborSystem = this.getTileNumber(this.state.tiles[neighbor]);
-      if (tileData.hyperlanes.indexOf(neighborSystem) >= 0) {
-        neighbors.push(
-          ...this.getHyperlaneEndpoints(neighbor, startPosition, new Set()),
-        );
-      } else {
-        neighbors.push(neighbor);
-      }
-    }
-    return neighbors;
-  }
-
-  /**
    * Breadth-first search over the board-position adjacency graph, returning the hex distance from startPosition to
    * every other board position.
    */
@@ -634,7 +555,7 @@ class App extends React.Component {
     let queue = [startPosition];
     while (queue.length > 0) {
       let current = queue.shift();
-      for (let neighbor of this.getDistanceNeighbors(current)) {
+      for (let neighbor of getAdjacentPositions(this.state.tiles, current)) {
         if (distances[neighbor] === Infinity) {
           distances[neighbor] = distances[current] + 1;
           queue.push(neighbor);

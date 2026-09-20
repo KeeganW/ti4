@@ -10,6 +10,7 @@ import tileData, {
 } from "../data/tileData";
 import factionData from "../data/factionData";
 import adjacencyData from "../data/adjacencyData.json";
+import { getAdjacentPositions } from "../helpers/Adjacency";
 import HelpModal from "./HelpModal";
 import SetPlayerNameModal from "./SetPlayerNameModal";
 import SetFactionsModal from "./SetFactionsModal";
@@ -1459,7 +1460,9 @@ class MapOptions extends React.Component {
     }
   }
   /**
-   * Check that anomalies and wormholes are not adjacent, and if so swap them with other tiles
+   * Check that anomalies and wormholes are not adjacent, and if so swap them with other tiles.
+   * Adjacency here is the rules definition, so systems joined by a hyperlane count as adjacent
+   * even though they aren't physically touching (see getAdjacentPositions).
    * @param {*} newTiles Array of tiles that are on the map currently
    * @param {*} includedExpansions Array of expansions to include
    */
@@ -1497,7 +1500,7 @@ class MapOptions extends React.Component {
     for (let anomaly of newTileAnomalies) {
       let anomalyTileNumber = newTiles.indexOf(anomaly);
 
-      let adjacentTiles = adjacencyData[anomalyTileNumber];
+      let adjacentTiles = getAdjacentPositions(newTiles, anomalyTileNumber);
       let adjacentAnomalies = [];
 
       // Get a list of all adjacent anomalies to this one
@@ -1532,7 +1535,7 @@ class MapOptions extends React.Component {
       let anomalyTileNumber = newTiles.indexOf(anomaly);
 
       // Double check adjacencies
-      let adjacentTiles = adjacencyData[anomalyTileNumber];
+      let adjacentTiles = getAdjacentPositions(newTiles, anomalyTileNumber);
       let adjacentAnomalies = [];
       // Get a list of all adjacent anomalies to this one
       for (let adjacentTileNumber of adjacentTiles) {
@@ -1584,7 +1587,7 @@ class MapOptions extends React.Component {
           for (let tile of blueTiles) {
             let tileNumber = newTiles.indexOf(tile);
             if (tileNumber >= 0) {
-              let adjacentTiles = adjacencyData[tileNumber];
+              let adjacentTiles = getAdjacentPositions(newTiles, tileNumber);
               let swappable = true;
               for (let adjacentTile of adjacentTiles) {
                 if (
@@ -1642,7 +1645,10 @@ class MapOptions extends React.Component {
           for (let blankRed of blankReds) {
             let blankRedTileNumber = newTiles.indexOf(blankRed);
             if (blankRedTileNumber >= 0) {
-              let adjacentTiles = adjacencyData[blankRedTileNumber];
+              let adjacentTiles = getAdjacentPositions(
+                newTiles,
+                blankRedTileNumber,
+              );
               let swappable = true;
               for (let adjacentTile of adjacentTiles) {
                 if (
@@ -1681,7 +1687,10 @@ class MapOptions extends React.Component {
           tileData.all[womrhole].planets.length === 0
         ) {
           // Wormhole exists on the board, and is blank. Check if it is adjacent to another wormhole
-          let adjacentTileNumbers = adjacencyData[wormholeTileNumber];
+          let adjacentTileNumbers = getAdjacentPositions(
+            newTiles,
+            wormholeTileNumber,
+          );
           let adjacentWormhole = false;
           for (let adjacentTileNumber of adjacentTileNumbers) {
             if (allWormholesOfType.indexOf(newTiles[adjacentTileNumber]) >= 0) {
@@ -1702,7 +1711,10 @@ class MapOptions extends React.Component {
             for (let blankRed of blankReds) {
               let blankRedTileNumber = newTiles.indexOf(blankRed);
               if (blankRedTileNumber >= 0) {
-                let adjacentTilesNumbers = adjacencyData[blankRedTileNumber];
+                let adjacentTilesNumbers = getAdjacentPositions(
+                  newTiles,
+                  blankRedTileNumber,
+                );
                 let swappable = true;
                 for (let adjacentTileNumber of adjacentTilesNumbers) {
                   if (
