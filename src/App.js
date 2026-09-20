@@ -1057,7 +1057,14 @@ class App extends React.Component {
    * rotated once that much of the tile array is actually present.
    */
   rotateHexGrid(tilesOverride = []) {
-    const source = (index) => tilesOverride[index] ?? this.state.tiles[index];
+    // Rotate whichever board we were handed. Falling back to `this.state.tiles` on a
+    // per-index basis would mix a partially rotated board with the original one, which
+    // duplicated tiles on multi-step (counter-clockwise) rotations of boards whose tile
+    // array does not end on a ring boundary, e.g. 2 and 3 player maps (issue #131).
+    const tiles = tilesOverride.length > 0 ? tilesOverride : this.state.tiles;
+
+    // Positions past the end of a trimmed tile array are simply empty.
+    const source = (index) => tiles[index] ?? -1;
 
     let rotatedTileArray = [source(0)];
 
@@ -1067,7 +1074,7 @@ class App extends React.Component {
 
       // Rings 1-3 make up the smallest board and are always rotated; larger rings are only
       // rotated once the tile array actually extends into them.
-      if (ring > 3 && this.state.tiles.length <= ringStart) {
+      if (ring > 3 && tiles.length <= ringStart) {
         break;
       }
 
@@ -1077,21 +1084,6 @@ class App extends React.Component {
       }
 
       ringStart += ringSize;
-    }
-
-    // Issue #131: remove duplication from the list.
-    // Duplicates can occur during small map sizes, which leads to invalid maps.
-    for (let i = 0; i < rotatedTileArray.length; i++) {
-      for (let j = i + 1; j < rotatedTileArray.length; j++) {
-        if (
-          rotatedTileArray[i] &&
-          rotatedTileArray[j] &&
-          rotatedTileArray[i].toString().split("-")[0] ===
-            rotatedTileArray[j].toString().split("-")[0]
-        ) {
-          rotatedTileArray[j] = -1;
-        }
-      }
     }
 
     return rotatedTileArray;
