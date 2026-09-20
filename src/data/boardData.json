@@ -66,6 +66,85 @@
           [32, "85A", 2],
           [36, "85A", 2]
         ]
+      },
+      "warp": {
+        "description": "The 5 player warp board scaled down to 3 players, with the three playerless corners sealed off by hyperlanes.",
+        "source": "Marquize-sys",
+        "home_worlds": [19, 25, 31],
+        "primary_tiles": [7, 11, 15],
+        "secondary_tiles": [5, 3, 1, 9, 13, 17],
+        "tertiary_tiles": [20, 24, 26, 30, 32, 36],
+        "hyperlane_tiles": [
+          [2, "85A", 4],
+          [4, "85A", 0],
+          [6, "85A", 2],
+          [8, "87A", 0],
+          [10, "87A", 4],
+          [12, "87A", 2],
+          [14, "87A", 0],
+          [16, "87A", 4],
+          [18, "87A", 2],
+          [21, "83A", 1],
+          [22, "85A", 4],
+          [23, "83A", 2],
+          [27, "83A", 0],
+          [28, "85A", 0],
+          [29, "83A", 1],
+          [33, "83A", 2],
+          [34, "85A", 2],
+          [35, "83A", 0]
+        ],
+        "overrideRatios": {
+          "blueTileRatio": 3,
+          "redTileRatio": 2
+        }
+      },
+      "large warp": {
+        "description": "A four ring warp board for 3 players, with the playerless corners sealed off by hyperlanes. Needs Prophecy of Kings to fill.",
+        "source": "Marquize-sys",
+        "home_worlds": [37, 45, 53],
+        "primary_tiles": [19, 25, 31, 7, 11, 15],
+        "secondary_tiles": [38, 60, 44, 46, 52, 54],
+        "tertiary_tiles": [
+          1, 3, 5, 9, 13, 17, 20, 24, 26, 30, 32, 36, 41, 49, 57
+        ],
+        "hyperlane_tiles": [
+          [2, "85A", 4],
+          [4, "86A", 0],
+          [6, "85A", 2],
+          [8, "88A", 4],
+          [10, "88A", 2],
+          [12, "87A", 2],
+          [14, "87A", 0],
+          [16, "88A", 2],
+          [18, "88A", 0],
+          [21, "84A", 0],
+          [22, "89A", 5],
+          [23, "84A", 1],
+          [27, "83A", 0],
+          [28, "89A", 1],
+          [29, "84A", 0],
+          [33, "84A", 1],
+          [34, "89A", 1],
+          [35, "84A", 5],
+          [39, "87B", 2],
+          [40, "83A", 1],
+          [42, "83A", 5],
+          [43, "89B", 0],
+          [47, "87B", 4],
+          [48, "84A", 2],
+          [50, "83A", 4],
+          [51, "89B", 2],
+          [55, "87B", 0],
+          [56, "84A", 1],
+          [58, "83A", 0],
+          [59, "89B", 4]
+        ],
+        "requiresPok": true,
+        "overrideRatios": {
+          "blueTileRatio": 2,
+          "redTileRatio": 1
+        }
       }
     },
     "4": {
@@ -146,6 +225,66 @@
           [25, "85A", 5],
           [34, "86A", 2]
         ]
+      },
+      "corner warp": {
+        "description": "The 5 player warp board scaled down to 4 players, with the two playerless corners sealed off by hyperlanes.",
+        "source": "Marquize-sys",
+        "home_worlds": [22, 25, 31, 34],
+        "primary_tiles": [9, 11, 15, 17],
+        "secondary_tiles": [6, 5, 3, 2, 7, 10, 13, 16],
+        "tertiary_tiles": [21, 23, 24, 26, 30, 32, 33, 35],
+        "hyperlane_tiles": [
+          [1, "86A", 3],
+          [4, "86A", 0],
+          [8, "88A", 1],
+          [12, "88A", 0],
+          [14, "87A", 0],
+          [18, "87A", 5],
+          [19, "85A", 3],
+          [20, "84A", 0],
+          [27, "83A", 0],
+          [28, "85A", 0],
+          [29, "84A", 0],
+          [36, "83A", 0]
+        ],
+        "overrideRatios": {
+          "blueTileRatio": 7,
+          "redTileRatio": 3
+        }
+      },
+      "large warp": {
+        "description": "A four ring warp board for 4 players, with the playerless corners sealed off by hyperlanes. Needs Prophecy of Kings to fill.",
+        "source": "Marquize-sys",
+        "home_worlds": [41, 45, 53, 57],
+        "primary_tiles": [22, 25, 31, 34, 9, 11, 15, 17],
+        "secondary_tiles": [40, 42, 44, 46, 52, 54, 56, 58],
+        "tertiary_tiles": [
+          2, 3, 5, 6, 7, 10, 13, 16, 21, 23, 24, 26, 30, 32, 33, 35, 37, 43, 49,
+          55
+        ],
+        "hyperlane_tiles": [
+          [1, "86A", 3],
+          [4, "86A", 0],
+          [8, "87A", 3],
+          [12, "87A", 2],
+          [14, "87A", 0],
+          [18, "87A", 5],
+          [19, "89A", 0],
+          [20, "84A", 0],
+          [27, "84A", 2],
+          [28, "89A", 1],
+          [29, "84A", 0],
+          [36, "84A", 2],
+          [38, "84A", 0],
+          [39, "89B", 5],
+          [47, "87B", 4],
+          [48, "83A", 0],
+          [50, "84A", 0],
+          [51, "89B", 2],
+          [59, "87B", 1],
+          [60, "83A", 0]
+        ],
+        "requiresPok": true
       }
     },
     "5": {
@@ -175,7 +314,10 @@
           [28, "85A", 0],
           [29, "84A", 0]
         ],
-        "overrideRatios": { "blueTileRatio": 3, "redTileRatio": 2 }
+        "overrideRatios": {
+          "blueTileRatio": 3,
+          "redTileRatio": 2
+        }
       },
       "diamond": {
         "description": "A slightly smaller map than normal, which focuses on being closer to Mecatol Rex.",
@@ -220,6 +362,30 @@
         ],
         "tertiary_tiles": [1, 12, 7, 14, 19],
         "hyperlane_tiles": []
+      },
+      "large warp": {
+        "description": "A four ring version of the 5 player warp board, using hyperlanes to keep the slices even. Needs Prophecy of Kings to fill.",
+        "source": "Marquize-sys",
+        "home_worlds": [37, 41, 45, 53, 57],
+        "primary_tiles": [19, 22, 25, 31, 34, 7, 9, 11, 15, 17],
+        "secondary_tiles": [38, 60, 40, 42, 44, 46, 52, 54, 56, 58],
+        "tertiary_tiles": [
+          1, 2, 3, 5, 6, 8, 10, 13, 16, 18, 20, 21, 23, 24, 26, 30, 32, 33, 35,
+          36, 39, 43, 49, 55, 59
+        ],
+        "hyperlane_tiles": [
+          [4, "86A", 0],
+          [12, "87A", 2],
+          [14, "87A", 0],
+          [27, "83A", 0],
+          [28, "89A", 1],
+          [29, "84A", 0],
+          [47, "87B", 4],
+          [48, "84A", 2],
+          [50, "83A", 4],
+          [51, "89B", 2]
+        ],
+        "requiresPok": true
       }
     },
     "6": {
@@ -244,6 +410,7 @@
       "large": {
         "description": "The large version using the expansion tiles.",
         "source": "Game Rules",
+        "requiresPok": true,
         "home_worlds": [37, 41, 45, 49, 53, 57],
         "primary_tiles": [19, 22, 25, 28, 31, 34, 17, 15, 13, 11, 9, 7],
         "secondary_tiles": [60, 40, 44, 48, 52, 56, 58, 54, 50, 46, 42, 38],
