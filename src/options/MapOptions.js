@@ -21,20 +21,28 @@ const expansionCheck = (includedExpansions) => (id) =>
   (!tileData.asyncLanes.includes(id) || includedExpansions[EXPANSIONS.Async]) &&
   (!tileData.te.includes(id) || includedExpansions[EXPANSIONS.TE]);
 
+const pokFreeBoardStyles = (playerCount) =>
+  Object.keys(boardData.styles[playerCount]).filter(
+    (style) => !boardData.styles[playerCount][style].requiresPok,
+  );
+
 class MapOptions extends React.Component {
   constructor(props) {
     super(props);
     const startingValues = {
       numberOfPlayers: [2, 3, 4, 5, 6],
       pokNumberOfPlayers: [7, 8],
+      // Styles flagged "requiresPok" lean on tiles that only exist in Prophecy
+      // of Kings (the big four ring boards can't be filled from the base pool),
+      // so they're only offered once that expansion is on. Keep new styles
+      // appended to the end of their player count in boardData.json: shared
+      // links encode the board style as its index in these lists.
       boardStyles: {
-        2: Object.keys(boardData.styles["2"]).map((key) => key),
-        3: Object.keys(boardData.styles["3"]).map((key) => key),
-        4: Object.keys(boardData.styles["4"]).map((key) => key),
-        5: Object.keys(boardData.styles["5"]).map((key) => key),
-        6: Object.keys(boardData.styles["6"])
-          .map((key) => (key === "large" ? null : key))
-          .filter((x) => x),
+        2: pokFreeBoardStyles("2"),
+        3: pokFreeBoardStyles("3"),
+        4: pokFreeBoardStyles("4"),
+        5: pokFreeBoardStyles("5"),
+        6: pokFreeBoardStyles("6"),
       },
       boardStylesPok: {
         2: Object.keys(boardData.styles["2"]).map((key) => key),
