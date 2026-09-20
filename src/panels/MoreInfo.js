@@ -16,6 +16,12 @@ import traitCultural from "./icons/trait-cultural.png";
 import traitHazardous from "./icons/trait-hazardous.png";
 import traitIndustrial from "./icons/trait-industrial.png";
 
+// Optimal values can land on a half when a planet's resources and influence
+// are tied, so only show a decimal when there actually is one.
+function formatOptimal(value) {
+  return Number.isInteger(value) ? value.toString() : value.toFixed(1);
+}
+
 class MoreInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -32,6 +38,8 @@ class MoreInfo extends React.Component {
     let planets = 0;
     let resources = 0;
     let influence = 0;
+    let optimalResources = 0;
+    let optimalInfluence = 0;
     let wormholes = [];
     let specialties = {
       biotic: 0,
@@ -90,6 +98,16 @@ class MoreInfo extends React.Component {
           planets += 1;
           resources += planet.resources;
           influence += planet.influence;
+          // Optimal values, as used by Milty Draft: a planet only contributes
+          // whichever of its values is higher, splitting evenly on a tie.
+          if (planet.resources > planet.influence) {
+            optimalResources += planet.resources;
+          } else if (planet.influence > planet.resources) {
+            optimalInfluence += planet.influence;
+          } else {
+            optimalResources += planet.resources / 2;
+            optimalInfluence += planet.influence / 2;
+          }
           let planetSpecialties = [].concat(planet.specialty);
           for (let specialty of planetSpecialties) {
             if (specialty in specialties) {
@@ -115,6 +133,8 @@ class MoreInfo extends React.Component {
       planets: planets,
       resources: resources,
       influence: influence,
+      optimalResources: optimalResources,
+      optimalInfluence: optimalInfluence,
       specialties: specialties,
       traits: traits,
       wormholes: wormholes,
@@ -147,6 +167,17 @@ class MoreInfo extends React.Component {
             </td>
             <td>{adjacentInfo.resources}</td>
             <td>{adjacentInfo.influence}</td>
+            <td
+              title={
+                "Optimal total: " +
+                formatOptimal(
+                  adjacentInfo.optimalResources + adjacentInfo.optimalInfluence,
+                )
+              }
+            >
+              {formatOptimal(adjacentInfo.optimalResources)}/
+              {formatOptimal(adjacentInfo.optimalInfluence)}
+            </td>
             <td>
               <span className={"d-flex"}>
                 {[...Array(adjacentInfo.traits.cultural)].map((e, i) => (
@@ -259,6 +290,14 @@ class MoreInfo extends React.Component {
                 </th>
                 <th scope="col">
                   <img className={"icon"} src={influence} alt={"Inf."} />
+                </th>
+                <th scope="col" title="Optimal resources / influence">
+                  <span className={"d-flex"}>
+                    <span>Opt.</span>
+                    <img className={"icon"} src={resource} alt={"Opt. Res."} />
+                    <span>/</span>
+                    <img className={"icon"} src={influence} alt={"Opt. Inf."} />
+                  </span>
                 </th>
                 <th scope="col">
                   <img className={"icon"} src={planet} alt={"Planets"} />
