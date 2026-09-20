@@ -68,8 +68,8 @@
         ]
       },
       "warp": {
-        "description": "The 5 player warp board scaled down to 3 players, with the three playerless corners sealed off by hyperlanes.",
-        "source": "Marquize-sys",
+        "description": "The Trident, a 5 player warp board scaled down to 3. Warp zones fill the three playerless corners, each wrapping around one isolated system that only hyperlanes reach, so the players sit close together and Mecatol Rex has just three neighbors.",
+        "source": "Skootur",
         "home_worlds": [19, 25, 31],
         "primary_tiles": [7, 11, 15],
         "secondary_tiles": [5, 3, 1, 9, 13, 17],
@@ -95,8 +95,8 @@
           [35, "83A", 0]
         ],
         "overrideRatios": {
-          "blueTileRatio": 3,
-          "redTileRatio": 2
+          "blueTileRatio": 2,
+          "redTileRatio": 1
         }
       },
       "large warp": {
