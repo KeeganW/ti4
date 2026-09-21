@@ -122,6 +122,52 @@ h5 {
 #extraTiles {
   color: white;
 }
+#extraTilesSearch {
+  padding: 0 var(--scroll-bar-distance);
+}
+.help-content ul {
+  padding-left: 20px;
+}
+.help-content li {
+  margin-bottom: 4px;
+}
+.help-content .alert {
+  margin-bottom: 1rem;
+}
+.help-quote {
+  margin-bottom: 1rem;
+  padding-left: 12px;
+  border-left: 3px solid var(--secondary-color);
+  font-style: italic;
+  color: #555;
+}
+.extra-no-results {
+  color: black;
+}
+.extra-section {
+  margin-bottom: 10px;
+}
+.extra-section-header {
+  display: block;
+  width: 100%;
+  text-align: left;
+  color: white;
+  background-color: var(--secondary-color);
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.extra-section-header:hover {
+  color: var(--hover-color);
+}
+.extra-section-caret {
+  display: inline-block;
+  width: 16px;
+}
 #moreInfoContainer {
   color: black;
   position: fixed;

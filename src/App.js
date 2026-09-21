@@ -859,7 +859,8 @@ class App extends React.Component {
       (!tileData.sun.includes(id) || includedExpansions[EXPANSIONS.AS]) &&
       (!tileData.asyncLanes.includes(id) ||
         includedExpansions[EXPANSIONS.Async]) &&
-      (!tileData.te.includes(id) || includedExpansions[EXPANSIONS.TE]);
+      (!tileData.te.includes(id) || includedExpansions[EXPANSIONS.TE]) &&
+      (!tileData.ds.includes(id) || includedExpansions[EXPANSIONS.DS]);
 
     systemNumbers = systemNumbers
       .concat(tileData.blue)
@@ -889,6 +890,17 @@ class App extends React.Component {
         }
       }
     }
+
+    // Hide the headers of any section in the extra tiles panel that has no visible tiles left
+    $(".extra-section").each(function () {
+      const hasVisibleTile =
+        $(this)
+          .find("img.tile")
+          .filter(function () {
+            return this.style.display !== "none";
+          }).length > 0;
+      $(this).toggleClass("d-none", !hasVisibleTile);
+    });
   }
 
   /**
@@ -1609,6 +1621,7 @@ class App extends React.Component {
           customMapBuilding={this.state.customMapBuilding}
 
           updateTiles={this.updateTiles}
+          showExtraTiles={this.showExtraTiles}
           toggleShowAllExtraTiles={this.toggleShowAllExtraTiles}
           toggleCustomMapBuilding={this.toggleCustomMapBuilding}
           unsetAllTiles={this.unsetAllTiles}

@@ -9,7 +9,10 @@ class HelpModal extends React.Component {
           <Modal.Title>{this.props.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div dangerouslySetInnerHTML={{ __html: this.props.content }} />
+          <div
+            className="help-content"
+            dangerouslySetInnerHTML={{ __html: this.props.content }}
+          />
         </Modal.Body>
       </Modal>
     );

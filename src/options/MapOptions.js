@@ -27,6 +27,14 @@ const pokFreeBoardStyles = (playerCount) =>
     (style) => !boardData.styles[playerCount][style].requiresPok,
   );
 
+const IP_POLICY_LINK = `<a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf" target="_blank" rel="noreferrer">Asmodee guidelines on community usage of TI4 intellectual property</a>`;
+
+/**
+ * A link to the reference document for a set of fan-made content, shown at the bottom of its help modal
+ */
+const referenceLink = (url) =>
+  `<p class="mb-0"><a href="${url}" target="_blank" rel="noreferrer">Reference document for this content</a></p>`;
+
 class MapOptions extends React.Component {
   constructor(props) {
     super(props);
@@ -2654,203 +2662,250 @@ class MapOptions extends React.Component {
             key={"help-fan-content"}
             visible={this.state.fanContentHelp}
             hideModal={this.toggleFanContentHelp}
-            title={"About Fanmade Content for Twilight Imperium"}
-            content={`<p>
-                        WARNING: Highly Experimental content ahead. Fan made content is subject to change and does not guarentee the same balance and quality as TI4 and the POK expansion.
-                        <br>
-                        <br>
-                        Over the past however many years, some fans have created additional content for the game that has become relatively popular. This option allows you to add some of the more well-known fan system tiles during map generation.
-                        <br>
-                        <br>
-                        Fan content featured here is created to be compliant with the <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>. 
-                        </p>`}
+            title={"About Fan-Made Content"}
+            content={`<p class="alert alert-warning">
+                        Highly experimental content ahead. Fan-made content is subject to change, and does not
+                        guarantee the same balance and quality as TI4 and its official expansions.
+                      </p>
+                      <p>
+                        Over the years, some fans have created additional content for the game that has become
+                        relatively popular. This option lets you add some of the more well-known fan system tiles
+                        during map generation.
+                      </p>
+                      <p class="mb-0">
+                        Fan content featured here is created to be compliant with the ${IP_POLICY_LINK}.
+                      </p>`}
           />
           <HelpModal
             key={"help-uncharted-space"}
             visible={this.state.unchartedSpaceHelp}
             hideModal={this.toggleUnchartedSpaceHelp}
-            title={"About Fanmade Content for Twilight Imperium"}
-            content={`<p>
-                        "A fan-made expansion for Twilight Imperium: Fourth Edition from the team responsible for Discordant Stars. The new content in this pack is intended to expand the variety of available system tiles, exploration effects, relics, and action cards, while preserving official game balance. This project has endeavored to fully comply with <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>."
-                        <br>
-                        <br>
-                        <a href="https://docs.google.com/document/d/10sYWiwVNvdOwDMpvHlbsx4athKwgeTc8usWFMV3Aaas">Reference document for this content</a>
-                        <br>
-                        <br>
-                        Obviously only the new system tiles are relevant for this tool. This will add an additional 24 system tiles, including 5 new legendary planets, some additional empty systems and anomalies to even out system distriputions, and one gamma wormhole inside a gravity rift.
-                         </p>`}
+            title={"About Uncharted Space"}
+            content={`<blockquote class="help-quote">
+                        A fan-made expansion for Twilight Imperium: Fourth Edition from the team responsible for
+                        Discordant Stars. The new content in this pack is intended to expand the variety of available
+                        system tiles, exploration effects, relics, and action cards, while preserving official game
+                        balance. This project has endeavored to fully comply with the ${IP_POLICY_LINK}.
+                      </blockquote>
+                      <p>
+                        Only the new system tiles are relevant for this tool. This adds 24 system tiles, including
+                        5 new legendary planets, some additional empty systems and anomalies to even out system
+                        distributions, and one gamma wormhole inside a gravity rift.
+                      </p>
+                      ${referenceLink(
+                        "https://docs.google.com/document/d/10sYWiwVNvdOwDMpvHlbsx4athKwgeTc8usWFMV3Aaas",
+                      )}`}
           />
           <HelpModal
             key={"help-discordant-stars"}
             visible={this.state.discordantStarsHelp}
             hideModal={this.toggleDiscordantStarsHelp}
-            title={"About Fanmade Content for Twilight Imperium"}
-            content={`<p>
-                         "A fan-made expansion for Twilight Imperium: Fourth Edition that adds 34 additional factions designed by & for the Twilight Imperium community. This project has endeavored to fully comply with <a href="https://images-cdn.fantasyflightgames.com/filer_public/fa/b1/fab15a15-94a6-404c-ab86-6a3b0e77a7a0/ip_policy_031419_final_v21.pdf">Asmodee guidelines on community usage of TI4 Intellectual property</a>."
-                         <br>
-                         <br>
-                         <a href="https://docs.google.com/document/d/1214N4Py1NqvkQzFN5YULKiR7rmn1qpf4OdFqb8_vQUg">Reference document for this content</a>
-                         <br>
-                         <br>
-                         This option will only matter if you choose to pick factions for players. This will add these factions to the pool of random faction, include their home system in the graphics, and influence faction anomalies.
-                         </p>`}
+            title={"About Discordant Stars"}
+            content={`<blockquote class="help-quote">
+                        A fan-made expansion for Twilight Imperium: Fourth Edition that adds 34 additional factions
+                        designed by and for the Twilight Imperium community. This project has endeavored to fully
+                        comply with the ${IP_POLICY_LINK}.
+                      </blockquote>
+                      <p>
+                        This option only matters if you choose to pick factions for players. It adds these factions
+                        to the pool of random factions, includes their home systems in the graphics, and influences
+                        faction anomalies.
+                      </p>
+                      ${referenceLink(
+                        "https://docs.google.com/document/d/1214N4Py1NqvkQzFN5YULKiR7rmn1qpf4OdFqb8_vQUg",
+                      )}`}
           />
           <HelpModal
             key={"help-ascendent-sun"}
             visible={this.state.ascendentSunHelp}
             hideModal={this.toggleAscendentSunHelp}
-            title={"About Fanmade Content for Twilight Imperium"}
+            title={"About Ascendant Sun"}
             content={`<p>
-                         "Eronous Tiles" is a set of 130+ tiles created by discord user and artist Eronous. These tiles were intially created for the TI4 async bot as a part of large community games that required very large maps.
-                         <br>
-                         <br>
-                         <a href="https://docs.google.com/spreadsheets/d/1C1a8uc_DT21aPUUF5oQWNb0y9QYZHCVsE5rarEjB8kA">Reference document for this content</a>
-                         <br>
-                         <br>
-                         This set of tiles includes 110 new planets, including 12 legendary planets, 6 new wormhole types, and 2 planets inside supernovas!
-                         </p>`}
+                        "Eronous Tiles" is a set of 130+ tiles created by Discord user and artist Eronous. They were
+                        initially made for the TI4 async bot, as part of large community games that required very
+                        large maps.
+                      </p>
+                      <p>
+                        This set includes 110 new planets, 12 of which are legendary, 6 new wormhole types, and
+                        2 planets inside supernovas.
+                      </p>
+                      ${referenceLink(
+                        "https://docs.google.com/spreadsheets/d/1C1a8uc_DT21aPUUF5oQWNb0y9QYZHCVsE5rarEjB8kA",
+                      )}`}
           />
           <HelpModal
             key={"help-fan-hyperlanes"}
             visible={this.state.fanHyperlanesHelp}
             hideModal={this.toggleFanHyperlanesHelp}
-            title={"About Fanmade Content for Twilight Imperium"}
-            content={`<p>
-                         These are a set of hyperlane tiles that are a part of the TI4 async bot but aren't necessarialy part of any particular fan expansion. Feel free to use them however you imagine!
-                         </p>`}
+            title={"About Async Hyperlanes"}
+            content={`<p class="mb-0">
+                        These are a set of hyperlane tiles that are part of the TI4 async bot, but aren't necessarily
+                        part of any particular fan expansion. Feel free to use them however you imagine.
+                      </p>`}
           />
           <HelpModal
             key={"help-board"}
             visible={this.state.boardStyleHelp}
             hideModal={this.toggleBoardStyleHelp}
             title={"About Board Style"}
-            content="<p>
-                         Board style changes how the tiles are actually laid out on a newly generated map.
-                         <br>
-                         <br>
-                         Changing this would cause you to expect different hex layouts, such as different patterns of tiles, usage of hyperlanes, or unorthodox placement of home worlds.
-                         </p>"
+            content={`<p>
+                        Board style changes how the tiles are actually laid out on a newly generated map.
+                      </p>
+                      <p class="mb-0">
+                        Changing this gives you different hex layouts, such as different patterns of tiles, usage of
+                        hyperlanes, or unorthodox placement of home worlds.
+                      </p>`}
           />
           <HelpModal
             key={"help-placement"}
             visible={this.state.placementStyleHelp}
             hideModal={this.togglePlacementStyleHelp}
             title={"About Placement Style"}
-            content="<p>
-                         Placement style dictates where important tiles are placed. Most revolve around having at least one tile near the home system with good resources.
-                         <br>
-                         <br>
-                         <br><b>Slice:</b> Places tiles like a normal player would. Prioritizes a good pathway to mecatol, and filling in the area around the home system with good tiles.
-                         <br><b>Initial:</b> Only guarantees a good tile right in front of the home system (on the way to mecatol). Everything else is random.
-                         <br><b>Home:</b> Prioritizes all of the adjacent tiles to the home system and everything else is random.
-                         <br><b>Random:</b> Shuffles the priority levels completely. No favoritism to tiles near the home system.
-                         </p>"
+            content={`<p>
+                        Placement style dictates where important tiles are placed. Most revolve around having at
+                        least one tile near the home system with good resources.
+                      </p>
+                      <ul class="mb-0">
+                        <li><b>Slice:</b> Places tiles like a normal player would. Prioritizes a good pathway to
+                        Mecatol, and filling in the area around the home system with good tiles.</li>
+                        <li><b>Initial:</b> Only guarantees a good tile right in front of the home system (on the way
+                        to Mecatol). Everything else is random.</li>
+                        <li><b>Home:</b> Prioritizes all of the tiles adjacent to the home system, and everything
+                        else is random.</li>
+                        <li><b>Random:</b> Shuffles the priority levels completely. No favoritism to tiles near the
+                        home system.</li>
+                      </ul>`}
           />
           <HelpModal
             key={"help-pick"}
             visible={this.state.pickStyleHelp}
             hideModal={this.togglePickStyleHelp}
             title={"About Pick Style"}
-            content='<p>
-                         Pick Style is used to determine how tiles are weighted for when they are placed on the board. A higher weighted tile means that the hex is more important, and so (depending on the placement style) it is put closer to home worlds to facilitate available assets.
-                         <br>
-                         <br><b>Balanced:</b> A custom weight which favors resources and planet count more than anomalies. This more accurately factors in tech specialties and influence as trade-offs to the "Resource" pick.
-                         <br><b>Resource:</b> Tiles are ordered primarily by their resource values. Higher resource planets are more coveted, and so are more important.
-                         <br><b>Influence:</b> Similar to "Resource", tiles are ordered primarily by their influence values.
-                         <br><b>Random:</b> Tiles are completely randomly ordered. Expect chaotic and unbalanced maps.
-                         <br><b>Custom:</b> Enter your own values in for balancing tradeoffs between various tile qualities.
-                         </p>'
+            content={`<p>
+                        Pick style determines how tiles are weighted when they are placed on the board. A higher
+                        weighted tile means that the hex is more important, and so (depending on the placement style)
+                        it is put closer to home worlds to facilitate available assets.
+                      </p>
+                      <ul class="mb-0">
+                        <li><b>Balanced:</b> A custom weight which favors resources and planet count more than
+                        anomalies. This more accurately factors in tech specialties and influence as trade-offs to
+                        the "Resource" pick.</li>
+                        <li><b>Resource:</b> Tiles are ordered primarily by their resource values. Higher resource
+                        planets are more coveted, and so are more important.</li>
+                        <li><b>Influence:</b> Similar to "Resource", but tiles are ordered primarily by their
+                        influence values.</li>
+                        <li><b>Random:</b> Tiles are completely randomly ordered. Expect chaotic and unbalanced
+                        maps.</li>
+                        <li><b>Custom:</b> Enter your own values for balancing trade-offs between various tile
+                        qualities.</li>
+                      </ul>`}
           />
           <HelpModal
             key={"help-factions"}
             visible={this.state.pickFactionsHelp}
             hideModal={this.togglePickFactionsHelp}
             title={"About Picking Factions"}
-            content="<p>
-                         Automatically assigns factions to the players on the boards.
-                         <br>
-                         <br>
-                         From the set of factions, turning this on will assign every player a random faction (designated by assigning them the homeworld tile of that faction). You should pick which player sits at a certain position before turning this on.
-                         </p>"
+            content={`<p>
+                        Automatically assigns factions to the players on the board.
+                      </p>
+                      <p class="mb-0">
+                        From the set of factions, turning this on assigns every player a random faction (designated by
+                        giving them the home world tile of that faction). You should pick which player sits at a
+                        certain position before turning this on.
+                      </p>`}
           />
           <HelpModal
             key={"help-multiple"}
             visible={this.state.pickMultipleFactionsHelp}
             hideModal={this.togglePickMultipleFactionsHelp}
             title={"About Picking Multiple Factions"}
-            content="<p>
-                         Divides all the factions evenly up amongst the players in the game (with no overflow), so that they can choose from a selection instead of being specifically assigned one faction.
-                         <br>
-                         <br>
-                         Some groups prefer to have a draft, where every player is given a few factions to pick between. This lets them pick the factions that they want to play, but not have any conflicts with other players about playing a certain faction.
-                         </p>"
+            content={`<p>
+                        Divides all the factions evenly amongst the players in the game (with no overflow), so that
+                        they can choose from a selection instead of being assigned one faction.
+                      </p>
+                      <p class="mb-0">
+                        Some groups prefer to have a draft, where every player is given a few factions to pick
+                        between. This lets them play the faction they want, without conflicting with other players
+                        over a certain faction.
+                      </p>`}
           />
           <HelpModal
             key={"help-priority"}
             visible={this.state.shufflePriorityHelp}
             hideModal={this.toggleShufflePriorityHelp}
             title={"About Shuffling Priority"}
-            content="<p>
-                         Randomizes the priority picks for each picking round.
-                         <br>
-                         <br>
-                         Normally when placing tiles, this tool attempts to place the tiles so player 1 does not always get the best tiles. To do this, it follows the game setup rules and (in a 6 player game) player 1 gets to place tile 1 and 12, while player 6 gets to place tile 6 and 7.
-                         <br>
-                         <br>
-                         Turning this on stops this from happening, and instead completely randomizes the placement order.
-                         </p>"
+            content={`<p>
+                        Randomizes the priority picks for each picking round.
+                      </p>
+                      <p>
+                        Normally when placing tiles, this tool attempts to place them so that player 1 does not always
+                        get the best tiles. To do this, it follows the game setup rules: in a 6 player game, player 1
+                        gets to place tiles 1 and 12, while player 6 places tiles 6 and 7.
+                      </p>
+                      <p class="mb-0">
+                        Turning this on stops that from happening, and instead completely randomizes the placement
+                        order.
+                      </p>`}
           />
           <HelpModal
             key={"help-reverse"}
             visible={this.state.reversePlacementOrderHelp}
             hideModal={this.toggleReversePlacementOrderHelp}
             title={"About Reverse Placement Order"}
-            content="<p>
-                         Reverses which tiles are placed first in placement order.
-                         <br>
-                         <br>
-                         Tiles are normally placed in priority (see randomize priority help). This reverses the order, so that the last picks are first, which generally has the effect of pushing the more valuable tiles towards the center of the galaxy.
-                         </p>"
+            content={`<p>
+                        Reverses which tiles are placed first in placement order.
+                      </p>
+                      <p class="mb-0">
+                        Tiles are normally placed in priority order (see the shuffling priority help). This reverses
+                        that order, so that the last picks come first, which generally has the effect of pushing the
+                        more valuable tiles towards the center of the galaxy.
+                      </p>`}
           />
           <HelpModal
             key={"help-force-wormholes"}
             visible={this.state.forceWormholesHelp}
             hideModal={this.toggleForceWormholesHelp}
             title={"About Forcing Alpha and Beta Wormholes"}
-            content="<p>
-                         Normally, map generation randomly chooses a handful of wormhole types (out of all those eligible) to actually place on the board, which means Alpha and Beta wormholes are not guaranteed to show up, especially when fan-made wormhole types are enabled.
-                         <br>
-                         <br>
-                         Turning this on ensures that a pair of Alpha wormholes and a pair of Beta wormholes are always included in the generated galaxy.
-                         </p>"
+            content={`<p>
+                        Normally, map generation randomly chooses a handful of wormhole types (out of all those
+                        eligible) to place on the board, which means Alpha and Beta wormholes are not guaranteed to
+                        show up, especially when fan-made wormhole types are enabled.
+                      </p>
+                      <p class="mb-0">
+                        Turning this on ensures that a pair of Alpha wormholes and a pair of Beta wormholes are always
+                        included in the generated galaxy.
+                      </p>`}
           />
           <HelpModal
             key={"help-balance-planet-traits"}
             visible={this.state.balancePlanetTraitsHelp}
             hideModal={this.toggleBalancePlanetTraitsHelp}
-            title={"About Balance Planet Traits"}
-            content="<p>
-                         Normally, the mix of Cultural, Industrial, and Hazardous planets on the board is left entirely to chance, which can occasionally leave one trait so scarce that a trait-based objective becomes nearly unscorable for most players.
-                         <br>
-                         <br>
-                         Turning this on tops up whichever trait is most underrepresented after generation, swapping in additional tiles of that trait so all three remain reasonably achievable.
-                         </p>"
+            title={"About Balancing Planet Traits"}
+            content={`<p>
+                        Normally, the mix of Cultural, Industrial, and Hazardous planets on the board is left entirely
+                        to chance, which can occasionally leave one trait so scarce that a trait-based objective
+                        becomes nearly unscorable for most players.
+                      </p>
+                      <p class="mb-0">
+                        Turning this on tops up whichever trait is most underrepresented after generation, swapping in
+                        additional tiles of that trait so that all three remain reasonably achievable.
+                      </p>`}
           />
           <HelpModal
             key={"help-faction-anomalies"}
             visible={this.state.ensureFactionAnomaliesHelp}
             hideModal={this.toggleEnsureFactionAnomaliesHelp}
-            title={"About Ensure Faction Anomalies"}
-            content="<p>
-                         Ensures that the corresponding beneficial anomalies will be present in the galaxy for each faction.
-                         <br>
-                         <ul>
-                             <li>Muatt:  Supernova</li>
-                             <li>Saar:  Asteroid Field</li>
-                             <li>Empyrean:  Nebulae</li>
-                             <li>Vuil'Raith and Nivyn (DS):  Gravity Rift</li>
-                         </ul>
-                         </p>"
+            title={"About Ensuring Faction Anomalies"}
+            content={`<p>
+                        Ensures that the corresponding beneficial anomaly is present in the galaxy for each of these
+                        factions.
+                      </p>
+                      <ul class="mb-0">
+                        <li><b>Muaat:</b> Supernova</li>
+                        <li><b>Saar:</b> Asteroid Field</li>
+                        <li><b>Empyrean:</b> Nebula</li>
+                        <li><b>Vuil'Raith</b> and <b>Nivyn</b> (DS)<b>:</b> Gravity Rift</li>
+                      </ul>`}
           />
 
           <Button type="submit" className="btn btn-primary">
