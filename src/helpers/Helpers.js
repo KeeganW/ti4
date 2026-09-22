@@ -162,3 +162,31 @@ export const calculateOffsets = (width, height, maxRing = MAX_RING) => {
 
   return offsets;
 };
+
+/**
+ * The angle (in degrees, 0 at the top of the board and increasing clockwise) of a board position
+ * as seen from Mecatol Rex. Used to put home systems in seating order — the boards list their
+ * home worlds clockwise starting from the top, and player numbers need to follow that rather than
+ * the order the positions happen to fall in the tile array (on the 7 player warp board, for
+ * example, two of the homes sit in ring 3 and so come before the top home system by index).
+ * Mecatol Rex itself has no angle and is reported as 0.
+ * @param {number} position index into the tiles array
+ * @returns {number} the clockwise angle from the top, in the range [0, 360)
+ */
+export const clockwiseAngleFromTop = (position) => {
+  buildCoordinateLookups();
+  const axial = axialByPosition[position];
+  if (!axial) {
+    return 0;
+  }
+
+  // Same basis calculateOffsets draws with, so the angle matches what's on screen. Tile height is
+  // taken as 1 and tile width as 1 too: only the ratio between the two axes matters here, and the
+  // rendered tiles are close enough to regular that seating order comes out the same either way.
+  const [q, r] = axial;
+  const x = 0.75 * r;
+  const y = -q - 0.5 * r;
+
+  const degrees = (Math.atan2(x, -y) * 180) / Math.PI;
+  return (degrees + 360) % 360;
+};

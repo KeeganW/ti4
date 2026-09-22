@@ -13,6 +13,7 @@ import tileData, { WORMHOLE_SYMBOLS, EXPANSIONS } from "./data/tileData";
 import factionData from "./data/factionData";
 import {
   calculateOffsets,
+  clockwiseAngleFromTop,
   MAX_RING,
   MAX_TILE_COUNT,
   ringForPosition,
@@ -541,6 +542,14 @@ class App extends React.Component {
         (position) => ringForPosition(position) === outermostRing,
       );
     }
+
+    // Player numbers follow the seating order around the table: the home system at the top of the
+    // board is player one, and the rest count clockwise from there. Tile-array order isn't the
+    // same thing - the 7 player warp board, for instance, seats two players in ring 3, whose
+    // positions sort ahead of the home system at the top of ring 4.
+    homePositions.sort(
+      (a, b) => clockwiseAngleFromTop(a) - clockwiseAngleFromTop(b) || a - b,
+    );
 
     return homePositions;
   }
