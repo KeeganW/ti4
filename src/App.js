@@ -869,7 +869,8 @@ class App extends React.Component {
       .filter(expansionCheck(this.state.includedExpansions));
 
     if (this.state.customMapBuilding) {
-      systemNumbers = [-1].concat(systemNumbers.concat(tileData.hyperlanes));
+      // -1 (empty) and 0 (home system placeholder) are only offered while building custom maps
+      systemNumbers = [-1, 0].concat(systemNumbers.concat(tileData.hyperlanes));
     }
 
     for (let systemNumber of systemNumbers) {

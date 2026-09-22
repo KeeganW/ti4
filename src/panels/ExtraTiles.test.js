@@ -66,17 +66,31 @@ test("adds a section for each enabled expansion", () => {
   expect(tileIds()).toContain("3201");
 });
 
-test("adds the empty tile and hyperlane sections while building custom maps", () => {
+test("adds the placeholder and hyperlane sections while building custom maps", () => {
   renderPanel({ customMapBuilding: true });
 
   expect(sectionHeaders()).toEqual([
-    "Empty",
+    "Placeholders",
     "Base Game",
     "Home Worlds",
     "Hyperlanes",
   ]);
   expect(tileIds()).toContain("-1");
+  expect(tileIds()).toContain("0");
   expect(tileIds()).toContain("83A");
+  expect(screen.getByText("Empty")).not.toBeNull();
+  expect(screen.getByText("Home")).not.toBeNull();
+});
+
+test("finds the placeholder tiles by name", () => {
+  renderPanel({ customMapBuilding: true, overlayVisible: true });
+  const search = screen.getByLabelText("Search tiles");
+
+  fireEvent.change(search, { target: { value: "home" } });
+  expect(tileIds()).toEqual(["0"]);
+
+  fireEvent.change(search, { target: { value: "empty" } });
+  expect(tileIds()).toEqual(["-1"]);
 });
 
 test("searches by tile number, planet name, and planet trait", () => {

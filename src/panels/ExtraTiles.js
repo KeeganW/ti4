@@ -41,6 +41,15 @@ function compareSystemNumbers(a, b) {
   return numberA - numberB;
 }
 
+/**
+ * The placeholder tiles have no entry in the tile catalog, so they get their labels from here. "0" is the
+ * home system placeholder the generator leaves where a player's home world goes, and -1 is an empty slot.
+ */
+const PLACEHOLDER_LABELS = {
+  "-1": "Empty",
+  0: "Home",
+};
+
 class ExtraTiles extends React.Component {
   constructor(props) {
     super(props);
@@ -124,7 +133,14 @@ class ExtraTiles extends React.Component {
 
     const id = String(systemNumber);
     if (id === "-1") {
-      return "empty".includes(term);
+      return "empty".includes(term) || "placeholder".includes(term);
+    }
+    if (id === "0") {
+      return (
+        "home".includes(term) ||
+        "homeworld".includes(term) ||
+        "placeholder".includes(term)
+      );
     }
     if (id.toLowerCase().includes(term)) {
       return true;
@@ -198,7 +214,7 @@ class ExtraTiles extends React.Component {
           className={"overlay" + (this.props.overlayVisible ? "" : " d-none")}
           style={this.overlayStyle}
         >
-          {systemNumber === -1 ? "Empty" : systemNumber}
+          {PLACEHOLDER_LABELS[systemNumber] ?? systemNumber}
         </span>
         <img
           id={"extra-" + systemNumber}
@@ -239,7 +255,7 @@ class ExtraTiles extends React.Component {
 
   /**
    * Split the available tiles into the sections shown in the panel: one per expansion, one for home
-   * worlds, and (while building custom maps) the hyperlanes and the empty tile.
+   * worlds, and (while building custom maps) the hyperlanes and the placeholder tiles.
    */
   buildSections() {
     const included = this.props.includedExpansions;
@@ -272,7 +288,11 @@ class ExtraTiles extends React.Component {
     const sections = [];
 
     if (this.props.customMapBuilding) {
-      sections.push({ key: "empty", label: "Empty", tiles: [-1] });
+      sections.push({
+        key: "placeholders",
+        label: "Placeholders",
+        tiles: [-1, 0],
+      });
     }
 
     sections.push(
@@ -442,6 +462,7 @@ class ExtraTiles extends React.Component {
                         <i>gravity-rift</i></li>
                         <li><b>Wormhole:</b> <i>alpha</i>, <i>beta</i>, <i>gamma</i>, <i>delta</i></li>
                         <li><b>Faction:</b> <i>sol</i>, <i>hacan</i>, <i>creuss</i></li>
+                        <li><b>Placeholder:</b> <i>empty</i>, <i>home</i> (custom map building only)</li>
                       </ul>
                       <p class="mb-0">
                         Matches are partial and case insensitive, so <i>neb</i> finds every nebula. Only tiles from
