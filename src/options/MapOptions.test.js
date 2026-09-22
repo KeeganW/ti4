@@ -203,3 +203,41 @@ describe("balanceSlices", () => {
     }
   });
 });
+
+describe("forceAnomalies", () => {
+  const generate = (forceAnomalies, seed) =>
+    mapOptions({
+      currentNumberOfPlayers: 6,
+      currentBoardStyle: "normal",
+      forceAnomalies: forceAnomalies,
+      currentSeed: String(seed),
+      pickFactions: false,
+      ensureFactionAnomalies: false,
+    }).getNewTileSet([], includedExpansions);
+
+  /** The anomaly types present on a board, by their tileData list. */
+  const typesPresent = (tiles) =>
+    ["asteroidFields", "supernovas", "nebulae", "gravityRifts"].filter((type) =>
+      tiles.some((tile) => tileData[type].includes(tile)),
+    );
+
+  it("puts every anomaly type on the board", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      expect(typesPresent(generate(true, seed))).toHaveLength(4);
+    }
+  });
+
+  it("still keeps anomalies off each other", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      expect(adjacentAnomalyPairs(generate(true, seed))).toHaveLength(0);
+    }
+  });
+
+  it("is off by default, where types can go missing", () => {
+    const boards = [];
+    for (let seed = 1; seed <= 10; seed++) {
+      boards.push(typesPresent(generate(false, seed)).length);
+    }
+    expect(Math.min(...boards)).toBeLessThan(4);
+  });
+});

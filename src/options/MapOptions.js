@@ -106,6 +106,7 @@ class MapOptions extends React.Component {
       shuffleBoards: false,
       reversePlacementOrder: false,
       forceWormholes: false,
+      forceAnomalies: false,
       ensureFactionAnomalies: true,
       balancePlanetTraits: false,
       balanceSlices: true,
@@ -126,6 +127,7 @@ class MapOptions extends React.Component {
       shufflePriorityHelp: false,
       reversePlacementOrderHelp: false,
       forceWormholesHelp: false,
+      forceAnomaliesHelp: false,
       ensureFactionAnomaliesHelp: false,
       balancePlanetTraitsHelp: false,
 
@@ -182,6 +184,7 @@ class MapOptions extends React.Component {
     this.toggleReversePlacementOrderHelp =
       this.toggleReversePlacementOrderHelp.bind(this);
     this.toggleForceWormholesHelp = this.toggleForceWormholesHelp.bind(this);
+    this.toggleForceAnomaliesHelp = this.toggleForceAnomaliesHelp.bind(this);
     this.toggleEnsureFactionAnomaliesHelp =
       this.toggleEnsureFactionAnomaliesHelp.bind(this);
     this.toggleBalancePlanetTraitsHelp =
@@ -473,6 +476,7 @@ class MapOptions extends React.Component {
     encodedSettings += this.state.shuffleBoards ? "T" : "F";
     encodedSettings += this.state.reversePlacementOrder ? "T" : "F";
     encodedSettings += this.state.forceWormholes ? "T" : "F";
+    encodedSettings += this.state.forceAnomalies ? "T" : "F";
     encodedSettings += this.state.balancePlanetTraits ? "T" : "F";
     encodedSettings += this.state.balanceSlices ? "T" : "F";
     encodedSettings += this.state.pickFactions ? "T" : "F";
@@ -677,6 +681,10 @@ class MapOptions extends React.Component {
     let forceWormholes = newSettings[currentIndex] === "T";
     currentIndex += 1;
 
+    // Force All Anomaly Types
+    let forceAnomalies = newSettings[currentIndex] === "T";
+    currentIndex += 1;
+
     // Balance Planet Traits
     let balancePlanetTraits = newSettings[currentIndex] === "T";
     currentIndex += 1;
@@ -759,6 +767,7 @@ class MapOptions extends React.Component {
         shuffleBoards: shuffleBoards,
         reversePlacementOrder: reversePlacementOrder,
         forceWormholes: forceWormholes,
+        forceAnomalies: forceAnomalies,
         balancePlanetTraits: balancePlanetTraits,
         balanceSlices: balanceSlices,
         pickFactions: pickFactions,
@@ -1219,8 +1228,10 @@ class MapOptions extends React.Component {
       }
     }
 
-    // These tiles are ensured for factions and may not be replaced
+    // These tiles are ensured for factions or by the forced anomaly types, and may not be
+    // replaced by the adjacency pass later on
     const ensuredAnomalies = [];
+    this.ensuredAnomalies = ensuredAnomalies;
 
     if (this.state.ensureFactionAnomalies && this.state.pickFactions) {
       currentFactions.forEach((faction) => {
@@ -1271,6 +1282,53 @@ class MapOptions extends React.Component {
           }
         }
       });
+    }
+
+    // Force one of every anomaly type onto the board, if enabled
+    if (this.state.forceAnomalies) {
+      const anomalyTypes = [
+        tileData.asteroidFields,
+        tileData.supernovas,
+        tileData.nebulae,
+        tileData.gravityRifts,
+      ];
+      for (const anomalyType of anomalyTypes) {
+        const anomalies = anomalyType.filter(
+          expansionCheck(includedExpansions),
+        );
+
+        // Any tile of the type already in the pool satisfies it, so just protect that one
+        const existing = newSystems.find((system) =>
+          anomalies.includes(system),
+        );
+        if (existing !== undefined) {
+          if (!ensuredAnomalies.includes(existing)) {
+            ensuredAnomalies.push(existing);
+          }
+          continue;
+        }
+
+        const candidates = this.shuffle(
+          anomalies.filter(
+            (tile) => allReds.includes(tile) || allBlues.includes(tile),
+          ),
+        );
+        while (candidates.length > 0) {
+          const tile = candidates.pop();
+          if (allReds.includes(tile)) {
+            if (redsToPlace <= 0) continue;
+            allReds.splice(allReds.indexOf(tile), 1);
+            redsToPlace -= 1;
+          } else {
+            if (bluesToPlace <= 0) continue;
+            allBlues.splice(allBlues.indexOf(tile), 1);
+            bluesToPlace -= 1;
+          }
+          newSystems.push(tile);
+          ensuredAnomalies.push(tile);
+          break;
+        }
+      }
     }
 
     // Force Alpha and Beta wormholes to actually be placed on the board, if enabled
@@ -1504,7 +1562,9 @@ class MapOptions extends React.Component {
    * @param {*} includedExpansions Array of expansions to include
    */
   checkAdjacencies(newTiles, includedExpansions) {
-    //
+    // Anomalies that generation promised would be on the board, so they may be moved but never
+    // swapped out for a tile that was left off it
+    const ensuredAnomalies = this.ensuredAnomalies || [];
 
     // Get all anomalies
     let allTrueAnomalies = tileData.anomaly.filter(
@@ -1613,7 +1673,7 @@ class MapOptions extends React.Component {
           }
         }
         this.shuffle(possibleTiles);
-        if (possibleTiles.length > 0) {
+        if (possibleTiles.length > 0 && !ensuredAnomalies.includes(anomaly)) {
           swapped = true;
           newTiles[anomalyTileNumber] = possibleTiles[0];
         }
@@ -1671,7 +1731,7 @@ class MapOptions extends React.Component {
           }
         }
         this.shuffle(possibleBlanks);
-        if (possibleBlanks.length > 0) {
+        if (possibleBlanks.length > 0 && !ensuredAnomalies.includes(anomaly)) {
           swapped = true;
           newTiles[anomalyTileNumber] = possibleBlanks[0];
         }
@@ -2373,6 +2433,11 @@ class MapOptions extends React.Component {
       forceWormholesHelp: !this.state.forceWormholesHelp,
     });
   }
+  toggleForceAnomaliesHelp(event) {
+    this.setState({
+      forceAnomaliesHelp: !this.state.forceAnomaliesHelp,
+    });
+  }
   toggleEnsureFactionAnomaliesHelp(event) {
     this.setState({
       ensureFactionAnomaliesHelp: !this.state.ensureFactionAnomaliesHelp,
@@ -2817,6 +2882,20 @@ class MapOptions extends React.Component {
                   />
                 </Form.Group>
 
+                <Form.Group className="mb-3 d-flex" controlId="forceAnomalies">
+                  <Form.Check
+                    name="forceAnomalies"
+                    type="checkbox"
+                    checked={this.state.forceAnomalies}
+                    onChange={this.handleInputChange}
+                    label="Force All Anomaly Types"
+                  />
+                  <QuestionCircle
+                    className="icon"
+                    onClick={this.toggleForceAnomaliesHelp}
+                  />
+                </Form.Group>
+
                 <Form.Group
                   className="mb-3 d-flex"
                   controlId="balancePlanetTraits"
@@ -3085,6 +3164,22 @@ class MapOptions extends React.Component {
                       <p class="mb-0">
                         Turning this on ensures that a pair of Alpha wormholes and a pair of Beta wormholes are always
                         included in the generated galaxy.
+                      </p>`}
+          />
+          <HelpModal
+            key={"help-force-anomalies"}
+            visible={this.state.forceAnomaliesHelp}
+            hideModal={this.toggleForceAnomaliesHelp}
+            title={"About Forcing All Anomaly Types"}
+            content={`<p>
+                        Normally, which anomalies show up is left to chance, so a galaxy can easily end up with no
+                        nebula or no gravity rift at all. That is a problem for the factions built around a specific
+                        anomaly, like The Clan of Saar, The Embers of Muaat, The Empyrean and The Vuil'Raith Cabal.
+                      </p>
+                      <p class="mb-0">
+                        Turning this on ensures at least one asteroid field, one supernova, one nebula and one gravity
+                        rift are included in the generated galaxy, whichever tile of that type gets picked. This
+                        applies no matter which factions are in the game, unlike Ensure Faction Anomalies.
                       </p>`}
           />
           <HelpModal

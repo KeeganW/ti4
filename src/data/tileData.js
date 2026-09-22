@@ -5203,7 +5203,7 @@ tileData.asteroidFields = tileData.anomaly.filter((id) =>
   tileData.all[id].anomaly.includes(ANOMALIES.ASTEROID_FIELD),
 );
 tileData.gravityRifts = tileData.anomaly.filter((id) =>
-  tileData.all[id].anomaly.includes(ANOMALIES.ASTEROID_FIELD),
+  tileData.all[id].anomaly.includes(ANOMALIES.GRAVITY_RIFT),
 );
 tileData.nebulae = tileData.anomaly.filter((id) =>
   tileData.all[id].anomaly.includes(ANOMALIES.NEBULA),
