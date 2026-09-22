@@ -1,6 +1,12 @@
 import MapOptions from "./MapOptions";
 import tileData, { EXPANSIONS } from "../data/tileData";
 import { getAdjacentPositions } from "../helpers/Adjacency";
+import {
+  getSliceImbalance,
+  getSliceMap,
+  getSliceStats,
+} from "../helpers/Slices";
+import boardData from "../data/boardData.json";
 
 const includedExpansions = {
   [EXPANSIONS.POK]: true,
@@ -15,9 +21,13 @@ const includedExpansions = {
  * checkAdjacencies only reads props and seeded state, and never touches the DOM, so it can be
  * driven straight off an unmounted instance.
  */
-const mapOptions = () => {
-  const instance = new MapOptions({ includedTiles: [], lockedTiles: [] });
-  instance.state = { ...instance.state, currentSeed: "1234" };
+const mapOptions = (state = {}) => {
+  const instance = new MapOptions({
+    includedTiles: [],
+    lockedTiles: [],
+    excludedTiles: [],
+  });
+  instance.state = { ...instance.state, currentSeed: "1234", ...state };
   return instance;
 };
 
@@ -113,5 +123,83 @@ describe("checkAdjacencies", () => {
     mapOptions().checkAdjacencies(tiles, includedExpansions);
 
     expect(tiles).toEqual(before);
+  });
+});
+
+describe("balanceSlices", () => {
+  /**
+   * Generate a board the way the app does, but without going through setState, so the result can
+   * be measured. balanceSlices is the last thing getNewTileSet does, so toggling it is the only
+   * difference between the two boards a seed produces.
+   */
+  const generate = (players, style, balanceSlices, seed) =>
+    mapOptions({
+      currentNumberOfPlayers: players,
+      currentBoardStyle: style,
+      balanceSlices: balanceSlices,
+      currentSeed: String(seed),
+      pickFactions: false,
+      ensureFactionAnomalies: false,
+    }).getNewTileSet([], includedExpansions);
+
+  const imbalance = (players, style, tiles) =>
+    getSliceImbalance(
+      getSliceStats(
+        tiles,
+        getSliceMap(
+          tiles,
+          boardData.styles[String(players)][style].home_worlds,
+        ),
+      ),
+    );
+
+  const resourceSpread = (players, style, tiles) => {
+    const resources = getSliceStats(
+      tiles,
+      getSliceMap(tiles, boardData.styles[String(players)][style].home_worlds),
+    ).map((slice) => slice.resources);
+    return Math.max(...resources) - Math.min(...resources);
+  };
+
+  it("evens out the slices on the five player warp board", () => {
+    // The board this was written for: five slices dealt by tile ranking routinely came out with
+    // one player on roughly double another's resources
+    for (let seed = 1; seed <= 10; seed++) {
+      const unbalanced = generate(5, "warp", false, seed);
+      const balanced = generate(5, "warp", true, seed);
+
+      expect(imbalance(5, "warp", balanced)).toBeLessThanOrEqual(
+        imbalance(5, "warp", unbalanced),
+      );
+      expect(resourceSpread(5, "warp", balanced)).toBeLessThanOrEqual(4);
+    }
+  });
+
+  it("uses the same set of systems, just in different places", () => {
+    const unbalanced = generate(5, "warp", false, 7);
+    const balanced = generate(5, "warp", true, 7);
+
+    const census = (tiles) => [...tiles].sort().join(",");
+    expect(census(balanced)).toEqual(census(unbalanced));
+  });
+
+  it("leaves home systems and hyperlanes where the board style put them", () => {
+    const style = boardData.styles["5"]["warp"];
+    const tiles = generate(5, "warp", true, 7);
+
+    for (const position of style.home_worlds) {
+      expect(tiles[position]).toEqual(0);
+    }
+    for (const [position, tile, rotation] of style.hyperlane_tiles) {
+      expect(tiles[position]).toEqual(tile + "-" + rotation);
+    }
+    expect(tiles[0]).toEqual(18);
+  });
+
+  it("does not push anomalies next to each other while evening things out", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const tiles = generate(5, "warp", true, seed);
+      expect(adjacentAnomalyPairs(tiles)).toHaveLength(0);
+    }
   });
 });

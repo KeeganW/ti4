@@ -11,9 +11,24 @@ import tileData, {
 import factionData from "../data/factionData";
 import adjacencyData from "../data/adjacencyData.json";
 import { getAdjacentPositions } from "../helpers/Adjacency";
+import {
+  getSliceImbalance,
+  getSliceMap,
+  getSliceStats,
+} from "../helpers/Slices";
 import HelpModal from "./HelpModal";
 import SetPlayerNameModal from "./SetPlayerNameModal";
 import SetFactionsModal from "./SetFactionsModal";
+
+/**
+ * How many swaps balanceSlices will make before giving up. It stops as soon as no swap improves
+ * things, which on the built-in boards happens long before this, so it only guards against a
+ * pathological board grinding the browser.
+ */
+const BALANCE_SLICES_MAX_PASSES = 200;
+
+/** Ignore improvements this small, so floating point noise can't keep the swap loop going. */
+const BALANCE_EPSILON = 1e-9;
 
 const expansionCheck = (includedExpansions) => (id) =>
   (!tileData.pok.includes(id) || includedExpansions[EXPANSIONS.POK]) &&
@@ -93,6 +108,7 @@ class MapOptions extends React.Component {
       forceWormholes: false,
       ensureFactionAnomalies: true,
       balancePlanetTraits: false,
+      balanceSlices: true,
       generated: false,
       advancedSettingsOpen: false,
 
@@ -138,6 +154,7 @@ class MapOptions extends React.Component {
     this.ensureAnomalies = this.ensureAnomalies.bind(this);
     this.ensureWormholesForType = this.ensureWormholesForType.bind(this);
     this.ensurePlanetTraitBalance = this.ensurePlanetTraitBalance.bind(this);
+    this.balanceSlices = this.balanceSlices.bind(this);
 
     this.updateBoardStyleOptions = this.updateBoardStyleOptions.bind(this); // TODO is the bind needed?
 
@@ -169,6 +186,7 @@ class MapOptions extends React.Component {
       this.toggleEnsureFactionAnomaliesHelp.bind(this);
     this.toggleBalancePlanetTraitsHelp =
       this.toggleBalancePlanetTraitsHelp.bind(this);
+    this.toggleBalanceSlicesHelp = this.toggleBalanceSlicesHelp.bind(this);
     this.toggleAdvancedSettings = this.toggleAdvancedSettings.bind(this);
   }
 
@@ -456,6 +474,7 @@ class MapOptions extends React.Component {
     encodedSettings += this.state.reversePlacementOrder ? "T" : "F";
     encodedSettings += this.state.forceWormholes ? "T" : "F";
     encodedSettings += this.state.balancePlanetTraits ? "T" : "F";
+    encodedSettings += this.state.balanceSlices ? "T" : "F";
     encodedSettings += this.state.pickFactions ? "T" : "F";
     if (this.state.pickFactions) {
       encodedSettings += this.state.ensureFactionAnomalies ? "T" : "F";
@@ -662,6 +681,10 @@ class MapOptions extends React.Component {
     let balancePlanetTraits = newSettings[currentIndex] === "T";
     currentIndex += 1;
 
+    // Balance Slices
+    let balanceSlices = newSettings[currentIndex] === "T";
+    currentIndex += 1;
+
     // Pick Factions
     let pickFactions = newSettings[currentIndex] === "T";
     currentIndex += 1;
@@ -737,6 +760,7 @@ class MapOptions extends React.Component {
         reversePlacementOrder: reversePlacementOrder,
         forceWormholes: forceWormholes,
         balancePlanetTraits: balancePlanetTraits,
+        balanceSlices: balanceSlices,
         pickFactions: pickFactions,
         ensureFactionAnomalies: ensureFactionAnomalies,
       },
@@ -924,6 +948,11 @@ class MapOptions extends React.Component {
 
     // Planets have been placed, time to do post processing checks to make sure things are good to go.
     this.checkAdjacencies(newTiles, includedExpansions);
+
+    // Even out what each player can reach, without undoing the adjacency fixes above
+    if (this.state.balanceSlices) {
+      this.balanceSlices(newTiles, includedExpansions);
+    }
 
     // Update the generated flag then update the tiles
     return newTiles;
@@ -1753,6 +1782,165 @@ class MapOptions extends React.Component {
   }
 
   /**
+   * Count how many of the given positions break the adjacency rules checkAdjacencies enforces:
+   * an anomaly next to another anomaly, or a blank wormhole tile next to another wormhole of the
+   * same type. Counting rather than just reporting pass/fail lets balanceSlices keep working on a
+   * board that already had a violation it could not place its way out of.
+   * @param {*} newTiles Array of tiles that are on the map currently
+   * @param {number[]} positions The positions to check
+   * @param {*} allTrueAnomalies The anomaly tiles available to this game
+   * @returns {number} How many of those positions sit in an illegal spot
+   */
+  countAdjacencyViolations(newTiles, positions, allTrueAnomalies) {
+    let violations = 0;
+
+    for (let position of positions) {
+      let tile = newTiles[position];
+      if (tileData.all[tile] === undefined) continue;
+
+      let adjacentTileNumbers = getAdjacentPositions(newTiles, position);
+
+      if (allTrueAnomalies.indexOf(tile) >= 0) {
+        for (let adjacentTileNumber of adjacentTileNumbers) {
+          if (allTrueAnomalies.indexOf(newTiles[adjacentTileNumber]) >= 0) {
+            violations += 1;
+            break;
+          }
+        }
+      }
+
+      // Only blank wormholes get moved apart, matching the wormhole pass in checkAdjacencies
+      if (
+        tileData.all[tile].wormhole.length > 0 &&
+        tileData.all[tile].planets.length === 0
+      ) {
+        for (let adjacentTileNumber of adjacentTileNumbers) {
+          let adjacentTile = tileData.all[newTiles[adjacentTileNumber]];
+          if (adjacentTile === undefined) continue;
+          if (
+            adjacentTile.wormhole.some((wormhole) =>
+              tileData.all[tile].wormhole.includes(wormhole),
+            )
+          ) {
+            violations += 1;
+            break;
+          }
+        }
+      }
+    }
+
+    return violations;
+  }
+
+  /**
+   * Even out the slices. Generation places tiles by weight into a fixed list of positions, which
+   * balances the *rank* of the tiles each player gets but not their value — a slice can easily end
+   * up with twice the resources of the one across the board from it. This walks that back by
+   * repeatedly swapping the pair of systems that most reduces how uneven the slices are, stopping
+   * when no swap helps any more.
+   *
+   * Swaps stay within a tier (primary for primary, and so on) so the board keeps the shape its
+   * layout intends, and a swap is only taken if it doesn't leave more tiles breaking the anomaly
+   * and wormhole adjacency rules than before, so it can't undo checkAdjacencies.
+   * @param {*} newTiles Array of tiles that are on the map currently
+   * @param {*} includedExpansions Dictionary of expansions to include based on the enum EXPANSIONS
+   */
+  balanceSlices(newTiles, includedExpansions) {
+    const currentBoardStyle =
+      boardData.styles[this.state.currentNumberOfPlayers.toString()][
+        this.state.currentBoardStyle
+      ];
+    const homeWorlds = currentBoardStyle["home_worlds"];
+    const sliceMap = getSliceMap(newTiles, homeWorlds);
+    if (sliceMap.length < 2) return;
+
+    const allTrueAnomalies = tileData.anomaly.filter(
+      expansionCheck(includedExpansions),
+    );
+
+    // Tiles the user pinned in place stay where they are
+    const frozenPositions = new Set(
+      this.props.lockedTiles
+        .map((system) => newTiles.indexOf(system))
+        .filter((position) => position >= 0),
+    );
+
+    const tiers = ["primary_tiles", "secondary_tiles", "tertiary_tiles"]
+      .map((tier) =>
+        currentBoardStyle[tier].filter(
+          (position) =>
+            !frozenPositions.has(position) &&
+            tileData.all[newTiles[position]] !== undefined,
+        ),
+      )
+      .filter((tier) => tier.length > 1);
+
+    let imbalance = getSliceImbalance(getSliceStats(newTiles, sliceMap));
+
+    for (let pass = 0; pass < BALANCE_SLICES_MAX_PASSES; pass++) {
+      if (imbalance <= 0) break;
+
+      let bestSwap = null;
+      let bestImbalance = imbalance;
+
+      for (let tier of tiers) {
+        for (let first = 0; first < tier.length; first++) {
+          for (let second = first + 1; second < tier.length; second++) {
+            const from = tier[first];
+            const to = tier[second];
+
+            // Only positions the affected tiles touch can change adjacency, so check just those
+            const affected = new Set([from, to]);
+            for (let position of getAdjacentPositions(newTiles, from)) {
+              affected.add(position);
+            }
+            for (let position of getAdjacentPositions(newTiles, to)) {
+              affected.add(position);
+            }
+            const violationsBefore = this.countAdjacencyViolations(
+              newTiles,
+              affected,
+              allTrueAnomalies,
+            );
+
+            const swapped = newTiles[from];
+            newTiles[from] = newTiles[to];
+            newTiles[to] = swapped;
+
+            const newImbalance = getSliceImbalance(
+              getSliceStats(newTiles, sliceMap),
+            );
+            const improves = newImbalance < bestImbalance - BALANCE_EPSILON;
+            const staysLegal =
+              improves &&
+              this.countAdjacencyViolations(
+                newTiles,
+                affected,
+                allTrueAnomalies,
+              ) <= violationsBefore;
+
+            newTiles[to] = newTiles[from];
+            newTiles[from] = swapped;
+
+            if (staysLegal) {
+              bestSwap = [from, to];
+              bestImbalance = newImbalance;
+            }
+          }
+        }
+      }
+
+      if (bestSwap === null) break;
+
+      const [from, to] = bestSwap;
+      const swapped = newTiles[from];
+      newTiles[from] = newTiles[to];
+      newTiles[to] = swapped;
+      imbalance = bestImbalance;
+    }
+  }
+
+  /**
    * Ensures that for all wormholes of given types that either 0 or 2+ of that wormhole are included.
    * @param {*} possibleTiles A set of tiles chosen for a map gen
    * @param {Int8Array} desiredWormholes The types of wormholes desired to check
@@ -2195,6 +2383,12 @@ class MapOptions extends React.Component {
       balancePlanetTraitsHelp: !this.state.balancePlanetTraitsHelp,
     });
   }
+  toggleBalanceSlicesHelp(event) {
+    this.setState({
+      balanceSlicesHelp: !this.state.balanceSlicesHelp,
+    });
+  }
+
   toggleAdvancedSettings(event) {
     this.setState({
       advancedSettingsOpen: !this.state.advancedSettingsOpen,
@@ -2623,7 +2817,10 @@ class MapOptions extends React.Component {
                   />
                 </Form.Group>
 
-                <Form.Group className="d-flex" controlId="balancePlanetTraits">
+                <Form.Group
+                  className="mb-3 d-flex"
+                  controlId="balancePlanetTraits"
+                >
                   <Form.Check
                     name="balancePlanetTraits"
                     type="checkbox"
@@ -2634,6 +2831,20 @@ class MapOptions extends React.Component {
                   <QuestionCircle
                     className="icon"
                     onClick={this.toggleBalancePlanetTraitsHelp}
+                  />
+                </Form.Group>
+
+                <Form.Group className="d-flex" controlId="balanceSlices">
+                  <Form.Check
+                    name="balanceSlices"
+                    type="checkbox"
+                    checked={this.state.balanceSlices}
+                    onChange={this.handleInputChange}
+                    label="Balance Slices"
+                  />
+                  <QuestionCircle
+                    className="icon"
+                    onClick={this.toggleBalanceSlicesHelp}
                   />
                 </Form.Group>
               </div>
@@ -2889,6 +3100,31 @@ class MapOptions extends React.Component {
                       <p class="mb-0">
                         Turning this on tops up whichever trait is most underrepresented after generation, swapping in
                         additional tiles of that trait so that all three remain reasonably achievable.
+                      </p>`}
+          />
+          <HelpModal
+            key={"help-balance-slices"}
+            visible={this.state.balanceSlicesHelp}
+            hideModal={this.toggleBalanceSlicesHelp}
+            title={"About Balancing Slices"}
+            content={`<p>
+                        Tiles are normally dealt out by how good they are, one to each player in
+                        turn, which evens out the <i>ranking</i> of what everybody gets but not its
+                        value. Two tiles next to each other in that ranking can be worth wildly
+                        different amounts, so it is easy to end up with one player sitting on twice
+                        the resources of another.
+                      </p>
+                      <p>
+                        Turning this on measures what each player can actually reach &mdash; the
+                        systems within two jumps of their home system, with contested systems split
+                        between everyone equally close to them &mdash; and swaps systems between
+                        slices until the resources, influence, planets, and anomalies are as even as
+                        they can be made.
+                      </p>
+                      <p class="mb-0">
+                        Systems are only ever swapped with others of the same importance to the
+                        board, and never in a way that puts two anomalies or two matching wormholes
+                        next to each other, so the shape and feel of the board style is kept intact.
                       </p>`}
           />
           <HelpModal
