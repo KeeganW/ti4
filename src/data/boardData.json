@@ -18,6 +18,15 @@
         "secondary_tiles": [5, 2, 21, 30, 32, 23],
         "tertiary_tiles": [10, 16, 14, 8, 7, 13, 12, 18, 1, 4, 6, 3],
         "hyperlane_tiles": []
+      },
+      "trade wars": {
+        "description": "The Trade Wars 2 player variant with three trade systems. Both players sit along the bottom edge; place the home systems of unused factions in the three empty slots (top left, top right, and bottom) as trade systems.",
+        "source": "KingOfRohan",
+        "home_worlds": [25, 31],
+        "primary_tiles": [11, 15],
+        "secondary_tiles": [24, 26, 12, 32, 30, 14],
+        "tertiary_tiles": [10, 16, 8, 18, 3, 5, 2, 6, 1, 4],
+        "hyperlane_tiles": []
       }
     },
     "3": {
